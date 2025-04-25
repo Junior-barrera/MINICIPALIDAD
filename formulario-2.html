@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Presupuesto Municipal | Municipalidad de Arica</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+            /* Header styles */
+header {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+}
+
+.top-header {
+  display: flex;
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center;
+  padding: 15px 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el texto debajo del logo */
+  margin-left: 0;
+}
+
+.logo-text h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #86868b;
+}
+        
+        /* Transparency links */
+        .transparency-container {
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
+        
+        .transparency-toggle {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: none;
+            color: #06c;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparency-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .toggle-icon {
+            display: inline-block;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .transparency-links {
+            background-color: rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            transition: max-height 0.4s ease;
+        }
+        
+        .transparency-links a {
+            color: #06c;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 400;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .transparency-links a:hover {
+            opacity: 0.7;
+            transform: translateY(-1px);
+        }
+        
+        /* Navigation menu */
+        nav {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .main-menu {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            overflow-x: auto;
+        }
+        
+        .main-menu li {
+            position: relative;
+        }
+        
+        .main-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #1d1d1f;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .main-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 20px;
+            height: 2px;
+            background-color: #06c;
+            transition: transform 0.3s ease;
+        }
+        
+        .main-menu a:hover {
+            color: #06c;
+        }
+        
+        .main-menu a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+        
+        /* Dashboard container */
+        .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f7;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #06c;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #e9e9eb;
+            transform: translateY(-2px);
+        }
+        
+        .back-icon {
+            margin-right: 8px;
+        }
+        
+        .dashboard-iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            position: relative;
+        }
+        
+        /* Overlay para mostrar mientras carga el iframe */
+        .iframe-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #06c;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .dashboard-description {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-description h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-description p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        /* Assistant chat button */
+        .assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(6, 12, 204, 0.9);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .assistant-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 40px;
+            }
+            
+            .dashboard-iframe {
+                height: 65vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 24px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .dashboard-iframe {
+                height: 50vh;
+            }
+            
+            .transparency-toggle {
+                display: block;
+            }
+            
+            .transparency-toggle.active .toggle-icon {
+                transform: rotate(180deg);
+            }
+            
+            .transparency-links {
+                max-height: 0;
+                padding: 0;
+                overflow: hidden;
+                flex-direction: column;
+            }
+            
+            .transparency-links.active {
+                max-height: 200px;
+                padding: 10px 0;
+            }
+            
+            .transparency-links a {
+                margin: 8px 0;
+                padding: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with logo and search -->
+            <div class="top-header">
+                <div class="logo">
+                    <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                    <div class="logo-text">
+                        <h1>ARICA</h1>
+                        <span>MUNICIPALIDAD | mejor ciudad</span>
+                    </div>
+                </div>
+            </div>
+    
+    <!-- Dashboard section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Formulario Oficina de Mantenimiento de Vehículos y Maquinaria</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon">←</span> Volver al Inicio
+            </button>
+        </div>
+        
+        <!-- Contenedor del iframe con indicador de carga -->
+        <div style="position: relative;">
+            <div id="loadingIndicator" class="iframe-loading">
+                <div class="loader"></div>
+                <p>Cargando Formulario...</p>
+            </div>
+            
+            <!-- Iframe del dashboard de Looker Studio (URL corregida para embebido) -->
+            <iframe id="dashboardIframe" class="dashboard-iframe" 
+                src="https://applisoft.site/web/muniarica/dideco.php"
+                allowfullscreen
+                onload="hideLoading()"></iframe>
+        </div>
+        
+        
+    </section>
+    
+     <!-- Footer -->
+     <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca , Arica</p>
+                <p>Anexo:6959 </p>
+                <p>Email:roberto.mamani@municipalidadarica.cl </p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica </strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p
+            <p> Desarrollado por Junior Barrera</p
+        </div>
+    </footer>
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <script>
+        // Función para ocultar indicador de carga cuando el iframe se carga
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+        
+        // Función para manejar errores de carga del iframe
+        function handleIframeError() {
+            const iframe = document.getElementById('dashboardIframe');
+            
+            // Verificar si el iframe se cargó correctamente después de 10 segundos
+            setTimeout(function() {
+                try {
+                    // Intentar acceder al contenido del iframe
+                    const iframeContent = iframe.contentWindow || iframe.contentDocument;
+                    if (!iframeContent) {
+                        // Si no hay contenido, mostrar mensaje de error
+                        showFallbackMessage();
+                    }
+                } catch (e) {
+                    // Si hay un error al acceder al contenido, mostrar mensaje
+                    showFallbackMessage();
+                }
+            }, 10000);
+        }
+        
+        // Mostrar mensaje alternativo si el dashboard no carga
+        function showFallbackMessage() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="margin-bottom: 15px;">No se pudo cargar el dashboard</h3>
+                    <p style="margin-bottom: 20px;">Parece que hay un problema al cargar el dashboard. Por favor, intenta:</p>
+                    <a href="https://lookerstudio.google.com/reporting/da465897-8e1a-4d06-9f8e-27d84a749431" 
+                       target="_blank" 
+                       style="display: inline-block; background-color: #06c; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                        Ver dashboard en Looker Studio
+                    </a>
+                </div>
+            `;
+            loadingIndicator.style.display = 'flex';
+        }
+        
+        // Función para abrir asistencia via WhatsApp
+        function openAssistance() {
+            // Reemplaza con tu número real para WhatsApp (formato internacional sin +)
+            const phoneNumber = "56959414178"; // Reemplaza con tu número real
+            window.open(`https://wa.me/${phoneNumber}`, '_blank');
+        }
+        
+        // Código para el menú de transparencia
+        document.addEventListener('DOMContentLoaded', function() {
+            const transparencyToggle = document.querySelector('.transparency-toggle');
+            const transparencyLinks = document.querySelector('.transparency-links');
+            
+            if (transparencyToggle && transparencyLinks) {
+                transparencyToggle.addEventListener('click', function() {
+                    transparencyToggle.classList.toggle('active');
+                    transparencyLinks.classList.toggle('active');
+                });
+                
+                // Inicializar estado del menú según ancho de pantalla
+                function checkScreenWidth() {
+                    if (window.innerWidth <= 768) {
+                        transparencyLinks.classList.remove('active');
+                    } else {
+                        transparencyLinks.classList.add('active');
+                    }
+                }
+                
+                // Verificar al cargar y redimensionar
+                checkScreenWidth();
+                window.addEventListener('resize', checkScreenWidth);
+            }
+            
+            // Efecto de scroll en el header
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                }
+            });
+            
+            // Iniciar verificación de carga del iframe
+            handleIframeError();
+        });
+    </script>
+      <script>
+        // Estructura para almacenar el contenido indexado del sitio
+        const siteContent = [
+            {
+                title: "Inicio",
+                url: "index.html",
+                content: "Municipalidad de Arica página principal DIMAO mejor ciudad"
+            },
+            {
+                title: "GPS DIMAO",
+                url: "dashboard-gps.html",
+                content: "Seguimiento en tiempo real de los vehículos recolectores, análisis de rutas, tiempos de operación y eficiencia del servicio."
+            },
+            {
+                title: "Presupuesto Anual",
+                url: "dashboard-presupuesto.html",
+                content: "Seguimiento y control del presupuesto anual, análisis de ingresos, egresos y distribución para planificación eficiente de recursos."
+            },
+            {
+                title: "Abastecimiento de Combustible",
+                url: "dashboard-abastecimiento.html",
+                content: "Información clave sobre abastecimiento de combustible, consumo, trámites y tiempos de respuesta. Análisis de tendencias y gestión del suministro."
+            },
+            {
+                title: "Bodega Mecánica",
+                url: "dashboard-bodega.html",
+                content: "Control de inventario en bodega mecánica, gestión de repuestos, insumos y herramientas para mantenimiento eficiente."
+            },
+            {
+                title: "Certificados Digitales",
+                url: "formulario-1.html",
+                content: "Solicitud y descarga de certificados municipales con firma electrónica avanzada y validación digital."
+            },
+            {
+                title: "Sistema de Pagos Online",
+                url: "formulario-1.html",
+                content: "Pago de cuentas y permisos con plataforma segura, múltiples métodos de pago y monederos digitales."
+            },
+            {
+                title: "Portal de Trámites Digitales",
+                url: "formulario-1.html",
+                content: "Solicitudes, expedientes y procesos administrativos con seguimiento en tiempo real."
+            },
+            {
+                title: "Transparencia",
+                url: "#",
+                content: "Datos abiertos Transparencia activa Plataforma Ley de Lobby Solicitar Información"
+            },
+            {
+                title: "Contacto",
+                url: "#",
+                content: "Municipalidad de Arica Rafael Sotomayor 415, Arica Teléfono: (58) 2 206300 Email: contacto@muniarica.cl"
+            },
+            {
+                title: "Enlaces Rápidos",
+                url: "#",
+                content: "Portal de Transparencia Trabaja con Nosotros Licitaciones Preguntas Frecuentes"
+            },
+            {
+                title: "Servicios",
+                url: "#",
+                content: "Patentes Municipales Permisos de Circulación Departamento Social Aseo y Ornato"
+            }
+        ];
+        
+        // Función para mostrar los resultados de búsqueda
+        function showSearchResults(results) {
+            // Crear el contenedor de resultados si no existe
+            let searchResultsContainer = document.getElementById('search-results');
+            
+            if (!searchResultsContainer) {
+                searchResultsContainer = document.createElement('div');
+                searchResultsContainer.id = 'search-results';
+                searchResultsContainer.className = 'search-results';
+                
+                // Estilos para el contenedor de resultados
+                searchResultsContainer.style.position = 'absolute';
+                searchResultsContainer.style.top = '100%';
+                searchResultsContainer.style.right = '0';
+                searchResultsContainer.style.width = '350px';
+                searchResultsContainer.style.maxHeight = '400px';
+                searchResultsContainer.style.overflowY = 'auto';
+                searchResultsContainer.style.backgroundColor = '#fff';
+                searchResultsContainer.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                searchResultsContainer.style.borderRadius = '4px';
+                searchResultsContainer.style.padding = '15px';
+                searchResultsContainer.style.zIndex = '1000';
+                
+                // Añadir el contenedor al DOM
+                document.querySelector('.search-bar').appendChild(searchResultsContainer);
+            }
+            
+            // Limpiar resultados anteriores
+            searchResultsContainer.innerHTML = '';
+            
+            // Crear el encabezado de resultados
+            const resultsHeader = document.createElement('div');
+            resultsHeader.className = 'search-results-header';
+            resultsHeader.style.display = 'flex';
+            resultsHeader.style.justifyContent = 'space-between';
+            resultsHeader.style.alignItems = 'center';
+            resultsHeader.style.marginBottom = '10px';
+            
+            const resultsTitle = document.createElement('h3');
+            resultsTitle.style.margin = '0';
+            resultsTitle.style.fontSize = '16px';
+            resultsTitle.textContent = `Resultados de búsqueda (${results.length})`;
+            
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '✕';
+            closeButton.style.background = 'none';
+            closeButton.style.border = 'none';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.fontSize = '16px';
+            closeButton.onclick = () => {
+                searchResultsContainer.style.display = 'none';
+            };
+            
+            resultsHeader.appendChild(resultsTitle);
+            resultsHeader.appendChild(closeButton);
+            searchResultsContainer.appendChild(resultsHeader);
+            
+            // Si no hay resultados
+            if (results.length === 0) {
+                const noResults = document.createElement('p');
+                noResults.style.textAlign = 'center';
+                noResults.style.padding = '20px 0';
+                noResults.style.color = '#666';
+                noResults.textContent = 'No se encontraron resultados para tu búsqueda';
+                searchResultsContainer.appendChild(noResults);
+                return;
+            }
+            
+            // Crear la lista de resultados
+            const resultsList = document.createElement('ul');
+            resultsList.style.listStyle = 'none';
+            resultsList.style.padding = '0';
+            resultsList.style.margin = '0';
+            
+            results.forEach(result => {
+                const listItem = document.createElement('li');
+                listItem.style.padding = '10px 0';
+                listItem.style.borderBottom = '1px solid #eee';
+                
+                const resultLink = document.createElement('a');
+                resultLink.href = result.url;
+                resultLink.style.textDecoration = 'none';
+                resultLink.style.color = '#0066cc';
+                resultLink.style.display = 'block';
+                
+                const resultTitle = document.createElement('div');
+                resultTitle.className = 'result-title';
+                resultTitle.style.fontWeight = 'bold';
+                resultTitle.style.marginBottom = '5px';
+                resultTitle.textContent = result.title;
+                
+                const resultContent = document.createElement('div');
+                resultContent.className = 'result-content';
+                resultContent.style.fontSize = '14px';
+                resultContent.style.color = '#666';
+                
+                // Limitar el contenido a 100 caracteres
+                let contentPreview = result.content;
+                if (contentPreview.length > 100) {
+                    contentPreview = contentPreview.substring(0, 100) + '...';
+                }
+                resultContent.textContent = contentPreview;
+                
+                resultLink.appendChild(resultTitle);
+                resultLink.appendChild(resultContent);
+                listItem.appendChild(resultLink);
+                resultsList.appendChild(listItem);
+            });
+            
+            searchResultsContainer.appendChild(resultsList);
+            searchResultsContainer.style.display = 'block';
+        }
+        
+        // Función para realizar la búsqueda
+        function performSearch(query) {
+            // Normalizar la consulta (quitar acentos, convertir a minúsculas)
+            const normalizedQuery = query.toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+            
+            if (normalizedQuery.trim() === '') {
+                // Si la búsqueda está vacía, ocultar los resultados
+                const searchResults = document.getElementById('search-results');
+                if (searchResults) {
+                    searchResults.style.display = 'none';
+                }
+                return;
+            }
+            
+            // Buscar coincidencias
+            const results = siteContent.filter(item => {
+                const normalizedTitle = item.title.toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                
+                const normalizedContent = item.content.toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                
+                return normalizedTitle.includes(normalizedQuery) || 
+                       normalizedContent.includes(normalizedQuery);
+            });
+            
+            // Mostrar resultados
+            showSearchResults(results);
+        }
+        
+        // Inicializar la función de búsqueda cuando se carga el documento
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-bar input');
+            const searchButton = document.querySelector('.search-bar button');
+            
+            if (searchInput && searchButton) {
+                // Evento para el botón de búsqueda
+                searchButton.addEventListener('click', function() {
+                    performSearch(searchInput.value);
+                });
+                
+                // Evento para la tecla Enter en el campo de búsqueda
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch(searchInput.value);
+                    }
+                });
+                
+                // Evento para buscar mientras se escribe (opcional)
+                searchInput.addEventListener('input', function() {
+                    // Retraso de 300ms para no sobrecargar con cada pulsación
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => {
+                        performSearch(this.value);
+                    }, 300);
+                });
+                
+                // Cerrar resultados al hacer clic fuera
+                document.addEventListener('click', function(event) {
+                    const searchResults = document.getElementById('search-results');
+                    const searchBar = document.querySelector('.search-bar');
+                    
+                    if (searchResults && 
+                        !searchResults.contains(event.target) && 
+                        !searchBar.contains(event.target)) {
+                        searchResults.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Agregar estilos CSS para el buscador y los resultados
+            const style = document.createElement('style');
+            style.textContent = `
+                .search-bar {
+                    position: relative;
+                }
+                
+                .search-bar input {
+                    transition: width 0.3s ease;
+                }
+                
+                .search-bar input:focus {
+                    width: 250px;
+                }
+                
+                .search-results .result-title {
+                    color: #0066cc;
+                }
+                
+                .search-results li:hover {
+                    background-color: #f5f5f5;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // Función para agregar más contenido al índice de búsqueda
+        // Puedes llamar a esta función si quieres agregar más contenido dinámicamente
+        function addToSearchIndex(item) {
+            siteContent.push(item);
+        }
+        
+        // Función para expandir el índice de búsqueda con todo el contenido de la página
+        function indexPageContent() {
+            // Seleccionar todos los elementos con texto significativo
+            const textElements = document.querySelectorAll('h1, h2, h3, p, a, li');
+            
+            textElements.forEach(element => {
+                // Si es un enlace, verificar si ya está indexado
+                if (element.tagName === 'A' && element.href) {
+                    const url = element.getAttribute('href');
+                    const alreadyIndexed = siteContent.some(item => item.url === url);
+                    
+                    if (!alreadyIndexed && element.textContent.trim() !== '') {
+                        addToSearchIndex({
+                            title: element.textContent.trim(),
+                            url: url,
+                            content: element.textContent.trim()
+                        });
+                    }
+                } 
+                // Para elementos que no son enlaces pero tienen contenido significativo
+                else if (element.textContent.trim().length > 10) {
+                    // Buscar el título más cercano
+                    let closestHeading = element.previousElementSibling;
+                    let title = '';
+                    
+                    while (closestHeading && !title) {
+                        if (['H1', 'H2', 'H3'].includes(closestHeading.tagName)) {
+                            title = closestHeading.textContent.trim();
+                        } else {
+                            closestHeading = closestHeading.previousElementSibling;
+                        }
+                    }
+                    
+                    // Si no se encontró un título, usar un título genérico
+                    if (!title) {
+                        title = 'Contenido de la página';
+                    }
+                    
+                    // Verificar si ya existe un ítem con este título y contenido similar
+                    const similarContent = siteContent.some(item => 
+                        item.title === title && 
+                        item.content.includes(element.textContent.trim().substring(0, 30))
+                    );
+                    
+                    if (!similarContent) {
+                        addToSearchIndex({
+                            title: title,
+                            url: window.location.pathname,
+                            content: element.textContent.trim()
+                        });
+                    }
+                }
+            });
+        }
+        
+        // Llamar a la función de indexación cuando la página esté completamente cargada
+        window.addEventListener('load', indexPageContent);
+    </script>
+</body>
+</html>
