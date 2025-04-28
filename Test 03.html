@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de datos en Google Sheets</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+    #loader, #loaderTabla {
+      display: none;
+      margin: 10px 0;
+    }
+    #toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 17px;
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;} 
+      to {bottom: 0; opacity: 0;}
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Formulario para agregar datos</h2>
+
+  <form id="formulario">
+    <input type="text" id="numero" placeholder="Número" required>
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="text" id="apellido" placeholder="Apellido" required>
+    <input type="text" id="telefono" placeholder="Teléfono" required>
+    <textarea id="notas" placeholder="Notas" rows="3" required></textarea>
+    <button type="button" id="btnEnviar" onclick="enviarDatos()">Enviar</button>
+    <div id="loader">Enviando datos...</div>
+  </form>
+
+  <h2>Datos almacenados</h2>
+  <div id="loaderTabla">Cargando tabla...</div>
+  <div id="tabla-container">Cargando datos...</div>
+
+  <div id="toast"></div>
+
+<script>
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbya_PF2aLh7zDg-ALvVCPvSoor_xj28zGiFgrdhd0F-tCl0fvIjsw4NSH-6YbtZ4d4/exec';  // <-- Aquí pon la URL del Web App de Apps Script
+
+  document.addEventListener('DOMContentLoaded', cargarDatos);
+
+  function mostrarToast(mensaje, color) {
+    const toast = document.getElementById('toast');
+    toast.textContent = mensaje;
+    toast.style.backgroundColor = color;
+    toast.className = "show";
+    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+  }
+
+  function cargarDatos() {
+    const loaderTabla = document.getElementById('loaderTabla');
+    const tablaContainer = document.getElementById('tabla-container');
+
+    loaderTabla.style.display = 'block';
+    tablaContainer.innerHTML = '';
+
+    fetch(WEB_APP_URL)
+      .then(response => response.json())
+      .then(values => {
+        if (!values || values.length === 0) {
+          tablaContainer.innerText = 'No se encontraron datos.';
+          return;
+        }
+
+        let table = '<table>';
+        values.forEach((fila, index) => { // Mostrar los más nuevos arriba
+          table += '<tr>';
+          fila.forEach(celda => {
+            // table += index === values.length - 1
+            table += index === 0
+              ? `<th>${celda}</th>` // Primera fila (original) como encabezado
+              : `<td>${celda}</td>`;
+          });
+          table += '</tr>';
+        });
+        table += '</table>';
+
+        tablaContainer.innerHTML = table;
+      })
+      .catch(error => {
+        console.error('Error al obtener los datos:', error);
+        tablaContainer.innerText = 'Error al cargar datos.';
+      })
+      .finally(() => {
+        loaderTabla.style.display = 'none';
+      });
+  }
+
+  function enviarDatos() {
+    const numero = document.getElementById('numero').value.trim();
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const notas = document.getElementById('notas').value.trim();
+    const btn = document.getElementById('btnEnviar');
+    const loader = document.getElementById('loader');
+
+    if (!numero || !nombre || !apellido || !telefono || !notas) {
+      mostrarToast('Por favor completa todos los campos.', '#e74c3c');
+      return;
+    }
+
+    btn.disabled = true;
+    loader.style.display = 'block';
+
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ numero, nombre, apellido, telefono, notas })
+    })
+    .then(() => {
+      mostrarToast('Datos enviados exitosamente 🎉', '#27ae60');
+      document.getElementById('formulario').reset();
+      cargarDatos();
+    })
+    .catch(error => {
+      console.error('Error al enviar datos:', error);
+      mostrarToast('Error al enviar los datos.', '#e74c3c');
+    })
+    .finally(() => {
+      btn.disabled = false;
+      loader.style.display = 'none';
+    });
+  }
+</script>
+
+</body>
+</html>
