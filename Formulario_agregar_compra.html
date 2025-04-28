@@ -1,0 +1,1043 @@
+<!DOCTYPE html>        <!-- --------- INGRESO DE DOCUMENTOS  --------- -->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Documentos</title>
+
+    <style>
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fondo con degradado */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #c2e9fb, #a1c4fd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px;
+  color: #333;
+}
+
+/* Contenedor del formulario estilo glassmorphism */
+#cont_form {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: fadeIn 1s ease-in-out;
+  text-align: center; /* Centra texto e inline-blocks */
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Labels e inputs */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #ffffffc7;
+  text-transform: uppercase;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+  outline: none;
+}
+
+/* Botones */
+.button1, .button2, .button3 {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+  border: none;
+}
+
+.button1 {
+  background-color: #27ae60;
+  color: white;
+}
+.button1:hover {
+  background-color: #1e8449;
+}
+
+.button2 {
+  background-color: #e74c3c;
+  color: white;
+}
+.button2:hover {
+  background-color: #c0392b;
+}
+
+.button3 {
+  background-color: #2980b9;
+  color: white;
+}
+.button3:hover {
+  background-color: #21618c;
+}
+
+/* Colores de texto */
+.negritas {
+  font-weight: bold;
+}
+
+.azul {
+  color: #ffffff;
+}
+
+.listo {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.color_suggestions {
+  color: #8e44ad;
+}
+
+/* Separador */
+hr {
+  height: 2px;
+  border: none;
+  background: linear-gradient(to right, #3498db, #8e44ad);
+  margin: 20px 0;
+}
+
+
+    </style>
+
+</head>
+<body>
+
+  <div id="cont_form">
+
+  <form id="formulario">
+
+  <H2>FORMULARIO DE INGRESO DE COMPRAS</H2>
+  
+  <br>
+  
+  <b>Año </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <select id="numAnio" name="numAnio" style="width: 140px;" onchange="continuar_nomUnid()"  onclick="borrar_div(0)">
+  </select>
+
+  &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;
+  <label class="listo" id="listoChck" name="listoChck" onclick="borrar_div(0)"></label>
+
+  <br>
+
+  <b>Unidad</b>&nbsp;&nbsp;&nbsp;&nbsp;
+  <select id="nomUnid" name="nomUnid" style="width: 450px;" onchange="continuar_nomCtas()"  onclick="borrar_div(0)">
+  </select>
+
+  <br>
+
+  <b>N° CTA </b>&nbsp;&nbsp;&nbsp;
+  <select id="numCtas" name="numCtas" style="width: 450px;" onchange="continuar_proyect()"  onclick="borrar_div(0)">
+  </select>
+
+  <br>
+
+  <b>Proyecto</b>&nbsp;
+  <select id="nomPryt" name="nomPryt" style="width: 450px;" onchange="ingresar_datos()"  onclick="borrar_div(0)">
+  </select>
+
+  <p>     <!-- *************** DATOS PARA DEL REGISTRO ******************* -->
+
+  <div id="div_s0" hidden>
+  
+  <hr>&nbsp;<br> 
+
+  <b>Fecha </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input type="date" id="fecha" name="fecha" style="width: 100px;" onclick="borrar_div(0)">
+
+  <br>
+  
+  <b>N° Compra</b>&nbsp;
+  <select id="ncompra" name="ncompra" style="width: 190px;" onchange="ingresar_compra()"  onclick="borrar_div(0)">
+  </select>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b><label id="lcompra"></label></b>
+
+  <br>
+  
+  <b>Compra</b>&nbsp;&nbsp;&nbsp;&nbsp;
+  <select id="tcompra" name="tcompra" style="width: 78px;" onchange="llenar_estado()"  onclick="borrar_div(0)">
+  </select>
+
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <select id="estado" name="estado" style="width: 248px;"  onclick="borrar_div(0)">
+  </select>
+
+  <br>
+
+  <b>N° CTA</b> &nbsp; &nbsp; &nbsp;
+  <input type="text" id="cuentas" name="cuentas" style="width: 340px;" oninput="showSuggestionsCuentas()" onclick="borrar_div(3)">
+  <div class="color_suggestions" id="suggestionsCuentas"></div>
+
+  <b>Comprom</b> &nbsp;
+  <input type="text" id="saldo" name="saldo" style="width: 95px;" oninput="formatearNumero(this)" onclick="borrar_div(0)"> 
+
+  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <b>Dispone</b> &nbsp;
+  <input type="text" id="saldo" name="saldo" style="width: 95px;" onclick="borrar_div(0)" readonly> 
+  
+  <br>
+
+  <b>Documen</b> &nbsp;
+  <input type="text" id="tipoDocum" name="tipoDocum" style="width: 100px;" onclick="borrar_div(0)">
+  &nbsp; &nbsp;
+  <input type="text" id="numeDocum" name="numeDocum" style="width: 195px;" onclick="borrar_div(0)">
+
+
+  <hr><br>   <!-- ===========================================================  --> 
+
+    
+  <b>Desembolso</b>&nbsp;&nbsp;
+  <input type="text" id="desembo1" name="desembo1" oninput="formatearNumero(this)" style="width: 95px;" onclick="borrar_div(0)">
+  &nbsp; &nbsp; &nbsp;* Solo al final (en el pago)
+
+  <br>
+  
+  <textarea id="comentari" name="comentari" rows="3" style="width: 428px;" onclick="borrar_div(0)"></textarea>
+  
+
+  </div>
+
+  <p>
+
+  <center>
+
+  <div id="div_s1" hidden>
+  <input class="button1" type="button" value="GUARDAR" onclick="guardarDatos()" style="width: 100px;">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input class="button3" type="button" value="LIMPIAR" onclick="limpiarDatos()" style="width: 100px;">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <input class="button2" type="button" value="CERRAR" style="width: 100px;" onclick="cerrarForm()">
+  </div>
+
+  <div id="div_s2">
+  <input class="button2" type="button" value="CERRAR" style="width: 100px;" onclick="cerrarForm()">
+  </div>
+  </center>
+
+
+  <a style="display: none;">
+    <input type="text" id="fanio"  name="fanio"  value="">
+    <input type="text" id="fech1"  name="fech1"  value="">
+    <input type="text" id="numCta" name="numCta" value="">
+    <input type="text" id="nomCta" name="nomCta" value="">
+    <input type="text" id="desembo2"  name="desembo2"  value="">
+    
+  </a>
+
+  </form>
+
+  </div>
+
+
+  <script>
+    
+
+    // Sets para almacenar valores únicos
+    var tipDocumentSet = new Set();
+    var tipDescripcSet = new Set();
+    var tipComentarSet = new Set();
+    var tipNumeDocuSet = new Set();
+    var permiSet = new Set();
+
+    var tipDocument = new Array();        // Array con los Documentos
+    var tipDescripc = new Array();        // Array con las Descripciones
+    var tipComentar = new Array();        // Array con los Comentarios
+    var tipNumeDocu = new Array();        // Array con los N° de otros Documentos
+    var tipNomCuent = new Array();        // Array con los Nombre de las Cuentas
+
+    var separa7 = " - ";
+
+    var caractCheck = "✓";
+    var listCheck = "";
+    var ultimoId = "";
+
+    var form_anio = "";
+    var form_unid = "";
+    var form_ncta = "";
+    var form_pryt = "";
+
+    var fila_pac = 0;
+
+    const anioActual = new Date().getFullYear();
+    var este_anio = parseInt(anioActual);
+
+    var maxDoc = "";
+    var nnleer = 0;
+    var permiso = new Array();              // Permiso de la oficina (ejemplo: VMQ)
+    permiso[0] = "";
+
+    // var miUnid = "ILUMINACION";
+    // var miUnid = "DIRECTOR";
+
+    var selec0 = "-- INGRESAR --";
+    var permisott = "";
+
+    var colmcta = 0;                        // Columna de Anex 1a donde esta el N° de cuenta & descripcion
+
+    var dato_dt = new Array();              // Todos los datos de la hoja DATOS
+    var dat_PAC = new Array();              // Todos los datos de la hoja PAC
+    var dato_1a = new Array();              // Todos los datos de la hoja ANEX 1a
+    var dato_1b = new Array();              // Todos los datos de la hoja ANEX 1b
+
+    var suggest = new Array();
+    suggest = [ "suggestionsDocument", "suggestionsDescripc", "suggestionsCuentas" ];
+
+    var sel_dept = "";                      // Seleccionar el tipo de DEPTO
+
+
+    const API_KEY = 'AIzaSyBM9AcgPgM6MzM04Rij1xuti1Uf-n2QUuI';                 // Clave de API
+    const SPREADSHEET_ID = '1GEFe7QHsqxV2TX8CKxW4Awq0coKIw8Nq5xATl15ZoOE';     // Dirección libro de Google Sheets
+
+
+    
+
+    // ************************************************************************
+    // ************************************************************************
+
+
+    var tx_iden = "Ejemplo:   2025 LP PRENSA HIDRAULICA";
+    var tx_desc = "INGRESE UNA DESCRIPCION FACIL DE RECORDAR";
+    var tx_ncta = "N° de Cuenta   o   C.C.";
+    var tx_ndoc = "N° Documento   -   Ejemplo:  2085-SE100-LP25";
+    var tx_cmnt = "INGRESE UN COMENTARIO SOBRE ESTA ENTRADA";
+
+    /*
+    document.getElementById("identific" ).placeholder = tx_iden;
+    document.getElementById("descripci" ).placeholder = tx_desc;
+    document.getElementById("cuentas"   ).placeholder = tx_ncta;
+    document.getElementById("numeDocum" ).placeholder = tx_ndoc;
+    document.getElementById("comentari").placeholder = tx_cmnt;
+    */
+
+    
+    // ************************************************************************
+    // ************************************************************************
+
+    
+    function guardarDatos() {
+
+      if (permiso[0] != "") {
+        
+        ultimoId = "";
+        if (ultimoId != (document.getElementById("numeDocum").value).toString()) {
+
+          var error = 0;
+          var errdt = new Array();
+          if (document.getElementById("fecha").value == ""    )   { errdt[error] = "Fecha"; error++; }
+          if (document.getElementById("identific").value == "")   { errdt[error] = "Identificacion"; error++; }
+          if (document.getElementById("descripci").value == "")   { errdt[error] = "Descripcion"; error++; }
+          if (document.getElementById("compra").value == ""   )   { errdt[error] = "Tipo de compra"; error++; }
+          if (document.getElementById("compra").value == "0"  )   { errdt[error] = "Tipo de compra"; error++; }
+          if (document.getElementById("estado").value == ""   )   { errdt[error] = "Estado del ingreso"; error++; }
+          if (document.getElementById("estado").value == "0"  )   { errdt[error] = "Estado del ingreso"; error++; }
+          if (document.getElementById("cuentas").value == ""  )   { errdt[error] = "Numero de CTA o C.C."; error++; }
+          if (document.getElementById("numeDocum").value == "")   { errdt[error] = "Ingresar un Documento"; error++; }
+
+
+          if (error == 0) {
+
+            baul = (document.getElementById("desembo1").value).toString().toUpperCase();
+            if ((baul != "") && (baul != "0")) {
+              var numeroLimpio = baul.replace(/\./g, '');      // Eliminar los puntos del formato
+              var numero = Number(numeroLimpio);               // Intentar convertir a número
+    
+              if (!isNaN(numero)) {         // Validar si es un número válido
+                document.getElementById("desembo2").value = (numero).toString();
+              } else {
+                errdt[error] = "El desembolso no es un numero valido";
+                error = 1;
+              }
+            } else {
+              document.getElementById("desembo2").value = "";
+            }
+
+          }
+
+
+          if (error == 0) {
+
+            var baules = new Array();
+            baul = (document.getElementById("cuentas").value).toString().toUpperCase();
+            pp = 0;
+            for (jj = 0; jj < tipNomCuent.length; jj++) {
+              if ((tipNomCuent[jj].toString() == "") && (jj > 0)) { break; }
+              if (tipNomCuent[jj].toString().toUpperCase() == baul) { 
+                pp = 1;
+                break;
+              }
+            }
+            if (pp != 1) { 
+              baul = "error";
+              alert("ERROR EN EL INGRESO DE LA CUENTA:\nDEBES SELECCIONAR UNA CUENTA VALIDA");
+            }
+            if (pp == 1) {
+              baules = baul.split(" & ");
+              if (baules.length == 2) {
+                document.getElementById("numCta").value = (baules[0]).toString().toUpperCase();
+                document.getElementById("nomCta").value = (baules[1]).toString().toUpperCase();
+              } else {
+                baul = "error";
+                alert("ERROR EN EL INGRESO DE LA CUENTA:\nDEBES SELECCIONAR UNA CUENTA VALIDA");
+              }
+            }
+            
+            if (baul != "error") {
+              // var partes7 = new Array();
+              let partes1 = (document.getElementById("fecha").value).split("-");
+              let dato1 = `${partes1[2]}/${partes1[1]}/${partes1[0]}`;     // Reordena a DD/MM/YYYY
+              document.getElementById("fech1").value = (dato1).toString().toUpperCase();
+              // baul = document.getElementById("fech1").value;
+              // parte7 = baul.split("/");
+              // document.getElementById("fanio").value = (partes5[2]).toString().toUpperCase();
+              // alert("El año es: " + (partes7[2]).toString().toUpperCase());
+
+              ultimoId = (document.getElementById("numeDocum").value).toString();
+              var formulario1 = document.getElementById("formulario");
+              
+              google.script.run.agregar_documento(formulario1);
+              // cerrarForm();
+            }
+            baul = "";
+          }
+
+          if (error > 0) {
+            baul = "";
+            if (error > 1) { ss = "S:"; } else { ss = ":"; }
+            for (tt = 0; tt < error; tt++) { baul = baul + "\n  " + (tt + 1) + ")  " + (errdt[tt]).toUpperCase(); }
+            alert("TE FALTA COMPLETAR " + tt + " ELEMENTO" + ss + baul);
+          }
+        }
+      } 
+      if (permiso[0] == "") {
+        alert("NO TIENES PERMISO PARA GUARDAR DOCUMENTOS");
+      }
+
+    }
+
+
+
+    function limpiarDatos() {
+      
+      document.getElementById("fecha").value = "";
+      document.getElementById("identific").value = "";
+      document.getElementById("descripci").value = "";
+      document.getElementById("cuentas"  ).value = "";
+      document.getElementById("numeDocum").value = "";
+      document.getElementById("comentari").value = "";
+      document.getElementById("estado").value = "0";
+      document.getElementById("desembo1").value = "";
+      document.getElementById("numCta").value = "";
+      document.getElementById("nomCta").value = "";
+      document.getElementById("compra").value = "";
+      document.getElementById("fech1").value = "";
+
+      document.getElementById("identific").placeholder = tx_iden;
+      document.getElementById("descripci").placeholder = tx_desc;
+      document.getElementById("cuentas"  ).placeholder = tx_ncta;
+      document.getElementById("numeDocum").placeholder = tx_ndoc;
+      document.getElementById("comentari").placeholder = tx_cmnt;
+      for (jj = 0; jj < suggest.length; jj++) { document.getElementById(suggest[jj]).innerHTML = ""; }
+      
+    }
+
+
+    function borrar_div(nn) {
+      if (nn > 0) {
+        for (jj = 0; jj < suggest.length; jj++) {
+          if ((jj + 1) != nn) { document.getElementById(suggest[jj]).innerHTML = ""; }
+        }
+      }
+      if (nn == 0) {
+        for (jj = 0; jj < suggest.length; jj++) { document.getElementById(suggest[jj]).innerHTML = ""; }
+      }
+    }
+
+
+    // ************************************************************************
+    // ************************************************************************
+
+
+    var select = document.getElementById("numAnio");
+    var delta = 0;
+    for (jj = 0; jj < 4; jj++) {
+      if (jj == 0) {
+        let option = document.createElement('option');
+        option.value = "0";
+        option.text  = selec0;
+        select.appendChild(option);
+      }
+      baul = ((este_anio + delta) - jj);
+      let option = document.createElement('option');
+      option.value = (baul).toString();
+      option.text  = (baul).toString();
+      select.appendChild(option);
+    }
+    form_anio = (este_anio).toString();
+    select.value = form_anio;
+    continuar_nomUnid();
+
+
+    
+    var RANGE = 'Anex 1a!A1:G';              // Leer la hoja Anex_1a desde A1 hasta la columna E
+    var url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var values = data.values;
+        if (!values || values.length === 0) {
+          alert('No se encontraron datos en Anex 1a');
+          return;
+        } else {
+          dato_1a = values;
+          nnleer++;
+          listCheck = listCheck + caractCheck;
+          document.getElementById("listoChck").innerHTML = listCheck;
+        }
+      })
+      .catch(error => {
+        alert('Error al obtener los datos de Anex 1a');
+      });
+
+
+
+    var RANGE = 'PAC!A1:R';              // Leer la hoja Anex_1a desde A1 hasta la columna R
+    var url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var values = data.values;
+        if (!values || values.length === 0) {
+          alert('No se encontraron datos en PAC');
+          return;
+        } else {
+          dat_PAC = values;
+          nnleer++;
+          listCheck = listCheck + caractCheck;
+          document.getElementById("listoChck").innerHTML = listCheck;
+          if ((form_anio != "") && (form_anio != "0")) { llenar_select_unid(); }
+        }
+      })
+      .catch(error => {
+        alert('Error al obtener los datos de PAC');
+      });
+
+
+
+    function continuar_nomUnid() {       // Lee el año y va a rellenar el select de la UNIDAD
+      form_anio = document.getElementById("numAnio").value;
+      baul = parseInt(form_anio);
+      if ((baul > 2020) && (baul < (este_anio + 1))) { 
+        if (dat_PAC.length > 0) { llenar_select_unid(); }
+      }
+    }
+
+    function continuar_nomCtas() {       // Lee la unidad y va a rellenar el select de la CUENTAS
+      form_unid = document.getElementById("nomUnid").value;
+      if ((form_unid != "") && (form_unid != selec0)) { llenar_select_ctas(); }
+    }
+
+    function continuar_proyect() {       // Lee la cuenta y va a rellenar el select de los Proyectos
+      form_ncta = document.getElementById("numCtas").value;
+      if ((form_ncta != "") && (form_ncta != selec0)) { llenar_select_pryt(); }
+    }
+
+    function ingresar_datos() {          // YA PUEDE LLENAR LOS DATOS DEL PROYECTO
+      form_pryt = document.getElementById("nomPryt").value;
+      if ((form_pryt != "") && (form_pryt != selec0)) {
+        document.getElementById("div_s0").removeAttribute("hidden");
+        document.getElementById("div_s2").setAttribute("hidden", "");
+        document.getElementById("div_s1").removeAttribute("hidden");
+        llenar_informacion(); 
+      }
+    }
+
+
+    
+    if (nnleer != 2) {
+      // document.getElementById("div_s0").removeAttribute("hidden");     // Elimina el atributo 'oculto'
+      // document.getElementById("div_s2").setAttribute("hidden", ""); 
+      // document.getElementById("div_s1").removeAttribute("hidden");     // Elimina el atributo 'oculto' 
+
+      /* 
+
+      google.script.run.withSuccessHandler(function(infor_dt) {
+        dato_dt = infor_dt;
+        listCheck = listCheck + caractCheck;
+        document.getElementById("listoChck").innerHTML = listCheck;
+        llenar_select_dt();
+      }).obtenerDatos_dt();
+
+      google.script.run.withSuccessHandler(function(info_PAC) {
+        dat_PAC = info_PAC;
+        nnleer++;
+        listCheck = listCheck + caractCheck;
+        document.getElementById("listoChck").innerHTML = listCheck;
+        if (nnleer == 2) { llenar_select(); }
+      }).obtenerDatos_PAC();
+
+      */
+      
+    } else {
+      if (document.getElementById("area").value != "0") { llenar_select(); }
+    }
+    
+    
+    // **************** SELECT PARA ELEGIR EL PROYECTO **************************
+
+
+    function llenar_select_unid() {          // Llenar los select de las UNIDADES
+      // Suponiendo que dat_PAC[fila][1] contiene los nombres de las áreas
+      const nomUnidSet = new Set();
+
+      // Recorremos dat_PAC para llenar el set con los valores únicos de la columna 1 (Año)
+      nomUnidSet.add(selec0);
+      for (ii = 1; ii < dat_PAC.length; ii++) {
+        var unidTx1 = (dat_PAC[ii][1]).toUpperCase();
+        var baul1 = (dat_PAC[ii][0]).toString();
+        if ((baul1 == form_anio) && (unidTx1 != "")) { nomUnidSet.add(unidTx1.trim().toUpperCase()); }
+      }
+
+      // Convertimos el set en un array y lo ordenamos alfabéticamente de A - Z
+      const nomUnidOrdenadas = Array.from(nomUnidSet).sort((a, b) => a.localeCompare(b));
+
+      // Obtenemos el select del DOM
+      const select = document.getElementById("nomUnid");
+
+      // Limpiamos el select (opcional si no hay opciones previas)
+      select.innerHTML = "";
+
+      // Creamos y añadimos las opciones al select
+      nomUnidOrdenadas.forEach(unidTx2 => {
+        const option = document.createElement("option");
+        option.value = unidTx2;
+        option.textContent = unidTx2;
+        select.appendChild(option);
+      });
+      select.value = selec0;
+    }
+
+
+    function llenar_select_ctas() {          // Llenar los select de las Cuentas
+      // Suponiendo que dat_PAC[fila][1] contiene los nombres de las áreas
+      const nomCtasSet = new Set();
+      
+      // Recorremos dat_PAC para llenar el set con los valores únicos de la columna 2 (Cuentas)
+      nomCtasSet.add(selec0);
+      for (ii = 1; ii < dat_PAC.length; ii++) {
+        var unidTx1 = dat_PAC[ii][2] + separa7 + dat_PAC[ii][3];
+        var baul1 = (dat_PAC[ii][0]).toString();
+        var baul2 = (dat_PAC[ii][1]).toString().toUpperCase();
+        if ((baul1 == form_anio) && (baul2 == form_unid) && (dat_PAC[ii][2] != "")) { 
+          nomCtasSet.add(unidTx1.trim().toUpperCase());
+        }
+      }
+
+      // Convertimos el set en un array y lo ordenamos alfabéticamente de A - Z
+      const nomCtasOrdenadas = Array.from(nomCtasSet).sort((a, b) => a.localeCompare(b));
+
+      // Obtenemos el select del DOM
+      const select = document.getElementById("numCtas");
+
+      // Limpiamos el select (opcional si no hay opciones previas)
+      select.innerHTML = "";
+
+      // Creamos y añadimos las opciones al select
+      nomCtasOrdenadas.forEach(unidTx2 => {
+        var unidTx7 = new Array();
+        unidTx7 = (unidTx2).split(separa7);
+        const option = document.createElement("option");
+        option.value = unidTx7[0];
+        option.textContent = unidTx2;
+        select.appendChild(option);
+      });
+      select.value = selec0;
+    }
+
+    
+    function llenar_select_pryt() {          // Llenar los select de los Proyectos
+      
+      // Suponiendo que dat_PAC[fila][1] contiene los nombres de las áreas
+      const nomPrytSet = new Set();
+
+      // Recorremos dat_PAC para llenar el set con los valores únicos de la columna 2 (Cuentas)
+      nomPrytSet.add(selec0);
+      for (ii = 1; ii < dat_PAC.length; ii++) {
+        var unidTx1 = dat_PAC[ii][4];
+        var baul1 = (dat_PAC[ii][0]).toString();
+        var baul2 = (dat_PAC[ii][1]).toString().toUpperCase();
+        var baul3 = (dat_PAC[ii][2]).toString().toUpperCase();
+        if ((baul1 == form_anio) && (baul2 == form_unid) && (baul3 == form_ncta) && (unidTx1 != "")) { 
+          nomPrytSet.add(unidTx1.trim().toUpperCase());
+        }
+      }
+
+      // Convertimos el set en un array y lo ordenamos alfabéticamente de A - Z
+      const nomPrytOrdenadas = Array.from(nomPrytSet).sort((a, b) => a.localeCompare(b));
+
+      // Obtenemos el select del DOM
+      const select = document.getElementById("nomPryt");
+
+      // Limpiamos el select (opcional si no hay opciones previas)
+      select.innerHTML = "";
+
+      // Creamos y añadimos las opciones al select
+      nomPrytOrdenadas.forEach(unidTx2 => {
+        const option = document.createElement("option");
+        option.value = unidTx2;
+        option.textContent = unidTx2;
+        select.appendChild(option);
+      });
+      select.value = selec0;
+
+    }
+
+
+    // **************** LLENADO DE INFORMACION DEL PROYECTO **************************
+
+
+    function llenar_informacion() {         // Llenar todos los select normales
+
+      form_anio = document.getElementById("numAnio").value;
+      form_unid = document.getElementById("nomUnid").value;
+      form_ncta = document.getElementById("numCtas").value;
+      form_pryt = document.getElementById("nomPryt").value;
+
+      fila_pac = 0;
+      for (ii = 1; ii < dat_PAC.length; ii++) {
+        var unidTx1 = dat_PAC[ii][0];
+        if (unidTx1 != "") {
+          var baul0 = (dat_PAC[ii][0]).toString();
+          var baul1 = (dat_PAC[ii][1]).toString().toUpperCase();
+          var baul2 = (dat_PAC[ii][2]).toString().toUpperCase();
+          var baul3 = (dat_PAC[ii][4]).toString().toUpperCase();
+          if ((baul0 == form_anio) && (baul1 == form_unid) && (baul2 == form_ncta) && (baul3 == form_pryt)) { 
+            fila_pac = ii;
+          }
+        } else {
+          break;
+        }
+      }
+
+
+      if (fila_pac > 0) {
+
+        xx = fila_pac;
+        num_oc = parseInt(dat_PAC[xx][9 ]);
+        tip_oc = parseInt(dat_PAC[xx][15]);
+
+        baul7 = "NN";
+        if (tip_oc == 4) { baul7 = "concursal"; }
+        if (tip_oc == 5) { baul7 = "TD"; }
+        if (tip_oc == 6) { baul7 = "especial"; }
+        
+        // Obtenemos el select del DOM
+        const select = document.getElementById("ncompra");
+        select.innerHTML = "";
+
+        pp = 0;
+        for (ii = 0; ii < num_oc; ii++) {
+          baul = "(EN PROCESO)";
+          if (ii < (num_oc - 1)) { baul = "(NUEVO)"; pp++; }
+          baul1 = (ii + 1).toString();
+          baul2 = (ii + 1).toString() + " " + baul;
+
+          if (ii == 0) {
+            document.getElementById("lcompra").innerHTML = "(De " + num_oc + " " + baul7 + ")";
+            const option = document.createElement("option");
+            option.value = selec0;
+            option.textContent = selec0;
+            select.appendChild(option);
+          }
+
+          const option = document.createElement("option");
+          option.value = baul1;
+          option.textContent = baul2;
+          select.appendChild(option);
+        }
+        select.value = selec0;
+      }
+    }
+
+
+    function ingresar_compra1() {         // Llenar el select de los tipos de compras
+      select = document.getElementById("tcompra");
+      select.innerHTML = "";
+      column1 = 0;
+      for (jj = 0; jj < 6; jj++) {
+        if (dato_1a[0][jj] != "") {       // Verificar si hay un valor en esa celda
+          if (pp == 0) {
+            let option = document.createElement('option');
+            option.value = selec0;
+            option.text  = selec0;
+            select.appendChild(option);
+          }
+          let option = document.createElement('option');
+          option.value = (dato_1a[0][jj]).toUpperCase();
+          option.text  = (dato_1a[0][jj]).toUpperCase();
+          select.appendChild(option);
+        }
+      }
+      select.value = selec0;
+    }
+
+
+    function ingresar_compra2() {         // Llenar el select de las pasos para la compra
+
+      select = document.getElementById("tcompra");
+      id_compra = (select.value).toUpperCase();
+      if (id_compra != selec0) {
+        select = document.getElementById("estado");
+        column1 = 0;
+        for (ii = 0; ii < 6; ii++) {
+          id_estado = (dato_1a[0][ii]).toUpperCase();
+          if ((select.value).toUpperCase() == id_estado) { column1 = ii + 1; }
+        }
+        if (column1 > 0) {
+          column1 = column1 - 1;
+          for (jj = 1; jj < dato_1a.length; jj++) {
+            if (dato_1a[jj][column1] != "") {       // Verificar si hay un valor en esa celda
+              if (jj == 1) {
+                let option = document.createElement('option');
+                option.value = selec0;
+                option.text  = selec0;
+                select.appendChild(option);
+              }
+              let option = document.createElement('option');
+              option.value = (dato_1a[jj][column1]).toUpperCase();
+              option.text  = (dato_1a[jj][column1]).toUpperCase();
+              select.appendChild(option);
+            }
+          }
+        }
+      }
+      select.value = selec0;
+
+    }
+
+
+    // ************************************************************************
+    // ************************************************************************
+
+
+    function llenar_select_dt() {
+
+      for (jj=1; jj < dato_dt.length; jj++) {
+        if (dato_dt[jj][0] == "") { break; }
+        if (dato_dt[jj][0] != "") {
+          tipDocumentSet.add(dato_dt[jj][3 ]);     // N° de Identificacion
+          tipDescripcSet.add(dato_dt[jj][4 ]);     // Descripcion
+          tipNumeDocuSet.add(dato_dt[jj][7 ]);     // Documentos
+          tipComentarSet.add(dato_dt[jj][11]);     // Comentarios
+        }
+      }
+
+      // Convertir los sets a arrays
+      tipDocument = [...tipDocumentSet];
+      tipDescripc = [...tipDescripcSet];
+      tipComentar = [...tipComentarSet];
+      tipNumeDocu = [...tipNumeDocuSet];
+
+    }
+
+    
+    // ************************************************************************
+    // ************************************************************************
+
+    
+    function showSuggestionsDocumento() {
+      const input = document.getElementById("identific").value.toLowerCase();
+      const suggestionsDocu = document.getElementById("suggestionsDocument");
+      suggestionsDocu.innerHTML = ''; // Limpiar sugerencias anteriores
+
+      if (input) {
+        // Usamos un Set para eliminar duplicados
+        const uniqueSuggestions = new Set(tipDocument.filter(documen => documen.toLowerCase().includes(input)));
+        uniqueSuggestions.forEach(documen => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = documen;
+            suggestionItem.onclick = () => selectDocument(documen);
+            suggestionsDocu.appendChild(suggestionItem);
+        });
+      }
+    }
+
+    function selectDocument(documen) {
+      document.getElementById("suggestionsDocument").innerHTML = "";
+      document.getElementById("identific").value = (documen).toString().toUpperCase();
+
+      var qq = 0;
+      baul1 = ""; baul2 = ""; baul3 = ""; baul4 = "";
+      for(ii = 0; ii < dato_dt.length; ii++) {
+        if ((dato_dt[ii][3] != "") && (qq == 0)) {
+          baul = (dato_dt[ii][3]).toString().toUpperCase();
+          if (((documen).toString().toUpperCase() == baul) && (qq == 0)) {
+            baul1 = (dato_dt[ii][4]).toString().toUpperCase();
+            document.getElementById("descripci").value = baul1;
+            baul2 = (dato_dt[ii][8]).toString().toUpperCase();
+            baul3 = (dato_dt[ii][9]).toString().toUpperCase();
+            document.getElementById("cuentas").value = baul2 + " & " + baul3;
+            baul1 = (dato_dt[ii][5]).toString().toUpperCase();
+            document.getElementById("compra" ).value = baul1;
+            llenar_estado();
+            qq++;
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+      baul1 = ""; baul2 = ""; baul3 = ""; baul4 = "";
+      baul = "";
+    }
+
+
+    // ************************************************************************
+
+    
+    function showSuggestionsDescripc() {
+      const input = document.getElementById("descripci").value.toLowerCase();
+      const suggestionsDescr = document.getElementById("suggestionsDescripc");
+      suggestionsDescr.innerHTML = ''; // Limpiar sugerencias anteriores
+
+      if (input) {
+        // Usamos un Set para eliminar duplicados
+        const uniqueSuggestions = new Set(tipDescripc.filter(descrip => descrip.toLowerCase().includes(input)));
+        uniqueSuggestions.forEach(descrip => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = descrip;
+            suggestionItem.onclick = () => selectDescrip(descrip);
+            suggestionsDescr.appendChild(suggestionItem);
+        });
+      }
+    }
+
+    function selectDescrip(descrip) {
+      document.getElementById("suggestionsDescripc").innerHTML = "";
+      document.getElementById("descripci").value = (descrip).toString().toUpperCase();
+    }
+
+
+    // ************************************************************************
+
+    
+    function showSuggestionsComentar() {
+      const input = document.getElementById("comentari").value.toLowerCase();
+      const suggestionsComen = document.getElementById("suggestionsComentar");
+      suggestionsComen.innerHTML = ''; // Limpiar sugerencias anteriores
+
+      if (input) {
+        // Usamos un Set para eliminar duplicados
+        const uniqueSuggestions = new Set(tipComentar.filter(comenta => comenta.toLowerCase().includes(input)));
+        uniqueSuggestions.forEach(comenta => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = comenta;
+            suggestionItem.onclick = () => selectComentar(comenta);
+            suggestionsComen.appendChild(suggestionItem);
+        });
+      }
+    }
+
+    function selectComentar(comenta) {
+      document.getElementById("suggestionsComentar").innerHTML = "";
+      document.getElementById("comentari").value = (comenta).toString().toUpperCase();
+    }
+
+
+    // ************************************************************************
+
+    
+    function showSuggestionsCuentas() {
+      const input = document.getElementById("cuentas").value.toLowerCase();
+      const suggestionsCuentas = document.getElementById("suggestionsCuentas");
+      suggestionsCuentas.innerHTML = ''; // Limpiar sugerencias anteriores
+
+      if (input) {
+        // Usamos un Set para eliminar duplicados
+        const uniqueSuggestions = new Set(tipNomCuent.filter(cuentas => cuentas.toLowerCase().includes(input)));
+        uniqueSuggestions.forEach(cuentas => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = cuentas;
+            suggestionItem.onclick = () => selectCuentas(cuentas);
+            suggestionsCuentas.appendChild(suggestionItem);
+        });
+      }
+    }
+
+    function selectCuentas(cuentas) {
+      document.getElementById("suggestionsCuentas").innerHTML = "";
+      document.getElementById("cuentas").value = (cuentas).toString().toUpperCase();
+    }
+
+
+    // ************************************************************************
+
+
+    function cerrarForm() {
+      window.close();
+    }
+
+
+    // ************************************************************************
+    
+
+    function formatearNumero(input) {
+      // Eliminar puntos y caracteres no numéricos
+      let valor = input.value.replace(/\./g, '').replace(/\D/g, '');
+            
+      // Convertir a número y formatear con puntos
+      let numeroFormateado = new Intl.NumberFormat('es-ES').format(valor);
+
+      // Actualizar el valor del input con el formato correcto
+      input.value = numeroFormateado;
+    }
+    
+
+    function borrar_div(nn) {  }
+
+  
+
+  </script>
+
+</body>
+</html>
