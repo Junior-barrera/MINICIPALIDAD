@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Presupuesto Municipal | Municipalidad de Arica</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+            /* Header styles */
+header {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+}
+
+.top-header {
+  display: flex;
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center;
+  padding: 15px 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el texto debajo del logo */
+  margin-left: 0;
+}
+
+.logo-text h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #86868b;
+}
+        
+        /* Transparency links */
+        .transparency-container {
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
+        
+        .transparency-toggle {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: none;
+            color: #06c;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparency-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .toggle-icon {
+            display: inline-block;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .transparency-links {
+            background-color: rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            transition: max-height 0.4s ease;
+        }
+        
+        .transparency-links a {
+            color: #06c;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 400;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .transparency-links a:hover {
+            opacity: 0.7;
+            transform: translateY(-1px);
+        }
+        
+        /* Navigation menu */
+        nav {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .main-menu {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            overflow-x: auto;
+        }
+        
+        .main-menu li {
+            position: relative;
+        }
+        
+        .main-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #1d1d1f;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .main-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 20px;
+            height: 2px;
+            background-color: #06c;
+            transition: transform 0.3s ease;
+        }
+        
+        .main-menu a:hover {
+            color: #06c;
+        }
+        
+        .main-menu a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+        
+         /* Dashboard container */
+         .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1d2939;
+            position: relative;
+        }
+        
+        .dashboard-title:after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #0066cc, #1a8cff);
+            border-radius: 2px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #0066cc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #f5f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+        }
+        
+        .back-icon {
+            margin-right: 8px;
+        }
+        
+        /* Card Grid System */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0066cc, #1a8cff);
+            z-index: 2;
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto 15px;
+            color: #0066cc;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.15);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            margin: 10px 0;
+            color: #1d2939;
+            padding: 0 20px;
+        }
+        
+        .card-description {
+            text-align: center;
+            padding: 0 25px;
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+        
+        .card-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #0066cc, #1a8cff);
+            border: none;
+            border-radius: 100px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0 auto 25px;
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+        }
+        
+        .card-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+            background: linear-gradient(135deg, #005cb8, #0080ff);
+        }
+        
+        .card-button .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card-button:hover .arrow {
+            transform: translateX(4px);
+        }
+        
+        /* Stats counter section */
+        .stats-section {
+            background: linear-gradient(135deg, #ffffff, #f5f9ff);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 50px 0 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        }
+        
+        .stats-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #1d2939;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0 20px;
+            min-width: 220px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #0066cc, #1a8cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 16px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        /* Assistant chat button */
+        .assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(6, 12, 204, 0.9);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .assistant-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 40px;
+            }
+            
+            .dashboard-iframe {
+                height: 65vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 24px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .dashboard-iframe {
+                height: 50vh;
+            }
+            
+            .transparency-toggle {
+                display: block;
+            }
+            
+            .transparency-toggle.active .toggle-icon {
+                transform: rotate(180deg);
+            }
+            
+            .transparency-links {
+                max-height: 0;
+                padding: 0;
+                overflow: hidden;
+                flex-direction: column;
+            }
+            
+            .transparency-links.active {
+                max-height: 200px;
+                padding: 10px 0;
+            }
+            
+            .transparency-links a {
+                margin: 8px 0;
+                padding: 5px 0;
+            }
+        }
+        .custom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(255, 105, 135, 0.3);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .custom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 105, 135, 0.5);
+    background: linear-gradient(135deg, #ee0979, #ff6a00);
+  }
+
+  .arrow {
+    margin-left: 10px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  .custom-btn:hover .arrow {
+    transform: translateX(4px);
+  }
+  /* Estilo para el contenedor de imagen circular */
+  .card-icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px; /* Añade margen automático a los lados */
+    overflow: hidden; /* Asegura que la imagen no sobresalga del círculo */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Estilo para la imagen dentro del círculo */
+  .card-icon-circle img {
+    width: 80%; /* Un poco menor que el contenedor para dejar margen */
+    height: 80%;
+    object-fit: cover; /* Cubre el área del círculo */
+    border-radius: 50%; /* Hace que la imagen también sea circular */
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .card-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .card-button:hover {
+    background-color: #0b7dda;
+  }
+  
+  .arrow {
+    margin-left: 8px;
+    transition: transform 0.3s;
+  }
+  
+  .card-button:hover .arrow {
+    transform: translateX(5px);
+  }
+  
+  /* Estilos responsive */
+  @media (max-width: 768px) {
+    .card {
+      max-width: 100%;
+    }
+  }
+  /* Variación 1: Círculo con borde de color */
+.card-icon-circle-border {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  border: 3px solid #2196F3; /* Borde azul que coincide con el botón */
+}
+
+/* Variación 2: Círculo con fondo de color */
+.card-icon-circle-colored {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #2196F3; /* Fondo azul que coincide con el botón */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.card-icon-circle-colored img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Hace la imagen blanca */
+}
+
+/* Variación 3: Círculo con efecto de sombra interna */
+.card-icon-circle-shadow {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Variación 4: Círculo con efecto de resplandor */
+.card-icon-circle-glow {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(33, 150, 243, 0.5); /* Resplandor azul */
+}
+    </style>
+</head>
+<body>
+    <!-- Header with logo and search -->
+            <div class="top-header">
+                <div class="logo">
+                    <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                    <div class="logo-text">
+                        <h1>ARICA</h1>
+                        <span>MUNICIPALIDAD | mejor ciudad</span>
+                    </div>
+                </div>
+            </div>
+    
+
+
+    </section>
+     <!-- Dashboard section -->
+     <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Sistema de Gestión de Presupuestos</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon">←<i class="fas fa-arrow-left"></i></span> Volver al Inicio
+            </button>
+        </div>
+
+        <!-- Cards for forms selection -->
+        <div class="cards-container">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="Presupuesto-Ingresos.webp" alt="Icono de Presupuesto">
+                  </div>
+                <h3 class="card-title">Ingresar Presupuesto</h3>
+                <p class="card-description">
+                    Complete el formulario para registrar un nuevo presupuesto anual de compra para su departamento o área municipal.
+                </p>
+                <a href="Formulario_agregar_compra.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="exceeel" alt="Icono de Presupuesto">
+                  </div>
+                <h3 class="card-title">Explorador de Presupuestos</h3>
+                <p class="card-description">
+                    Consulte y analice los presupuestos ingresados, con opciones para filtrar por departamento, período y estado.
+                </p>
+                <a href="exportador_datos.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="Presupuesto-Ingresos.webp" alt="Icono de Presupuesto">
+                  </div>
+                <h3 class="card-title">Ingresar Compra</h3>
+                <p class="card-description">
+                    Registre nuevas compras asociadas a los presupuestos aprobados y lleve un control de la ejecución presupuestaria.
+                </p>
+                <a href="https://applisoft.site/web/muniarica/educacion.php" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Stats section -->
+        <div class="stats-section">
+            <h3 class="stats-title">Estadísticas del Sistema</h3>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" id="presupuestos-count">248</div>
+                    <div class="stat-label">Presupuestos Activos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="departments-count">15</div>
+                    <div class="stat-label">Departamentos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="compras-count">1,852</div>
+                    <div class="stat-label">Compras Registradas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+     <!-- Footer -->
+     <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca , Arica</p>
+                <p>Anexo:6959 </p>
+                <p>Email:roberto.mamani@municipalidadarica.cl </p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica </strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p
+            <p> Desarrollado por Junior Barrera</p
+        </div>
+    </footer>
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <script>
+        // Función para ocultar indicador de carga cuando el iframe se carga
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+        
+        // Función para manejar errores de carga del iframe
+        function handleIframeError() {
+            const iframe = document.getElementById('dashboardIframe');
+            
+            // Verificar si el iframe se cargó correctamente después de 10 segundos
+            setTimeout(function() {
+                try {
+                    // Intentar acceder al contenido del iframe
+                    const iframeContent = iframe.contentWindow || iframe.contentDocument;
+                    if (!iframeContent) {
+                        // Si no hay contenido, mostrar mensaje de error
+                        showFallbackMessage();
+                    }
+                } catch (e) {
+                    // Si hay un error al acceder al contenido, mostrar mensaje
+                    showFallbackMessage();
+                }
+            }, 10000);
+        }
+        
+        // Mostrar mensaje alternativo si el dashboard no carga
+        function showFallbackMessage() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="margin-bottom: 15px;">No se pudo cargar el dashboard</h3>
+                    <p style="margin-bottom: 20px;">Parece que hay un problema al cargar el dashboard. Por favor, intenta:</p>
+                    <a href="https://lookerstudio.google.com/reporting/da465897-8e1a-4d06-9f8e-27d84a749431" 
+                       target="_blank" 
+                       style="display: inline-block; background-color: #06c; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                        Ver dashboard en Looker Studio
+                    </a>
+                </div>
+            `;
+            loadingIndicator.style.display = 'flex';
+        }
+        
+        // Función para abrir asistencia via WhatsApp
+        function openAssistance() {
+            // Reemplaza con tu número real para WhatsApp (formato internacional sin +)
+            const phoneNumber = "56959414178"; // Reemplaza con tu número real
+            window.open(`https://wa.me/${phoneNumber}`, '_blank');
+        }
+        
+        // Código para el menú de transparencia
+        document.addEventListener('DOMContentLoaded', function() {
+            const transparencyToggle = document.querySelector('.transparency-toggle');
+            const transparencyLinks = document.querySelector('.transparency-links');
+            
+            if (transparencyToggle && transparencyLinks) {
+                transparencyToggle.addEventListener('click', function() {
+                    transparencyToggle.classList.toggle('active');
+                    transparencyLinks.classList.toggle('active');
+                });
+                
+                // Inicializar estado del menú según ancho de pantalla
+                function checkScreenWidth() {
+                    if (window.innerWidth <= 768) {
+                        transparencyLinks.classList.remove('active');
+                    } else {
+                        transparencyLinks.classList.add('active');
+                    }
+                }
+                
+                // Verificar al cargar y redimensionar
+                checkScreenWidth();
+                window.addEventListener('resize', checkScreenWidth);
+            }
+            
+            // Efecto de scroll en el header
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                }
+            });
+            
+            // Iniciar verificación de carga del iframe
+            handleIframeError();
+        });
+    </script>
+     
+</body>
+</html>
