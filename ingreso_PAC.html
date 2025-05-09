@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso PAC | Municipalidad de Arica</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: center; /* Centramos horizontalmente */
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el texto debajo del logo */
+            margin-left: 0;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            font-weight: 400;
+            color: #86868b;
+        }
+        
+        /* Dashboard container */
+        .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f7;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #06c;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #e9e9eb;
+            transform: translateY(-2px);
+        }
+        
+        .back-icon {
+            margin-right: 8px;
+        }
+        
+        /* Carga de archivos estilo moderno */
+        .file-upload-container {
+            background-color: #3383FF;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 3px dashed rgba(255, 255, 255, 0.5);
+        }
+        
+        .file-upload-container.drag-active {
+            background-color: #2979ff;
+            border: 3px dashed white;
+            transform: scale(1.01);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .file-upload-icon {
+            margin-bottom: 20px;
+        }
+        
+        .file-upload-icon img {
+            width: 80px;
+            height: auto;
+        }
+        
+        .file-upload-button {
+            background-color: white;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-button:hover {
+            background-color: #f8f8f8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-upload-help {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-top: 15px;
+        }
+        
+        .upload-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .upload-option-button {
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-option-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        /* Assistant chat button */
+        .assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(6, 12, 204, 0.9);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .assistant-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 24px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .upload-options {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        .custom-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #3356e0, #ee0979);
+            border: none;
+            border-radius: 999px;
+            box-shadow: 0 8px 20px rgba(255, 105, 135, 0.3);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 105, 135, 0.5);
+        }
+
+        .arrow {
+            margin-left: 10px;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-btn:hover .arrow {
+            transform: translateX(4px);
+        }
+        
+        /* Botón para modificar Excel */
+        .modify-excel-btn {
+            background: linear-gradient(135deg, #06c, #09c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+        
+        .modify-excel-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.4);
+            background: linear-gradient(135deg, #0066cc, #0088dd);
+        }
+        
+        /* Contenedor de instrucciones */
+        .instructions-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .instructions-container h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .instructions-container ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions-container li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .instructions-container .note {
+            background-color: rgba(0, 102, 204, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #06c;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+       <!-- Header with logo -->
+       <header>
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main content section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Ingreso PAC - Presupuesto Anual de Compra</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon">←</span> Volver 
+            </button>
+        </div>
+        
+        <!-- Selector de año - AGREGADO -->
+        <div style="margin-bottom: 20px;">
+            <label for="numAnio" style="font-weight: 600; margin-right: 10px;">Año del PAC:</label>
+            <select id="numAnio" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px;">
+                <!-- Se llenará con JavaScript -->
+            </select>
+        </div>
+        
+        <!-- Contenedor de carga de archivos estilo moderno -->
+        <div id="dropZone" class="file-upload-container">
+            <div class="file-upload-icon">
+                <img src="ms-excel.png" alt="Icono de Excel">
+            </div>
+            <h2>Carga tu archivo Excel para PAC</h2>
+            <p id="uploadHelpText" class="file-upload-help">Arrastra y suelta tu archivo Excel o haz clic para seleccionarlo</p>
+            
+            <input type="file" id="excelFile" accept=".xls,.xlsx" style="display: none;">
+            <button class="file-upload-button" onclick="document.getElementById('excelFile').click()">
+                ELEGIR ARCHIVO
+            </button>
+            <p id="selectedFileName" style="margin-top: 10px;">No se ha seleccionado ningún archivo</p>
+            
+            <div id="uploadProgress" style="width: 80%; margin: 15px auto; display: none;">
+                <div style="background-color: rgba(255,255,255,0.3); height: 10px; border-radius: 5px; overflow: hidden;">
+                    <div id="progressBar" style="background-color: white; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+                </div>
+                <p id="progressText" style="margin-top: 5px; font-size: 14px;">Procesando...</p>
+            </div>
+            
+            <div class="upload-options">
+                <button id="uploadBtn" class="file-upload-button" style="background-color: #4CAF50; margin-right: 10px; display: none;">
+                    PROCESAR ARCHIVO
+                </button>
+                <button class="modify-excel-btn" onclick="descargarPlantilla()"> Descargar Plantilla PAC </button>
+            </div>
+        </div>
+        
+        <!-- Mensaje Toast para notificaciones -->
+        <div id="toast1" style="visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background-color: #333; color: white; text-align: center; border-radius: 5px; padding: 16px; z-index: 1000; min-width: 250px; opacity: 0; transition: opacity 0.3s ease;">
+            Mensaje de notificación
+        </div>
+        
+        <!-- Instrucciones -->
+        <div class="instructions-container">
+            <h3>Instrucciones para la carga del PAC</h3>
+            <ol>
+                <li>Seleccione el año para el cual está registrando el PAC.</li>
+                <li>Prepare su archivo Excel con el formato establecido para el Presupuesto Anual de Compra.</li>
+                <li>Asegúrese de que todas las columnas requeridas estén correctamente completadas.</li>
+                <li>Haga clic en "ELEGIR ARCHIVO" para seleccionar su archivo desde su computadora.</li>
+                <li>Una vez seleccionado, puede verificar el nombre del archivo antes de continuar.</li>
+                <li>Si necesita el formato oficial del PAC, utilice el botón "Descargar Plantilla PAC".</li>
+                <li>Para cargar el archivo, haga clic en "PROCESAR ARCHIVO" después de haber seleccionado el archivo.</li>
+            </ol>
+            
+            <div class="note">
+                <strong>Nota importante:</strong> El sistema solo acepta archivos en formato Excel (.xls, .xlsx). Asegúrese de seguir la plantilla oficial para evitar errores en el procesamiento.
+            </div>
+        </div>
+    </section>
+    <div class="upload-options">
+        <button id="uploadBtn" class="file-upload-button" style="background-color: #4CAF50; margin-right: 10px; display: none;">
+            PROCESAR ARCHIVO
+        </button>
+        <button class="modify-excel-btn" onclick='modificarpac.html'> Modificar PAC </button>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca, Arica</p>
+                <p>Anexo: 6959</p>
+                <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica</strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+    
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <script>
+        // Variables globales
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlpA3sYpB8j1HBp28AYOsxPTK72VB4qxkGCpbkKvbmb3p6hJHPRBEczdyXpaYO968/exec'; 
+var dexce9 = new Array();
+var dexcel = new Array(); // Guarda los datos del PAC desde excel para grabarlos
+var separa5 = "/"; // Separador entre datos de los unitarios
+var gast0 = "0/0/0/0/0/0/0/0/0/0"; // Valor inicial del Comprometido y del Gastado por cada compra
+
+// Inicializar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar selector de año
+    initYearSelector();
+    
+    // Configurar arrastrar y soltar
+    setupDragAndDrop();
+    
+    // Configurar input de archivo
+    setupFileInput();
+    
+    // Configurar botón de cargar
+    setupUploadButton();
+});
+
+// Inicializa el selector de año con valores actuales y futuros
+function initYearSelector() {
+    const select = document.getElementById("numAnio");
+    const currentYear = new Date().getFullYear();
+    
+    // Limpiar opciones existentes
+    select.innerHTML = '';
+    
+    // Agregar años (año actual y 4 años adicionales)
+    for (let i = 0; i < 5; i++) {
+        const year = currentYear + i; // Incluye año actual y 4 años siguientes
+        let option = document.createElement('option');
+        option.value = year.toString();
+        option.text = year.toString();
+        select.appendChild(option);
+    }
+    
+    // Establecer el año actual como seleccionado por defecto
+    select.value = currentYear.toString();
+    
+    // Resetear input de archivo cuando cambia el año
+    select.addEventListener('change', resetFileInput);
+}
+
+// Configurar eventos de arrastrar y soltar
+function setupDragAndDrop() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('excelFile');
+    
+    // Prevenir comportamiento predeterminado del navegador
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    // Añadir efectos visuales durante el arrastre
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+    
+    // Manejar el evento de soltar archivos
+    dropZone.addEventListener('drop', handleDrop, false);
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function highlight() {
+        dropZone.classList.add('drag-active');
+        document.getElementById('uploadHelpText').textContent = '¡Suelta el archivo para cargarlo!';
+    }
+    
+    function unhighlight() {
+        dropZone.classList.remove('drag-active');
+        document.getElementById('uploadHelpText').textContent = 'Arrastra y suelta tu archivo Excel o haz clic para seleccionarlo';
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            const file = files[0];
+            
+            // Verificar si es un archivo Excel
+            if (file.name.match(/\.(xls|xlsx)$/i)) {
+                // Asignar el archivo al input file
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+                
+                // Mostrar nombre del archivo
+                document.getElementById('selectedFileName').textContent = file.name;
+                
+                // Mostrar el botón de procesar
+                document.getElementById('uploadBtn').style.display = 'inline-flex';
+                
+                // Animación visual de éxito
+                showUploadSuccess();
+            } else {
+                // Mostrar error si no es Excel
+                document.getElementById('selectedFileName').textContent = '⚠️ El archivo debe ser Excel (.xls o .xlsx)';
+                document.getElementById('uploadBtn').style.display = 'none';
+            }
+        }
+    }
+}
+
+// Configurar input de archivo
+function setupFileInput() {
+    const fileInput = document.getElementById('excelFile');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileNameDisplay = document.getElementById('selectedFileName');
+    
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        
+        if (file) {
+            if (file.name.match(/\.(xls|xlsx)$/i)) {
+                fileNameDisplay.textContent = file.name;
+                showUploadSuccess();
+                uploadBtn.style.display = 'inline-flex';
+            } else {
+                fileNameDisplay.textContent = '⚠️ El archivo debe ser Excel (.xls o .xlsx)';
+                fileNameDisplay.style.color = '#ffcccb';
+                this.value = '';
+                uploadBtn.style.display = 'none';
+            }
+        } else {
+            fileNameDisplay.textContent = 'No se ha seleccionado ningún archivo';
+            uploadBtn.style.display = 'none';
+        }
+    });
+}
+
+// Configurar botón de cargar
+function setupUploadButton() {
+    document.getElementById('uploadBtn').addEventListener('click', function() {
+        const file = document.getElementById('excelFile').files[0];
+        if (!file) {
+            mostrarToast('Por favor seleccione un archivo Excel', '#e74c3c');
+            return;
+        }
+        
+        // Mostrar progreso
+        const progressContainer = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+        progressText.textContent = 'Procesando archivo...';
+        
+        // Leer y procesar el archivo Excel
+        procesarArchivoExcel(file, progressBar, progressText);
+    });
+}
+
+// Procesar archivo Excel
+function procesarArchivoExcel(file, progressBar, progressText) {
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            // Actualizar progreso de lectura
+            progressBar.style.width = '30%';
+            progressText.textContent = 'Leyendo datos...';
+            
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            // Verificar si el libro tiene hojas
+            if (workbook.SheetNames.length === 0) {
+                throw new Error("El archivo Excel no contiene hojas");
+            }
+            
+            // Actualizar progreso
+            progressBar.style.width = '60%';
+            progressText.textContent = 'Preparando datos...';
+            
+            // Procesar datos
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            
+            // Verificar si la hoja tiene datos
+            if (!worksheet['!ref']) {
+                throw new Error("La hoja Excel está vacía");
+            }
+            
+            const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            // Verificar si hay datos
+            if (rows.length <= 1) {
+                throw new Error("El archivo Excel no contiene suficientes datos");
+            }
+            
+            // Crear matriz uniforme
+            dexce9 = crearMatrizUniforme(rows);
+            
+            // Actualizar progreso
+            progressBar.style.width = '80%';
+            progressText.textContent = 'Procesando datos...';
+            
+            // Procesar datos finales
+            procesarDatosExcel();
+            
+            // Completar progreso
+            progressBar.style.width = '100%';
+            progressText.textContent = '¡Procesamiento completo!';
+            
+            // Mostrar mensaje de éxito
+            setTimeout(() => {
+                document.getElementById('uploadProgress').style.display = 'none';
+                mostrarToast('Archivo procesado correctamente', '#27ae60');
+            }, 1000);
+        } catch (error) {
+            handleProcessingError(error);
+        }
+    };
+    
+    reader.onerror = function(error) {
+        handleProcessingError(error);
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+// Función para crear una matriz uniforme
+function crearMatrizUniforme(matrizOriginal) {
+    // Verificar si hay datos
+    if (!matrizOriginal || matrizOriginal.length === 0) {
+        throw new Error("No hay datos en el archivo Excel");
+    }
+    
+    // Calcular la longitud máxima de las filas
+    const maxColumnas = Math.max(...matrizOriginal.map(fila => fila ? fila.length : 0));
+    
+    // Crear una nueva matriz uniformada
+    return matrizOriginal.map(fila => {
+        if (!fila) return Array(maxColumnas + 1).fill("");
+        
+        const filaCompleta = [...fila];
+        while (filaCompleta.length < (maxColumnas + 1)) {
+            filaCompleta.push(""); // Rellenar con celdas vacías
+        }
+        return filaCompleta;
+    });
+}
+
+// Procesa los datos del Excel
+function procesarDatosExcel() {
+    console.log("Procesando datos del Excel...");
+    
+    // Limpiar array de datos
+    dexcel = [];
+    
+    // Verificar si hay datos para procesar
+    if (!dexce9 || dexce9.length <= 1) {
+        mostrarToast("No hay datos válidos en el archivo Excel", "#e74c3c");
+        throw new Error("No hay datos válidos en el archivo");
+    }
+    
+    // Verificar si la primera fila tiene encabezados esperados
+    const headers = dexce9[0];
+    if (verificarEncabezados(headers)) {
+        mostrarToast("El formato del archivo no es correcto. Verifique que sea una plantilla PAC válida.", "#e74c3c");
+        throw new Error("Formato de archivo incorrecto");
+    }
+    
+    // Definir tipos de datos por columna
+    var modif = ["txt", "txt", "txt", "txt", "num", "num", "num", "num", "num", "txt",
+                 "txt", "txt", "num", "txt", "num", "txt", "txt", "txt", "txt", "txt"];
+    
+    // Omitir la primera fila (encabezados)
+    const datos = dexce9.slice(1);
+    const taman = datos[0].length;
+    
+    console.log("Número de filas a procesar:", datos.length);
+    
+    // Procesar cada fila
+    for (let ii = 0; ii < datos.length; ii++) {
+        var datito = [...datos[ii]]; // Copia la fila
+        
+        // Solo procesar filas con datos en la primera columna
+        if (datito[0] && datito[0] !== "") {
+            console.log("Procesando fila:", ii + 1);
+            
+            // Procesar cada columna
+            for (let jj = 0; jj < taman; jj++) {
+                // Manejar valores indefinidos
+                if (datito[jj] === undefined || datito[jj] === null) { 
+                    datito[jj] = ""; 
+                }
+                
+                // Convertir según el tipo de dato
+                if (jj < modif.length) {
+                    if (modif[jj] === "txt") { 
+                        datito[jj] = String(datito[jj]).trim(); 
+                    }
+                    if (modif[jj] === "num") { 
+                        // Convertir a número limpiando no numéricos
+                        let valor = String(datito[jj]).replace(/\./g, '').replace(/\D/g, '');
+                        datito[jj] = valor || "0"; 
+                    }
+                }
+            }
+            
+            // Agregar el año seleccionado como primera columna (nueva)
+            const nuevaFila = [document.getElementById("numAnio").value, ...datito];
+            
+            // Agregar la fila al array final
+            dexcel.push(nuevaFila);
+        }
+    }
+    UU = 0;
+    
+    console.log("Datos procesados:", dexcel.length, "filas");
+    
+    // Verificar si hay datos después del procesamiento
+    if (dexcel.length === 0) {
+        mostrarToast("No se encontraron datos válidos en el archivo Excel", "#e74c3c");
+        throw new Error("No hay datos válidos después del procesamiento");
+    }
+    
+    // Enviar datos al servidor
+    enviarDatos("PAC", 0, dexcel, 2);
+}
+
+// Verificar si los encabezados son los esperados para un PAC
+function verificarEncabezados(headers) {
+    // Definir encabezados mínimos esperados (pueden variar según el formato exacto del PAC)
+    const encabezadosEsperados = ["SOLICITUD", "ÁREA", "DESCRIPCIÓN", "UNIDAD"];
+    
+    // Convertir headers a string para facilitar la búsqueda
+    const normalize = str => str.trim().toUpperCase();
+    const headersStr = headers.map(h => normalize(h));  
+    
+    // Verificar si al menos los encabezados mínimos están presentes
+    return encabezadosEsperados.every(encabezado => 
+        headersStr.some(h => h.includes(encabezado))
+    );
+}
+
+// Enviar datos al servidor
+function enviarDatos(pagina, fila, datos, tipo) {
+
+    /*
+    console.log("Enviando datos al servidor...", datos.length, "filas");
+    mostrarToast('Enviando datos al servidor...', '#3498db');
+    
+    // Preparar datos para envío
+    const datosEnvio = {
+        pagina: pagina,
+        fila: fila,
+        datos: datos
+    };
+    
+    // Mostrar datos de depuración
+    console.log("Datos a enviar:", JSON.stringify(datosEnvio));
+    
+    // Crear formulario para envío (mejor manejo con Google Apps Script)
+    const formData = new FormData();
+    formData.append('action', 'guardarPAC');
+    formData.append('datos', JSON.stringify(datosEnvio));
+    
+    */
+
+    // Realizar la petición fetch
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pagina, fila, datos, tipo })
+    })
+    .then(response => {
+        console.log("Respuesta del servidor:", response);
+        
+        if (!response.ok) {
+            throw new Error(`Error del servidor: ${response.status}`);
+        }
+        
+        return response.text(); // Google Apps Script normalmente devuelve texto
+    })
+    .then(data => {
+        console.log("Datos recibidos:", data);
+        mostrarToast('Datos PAC enviados exitosamente 🎉', '#27ae60');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(error => {
+        console.error('Error al enviar datos:', error);
+        
+        // Intentar enviar con método alternativo (no-cors como último recurso)
+        enviarDatosAlternativo(pagina, fila, datos, 2);
+    });
+}
+
+// Método alternativo de envío (usando JSONP o no-cors como último recurso)
+function enviarDatosAlternativo(pagina, fila, datos, tipo) {
+    console.log("Intentando método alternativo de envío...");
+    
+    // Preparar datos para envío
+    const datosEnvio = {
+        pagina: pagina,
+        fila: fila,
+        datos: datos,
+        tipo: tipo
+    };
+    
+    // Crear formulario para envío
+    const formData = new FormData();
+    formData.append('action', 'guardarPAC');
+    formData.append('datos', JSON.stringify(datosEnvio));
+    
+    // Crear un elemento iframe temporal para enviar el formulario
+    const iframe = document.createElement('iframe');
+    iframe.name = 'submit-iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    
+    // Crear un formulario y enviarlo a través del iframe
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = WEB_APP_URL;
+    form.target = 'submit-iframe';
+    
+    // Agregar campos al formulario
+    const inputAccion = document.createElement('input');
+    inputAccion.type = 'hidden';
+    inputAccion.name = 'action';
+    inputAccion.value = 'guardarPAC';
+    form.appendChild(inputAccion);
+    
+    const inputDatos = document.createElement('input');
+    inputDatos.type = 'hidden';
+    inputDatos.name = 'datos';
+    inputDatos.value = JSON.stringify(datosEnvio);
+    form.appendChild(inputDatos);
+    
+    // Agregar el formulario al documento y enviarlo
+    document.body.appendChild(form);
+    
+    // Notificar y mostrar mensaje de éxito asumiendo que se envió correctamente
+    mostrarToast('Intentando enviar datos con método alternativo...', '#f39c12');
+    
+    form.submit();
+    
+    // Limpieza después de enviar
+    setTimeout(() => {
+        document.body.removeChild(form);
+        document.body.removeChild(iframe);
+        mostrarToast('Datos PAC enviados exitosamente 🎉', '#27ae60');
+    }, 2000);
+}
+
+// Manejar errores de procesamiento
+function handleProcessingError(error) {
+    console.error('Error al procesar el archivo:', error);
+    document.getElementById('uploadProgress').style.display = 'none';
+    mostrarToast('Error al procesar el archivo Excel: ' + error.message, '#e74c3c');
+}
+
+// Mostrar animación de éxito al cargar
+function showUploadSuccess() {
+    const dropZone = document.getElementById('dropZone');
+    const helpText = document.getElementById('uploadHelpText');
+    
+    // Efecto visual
+    dropZone.style.backgroundColor = '#4CAF50';
+    setTimeout(() => {
+        dropZone.style.backgroundColor = '#3383FF'; // Volver al color original
+    }, 1000);
+    
+    // Mensaje de éxito
+    helpText.textContent = '✅ ¡Archivo listo para procesar!';
+    setTimeout(() => {
+        helpText.textContent = 'Arrastra y suelta tu archivo Excel o haz clic para seleccionarlo';
+    }, 3000);
+}
+
+// Mostrar notificación toast
+function mostrarToast(mensaje, color) {
+    const toast = document.getElementById('toast1');
+    toast.textContent = mensaje;
+    toast.style.backgroundColor = color;
+    toast.style.visibility = 'visible';
+    toast.style.opacity = '1';
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            toast.style.visibility = 'hidden';
+        }, 300);
+    }, 3000);
+}
+
+// Resetear input de archivo cuando cambia el año
+function resetFileInput() {
+    document.getElementById('excelFile').value = '';
+    document.getElementById('selectedFileName').textContent = 'No se ha seleccionado ningún archivo';
+    document.getElementById('uploadBtn').style.display = 'none';
+}
+// Función para descargar plantilla PAC
+function descargarPlantilla() {
+    // Generar una plantilla básica de PAC usando SheetJS
+    try {
+        mostrarToast('Generando plantilla PAC...', '#3498db');
+        
+        // Crear un libro Excel nuevo
+        const wb = XLSX.utils.book_new();
+        
+        // Definir encabezados de la plantilla con las columnas específicas
+        const headers = [
+            "UNIDAD", "CUENTA CONTABLE", "DESCRICIÓN DE LA CUENTA",
+            "Producto o Servicio", "Cantidad", "Monto", "Total Ítem", 
+            "Solicitud Ajuste Presupuestario", "Cantidad OC", "Meses envío OC",
+            "Distribución regional", "Asignación Presupuestaria", 
+            "Cód. Gasto Presupuestario", "Tipo compra", "Cód. tipo compra",
+            "Mes publicación", "Comentario"
+        ];
+        
+        // Crear una hoja solo con los encabezados, sin filas de ejemplo
+        const ws_data = [headers];
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        
+        // Agregar la hoja al libro
+        XLSX.utils.book_append_sheet(wb, ws, "Plantilla PAC");
+        
+        // Guardar como archivo Excel
+        XLSX.writeFile(wb, "Plantilla_PAC.xlsx");
+        
+        mostrarToast('Plantilla PAC descargada exitosamente', '#27ae60');
+    } catch (error) {
+        console.error('Error al generar la plantilla:', error);
+        mostrarToast('Error al generar la plantilla: ' + error.message, '#e74c3c');
+    }
+}
+// Función para abrir asistencia via WhatsApp
+function openAssistance() {
+    const phoneNumber = "56959414178";
+    window.open(`https://wa.me/${phoneNumber}`, '_blank');
+}
+    </script>
+    
+</body>
+</html>
