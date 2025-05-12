@@ -544,6 +544,7 @@
     var sel_dept = "";                      // Seleccionar el tipo de DEPTO
 
     const WEB_APP_URL = dir_pac;     // Implementacion
+    // const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw9TfE8-orUBNLrpOtchgrknOEoodAbGbutAS49SukUTwMTu6t3m4LWBScCV3MoFnY/exec';
 
     cargando_icon(1);       // Activar la rueda de LOADING ....
 
@@ -642,9 +643,10 @@
           var error = 0;
           var tx_err = new Array();
 
-          for (jj = 0; jj < antigu[0].length; jj++) {
+          for (jj = 0; jj < antigu.length; jj++) {
             pp = 0;
-            baul1 = transformarFecha(document.getElementById("infor[" + jj + "][0]").value);
+            baul0 = (document.getElementById("infor[" + jj + "][0]").value);
+            baul1 =  transformarFecha(baul0);
             baul2 = (document.getElementById("infor[" + jj + "][1]").value).toString().toUpperCase();
             baul3 = (document.getElementById("infor[" + jj + "][2]").value).toString().toUpperCase();
             baul4 = (document.getElementById("infor[" + jj + "][3]").value).toString().toUpperCase();
