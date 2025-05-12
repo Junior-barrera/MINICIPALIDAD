@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exportador de Datos PAC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    
+    .filter-container > div {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    select, input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .button-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    .search-button {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .search-button:hover {
+      background-color: #45a049;
+    }
+    
+    .export-button {
+      background-color: #2196F3;
+      color: white;
+    }
+    
+    .export-button:hover {
+      background-color: #0b7dda;
+    }
+    
+    .clear-button {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .clear-button:hover {
+      background-color: #d32f2f;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #000000;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    
+    tr:hover {
+      background-color: #ddd;
+    }
+    
+    .results-container {
+      max-height: 500px;
+      overflow-x: auto; 
+      overflow-y: auto;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+    }
+    
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s;
+    }
+    
+    .loader.hidden {
+      display: none;
+    }
+    
+    .loader-animation {
+      text-align: center;
+      position: relative;
+    }
+    
+    .loader-circle {
+      border: 8px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 8px solid #4CAF50;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loader-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+    }
+    
+    .loader-message {
+      font-size: 18px;
+      color: #333;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .summary {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e7f3eb;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    #noDataMessage {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-style: italic;
+    }
+    @media screen and (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      
+      .filter-container > div {
+        flex: 100%;
+        min-width: 100%;
+      }
+      
+      .button-container button {
+        margin: 5px;
+        width: 100%;
+      }
+    }
+    
+    /* Estilos para hacer la tabla más compacta y responsive */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px; /* Reducir el tamaño de fuente */
+    }
+    
+    th, td {
+      padding: 6px 8px; /* Reducir el padding */
+      border: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top; /* Alinear contenido en la parte superior */
+    }
+    
+    /* Abreviar textos largos */
+    td.descripcion-compacta {
+      max-width: 120px;
+      white-space: normal; /* Permitir salto de línea */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    /* Hacer que solo se muestren las columnas más importantes en móviles */
+    @media screen and (max-width: 768px) {
+      /* Ocultar columnas menos importantes en móviles */
+      .hide-mobile {
+        display: none;
+      }
+      
+      /* Ajustar la tabla para móviles */
+      table {
+        font-size: 12px; /* Fuente aún más pequeña en móvil */
+      }
+      
+      th, td {
+        padding: 4px; /* Padding más pequeño */
+      }
+    }
+    
+    /* Opción para expandir filas con información adicional */
+    .expandable-row {
+      cursor: pointer;
+    }
+    
+    .row-details {
+      display: none;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-top: none;
+    }
+    
+    /* Agregar tooltips para textos largos */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      background-color: #555;
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -125px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader">
+    <div class="loader-animation">
+      <div class="loader-circle"></div>
+      <img src="logo_MUNI.png" alt="Logo" class="loader-logo">
+      <div class="loader-message">Cargando...</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Exportador de Datos PAC</h1>
+    <div class="filter-container">
+      <div>
+        <label for="anioFilter">Año:</label>
+        <select id="anioFilter">
+          <option value="0">Todos los años</option>
+          <!-- Se llenará dinámicamente -->
+        </select>
+      </div>
+      
+      <div>
+        <label for="unidadFilter">Unidad:</label>
+        <select id="unidadFilter">
+          <option value="0">Todas las unidades</option>
+          <!-- Se llenará dinámicamente -->
+        </select>
+      </div>
+      
+      <div>
+        <label for="cuentaFilter">Cuenta:</label>
+        <select id="cuentaFilter">
+          <option value="0">Todas las cuentas</option>
+          <!-- Se llenará dinámicamente -->
+        </select>
+      </div>
+      
+      <div>
+        <label for="tipoCompraFilter">Tipo de Compra:</label>
+        <select id="tipoCompraFilter">
+          <option value="0">Todos los tipos</option>
+          <!-- Se llenará dinámicamente -->
+        </select>
+      </div>
+    </div>
+    
+    <div class="button-container">
+      <button class="search-button" onclick="filtrarDatos()">Buscar</button>
+      <button class="export-button" onclick="exportarExcel()">Exportar a Excel</button>
+      <button class="clear-button" onclick="limpiarFiltros()">Limpiar filtros</button>
+      <button class="back-button" onclick="window.location.href='exportador_datos.html'">
+        <span class="back-icon">←</span> Volver al Exportador de Compras
+      </button>
+      <button class="back-button" onclick="window.location.href='formulario-1.html'">
+        <span class="back-icon">←</span> Volver al Inicio
+      </button>
+    </div>
+    
+    <div class="summary" id="resumenDatos"></div>
+    
+    <div class="results-container">
+      <table id="tablaDatos">
+        <thead>
+          <tr>
+            <th>Año</th>
+            <th>Unidad</th>
+            <th>Cuenta Contable</th>
+            <th>Descripción Cuenta</th>
+            <th>Producto o Servicio</th>
+            <th>Cantidad</th>
+            <th>Monto</th>
+            <th>Total Ítem</th>
+            <th>Solicitud Ajuste</th>
+            <th>Cantidad OC</th>
+            <th>Meses envío OC</th>
+            <th>Distribución regional</th>
+            <th>Asignación Presupuestaria</th>
+            <th>Cód. Gasto Presupuestario</th>
+            <th>Tipo compra</th>
+            <th>Cód. tipo compra</th>
+            <th>Mes publicación</th>
+            <th>Comentario</th>
+            <th>Comprometido</th>
+            <th>Gasto</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+        <tbody id="datosBody">
+          <!-- Aquí se llenarán los datos dinámicamente -->
+        </tbody>
+      </table>
+      <div id="noDataMessage" style="display: none;">No se encontraron datos con los filtros seleccionados</div>
+    </div>
+  </div>
+  
+  <!-- Scripts necesarios para Excel Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <script>
+    // Constantes de conexión - usar las mismas que en tu formulario original
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyxdxWQWK8TmGQx99LO2xOIl4G_hozsAKM0wDMRA6D_5s-FMH-GMF1pyWLNQ0UWEeY/exec';
+    
+    // Variables para almacenar los datos
+    let dato_dt = [];   // Datos de la hoja "Registro"
+    let dat_PAC = [];   // Datos de la hoja "PAC" - Esta es la que utilizaremos
+    let dato_1a = [];   // Datos de la hoja "Anex 1a"
+    let dato_1b = [];   // Datos de la hoja "Anex 1b"
+    
+    // Variables para filtros únicos
+    let aniosUnicos = new Set();
+    let unidadesUnicas = new Set();
+    let cuentasUnicas = new Set();
+    let tiposCompraUnicos = new Set();
+    
+    // Datos filtrados actuales para exportar
+    let datosFiltrados = [];
+    
+    // Función para formatear números con puntos como separador de miles
+    function formatearNumero(valor) {
+      if (!valor && valor !== 0) return '';
+      // Eliminar puntos y caracteres no numéricos
+      let valor2 = valor.toString().replace(/\./g, '').replace(/\D/g, '');
+      // Convertir a número y formatear con puntos
+      let numeroFormateado = new Intl.NumberFormat('es-ES').format(parseInt(valor2) || 0);
+      // Actualizar el valor del input con el formato correcto
+      return numeroFormateado;
+    }
+    
+    // Manejo del loader
+    function mostrarLoader() {
+      document.querySelector('.loader').classList.remove('hidden');
+      document.querySelector('.loader').style.display = 'flex';
+    }
+    
+    function ocultarLoader() {
+      document.querySelector('.loader').classList.add('hidden');
+      setTimeout(function() {
+        document.querySelector('.loader').style.display = 'none';
+      }, 500);
+    }
+    
+    // Función para cargar los datos desde la API
+    function cargarDatos() {
+      mostrarLoader();
+      
+      fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(data => {
+          // Asignar los datos recibidos a las variables
+          dato_dt = data.dato_dt || [];
+          dat_PAC = data.dat_PAC || [];
+          dato_1a = data.dato_1a || [];
+          dato_1b = data.dato_1b || [];
+          
+          // Verificar datos de PAC
+          console.log('Datos PAC cargados:', dat_PAC.length);
+          
+          // Llenar los filtros
+          llenarFiltros();
+          
+          // Mostrar todos los datos al inicio
+          filtrarDatos();
+          
+          // Ocultar el loader
+          ocultarLoader();
+        })
+        .catch(error => {
+          console.error('Error al obtener los datos:', error);
+          alert('Error al cargar los datos. Por favor intente nuevamente.');
+          ocultarLoader();
+        });
+    }
+    
+    // Función para llenar los filtros con valores únicos
+    function llenarFiltros() {
+      // Limpiar conjuntos
+      aniosUnicos.clear();
+      unidadesUnicas.clear();
+      cuentasUnicas.clear();
+      tiposCompraUnicos.clear();
+      
+      // Mapeo de índices para los datos de PAC
+      // [0]:AÑO, [1]:UNIDAD, [2-3]:CUENTA-DESCRIPCIÓN, [14]:TIPO COMPRA
+      var primeraFila = true;
+      dat_PAC.forEach(fila => {
+        if (!primeraFila && fila && fila.length > 15) {
+          if (fila[0]) aniosUnicos.add(fila[0].toString().trim());
+          if (fila[1]) unidadesUnicas.add(fila[1].toString().trim().toUpperCase());
+          
+          // Para cuentas, guardamos número + descripción
+          if (fila[2] && fila[3]) {
+            const cuentaCompleta = `${fila[2]} - ${fila[3]}`;
+            cuentasUnicas.add(cuentaCompleta);
+          }
+          
+          if (fila[14]) tiposCompraUnicos.add(fila[14].toString().trim().toUpperCase());
+        }
+        primeraFila = false;
+      });
+      
+      // Convertir a arrays y ordenar
+      const aniosArray = Array.from(aniosUnicos).sort((a, b) => b - a); // Ordenar descendente (año más reciente primero)
+      const unidadesArray = Array.from(unidadesUnicas).sort();
+      const cuentasArray = Array.from(cuentasUnicas).sort();
+      const tiposCompraArray = Array.from(tiposCompraUnicos).sort();
+      
+      // Llenar los select
+      llenarSelect('anioFilter', aniosArray);
+      llenarSelect('unidadFilter', unidadesArray);
+      llenarSelect('cuentaFilter', cuentasArray);
+      llenarSelect('tipoCompraFilter', tiposCompraArray);
+      
+      // Establecer el año actual como predeterminado si existe
+      const anioActual = new Date().getFullYear().toString();
+      if (aniosArray.includes(anioActual)) {
+        document.getElementById('anioFilter').value = anioActual;
+      }
+    }
+    
+    // Función auxiliar para llenar un select con opciones
+    function llenarSelect(selectId, opciones) {
+      const select = document.getElementById(selectId);
+      
+      // Mantener la primera opción (Todos)
+      const primerOpcion = select.options[0];
+      select.innerHTML = '';
+      select.appendChild(primerOpcion);
+      
+      // Añadir las nuevas opciones
+      opciones.forEach(opcion => {
+        if (opcion && opcion.trim() !== '') {
+          const option = document.createElement('option');
+          option.value = opcion;
+          option.textContent = opcion;
+          select.appendChild(option);
+        }
+      });
+    }
+    
+    // Función para filtrar los datos según las selecciones del usuario
+    function filtrarDatos() {
+      const anioFiltro = document.getElementById('anioFilter').value;
+      const unidadFiltro = document.getElementById('unidadFilter').value;
+      const cuentaFiltro = document.getElementById('cuentaFilter').value;
+      const tipoCompraFiltro = document.getElementById('tipoCompraFilter').value;
+      
+      // Extraer solo el número de cuenta del filtro si está seleccionado
+      let numCuentaFiltro = '';
+      if (cuentaFiltro !== '0') {
+        numCuentaFiltro = cuentaFiltro.split(' - ')[0];
+      }
+      
+      // Filtrar los datos
+      datosFiltrados = [];
+      let primeraFila = true;
+      
+      dat_PAC.forEach(fila => {
+        if (primeraFila) {
+          primeraFila = false;
+          return; // Saltar la primera fila (encabezados)
+        }
+        
+        // Verificar que la fila tenga datos suficientes
+        if (!fila || fila.length < 15) return;
+        
+        // Aplicar filtros si están seleccionados
+        if (anioFiltro !== '0' && (!fila[0] || fila[0].toString() !== anioFiltro)) return;
+        if (unidadFiltro !== '0' && (!fila[1] || fila[1].toString().toUpperCase() !== unidadFiltro.toUpperCase())) return;
+        if (numCuentaFiltro !== '' && (!fila[2] || fila[2].toString() !== numCuentaFiltro)) return;
+        if (tipoCompraFiltro !== '0' && (!fila[14] || fila[14].toString().toUpperCase() !== tipoCompraFiltro.toUpperCase())) return;
+        
+        datosFiltrados.push(fila);
+      });
+      
+      // Mostrar los datos filtrados
+      mostrarDatos();
+    }
+    
+    // Función para mostrar los datos en la tabla
+    function mostrarDatos() {
+      const tbody = document.getElementById('datosBody');
+      const noDataMessage = document.getElementById('noDataMessage');
+      
+      // Limpiar la tabla
+      tbody.innerHTML = '';
+      
+      // Mostrar mensaje si no hay datos
+      if (datosFiltrados.length === 0) {
+        noDataMessage.style.display = 'block';
+        document.getElementById('resumenDatos').textContent = 'No hay datos para mostrar';
+        return;
+      }
+      
+      // Ocultar mensaje si hay datos
+      noDataMessage.style.display = 'none';
+      
+      // Calcular totales para el resumen
+      let totalMonto = 0;
+      let totalComprometido = 0;
+      let totalGastado = 0;
+      let totalSaldo = 0;
+      
+      // Llenar la tabla con los datos
+      datosFiltrados.forEach(fila => {
+        const tr = document.createElement('tr');
+        
+        // Añadir todas las columnas que necesitamos
+        // ÍNDICES: 
+        // [0]:AÑO, [1]:UNIDAD, [2]:CUENTA, [3]:DESCRIPCIÓN CUENTA,
+        // [4]:PRODUCTO/SERVICIO, [5]:CANTIDAD, [6]:MONTO, [7]:TOTAL ITEM,
+        // [8]:SOLICITUD AJUSTE, [9]:CANTIDAD OC, [10]:MESES ENVÍO OC,
+        // [11]:DISTRIBUCIÓN REGIONAL, [12]:ASIGNACIÓN PRESUPUESTARIA,
+        // [13]:CÓD GASTO PRESUPUESTARIO, [14]:TIPO COMPRA, [15]:CÓD TIPO COMPRA,
+        // [16]:MES PUBLICACIÓN, [17]:COMENTARIO, [18]:COMPROMETIDO,
+        // [20]:GASTO, [22]:SALDO
+        
+        // Año [0]
+        tr.appendChild(crearCelda(fila[0]));
+        
+        // Unidad [1]
+        tr.appendChild(crearCelda(fila[1]));
+        
+        // Cuenta Contable [2]
+        tr.appendChild(crearCelda(fila[2]));
+        
+        // Descripción Cuenta [3]
+        tr.appendChild(crearCelda(fila[3]));
+        
+        // Producto o Servicio [4]
+        tr.appendChild(crearCelda(fila[4]));
+        
+        // Cantidad [5]
+        tr.appendChild(crearCelda(fila[5]));
+        
+        // Monto [6]
+        const monto = parseFloat(fila[6]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0;
+        tr.appendChild(crearCelda(formatearNumero(monto), 'text-right'));
+        totalMonto += monto;
+        
+        // Total Ítem [7]
+        tr.appendChild(crearCelda(fila[7]));
+        
+        // Cantidad OC [9]
+        tr.appendChild(crearCelda(fila[8]));
+        
+        // Meses envío OC [10]
+        tr.appendChild(crearCelda(fila[9]));
+        
+        // Distribución regional [11]
+        tr.appendChild(crearCelda(fila[10]));
+        
+        // Asignación Presupuestaria [12]
+        tr.appendChild(crearCelda(fila[11]));
+        
+        // Cód. Gasto Presupuestario [13]
+        tr.appendChild(crearCelda(fila[12]));
+        
+        // Tipo compra [14]
+        tr.appendChild(crearCelda(fila[13]));
+        
+        // Cód. tipo compra [15]
+        tr.appendChild(crearCelda(fila[14]));
+        
+        // Mes publicación [16]
+        tr.appendChild(crearCelda(fila[15]));
+        
+        // Comentario [17]
+        tr.appendChild(crearCelda(fila[16]));
+        
+        // Comprometido [18]
+        const comprometido = parseFloat(fila[17]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0;
+        tr.appendChild(crearCelda(formatearNumero(comprometido), 'text-right'));
+        totalComprometido += comprometido;
+        
+        // Gasto [19]
+        const gasto = parseFloat(fila[19]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0;
+        tr.appendChild(crearCelda(formatearNumero(gasto), 'text-right'));
+        totalGastado += gasto;
+        
+        // Saldo [22]
+        const saldo = parseFloat(fila[21]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0;
+        tr.appendChild(crearCelda(formatearNumero(saldo), 'text-right'));
+        totalSaldo += saldo;
+        
+        tbody.appendChild(tr);
+      });
+      
+      // Actualizar el resumen
+      document.getElementById('resumenDatos').textContent = 
+        `Registros encontrados: ${datosFiltrados.length} | ` +
+        `Total monto: $${formatearNumero(totalMonto)} | ` +
+        `Total comprometido: $${formatearNumero(totalComprometido)} | ` +
+        `Total gastado: $${formatearNumero(totalGastado)} | ` +
+        `Total saldo: $${formatearNumero(totalSaldo)}`;
+    }
+    
+    // Función auxiliar para crear una celda de tabla
+    function crearCelda(texto, clase = '') {
+      const td = document.createElement('td');
+      td.textContent = texto !== undefined && texto !== null ? texto : '';
+      if (clase) td.className = clase;
+      return td;
+    }
+    
+    // Función para exportar los datos a Excel
+    function exportarExcel() {
+      if (datosFiltrados.length === 0) {
+        alert('No hay datos para exportar');
+        return;
+      }
+      
+      // Crear un array con los encabezados
+      const encabezados = [
+        'Año', 'Unidad', 'Cuenta Contable', 'Descripción Cuenta', 'Producto o Servicio',
+        'Cantidad', 'Monto', 'Total Ítem', 'Solicitud Ajuste', 'Cantidad OC',
+        'Meses envío OC', 'Distribución regional', 'Asignación Presupuestaria',
+        'Cód. Gasto Presupuestario', 'Tipo compra', 'Cód. tipo compra', 'Mes publicación',
+        'Comentario', 'Comprometido', 'Gasto', 'Saldo'
+      ];
+      
+      // Crear los datos para Excel
+      const datosExcel = [];
+      datosExcel.push(encabezados);
+      
+      // Añadir los datos filtrados
+      datosFiltrados.forEach(fila => {
+        const filaExcel = [
+          fila[0] || '',  // Año
+          fila[1] || '',  // Unidad
+          fila[2] || '',  // Cuenta Contable
+          fila[3] || '',  // Descripción Cuenta
+          fila[4] || '',  // Producto o Servicio
+          fila[5] || '',  // Cantidad
+          parseFloat(fila[6]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0,  // Monto
+          fila[7] || '',  // Total Ítem
+          fila[8] || '',  // Solicitud Ajuste
+          fila[9] || '',  // Cantidad OC
+          fila[10] || '', // Meses envío OC
+          fila[11] || '', // Distribución regional
+          fila[12] || '', // Asignación Presupuestaria
+          fila[13] || '', // Cód. Gasto Presupuestario
+          fila[14] || '', // Tipo compra
+          fila[15] || '', // Cód. tipo compra
+          fila[16] || '', // Mes publicación
+          fila[17] || '', // Comentario
+          parseFloat(fila[18]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0,  // Comprometido
+          parseFloat(fila[20]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0,  // Gasto
+          parseFloat(fila[22]?.toString().replace(/\./g, '').replace(/,/g, '.').replace(/[^\d.-]/g, '')) || 0   // Saldo
+        ];
+        
+        datosExcel.push(filaExcel);
+      });
+      
+      // Crear un libro de Excel
+      const libro = XLSX.utils.book_new();
+      
+      // Crear una hoja de cálculo
+      const hoja = XLSX.utils.aoa_to_sheet(datosExcel);
+      
+      // Establecer ancho de columnas
+      const anchos = [
+        { wch: 8 },   // Año
+        { wch: 20 },  // Unidad
+        { wch: 12 },  // Cuenta Contable
+        { wch: 25 },  // Descripción Cuenta
+        { wch: 40 },  // Producto o Servicio
+        { wch: 10 },  // Cantidad
+        { wch: 15 },  // Monto
+        { wch: 15 },  // Total Ítem
+        { wch: 15 },  // Solicitud Ajuste
+        { wch: 12 },  // Cantidad OC
+        { wch: 15 },  // Meses envío OC
+        { wch: 20 },  // Distribución regional
+        { wch: 25 },  // Asignación Presupuestaria
+        { wch: 15 },  // Cód. Gasto Presupuestario
+        { wch: 20 },  // Tipo compra
+        { wch: 15 },  // Cód. tipo compra
+        { wch: 15 },  // Mes publicación
+        { wch: 30 },  // Comentario
+        { wch: 15 },  // Comprometido
+        { wch: 15 },  // Gasto
+        { wch: 15 }   // Saldo
+      ];
+      
+      hoja['!cols'] = anchos;
+      
+      // Configurar formato de números con dos decimales para columnas financieras
+      for (let i = 2; i <= datosExcel.length; i++) {
+        // Monto (columna G)
+        if (hoja['G' + i]) {
+          hoja['G' + i].z = '#,##0';
+        }
+        // Comprometido (columna S)
+        if (hoja['S' + i]) {
+          hoja['S' + i].z = '#,##0';
+        }
+        // Gasto (columna T)
+        if (hoja['T' + i]) {
+          hoja['T' + i].z = '#,##0';
+        }
+        // Saldo (columna U)
+        if (hoja['U' + i]) {
+          hoja['U' + i].z = '#,##0';
+        }
+      }
+      
+      // Añadir la hoja al libro
+      XLSX.utils.book_append_sheet(libro, hoja, 'Datos PAC');
+      
+      // Generar el nombre del archivo con fecha actual
+      const fechaActual = new Date();
+      const fechaFormateada = `${fechaActual.getDate()}-${fechaActual.getMonth() + 1}-${fechaActual.getFullYear()}`;
+      
+      // Obtener información de los filtros aplicados
+      const anioFiltro = document.getElementById('anioFilter').value;
+      const unidadFiltro = document.getElementById('unidadFilter').value;
+      const cuentaFiltro = document.getElementById('cuentaFilter').value;
+      const tipoCompraFiltro = document.getElementById('tipoCompraFilter').value;
+      
+      // Construir nombre del archivo con filtros aplicados
+      let nombreArchivo = 'Datos_PAC';
+      
+      if (anioFiltro !== '0') nombreArchivo += `_${anioFiltro}`;
+      if (unidadFiltro !== '0') nombreArchivo += `_${unidadFiltro.substring(0, 15).replace(/\s+/g, '_')}`;
+      if (cuentaFiltro !== '0') {
+        const numCuenta = cuentaFiltro.split(' - ')[0];
+        nombreArchivo += `_Cta${numCuenta}`;
+      }
+      if (tipoCompraFiltro !== '0') nombreArchivo += `_${tipoCompraFiltro.substring(0, 10).replace(/\s+/g, '_')}`;
+      
+      nombreArchivo += `_${fechaFormateada}.xlsx`;
+      
+      // Exportar el archivo
+      XLSX.writeFile(libro, nombreArchivo);
+    }
+    
+    // Función para limpiar los filtros
+    function limpiarFiltros() {
+      document.getElementById('anioFilter').value = '0';
+      document.getElementById('unidadFilter').value = '0';
+      document.getElementById('cuentaFilter').value = '0';
+      document.getElementById('tipoCompraFilter').value = '0';
+      
+      // Volver a mostrar todos los datos
+      filtrarDatos();
+    }
+    
+    // Función para formatear valores monetarios para mostrar en pantalla
+    function formatearMoneda(valor) {
+      if (!valor && valor !== 0) return '';
+      return '$' + formatearNumero(valor);
+    }
+    
+    // Función para manejar el evento de cambio en los filtros
+    document.getElementById('anioFilter').addEventListener('change', () => {
+      // Si el usuario selecciona un año, podríamos filtrar las unidades relacionadas a ese año
+      // Esta es una funcionalidad adicional que podrías implementar
+    });
+    
+    // Iniciar la carga de datos cuando se carga la página
+    window.onload = function() {
+      cargarDatos();
+    };
+  </script>
+</body>
+</html>
