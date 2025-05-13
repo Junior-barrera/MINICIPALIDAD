@@ -1,0 +1,2 @@
+const dir_pac = "https://script.google.com/macros/s/AKfycbw9TfE8-orUBNLrpOtchgrknOEoodAbGbutAS49SukUTwMTu6t3m4LWBScCV3MoFnY/exec";
+const dir_mec = "https://script.google.com/macros/s/AKfycby_bjwOglJAYSCYSA24UhC_mBz0U0hI0pJPWo8oZyNryy9Uat6nRZ4D-9v-8x6Cy_OU/exec";
