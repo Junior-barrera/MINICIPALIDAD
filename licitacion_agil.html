@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licitación Ágil | Municipalidad de Arica</title>
+    <link rel="stylesheet" href="styles_licitacion.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Header with logo -->
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main content section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Licitación Ágil</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon">←</span> Volver 
+            </button>
+        </div>
+        
+        <!-- Cuadro para número de ordinario -->
+        <div class="ordinario-container">
+            <h3>Número de Ordinario para Licitación</h3>
+            <input type="text" id="ordinarioInput" class="ordinario-input" placeholder="Ingrese el número de ordinario...">
+            
+            <!-- Botones de navegación para ordinarios -->
+            <div class="ordinario-navigation">
+                <button id="prevOrdinarioBtn" class="nav-button" disabled>
+                    <span class="back-icon">←</span> Anterior
+                </button>
+                <button id="nextOrdinarioBtn" class="nav-button" disabled>
+                    Siguiente <span class="forward-icon">→</span>
+                </button>
+                <button id="eliminarOrdinarioBtn" class="nav-button" style="background-color: #f5365c;" disabled>
+                    Eliminar
+                </button>
+            </div>
+            
+            <!-- Selector de ordinarios guardados -->
+            <div class="ordinario-selector-container">
+                <select id="ordinarioSelector" class="ordinario-selector">
+                    <option value="">-- Seleccionar ordinario guardado --</option>
+                </select>
+                <button id="guardarOrdinarioBtn" class="selector-button">Guardar</button>
+            </div>
+        </div>
+        
+       <!-- Instrucciones con casillas de verificación -->
+       <div id="instructionsContainer" class="instructions-container">
+        <h3>PROCEDIMIENTO PARA REALIZAR UNA COMPRA ÁGIL</h3>
+    
+            <h4>PRIMERA ETAPA: INICIO DE LA SOLICITUD</h4>
+        <ol class="instructions-list">
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check1" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Elaboración de Requerimientos Técnicos</h5>
+                Redactar los requerimientos técnicos de la solicitud, especificando claramente los
+                productos o servicios necesarios.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check2" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Obtención de Cotización Referencial</h5>
+                Solicitar al menos una cotización a un proveedor inscrito en el portal ChileCompra,
+                con el fin de contar con un presupuesto referencial.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check3" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Elaboración de Ordinario Conductor</h5>
+                Redactar un ordinario conductor firmado por el Director de la DIMAO, que incluya:
+                Planificación F1, requerimientos técnicos detallados, elementos solicitados con sus características técnicas,
+                y tabla con: cuenta contable, presupuesto referencial y centro de costo.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check4" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Generación de Solicitud de Compra (Planilla Excel)</h5>
+                Completar la planilla Excel correspondiente, incluyendo: nombre del responsable de la solicitud,
+                unidad requirente, detalle de los productos o servicios solicitados, cuenta contable imputada,
+                valores neto (sin IVA) y total (con IVA). Este documento debe ser firmado por el solicitante y el Director de la DIMAO.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check5" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Envío a la Dirección de Administración y Finanzas (DAF)</h5>
+                Remitir toda la documentación a la DAF para su revisión y tramitación correspondiente.
+              </div>
+            </li>
+          </ol>
+
+            <h4>SEGUNDA ETAPA: ANÁLISIS Y RECOMENDACIÓN DE LA COMPRA</h4>
+          <ol class="instructions-list" start="6">
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check6" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Informe de Recomendación de la DAF</h5>
+                La DAF elaborará un informe de recomendación con un ID único (ejemplo: 2585-300-COT25), que debe incluir:
+                nombre de la licitación, antecedentes generales, detalle de la solicitud, análisis y evaluación de las ofertas,
+                y conclusión y adjudicación, identificando al proveedor adjudicado con nombre, RUT y monto total (IVA incluido).
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check7" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Criterios de Evaluación</h5>
+                Los criterios utilizados para adjudicar la oferta serán: menor precio ofertado, cumplimiento del requerimiento total,
+                adecuación al presupuesto referencial, cumplimiento de las especificaciones técnicas, menor plazo de entrega posible,
+                y pertinencia al giro comercial solicitado.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check8" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Remisión de Informe de Recomendación a la DAF</h5>
+                Enviar el informe a la DAF acompañado de: ordinario conductor firmado por el Director de la DIMAO
+                y carta de declaración jurada simple indicando ausencia de conflictos de interés.
+              </div>
+            </li>
+          </ol>
+
+            <h4>TERCERA ETAPA: RECEPCIÓN Y CIERRE DEL PROCESO</h4>
+          <ol class="instructions-list" start="9">
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check9" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Recepción de Insumos o Repuestos</h5>
+                Una vez recibidos los bienes en la Bodega General de la DAF, se debe emitir un <strong>Certificado de Conformidad</strong>,
+                firmado por: Jefe de Bodega de la DAF y encargado de la unidad solicitante.
+              </div>
+            </li>
+          
+            <li class="instruction-item">
+              <div class="checkbox-container">
+                <input type="checkbox" id="check10" class="custom-checkbox">
+              </div>
+              <div class="instruction-text">
+                <h5>Recepción de la Factura</h5>
+                Si los bienes cumplen con los requerimientos y no hay incumplimientos (como atrasos),
+                se procede a solicitar la factura correspondiente para su pago.
+              </div>
+            </li>
+          </ol>
+        
+          <div class="note">
+            <strong>CUANDO LOS BIENES NO SON ENTREGADOS:</strong><br>
+            Si los bienes no se entregan en un plazo de <strong>20 días hábiles</strong>, según fecha de la Orden de Compra, 
+            se debe informar a la DAF al día 18 hábil mediante correo electrónico. La DAF procederá a poner término al 
+            contrato con el proveedor incumplidor. Posteriormente, se deberá realizar un <strong>nuevo llamado</strong> en el portal ChileCompra.
+            <br><br>
+            <strong>CUANDO SE TRATA DE SERVICIOS O ARRIENDOS:</strong><br>
+            Se sigue el <strong>mismo procedimiento descrito anteriormente</strong>. <strong>Excepción:</strong> el <strong>Certificado de Conformidad</strong> 
+            será emitido únicamente por el encargado de la unidad solicitante y deberá ser firmado por el Director correspondiente.
+          </div>
+        </div>
+    </div>
+        
+        <!-- Botones de acción -->
+<div class="action-buttons">
+    <button id="readAloudBtn" class="action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+        </svg>
+        Leer en Voz Alta
+    </button>
+
+    <button id="generatePdfBtn" class="action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        Generar PDF
+    </button>
+    <a href="COMPRA AGIL.xlsx" download class="action-button" id="downloadExcelBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <path d="M9 8l6 8"></path>
+            <path d="M15 8l-6 8"></path>
+        </svg>
+        Planilla Excel
+    </a>
+    
+    <a href="Declaracion jurada compra agil.docx" download class="action-button" id="downloadWordBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <path d="M7 8l2 8 2-5 2 5 2-8"></path>
+        </svg>
+        Planilla Word
+    </a>
+    
+</div>
+    
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca, Arica</p>
+                <p>Anexo: 6959</p>
+                <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica</strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            <div class="footer-column licitaciones">
+                <h3>Licitaciones</h3>
+                <ul class="licitaciones-list">
+                    <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                    <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                    <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                    <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                    <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+    
+    <!-- Asistente -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <!-- Toast de notificación -->
+    <div id="toast">Mensaje de notificación</div>
+   <script>
+ // Variables globales
+let ordinarioData = {};
+let ordinarioList = [];
+let currentOrdinarioIndex = -1;
+let isSpeaking = false;
+let currentUtterance = null;
+let highlightedElements = [];
+let utteranceQueue = [];
+let currentHighlightIndex = 0;
+
+// URL del despliegue web de Google Apps Script - REEMPLAZAR CON TU URL DESPUÉS DE DESPLEGAR
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwP0DdpbRqWS-ZITRWWmYj9UYQ3EQwtbHSJTZ7dporMa9kjboJclGAQQCRgIOjZ8VTSgg/exec';
+
+// Inicializar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar botones
+    document.getElementById('generatePdfBtn').addEventListener('click', generatePDF);
+    document.getElementById('guardarOrdinarioBtn').addEventListener('click', guardarOrdinario);
+    document.getElementById('ordinarioSelector').addEventListener('change', cargarOrdinarioSeleccionado);
+    document.getElementById('prevOrdinarioBtn').addEventListener('click', cargarOrdinarioAnterior);
+    document.getElementById('nextOrdinarioBtn').addEventListener('click', cargarOrdinarioSiguiente);
+    document.getElementById('eliminarOrdinarioBtn').addEventListener('click', eliminarOrdinarioActual);
+    document.getElementById('readAloudBtn').addEventListener('click', readAloud);
+    
+    // Añadir event listeners a los checkboxes para guardar estado
+    const checkboxes = document.querySelectorAll('.custom-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', saveCheckboxState);
+    });
+    
+    // Añadir eventos para el campo de ordinario con funcionalidad de autocompletado
+    const ordinarioInput = document.getElementById('ordinarioInput');
+    ordinarioInput.addEventListener('input', function() {
+        actualizarBotones();
+        mostrarSugerencias(this.value);
+    });
+    
+    // Cargar ordinarios desde Google Sheets
+    cargarOrdinarios();
+    
+    // Crear contenedor para sugerencias si no existe
+    if (!document.getElementById('sugerenciasContainer')) {
+        crearContenedorSugerencias();
+    }
+    
+    // Reiniciar cualquier síntesis previa
+    speechSynthesis.cancel();
+});
+
+// Función para crear el contenedor de sugerencias
+function crearContenedorSugerencias() {
+    const ordinarioContainer = document.querySelector('.ordinario-container');
+    const ordinarioInput = document.getElementById('ordinarioInput');
+    
+    // Crear el contenedor de sugerencias
+    const sugerenciasContainer = document.createElement('div');
+    sugerenciasContainer.id = 'sugerenciasContainer';
+    sugerenciasContainer.style.cssText = `
+        position: absolute;
+        width: ${ordinarioInput.offsetWidth}px;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 10;
+        display: none;
+    `;
+    
+    // Posicionar el contenedor debajo del input
+    const inputRect = ordinarioInput.getBoundingClientRect();
+    sugerenciasContainer.style.top = `${inputRect.bottom}px`;
+    sugerenciasContainer.style.left = `${inputRect.left}px`;
+    
+    // Añadir al DOM
+    document.body.appendChild(sugerenciasContainer);
+    
+    // Actualizar posición cuando se haga scroll o se redimensione la ventana
+    window.addEventListener('resize', actualizarPosicionSugerencias);
+    window.addEventListener('scroll', actualizarPosicionSugerencias);
+}
+
+// Función para actualizar la posición del contenedor de sugerencias
+function actualizarPosicionSugerencias() {
+    const sugerenciasContainer = document.getElementById('sugerenciasContainer');
+    const ordinarioInput = document.getElementById('ordinarioInput');
+    
+    if (sugerenciasContainer && ordinarioInput) {
+        const inputRect = ordinarioInput.getBoundingClientRect();
+        sugerenciasContainer.style.top = `${inputRect.bottom + window.scrollY}px`;
+        sugerenciasContainer.style.left = `${inputRect.left + window.scrollX}px`;
+        sugerenciasContainer.style.width = `${ordinarioInput.offsetWidth}px`;
+    }
+}
+
+// Función para mostrar sugerencias basadas en la entrada del usuario
+function mostrarSugerencias(texto) {
+    const sugerenciasContainer = document.getElementById('sugerenciasContainer');
+    
+    if (!sugerenciasContainer) return;
+    
+    // Limpiar contenedor
+    sugerenciasContainer.innerHTML = '';
+    
+    if (!texto.trim()) {
+        sugerenciasContainer.style.display = 'none';
+        return;
+    }
+    
+    // Filtrar ordinarios que coincidan con el texto
+    const coincidencias = ordinarioList.filter(ord => 
+        ord.toLowerCase().includes(texto.toLowerCase()));
+    
+    if (coincidencias.length === 0) {
+        sugerenciasContainer.style.display = 'none';
+        return;
+    }
+    
+    // Mostrar sugerencias
+    coincidencias.forEach(ordinario => {
+        const item = document.createElement('div');
+        item.textContent = ordinario;
+        item.style.cssText = `
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        `;
+        
+        // Resaltar texto coincidente
+        const textoResaltado = ordinario.replace(
+            new RegExp(texto, 'i'),
+            match => `<strong>${match}</strong>`
+        );
+        item.innerHTML = textoResaltado;
+        
+        // Evento al hacer clic
+        item.addEventListener('mouseover', function() {
+            this.style.backgroundColor = '#f0f0f0';
+        });
+        
+        item.addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'transparent';
+        });
+        
+        item.addEventListener('click', function() {
+            document.getElementById('ordinarioInput').value = ordinario;
+            sugerenciasContainer.style.display = 'none';
+            
+            // Cargar automáticamente el ordinario seleccionado
+            cargarOrdinarioPorNombre(ordinario);
+        });
+        
+        sugerenciasContainer.appendChild(item);
+    });
+    
+    // Mostrar contenedor
+    actualizarPosicionSugerencias();
+    sugerenciasContainer.style.display = 'block';
+}
+
+// Función para cargar un ordinario específico por su nombre
+function cargarOrdinarioPorNombre(nombreOrdinario) {
+    if (ordinarioData[nombreOrdinario]) {
+        // Actualizar selector de ordinarios
+        document.getElementById('ordinarioSelector').value = nombreOrdinario;
+        
+        // Cargar estado de checkboxes
+        const checkboxState = ordinarioData[nombreOrdinario];
+        const checkboxes = document.querySelectorAll('.custom-checkbox');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = checkboxState[checkbox.id] || false;
+        });
+        
+        // Actualizar índice actual
+        currentOrdinarioIndex = ordinarioList.indexOf(nombreOrdinario);
+        
+        // Actualizar botones de navegación
+        actualizarBotones();
+        
+        // Mostrar notificación
+        mostrarToast('Ordinario cargado: ' + nombreOrdinario, '#4CAF50');
+    }
+}
+
+// Función para cargar todos los ordinarios desde Google Sheets
+async function cargarOrdinarios() {
+    try {
+        mostrarToast('Cargando datos...', '#3498db');
+        
+        const response = await fetch(`${SCRIPT_URL}?action=getAll`);
+        const data = await response.json();
+        
+        if (data.success) {
+            ordinarioData = data.data || {};
+            actualizarListaOrdinarios();
+            mostrarToast('Datos cargados correctamente', '#4CAF50');
+        } else {
+            mostrarToast('Error al cargar datos: ' + data.error, '#e74c3c');
+        }
+    } catch (error) {
+        console.error('Error al cargar ordinarios:', error);
+        mostrarToast('Error de conexión. Verifique su conexión a internet.', '#e74c3c');
+    }
+}
+
+// Función para actualizar la lista de ordinarios en el selector
+function actualizarListaOrdinarios() {
+    const selector = document.getElementById('ordinarioSelector');
+    // Limpiar opciones existentes excepto la primera
+    while (selector.options.length > 1) {
+        selector.remove(1);
+    }
+    
+    // Crear lista de ordinarios
+    ordinarioList = Object.keys(ordinarioData);
+    
+    // Añadir opciones al selector
+    ordinarioList.forEach(ordinario => {
+        const option = document.createElement('option');
+        option.value = ordinario;
+        option.textContent = ordinario;
+        selector.appendChild(option);
+    });
+    
+    // Actualizar botones de navegación
+    actualizarBotones();
+}
+
+// Función para guardar un nuevo ordinario o actualizar uno existente en Google Sheets
+async function guardarOrdinario() {
+    const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+    
+    if (ordinarioInput === '') {
+        mostrarToast('Por favor ingrese un número de ordinario', '#e74c3c');
+        return;
+    }
+    
+    // Guardar estado actual de checkboxes
+    const checkboxes = document.querySelectorAll('.custom-checkbox');
+    const checkboxState = {};
+    
+    checkboxes.forEach(checkbox => {
+        checkboxState[checkbox.id] = checkbox.checked;
+    });
+    
+    try {
+        mostrarToast('Guardando...', '#3498db');
+        
+        // Preparar datos para enviar
+        const dataToSend = {
+            action: 'save',
+            ordinario: ordinarioInput,
+            estado: JSON.stringify(checkboxState)
+        };
+        
+        // Configurar la solicitud
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(dataToSend).toString()
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Actualizar datos locales
+            ordinarioData[ordinarioInput] = checkboxState;
+            actualizarListaOrdinarios();
+            currentOrdinarioIndex = ordinarioList.indexOf(ordinarioInput);
+            mostrarToast('Ordinario guardado correctamente', '#4CAF50');
+        } else {
+            mostrarToast('Error al guardar: ' + data.error, '#e74c3c');
+        }
+    } catch (error) {
+        console.error('Error al guardar ordinario:', error);
+        mostrarToast('Error de conexión al guardar', '#e74c3c');
+    }
+}
+
+// Función para cargar un ordinario seleccionado
+function cargarOrdinarioSeleccionado() {
+    const selector = document.getElementById('ordinarioSelector');
+    const selectedOrdinario = selector.value;
+    
+    if (selectedOrdinario === '') {
+        return;
+    }
+    
+    // Actualizar campo de ordinario
+    document.getElementById('ordinarioInput').value = selectedOrdinario;
+    
+    // Cargar estado de checkboxes
+    const checkboxState = ordinarioData[selectedOrdinario];
+    
+    if (checkboxState) {
+        const checkboxes = document.querySelectorAll('.custom-checkbox');
+        
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = checkboxState[checkbox.id] || false;
+        });
+    }
+    
+    // Actualizar índice actual
+    currentOrdinarioIndex = ordinarioList.indexOf(selectedOrdinario);
+    
+    // Actualizar botones de navegación
+    actualizarBotones();
+}
+
+// Función para cargar ordinario anterior
+function cargarOrdinarioAnterior() {
+    if (currentOrdinarioIndex > 0) {
+        currentOrdinarioIndex--;
+        const ordinario = ordinarioList[currentOrdinarioIndex];
+        document.getElementById('ordinarioInput').value = ordinario;
+        document.getElementById('ordinarioSelector').value = ordinario;
+        cargarOrdinarioSeleccionado();
+    }
+}
+
+// Función para cargar ordinario siguiente
+function cargarOrdinarioSiguiente() {
+    if (currentOrdinarioIndex < ordinarioList.length - 1) {
+        currentOrdinarioIndex++;
+        const ordinario = ordinarioList[currentOrdinarioIndex];
+        document.getElementById('ordinarioInput').value = ordinario;
+        document.getElementById('ordinarioSelector').value = ordinario;
+        cargarOrdinarioSeleccionado();
+    }
+}
+
+// Función para eliminar ordinario actual
+async function eliminarOrdinarioActual() {
+    const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+    
+    if (ordinarioInput === '') {
+        mostrarToast('Por favor ingrese un número de ordinario', '#e74c3c');
+        return;
+    }
+    
+    // Verificar si el ordinario existe en los datos locales
+    if (!ordinarioData[ordinarioInput]) {
+        mostrarToast('El ordinario no existe en la base de datos', '#e74c3c');
+        return;
+    }
+    
+    // Confirmar eliminación
+    if (!confirm('¿Está seguro que desea eliminar el ordinario ' + ordinarioInput + '?')) {
+        return;
+    }
+    // Solicitar contraseña
+    const password = prompt('Ingrese la contraseña para confirmar la eliminación:');
+    const contraseñaCorrecta = 'DIMAO_2025x'; // Puedes cambiarla o gestionarla de forma más segura si deseas
+
+    if (password !== contraseñaCorrecta) {
+        mostrarToast('Contraseña incorrecta. No se eliminó el ordinario.', '#e74c3c');
+        return;
+    }
+
+    try {
+        mostrarToast('Eliminando...', '#3498db');
+        
+        // Preparar datos para enviar
+        const dataToSend = {
+            action: 'delete',
+            ordinario: ordinarioInput
+        };
+        
+        // Configurar la solicitud
+        const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(dataToSend).toString()
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Eliminar del objeto local
+            delete ordinarioData[ordinarioInput];
+            
+            // Limpiar campo
+            document.getElementById('ordinarioInput').value = '';
+            
+            // Actualizar lista y botones
+            actualizarListaOrdinarios();
+            
+            // Reiniciar índice actual
+            currentOrdinarioIndex = -1;
+            
+            // Reiniciar checkboxes
+            const checkboxes = document.querySelectorAll('.custom-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Ocultar sugerencias si están visibles
+            const sugerenciasContainer = document.getElementById('sugerenciasContainer');
+            if (sugerenciasContainer) {
+                sugerenciasContainer.style.display = 'none';
+            }
+            
+            mostrarToast('Ordinario eliminado correctamente', '#4CAF50');
+        } else {
+            console.error('Error del servidor:', data.error);
+            mostrarToast('Error al eliminar: ' + data.error, '#e74c3c');
+            
+            // Si hay error, recargamos los datos para asegurar sincronización
+            cargarOrdinarios();
+        }
+    } catch (error) {
+        console.error('Error al eliminar ordinario:', error);
+        mostrarToast('Error de conexión al eliminar. Intente nuevamente.', '#e74c3c');
+    }
+}
+
+// Función para actualizar botones de navegación
+function actualizarBotones() {
+    const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+    const prevBtn = document.getElementById('prevOrdinarioBtn');
+    const nextBtn = document.getElementById('nextOrdinarioBtn');
+    const eliminarBtn = document.getElementById('eliminarOrdinarioBtn');
+    
+    // Habilitar/deshabilitar botón de eliminar
+    eliminarBtn.disabled = ordinarioInput === '' || !ordinarioData[ordinarioInput];
+    
+    // Habilitar/deshabilitar botones de navegación
+    prevBtn.disabled = currentOrdinarioIndex <= 0;
+    nextBtn.disabled = currentOrdinarioIndex === -1 || currentOrdinarioIndex >= ordinarioList.length - 1;
+}
+
+// Función para guardar el estado de los checkboxes
+async function saveCheckboxState() {
+    const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+    
+    // Si hay un ordinario seleccionado, guardamos estado
+    if (ordinarioInput !== '' && ordinarioData[ordinarioInput]) {
+        const checkboxes = document.querySelectorAll('.custom-checkbox');
+        const checkboxState = {};
+        
+        checkboxes.forEach(checkbox => {
+            checkboxState[checkbox.id] = checkbox.checked;
+        });
+        
+        // Actualizar estado en estructura de datos local
+        ordinarioData[ordinarioInput] = checkboxState;
+        
+        try {
+            // Preparar datos para enviar
+            const dataToSend = {
+                action: 'save',
+                ordinario: ordinarioInput,
+                estado: JSON.stringify(checkboxState)
+            };
+            
+            // Configurar la solicitud
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(dataToSend).toString()
+            });
+            
+            const data = await response.json();
+            
+            if (!data.success) {
+                console.error('Error al guardar estado:', data.error);
+            }
+        } catch (error) {
+            console.error('Error al guardar estado de checkboxes:', error);
+        }
+    }
+}
+
+// Añadir eventos para el campo de ordinario con funcionalidad de autocompletado
+const ordinarioInput = document.getElementById('ordinarioInput');
+if (ordinarioInput) {
+    ordinarioInput.addEventListener('input', function() {
+        actualizarBotones();
+        mostrarSugerencias(this.value);
+        
+        const valorActual = this.value.trim();
+        
+        // Si el campo está vacío o el valor no existe en la lista de ordinarios guardados,
+        // desmarcar todas las casillas
+        if (valorActual === '' || !ordinarioData[valorActual]) {
+            const checkboxes = document.querySelectorAll('.custom-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+}
+
+// Función para generar PDF
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+    
+    if (ordinarioInput === '') {
+        mostrarToast('Por favor ingrese un número de ordinario', '#e74c3c');
+        return;
+    }
+    
+    // Preparar contenido para PDF
+    const instructionsContainer = document.getElementById('instructionsContainer');
+    
+    // Mostrar notificación
+    mostrarToast('Generando PDF, por favor espere...', '#3498db');
+    
+    // Usar html2canvas para capturar el contenido
+    html2canvas(instructionsContainer).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const imgX = (pdfWidth - imgWidth * ratio) / 2;
+        const imgY = 30;
+        
+        // Añadir encabezado
+        pdf.setFontSize(18);
+        pdf.setTextColor(0, 102, 204);
+        pdf.text('DIMAO', pdfWidth / 2, 15, { align: 'center' });
+        pdf.setFontSize(14);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('Licitación Ágil - Ordinario N° ' + ordinarioInput, pdfWidth / 2, 25, { align: 'center' });
+        
+        // Añadir imagen del contenido
+        pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+        
+        // Añadir pie de página
+        pdf.setFontSize(10);
+        pdf.setTextColor(100, 100, 100);
+        const today = new Date();
+        pdf.text('Documento generado el ' + today.toLocaleDateString(), pdfWidth / 2, pdfHeight - 10, { align: 'center' });
+        
+        // Guardar PDF
+        pdf.save('Licitación_Ágil_' + ordinarioInput + '.pdf');
+        
+        // Mostrar notificación de éxito
+        mostrarToast('PDF generado correctamente', '#4CAF50');
+    });
+}
+
+// Función para mostrar mensajes toast
+function mostrarToast(mensaje, color = '#333') {
+    const toast = document.getElementById('toast');
+    toast.textContent = mensaje;
+    toast.style.backgroundColor = color;
+    toast.style.visibility = 'visible';
+    toast.style.opacity = '1';
+    
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            toast.style.visibility = 'hidden';
+        }, 300);
+    }, 3000);
+}
+
+// Función para cerrar las sugerencias cuando se hace clic fuera de ellas
+document.addEventListener('click', function(event) {
+    const sugerenciasContainer = document.getElementById('sugerenciasContainer');
+    const ordinarioInput = document.getElementById('ordinarioInput');
+    
+    if (sugerenciasContainer && 
+        event.target !== sugerenciasContainer && 
+        event.target !== ordinarioInput && 
+        !sugerenciasContainer.contains(event.target)) {
+        sugerenciasContainer.style.display = 'none';
+    }
+});
+
+// Función para abrir asistente (placeholder)
+function openAssistance() {
+    mostrarToast('Asistente virtual no disponible en este momento', '#3498db');
+}
+
+// Función para leer el texto en voz alta con pausa/reanudación
+function readAloud() {
+    // Si ya está hablando, pausar
+    if (isSpeaking) {
+        pauseSpeech();
+        return;
+    }
+    
+    // Si hay una lectura pausada, reanudar
+    if (currentUtterance) {
+        resumeSpeech();
+        return;
+    }
+    
+    // Iniciar nueva lectura
+    startNewSpeech();
+}
+
+// Función para iniciar una nueva lectura
+function startNewSpeech() {
+    // Limpiar cualquier estado previo
+    resetSpeechState();
+    
+    // Obtener elementos a leer
+    const instructionsContainer = document.getElementById('instructionsContainer');
+    const title = instructionsContainer.querySelector('h3');
+    const instructionItems = instructionsContainer.querySelectorAll('.instruction-item');
+    const note = instructionsContainer.querySelector('.note');
+    
+    // Recopilar elementos en orden para resaltado
+    highlightedElements = [title];
+    instructionItems.forEach(item => {
+        highlightedElements.push(item.querySelector('.instruction-text'));
+    });
+    highlightedElements.push(note);
+    
+    // Crear utterances separados para cada elemento para mejor sincronización
+    utteranceQueue = highlightedElements.map(element => {
+        const utterance = new SpeechSynthesisUtterance(element.textContent.trim());
+        
+        // Configurar propiedades de la voz
+        configureVoice(utterance);
+        
+        // Añadir eventos para resaltado
+        utterance.onstart = () => {
+            highlightElement(element);
+            currentUtterance = utterance;
+        };
+        
+        utterance.onend = () => {
+            if (isSpeaking) {
+                unhighlightElement(element);
+                currentHighlightIndex++;
+            }
+        };
+        
+        return utterance;
+    });
+    
+    // Comenzar a hablar
+    isSpeaking = true;
+    updateReadButton();
+    speakNext();
+}
+
+// Función para hablar el siguiente elemento en la cola
+function speakNext() {
+    if (utteranceQueue.length > 0 && isSpeaking) {
+        const nextUtterance = utteranceQueue.shift();
+        speechSynthesis.speak(nextUtterance);
+        
+        // Manejar la finalización para continuar con el siguiente
+        nextUtterance.onend = function() {
+            if (isSpeaking) {
+                unhighlightElement(highlightedElements[currentHighlightIndex]);
+                currentHighlightIndex++;
+                speakNext();
+            }
+        };
+    } else if (utteranceQueue.length === 0) {
+        // Ha terminado toda la cola
+        resetSpeechState();
+        mostrarToast('Lectura completada', '#4CAF50');
+    }
+}
+
+// Función para configurar la voz del utterance
+function configureVoice(utterance) {
+    // Obtener voces disponibles
+    const voices = speechSynthesis.getVoices();
+    
+    // Intentar encontrar una voz femenina en español
+    const femaleVoice = voices.find(voice => 
+        voice.lang.includes('es') && (voice.name.toLowerCase().includes('female') || voice.name.toLowerCase().includes('mujer')));
+    
+    if (femaleVoice) {
+        utterance.voice = femaleVoice;
+    } else {
+        // Usar cualquier voz en español si no hay femenina específica
+        const spanishVoice = voices.find(voice => voice.lang.includes('es'));
+        if (spanishVoice) utterance.voice = spanishVoice;
+    }
+    
+    // Configurar propiedades de la voz
+    utterance.rate = 0.9; // Velocidad ligeramente más lenta
+    utterance.pitch = 1.2; // Tono un poco más alto para sonido femenino
+    utterance.lang = 'es-ES';
+}
+
+// Función para pausar la lectura
+function pauseSpeech() {
+    if (isSpeaking) {
+        isSpeaking = false;
+        speechSynthesis.pause();
+        updateReadButton();
+        mostrarToast('Lectura pausada', '#3498db');
+    }
+}
+
+// Función para reanudar la lectura
+function resumeSpeech() {
+    isSpeaking = true;
+    speechSynthesis.resume();
+    updateReadButton();
+    mostrarToast('Lectura reanudada', '#3498db');
+}
+
+// Función para reiniciar el estado de la lectura
+function resetSpeechState() {
+    // Detener cualquier síntesis en curso
+    speechSynthesis.cancel();
+    
+    // Limpiar resaltados previos
+    highlightedElements.forEach(element => {
+        if (element) unhighlightElement(element);
+    });
+    
+    // Reiniciar variables
+    isSpeaking = false;
+    currentUtterance = null;
+    highlightedElements = [];
+    utteranceQueue = [];
+    currentHighlightIndex = 0;
+    
+    // Actualizar botón
+    updateReadButton();
+}
+
+// Función para resaltar elemento
+function highlightElement(element) {
+    if (!element) return;
+    
+    // Guardar estilo original para restaurar después
+    element._originalBackgroundColor = element.style.backgroundColor;
+    element._originalTransition = element.style.transition;
+    
+    // Aplicar estilos de resaltado
+    element.style.backgroundColor = '#ffff9980';
+    element.style.transition = 'background-color 0.3s ease';
+    
+    // Scroll al elemento si está fuera de vista
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Función para quitar resaltado
+function unhighlightElement(element) {
+    if (!element) return;
+    
+    // Restaurar estilo original
+    element.style.backgroundColor = element._originalBackgroundColor || '';
+    element.style.transition = element._originalTransition || '';
+}
+
+// Función para actualizar el texto e icono del botón según estado
+function updateReadButton() {
+    const button = document.getElementById('readAloudBtn');
+    
+    if (isSpeaking) {
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+            Pausar Lectura
+        `;
+    } else {
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            ${currentUtterance ? 'Reanudar Lectura' : 'Leer en Voz Alta'}
+        `;
+    }
+}
+
+// Asegurarnos de cargar las voces disponibles
+window.speechSynthesis.onvoiceschanged = function() {
+    // Voces ya están cargadas
+};
+
+// Evento para detener la lectura cuando se navega
+window.addEventListener('beforeunload', function() {
+    resetSpeechState();
+});
+
+// Función para reiniciar las casillas de verificación
+function reiniciarCasillas() {
+    if (confirm('¿Está seguro que desea reiniciar todas las casillas?')) {
+        const checkboxes = document.querySelectorAll('.custom-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        
+        // Si hay un ordinario activo, actualizar su estado
+        const ordinarioInput = document.getElementById('ordinarioInput').value.trim();
+        if (ordinarioInput !== '' && ordinarioData[ordinarioInput]) {
+            saveCheckboxState();
+            mostrarToast('Casillas reiniciadas', '#4CAF50');
+        } else {
+            mostrarToast('Casillas reiniciadas localmente', '#3498db');
+        }
+    }
+}
+
+// Función para exportar todos los ordinarios a un archivo
+function exportarOrdinarios() {
+    if (Object.keys(ordinarioData).length === 0) {
+        mostrarToast('No hay ordinarios para exportar', '#e74c3c');
+        return;
+    }
+    
+    try {
+        // Convertir datos a JSON string
+        const dataStr = JSON.stringify(ordinarioData, null, 2);
+        
+        // Crear blob y enlace para descarga
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        
+        // Crear elemento de enlace y simular clic
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ordinarios_backup_' + new Date().toISOString().slice(0,10) + '.json';
+        document.body.appendChild(link);
+        link.click();
+        
+        // Limpiar
+        URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+        
+        mostrarToast('Exportación completada', '#4CAF50');
+    } catch (error) {
+        console.error('Error al exportar:', error);
+        mostrarToast('Error al exportar datos', '#e74c3c');
+    }
+}
+
+// Función para importar ordinarios desde un archivo
+function importarOrdinarios() {
+    // Crear input de archivo oculto
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json';
+    fileInput.style.display = 'none';
+    
+    // Manejar selección de archivo
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+        
+        // Confirmar importación
+        if (!confirm('Esta acción importará ordinarios desde el archivo seleccionado y podría sobrescribir datos existentes. ¿Desea continuar?')) {
+            return;
+        }
+        
+        // Solicitar contraseña
+        const password = prompt('Ingrese la contraseña para confirmar la importación:');
+        const contraseñaCorrecta = 'DIMAO_2025x';
+        
+        if (password !== contraseñaCorrecta) {
+            mostrarToast('Contraseña incorrecta. No se importaron los datos.', '#e74c3c');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.readAsText(file);
+        
+        reader.onload = async function() {
+            try {
+                const importedData = JSON.parse(reader.result);
+                
+                // Verificar formato
+                if (typeof importedData !== 'object') {
+                    throw new Error('Formato de archivo inválido');
+                }
+                
+                // Mostrar confirmación con conteo
+                const numOrdinarios = Object.keys(importedData).length;
+                const confirmMsg = `Se importarán ${numOrdinarios} ordinarios. ¿Está seguro?`;
+                
+                if (confirm(confirmMsg)) {
+                    mostrarToast('Importando datos...', '#3498db');
+                    
+                    // Contador para rastrear progreso
+                    let procesados = 0;
+                    let exitosos = 0;
+                    
+                    // Importar cada ordinario
+                    for (const [ordinario, estado] of Object.entries(importedData)) {
+                        try {
+                            // Preparar datos para enviar
+                            const dataToSend = {
+                                action: 'save',
+                                ordinario: ordinario,
+                                estado: JSON.stringify(estado)
+                            };
+                            
+                            // Configurar la solicitud
+                            const response = await fetch(SCRIPT_URL, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams(dataToSend).toString()
+                            });
+                            
+                            const data = await response.json();
+                            
+                            if (data.success) {
+                                // Actualizar datos locales
+                                ordinarioData[ordinario] = estado;
+                                exitosos++;
+                            }
+                            
+                            procesados++;
+                            
+                            // Actualizar progreso cada 5 ordinarios
+                            if (procesados % 5 === 0 || procesados === numOrdinarios) {
+                                mostrarToast(`Importando: ${procesados}/${numOrdinarios}`, '#3498db');
+                            }
+                        } catch (e) {
+                            console.error(`Error importando ordinario ${ordinario}:`, e);
+                            procesados++;
+                        }
+                    }
+                    
+                    // Actualizar lista después de importar
+                    actualizarListaOrdinarios();
+                    
+                    // Mostrar resultado final
+                    mostrarToast(`Importación completada: ${exitosos}/${numOrdinarios} exitosos`, '#4CAF50');
+                }
+            } catch (error) {
+                console.error('Error al importar archivo:', error);
+                mostrarToast('Error al procesar archivo. Formato inválido.', '#e74c3c');
+            }
+        };
+        
+        reader.onerror = function() {
+            mostrarToast('Error al leer el archivo', '#e74c3c');
+        };
+    });
+    
+    // Simular clic para abrir selector de archivos
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    document.body.removeChild(fileInput);
+}
+
+// Función para verificar estado de conexión
+async function verificarConexion() {
+    try {
+        mostrarToast('Verificando conexión...', '#3498db');
+        
+        const response = await fetch(`${SCRIPT_URL}?action=ping`);
+        const data = await response.json();
+        
+        if (data.success) {
+            mostrarToast('Conexión establecida correctamente', '#4CAF50');
+        } else {
+            mostrarToast('Error de conexión: ' + data.error, '#e74c3c');
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        mostrarToast('No se pudo conectar al servidor. Verifique su conexión a internet.', '#e74c3c');
+    }
+}
+
+// Función para sincronizar datos locales con el servidor
+async function sincronizarDatos() {
+    try {
+        mostrarToast('Sincronizando datos...', '#3498db');
+        
+        // Obtener datos actualizados del servidor
+        const response = await fetch(`${SCRIPT_URL}?action=getAll`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // Comparar con datos locales para determinar cambios
+            const datosServidor = data.data || {};
+            const ordinariosMergeados = {};
+            
+            // Unir datos del servidor con locales
+            Object.assign(ordinariosMergeados, datosServidor); 
+            
+            // Actualizar datos locales
+            ordinarioData = ordinariosMergeados;
+            actualizarListaOrdinarios();
+            
+            mostrarToast('Sincronización completada', '#4CAF50');
+        } else {
+            mostrarToast('Error al sincronizar: ' + data.error, '#e74c3c');
+        }
+    } catch (error) {
+        console.error('Error de sincronización:', error);
+        mostrarToast('Error de conexión al sincronizar', '#e74c3c');
+    }
+}
+
+// Función para buscar ordinarios
+function buscarOrdinarios() {
+    const searchTerm = prompt('Ingrese texto para buscar en los ordinarios:');
+    
+    if (!searchTerm || searchTerm.trim() === '') {
+        return;
+    }
+    
+    const term = searchTerm.toLowerCase().trim();
+    const coincidencias = ordinarioList.filter(ord => 
+        ord.toLowerCase().includes(term));
+    
+    if (coincidencias.length === 0) {
+        mostrarToast('No se encontraron coincidencias', '#e74c3c');
+        return;
+    }
+    
+    // Crear ventana modal para mostrar resultados
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Resultados de búsqueda: "${searchTerm}"</h3>
+            <div class="search-results"></div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Mostrar resultados
+    const resultsContainer = modal.querySelector('.search-results');
+    coincidencias.forEach(ordinario => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        
+        // Resaltar texto coincidente
+        const textoResaltado = ordinario.replace(
+            new RegExp(searchTerm, 'gi'),
+            match => `<strong>${match}</strong>`
+        );
+        
+        resultItem.innerHTML = textoResaltado;
+        resultItem.addEventListener('click', function() {
+            document.getElementById('ordinarioInput').value = ordinario;
+            cargarOrdinarioPorNombre(ordinario);
+            modal.style.display = 'none';
+            document.body.removeChild(modal);
+        });
+        
+        resultsContainer.appendChild(resultItem);
+    });
+    
+    // Manejar cierre de modal
+    const closeBtn = modal.querySelector('.close');
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        document.body.removeChild(modal);
+    });
+    
+    // Cerrar modal al hacer clic fuera del contenido
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            document.body.removeChild(modal);
+        }
+    });
+    
+    // Estilos para el modal
+    const style = document.createElement('style');
+    style.textContent = `
+        .modal {
+            display: block;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .close:hover {
+            color: #333;
+        }
+        
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .search-result-item strong {
+            background-color: #ffffaa;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
+        
+        @keyframes slideIn {
+            from {transform: translateY(-50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
+        }
+    `;
+    
+    document.head.appendChild(style);
+    
+    // Mostrar mensaje con el conteo
+    mostrarToast(`Se encontraron ${coincidencias.length} ordinarios`, '#4CAF50');
+}
+
+// Añadir eventos para funcionalidades adicionales cuando el DOM esté cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Si existen los botones, añadir event listeners
+    
+    // Botón para reiniciar casillas
+    const reiniciarBtn = document.getElementById('reiniciarCasillasBtn');
+    if (reiniciarBtn) {
+        reiniciarBtn.addEventListener('click', reiniciarCasillas);
+    }
+    
+    // Botón para exportar ordinarios
+    const exportarBtn = document.getElementById('exportarBtn');
+    if (exportarBtn) {
+        exportarBtn.addEventListener('click', exportarOrdinarios);
+    }
+    
+    // Botón para importar ordinarios
+    const importarBtn = document.getElementById('importarBtn');
+    if (importarBtn) {
+        importarBtn.addEventListener('click', importarOrdinarios);
+    }
+    
+    // Botón para verificar conexión
+    const verificarConexionBtn = document.getElementById('verificarConexionBtn');
+    if (verificarConexionBtn) {
+        verificarConexionBtn.addEventListener('click', verificarConexion);
+    }
+    
+    // Botón para sincronizar datos
+    const sincronizarBtn = document.getElementById('sincronizarBtn');
+    if (sincronizarBtn) {
+        sincronizarBtn.addEventListener('click', sincronizarDatos);
+    }
+    
+    // Botón para buscar ordinarios
+    const buscarBtn = document.getElementById('buscarBtn');
+    if (buscarBtn) {
+        buscarBtn.addEventListener('click', buscarOrdinarios);
+    }
+    
+    // Añadir atajo de teclado para guardar (Ctrl+S)
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault(); // Prevenir comportamiento por defecto del navegador
+            guardarOrdinario();
+        }
+    });
+});
+
+// Función para alternar modo oscuro
+let darkModeEnabled = false;
+
+function toggleDarkMode() {
+    darkModeEnabled = !darkModeEnabled;
+    document.body.classList.toggle('dark-mode', darkModeEnabled);
+    
+    // Guardar preferencia en localStorage
+    localStorage.setItem('darkMode', darkModeEnabled);
+    
+    // Actualizar ícono y texto del botón
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    if (darkModeBtn) {
+        if (darkModeEnabled) {
+            darkModeBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Modo Claro
+            `;
+        } else {
+            darkModeBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Modo Oscuro
+            `;
+        }
+    }
+    
+    mostrarToast(darkModeEnabled ? 'Modo oscuro activado' : 'Modo claro activado', '#3498db');
+}
+
+// Cargar preferencia de modo oscuro al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar preferencia guardada
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'true') {
+        darkModeEnabled = true;
+        document.body.classList.add('dark-mode');
+        
+        // Actualizar botón si existe
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        if (darkModeBtn) {
+            darkModeBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Modo Claro
+            `;
+        }
+    }
+    
+    // Añadir listener al botón de modo oscuro
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', toggleDarkMode);
+    }
+    
+    // Añadir estilos para modo oscuro si no existen
+    if (!document.getElementById('darkModeStyles')) {
+        const darkModeStyles = document.createElement('style');
+        darkModeStyles.id = 'darkModeStyles';
+        darkModeStyles.textContent = `
+            .dark-mode {
+                --bg-color: #1a1a1a;
+                --text-color: #f0f0f0;
+                --input-bg: #2a2a2a;
+                --card-bg: #2d2d2d;
+                --border-color: #444;
+                --button-bg: #3498db;
+                --button-text: #fff;
+                --button-hover: #2980b9;
+                --checkbox-bg: #2a2a2a;
+                --highlight-color: #3498db;
+            }
+            
+            .dark-mode body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+            
+            .dark-mode .container, 
+            .dark-mode .card {
+                background-color: var(--card-bg);
+                border-color: var(--border-color);
+            }
+            
+            .dark-mode input, 
+            .dark-mode select, 
+            .dark-mode textarea {
+                background-color: var(--input-bg);
+                color: var(--text-color);
+                border-color: var(--border-color);
+            }
+            
+            .dark-mode button {
+                background-color: var(--button-bg);
+                color: var(--button-text);
+            }
+            
+            .dark-mode button:hover:not(:disabled) {
+                background-color: var(--button-hover);
+            }
+            
+            .dark-mode button:disabled {
+                background-color: #555;
+                color: #999;
+            }
+            
+            .dark-mode .instruction-item {
+                border-color: var(--border-color);
+            }
+            
+            .dark-mode .custom-checkbox {
+                border-color: var(--border-color);
+                background-color: var(--checkbox-bg);
+            }
+            
+            .dark-mode .custom-checkbox:checked {
+                background-color: var(--highlight-color);
+            }
+        `;
+        
+        document.head.appendChild(darkModeStyles);
+    }
+});
+
+// Manejar servicio worker para PWA, si está configurado
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
+
+// Añadir funcionalidad de búsqueda rápida con atajo de teclado (Ctrl+F)
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault(); // Prevenir búsqueda del navegador
+        buscarOrdinarios();
+    }
+});
+
+// Función para actualizar la aplicación (mostrar mensaje para refrescar)
+function checkForUpdates() {
+    const lastCheckTime = localStorage.getItem('lastUpdateCheck');
+    const now = new Date().getTime();
+    
+    // Verificar actualizaciones cada 30 minutos
+    if (!lastCheckTime || (now - lastCheckTime > 30 * 60 * 1000)) {
+        fetch(`${SCRIPT_URL}?action=version`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.version) {
+                    const currentVersion = localStorage.getItem('appVersion') || '1.0.0';
+                    
+                    if (data.version !== currentVersion) {
+                        const updateMsg = confirm('Hay una nueva versión disponible. ¿Desea actualizar ahora?');
+                        if (updateMsg) {
+                            localStorage.setItem('appVersion', data.version);
+                            window.location.reload(true); // Forzar recarga sin caché
+                        }
+                    }
+                }
+                localStorage.setItem('lastUpdateCheck', now);
+            })
+            .catch(err => console.error('Error verificando actualizaciones:', err));
+    }
+}
+
+// Verificar actualizaciones al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar actualizaciones después de 5 segundos
+    setTimeout(checkForUpdates, 5000);
+});</script>
+</body>
+</html>
