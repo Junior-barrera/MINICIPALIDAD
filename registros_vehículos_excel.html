@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Registros de Vehículos | Municipalidad de Arica</title>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="dir_formularioapps.js"></script>
+    <style>
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Estilos para el encabezado */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            font-weight: 400;
+            color: #86868b;
+        }
+
+        /* Estilos para el contenedor principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* Estilos para filtros */
+        .filter-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .filter-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .filter-control:focus {
+            border-color: #06c;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(135deg, #06c, #09c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.4);
+        }
+        .filter-group-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* espacio entre botones */
+    margin-top: 15px;
+}
+
+        /* Estilos para la tabla de resultados */
+        .results-section {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .results-table th {
+            background-color: #f0f0f0;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .results-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .results-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .results-table tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        /* Estilos para el botón de exportar */
+        .export-section {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .export-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+        }
+
+        .export-btn i {
+            font-size: 18px;
+        }
+
+        /* Estilos para mensajes al usuario */
+        .message {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .info-message {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            color: #0d47a1;
+        }
+
+        .warning-message {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            color: #ff6f00;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Estilos para el footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        /* Estilos responsive */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .export-section {
+                justify-content: center;
+            }
+            
+            .export-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Estilos para el spinner de carga */
+        .loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #06c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Estado activo para filtros */
+        .active-filter {
+            background-color: #e6f7ff;
+            border-color: #91d5ff;
+        }
+        /* Estilos para el contenedor de sugerencias */
+#sugerencias-patente {
+    position: absolute;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: calc(100% - 40px);
+    margin-top: 2px;
+    border: 1px solid #ddd;
+}
+
+#sugerencias-patente div {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+#sugerencias-patente div:hover {
+    background-color: #f0f0f0;
+}
+
+#sugerencias-patente div:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para el input de patente */
+#filtro-patente {
+    position: relative;
+}
+    </style>
+</head>
+
+<body>
+    <!-- Loader para indicar carga -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header con logo -->
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <h2 class="page-title">Consulta de Registros de Vehículos</h2>
+        
+        <!-- Sección de filtros -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label class="filter-label">Patente</label>
+                <input type="text" id="filtro-patente" class="filter-control" placeholder="Ingrese patente" oninput="sugerirPatentes()">
+                <div id="sugerencias-patente" style="position: absolute; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 4px; max-height: 200px; overflow-y: auto; width: calc(100% - 40px); display: none; z-index: 1000;"></div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Año</label>
+                <select id="filtro-ano" class="filter-control">
+                    <option value="">Todos los años</option>
+                    <!-- Se llenará dinámicamente con JavaScript -->
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Estado</label>
+                <select id="filtro-estado" class="filter-control">
+                    <option value="">Todos los estados</option>
+                    <option value="OPERATIVA">OPERATIVA</option>
+                    <option value="EN REPARACION">EN REPARACION</option>
+                    <option value="DE BAJA">DE BAJA</option>
+                </select>
+            </div>
+
+            <div class="filter-group-buttons">
+                <button id="btn-filtrar" class="filter-btn">Buscar</button>
+                <button id="btn-volver" class="filter-btn" onclick="window.location.href='formulario-2.html'">Volver</button>
+            </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div id="contador-resultados" style="margin-top: 15px; font-weight: 500;"></div>
+        
+        <!-- Sección de resultados -->
+        <div class="results-section">
+            <div class="export-section">
+                <button id="btn-exportar" class="export-btn" onclick="exportarExcel()" disabled>
+                    <i>📊</i> Exportar a Excel
+                </button>
+            </div>
+            
+            <div id="tabla-contenedor" style="margin-top: 20px; overflow-x: auto;">
+                <table id="tabla-resultados" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>N° Control</th>
+                            <th>Fecha</th>
+                            <th>Patente</th>
+                            <th>Estado</th>
+                            <th>Movimiento</th>
+                            <th>Kilometraje</th>
+                            <th>Conductor</th>
+                            <th>Dirección</th>
+                            <th>Sistema</th>
+                            <th>Nivel Falla</th>
+                            <th>Trabajo Realizado</th>
+                            <th>Días en Taller</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                        <!-- Aquí se cargarán los resultados -->
+                    </tbody>
+                </table>
+                <div id="no-resultados" class="no-results" style="display: none;">
+                    No se encontraron registros con los filtros aplicados
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca, Arica</p>
+                <p>Anexo: 6959</p>
+                <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica</strong> y más, en un solo sistema integral.
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            <div class="footer-column licitaciones">
+                <h3>Licitaciones</h3>
+                <ul class="licitaciones-list">
+                    <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                    <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                    <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                    <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                    <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+
+    <script>
+       // Variables globales
+let datosRegistros = [];  // Para almacenar todos los registros
+let datosFiltrados = [];  // Para almacenar los registros filtrados
+let tipPaten = [];        // Para almacenar las patentes disponibles
+let dat_PAT = [];         // Datos completos de patentes
+let dato_dt = [];         // Datos completos de registros
+let dato_v1 = [];         // Datos de variables 1
+let dato_v2 = [];         // Datos de variables 2
+let tipNumer = [];        // Array para números de control
+let tipDirec = [];        // Array para direcciones
+let tipOpera = [];        // Array para operaciones
+let tipCondu = [];        // Array para conductores
+let tipTraba = [];        // Array para trabajos
+let baul_n1 = [];         // Array auxiliar
+
+// Variable para la URL del WebApp
+// Asegúrate de que dir_mec esté definido en tu HTML antes de cargar este script
+const WEB_APP_URL = dir_mec;
+
+// Ejecutar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar que la URL esté definida
+    if (!WEB_APP_URL) {
+        console.error("Error: URL del WebApp no definida (dir_mec)");
+        mostrarError("La configuración del sistema está incompleta. Contacte al administrador.");
+        return;
+    }
+    
+    // Cargar datos desde el servidor
+    cargarDatosDesdeServidor();
+    
+    // Configurar listeners de eventos
+    configurarEventos();
+});
+
+// Función para configurar los eventos
+function configurarEventos() {
+    // Cerrar sugerencias al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#filtro-patente') && !e.target.closest('#sugerencias-patente')) {
+            document.getElementById('sugerencias-patente').style.display = 'none';
+        }
+    });
+    
+    // Listener para el botón de filtrar
+    const btnFiltrar = document.getElementById('btn-filtrar');
+    if (btnFiltrar) {
+        btnFiltrar.addEventListener('click', filtrarRegistros);
+    }
+    
+    // Listener para el botón de exportar
+    const btnExportar = document.getElementById('btn-exportar');
+    if (btnExportar) {
+        btnExportar.addEventListener('click', exportarExcel);
+    }
+    
+    // Listener para el input de patente
+    const filtroPat = document.getElementById('filtro-patente');
+    if (filtroPat) {
+        filtroPat.addEventListener('input', sugerirPatentes);
+    }
+}
+
+// Función para cargar datos desde el servidor
+function cargarDatosDesdeServidor() {
+    mostrarLoader(true);
+    
+    fetch(WEB_APP_URL + "?h=PD12")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Asigna los datos recibidos a las variables
+            const dat_PATx = data.dat_PAT;    // Datos de la hoja "PATENTE"
+            const dato_dtx = data.dato_dt;    // Datos de la hoja "Datos"
+            const dato_v1x = data.dato_v1;    // Datos de la hoja "Variable1"
+            const dato_v2x = data.dato_v2;    // Datos de la hoja "Variable2"
+            
+            console.log("Datos recibidos:", data); // Log para debugging
+            
+            // Procesar patentes
+            procesarPatentes(dat_PATx);
+            
+            // Procesar datos de vehículos
+            procesarDatosVehiculos(dato_dtx);
+            
+            // Variables adicionales
+            if (dato_v1x && dato_v1x.length > 0) dato_v1 = dato_v1x;
+            if (dato_v2x && dato_v2x.length > 0) dato_v2 = dato_v2x;
+            
+            // Llenar años disponibles
+            llenarAniosDisponibles();
+            
+            // Mostrar todos los registros inicialmente
+            filtrarRegistros();
+            
+            // Ocultar loader
+            mostrarLoader(false);
+        })
+        .catch(error => {
+            console.error("Error al cargar datos:", error);
+            mostrarError("Error al cargar datos. Intente nuevamente.");
+            mostrarLoader(false);
+        });
+}
+
+// Procesar datos de patentes
+function procesarPatentes(dat_PATx) {
+    if (!dat_PATx || dat_PATx.length <= 0) return;
+    
+    tipPaten = [];
+    dat_PAT = [];
+    baul_n1 = [];
+    
+    for (let ii = 0; ii < dat_PATx.length; ii++) {
+        if (!dat_PATx[ii] || dat_PATx[ii][0] === "") continue;
+        
+        if (ii > 0) {
+            let jj = ii - 1;
+            tipPaten[jj] = dat_PATx[ii][0];    // Columna A
+            baul_n1[jj] = dat_PATx[ii][3];     // Columna D
+            dat_PAT[jj] = dat_PATx[ii];
+        }
+    }
+    
+    // Crear array de direcciones únicas
+    tipDirec = [...new Set(baul_n1.filter(item => item))];
+    console.log("Patentes procesadas:", tipPaten.length);
+}
+
+// Procesar datos de vehículos
+function procesarDatosVehiculos(dato_dtx) {
+    if (!dato_dtx || dato_dtx.length <= 0) return;
+    
+    dato_dt = [];
+    tipNumer = [];
+    
+    // Empezar desde ii=1 para omitir la primera fila
+    for (let ii = 1; ii < dato_dtx.length; ii++) {
+        if (!dato_dtx[ii] || dato_dtx[ii][0] === "") continue;
+        
+        // Usar un índice diferente para dato_dt y tipNumer para evitar huecos
+        let index = ii - 1;
+        dato_dt[index] = [...dato_dtx[ii]]; // Crear copia del array
+        tipNumer[index] = dato_dt[index][0];   // Columna A
+        
+        // Limpiar formatos numéricos
+        dato_dt[index][0] = limpiarNumero(dato_dt[index][0]);
+        dato_dt[index][4] = limpiarNumero(dato_dt[index][4]);
+        dato_dt[index][15] = limpiarNumero(dato_dt[index][15]);
+        dato_dt[index][20] = limpiarNumero(dato_dt[index][20]);
+        dato_dt[index][21] = limpiarNumero(dato_dt[index][21]);
+    }
+    
+    // Filtrar registros vacíos
+    datosRegistros = dato_dt.filter(reg => reg && reg[0] !== "");
+    console.log("Registros procesados:", datosRegistros.length);
+}
+
+// Función auxiliar para limpiar números
+function limpiarNumero(valor) {
+    if (!valor) return "";
+    return String(valor).replace(/\./g, '').replace(/\D/g, '');
+}
+
+// Llenar el selector de años basado en los registros disponibles
+function llenarAniosDisponibles() {
+    const selectAnio = document.getElementById('filtro-ano');
+    if (!selectAnio) return;
+    
+    // Limpiar opciones anteriores excepto la primera
+    while (selectAnio.options.length > 1) {
+        selectAnio.remove(1);
+    }
+    
+    const anios = new Set(); // Usamos Set para valores únicos
+    
+    // Extraer años de las fechas de los registros
+    datosRegistros.forEach(reg => {
+        if (reg && reg[1]) {
+            const anio = extraerAnioDesFecha(reg[1]);
+            if (anio) anios.add(anio);
+        }
+    });
+    
+    // Ordenar años descendentemente
+    const aniosOrdenados = Array.from(anios).sort((a, b) => b - a);
+    
+    // Llenar el selector
+    aniosOrdenados.forEach(anio => {
+        const option = document.createElement('option');
+        option.value = anio;
+        option.textContent = anio;
+        selectAnio.appendChild(option);
+    });
+}
+
+// Extraer año desde una fecha en varios formatos
+function extraerAnioDesFecha(fechaStr) {
+    if (!fechaStr) return null;
+    
+    // Manejar formatos DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD, YYYY/MM/DD
+    const separadores = ['-', '/'];
+    let partesFecha = null;
+    
+    for (const sep of separadores) {
+        if (fechaStr.includes(sep)) {
+            partesFecha = fechaStr.split(sep);
+            break;
+        }
+    }
+    
+    if (!partesFecha || partesFecha.length !== 3) return null;
+    
+    // Detectar formato de fecha
+    return partesFecha[2].length === 4 ? partesFecha[2] : 
+           partesFecha[0].length === 4 ? partesFecha[0] : null;
+}
+
+// Función mejorada para sugerir patentes al escribir
+function sugerirPatentes() {
+    const input = document.getElementById('filtro-patente');
+    const contenedorSugerencias = document.getElementById('sugerencias-patente');
+    
+    if (!input || !contenedorSugerencias) return;
+    
+    const valorInput = input.value.toUpperCase().trim();
+    contenedorSugerencias.innerHTML = '';
+    
+    if (valorInput.length < 2) {
+        contenedorSugerencias.style.display = 'none';
+        return;
+    }
+    
+    const sugerencias = tipPaten.filter(pat => 
+        pat && pat.toUpperCase().includes(valorInput)
+    );
+    
+    if (sugerencias.length > 0) {
+        // Aplicar estilos al contenedor de sugerencias
+        contenedorSugerencias.style.width = input.offsetWidth + 'px';
+        contenedorSugerencias.style.left = input.offsetLeft + 'px';
+        
+        sugerencias.slice(0, 10).forEach(patente => {  // Limitar a 10 sugerencias para mejor rendimiento
+            const div = document.createElement('div');
+            div.textContent = patente;
+            div.style.padding = '8px 12px';
+            div.style.cursor = 'pointer';
+            div.style.borderBottom = '1px solid #eee';
+            
+            // Resaltar la parte coincidente
+            const indice = patente.toUpperCase().indexOf(valorInput);
+            if (indice >= 0) {
+                const inicio = patente.substring(0, indice);
+                const medio = patente.substring(indice, indice + valorInput.length);
+                const fin = patente.substring(indice + valorInput.length);
+                div.innerHTML = inicio + '<strong>' + medio + '</strong>' + fin;
+            }
+            
+            // Efecto hover
+            div.onmouseover = function() {
+                this.style.backgroundColor = '#f0f0f0';
+            };
+            div.onmouseout = function() {
+                this.style.backgroundColor = 'white';
+            };
+            
+            // Al hacer clic en una sugerencia
+            div.addEventListener('click', () => {
+                input.value = patente;
+                contenedorSugerencias.style.display = 'none';
+                // Opcional: activar la búsqueda automáticamente
+                document.getElementById('btn-filtrar').click();
+            });
+            
+            contenedorSugerencias.appendChild(div);
+        });
+        
+        contenedorSugerencias.style.display = 'block';
+    } else {
+        contenedorSugerencias.style.display = 'none';
+    }
+}
+
+// Filtrar registros según criterios seleccionados
+function filtrarRegistros() {
+    const patente = document.getElementById('filtro-patente')?.value.toUpperCase().trim() || '';
+    const anio = document.getElementById('filtro-ano')?.value || '';
+    const estado = document.getElementById('filtro-estado')?.value || '';
+    
+    // Validar que hay datos
+    if (!datosRegistros || datosRegistros.length === 0) {
+        mostrarError("No hay datos disponibles para filtrar");
+        return;
+    }
+    
+    mostrarLoader(true);
+    
+    // Aplicar filtros
+    datosFiltrados = datosRegistros.filter(reg => {
+        if (!reg) return false;
+        
+        let cumpleFiltros = true;
+        
+        // Filtro por patente
+        if (patente && reg[3]) {
+            cumpleFiltros = cumpleFiltros && reg[3].toUpperCase().includes(patente);
+        }
+        
+        // Filtro por año
+        if (anio && reg[1]) {
+            const anioEnFecha = extraerAnioDesFecha(reg[1]);
+            cumpleFiltros = cumpleFiltros && anioEnFecha === anio;
+        }
+        
+        // Filtro por estado
+        if (estado && reg[8]) {
+            cumpleFiltros = cumpleFiltros && reg[8] === estado;
+        }
+        
+        return cumpleFiltros;
+    });
+    
+    // Mostrar resultados
+    mostrarResultados();
+    
+    // Actualizar contador
+    const contadorElem = document.getElementById('contador-resultados');
+    if (contadorElem) {
+        contadorElem.textContent = `Se encontraron ${datosFiltrados.length} registro(s)`;
+    }
+    
+    // Habilitar/deshabilitar botón de exportar
+    const btnExportar = document.getElementById('btn-exportar');
+    if (btnExportar) {
+        btnExportar.disabled = datosFiltrados.length === 0;
+    }
+    
+    mostrarLoader(false);
+}
+
+// Mostrar resultados en la tabla
+function mostrarResultados() {
+    const tablaBody = document.getElementById('tabla-body');
+    const sinResultados = document.getElementById('no-resultados');
+    
+    if (!tablaBody || !sinResultados) return;
+    
+    // Limpiar tabla
+    tablaBody.innerHTML = '';
+    
+    if (datosFiltrados.length === 0) {
+        sinResultados.style.display = 'block';
+        return;
+    }
+    
+    sinResultados.style.display = 'none';
+    
+    // Llenar tabla con datos filtrados
+    datosFiltrados.forEach(reg => {
+        if (!reg) return;
+        
+        const fila = document.createElement('tr');
+        
+        // Asegurarse que todos los elementos existen
+        const registro = [...reg];
+        while (registro.length < 22) { // Asegurar que hay suficientes elementos
+            registro.push("");
+        }
+        
+        // Índices de columnas a mostrar
+        const indices = [0, 1, 3, 8, 2, 4, 9, 7, 12, 11, 14, 15];
+        
+        // Crear celdas para cada columna
+        indices.forEach(indice => {
+            const celda = document.createElement('td');
+            celda.textContent = registro[indice] || '-';
+            fila.appendChild(celda);
+        });
+        
+        tablaBody.appendChild(fila);
+    });
+}
+
+// Exportar datos a Excel
+function exportarExcel() {
+    if (!datosFiltrados || datosFiltrados.length === 0) {
+        alert('No hay datos para exportar');
+        return;
+    }
+    
+    // Verificar que la librería XLSX está disponible
+    if (typeof XLSX === 'undefined') {
+        alert('Error: La librería de Excel no está disponible');
+        return;
+    }
+    
+    mostrarLoader(true);
+    
+    try {
+        // Preparar datos para el Excel
+        const datosExcel = [
+            // Encabezados
+            ['N° Control', 'Fecha', 'Patente', 'Estado', 'Movimiento', 'Kilometraje', 
+             'Conductor', 'Dirección', 'Sistema', 'Nivel Falla', 'Trabajo Realizado', 'Días en Taller']
+        ];
+        
+        // Índices de columnas a exportar
+        const indices = [0, 1, 3, 8, 2, 4, 9, 7, 12, 11, 14, 15];
+        
+        // Agregar filas de datos
+        datosFiltrados.forEach(reg => {
+            if (!reg) return;
+            
+            // Asegurarse que todos los elementos existen
+            const registro = [...reg];
+            while (registro.length < 22) {
+                registro.push("");
+            }
+            
+            datosExcel.push(indices.map(i => registro[i] || ''));
+        });
+        
+        // Crear libro de Excel
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(datosExcel);
+        
+        // Agregar estilos para encabezados (ancho de columnas)
+        ws['!cols'] = [
+            { width: 10 }, // N° Control
+            { width: 12 }, // Fecha
+            { width: 10 }, // Patente
+            { width: 15 }, // Estado
+            { width: 15 }, // Movimiento
+            { width: 12 }, // Kilometraje
+            { width: 20 }, // Conductor
+            { width: 20 }, // Dirección
+            { width: 20 }, // Sistema
+            { width: 15 }, // Nivel Falla
+            { width: 30 }, // Trabajo Realizado
+            { width: 12 }  // Días en Taller
+        ];
+        
+        // Añadir la hoja al libro
+        XLSX.utils.book_append_sheet(wb, ws, "Registros Vehículos");
+        
+        // Crear nombre de archivo con fecha
+        const fechaActual = new Date();
+        const fechaStr = `${fechaActual.getDate()}-${fechaActual.getMonth()+1}-${fechaActual.getFullYear()}`;
+        const nombreArchivo = `Registros_Vehiculos_${fechaStr}.xlsx`;
+        
+        // Guardar archivo
+        setTimeout(() => {
+            XLSX.writeFile(wb, nombreArchivo);
+            mostrarLoader(false);
+        }, 500);
+    } catch (error) {
+        console.error("Error al exportar a Excel:", error);
+        alert("Error al exportar. Intente nuevamente.");
+        mostrarLoader(false);
+    }
+}
+
+// Mostrar/ocultar loader
+function mostrarLoader(mostrar) {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = mostrar ? 'flex' : 'none';
+    }
+}
+
+// Mostrar mensaje de error
+function mostrarError(mensaje) {
+    // Si tienes un elemento para mostrar errores, úsalo aquí
+    alert(mensaje);
+} 
+ </script>
+</body>
+</html>

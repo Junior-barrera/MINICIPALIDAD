@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mantenimiento Vehículos | Municipalidad de Arica</title>
+</head>
+<style>
+    /* Reset and base styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    body {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        overflow-x: hidden;
+    }
+    
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+        /* Header styles */
+header {
+background-color: rgba(255, 255, 255, 0.8);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+position: sticky;
+top: 0;
+z-index: 100;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+transition: all 0.4s ease;
+}
+
+.top-header {
+display: flex;
+justify-content: center; /* Centramos horizontalmente */
+align-items: center;
+padding: 15px 5%;
+max-width: 1400px;
+margin: 0 auto;
+text-align: center;
+}
+
+.logo {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+}
+
+.logo img {
+height: 40px;
+transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+transform: scale(1.05);
+}
+
+.logo-text {
+display: flex;
+flex-direction: column;
+align-items: center; /* Centra el texto debajo del logo */
+margin-left: 0;
+}
+
+.logo-text h1 {
+font-size: 24px;
+font-weight: 600;
+letter-spacing: -0.5px;
+}
+
+.logo-text span {
+font-size: 12px;
+font-weight: 400;
+color: #86868b;
+}
+    
+    /* Transparency links */
+    .transparency-container {
+        position: relative;
+        background-color: rgba(0, 0, 0, 0.03);
+        text-align: center;
+    }
+    
+    .transparency-toggle {
+        display: none;
+        background-color: rgba(0, 0, 0, 0.03);
+        border: none;
+        color: #06c;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+    
+    .transparency-toggle:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .toggle-icon {
+        display: inline-block;
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+    }
+    
+    .transparency-links {
+        background-color: rgba(0, 0, 0, 0.03);
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+        overflow-x: auto;
+        white-space: nowrap;
+        transition: max-height 0.4s ease;
+    }
+    
+    .transparency-links a {
+        color: #06c;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 14px;
+        font-weight: 400;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .transparency-links a:hover {
+        opacity: 0.7;
+        transform: translateY(-1px);
+    }
+    
+    /* Navigation menu */
+    nav {
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    
+    .main-menu {
+        display: flex;
+        list-style: none;
+        justify-content: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 5%;
+        overflow-x: auto;
+    }
+    
+    .main-menu li {
+        position: relative;
+    }
+    
+    .main-menu a {
+        display: block;
+        padding: 15px 20px;
+        color: #1d1d1f;
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 14px;
+        transition: color 0.3s ease;
+        position: relative;
+    }
+    
+    .main-menu a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 20px;
+        height: 2px;
+        background-color: #06c;
+        transition: transform 0.3s ease;
+    }
+    
+    .main-menu a:hover {
+        color: #06c;
+    }
+    
+    .main-menu a:hover::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+    
+     /* Dashboard container */
+     .dashboard-container {
+        padding: 40px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    
+    .dashboard-title {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #1d2939;
+        position: relative;
+    }
+    
+    .dashboard-title:after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #0066cc, #1a8cff);
+        border-radius: 2px;
+    }
+    
+    .back-button {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 100px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #0066cc;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .back-button:hover {
+        background-color: #f5f9ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+    }
+    
+    .back-icon {
+        margin-right: 8px;
+    }
+    
+    /* Card Grid System */
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin: 40px 0;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #0066cc, #1a8cff);
+        z-index: 2;
+    }
+    
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px auto 15px;
+        color: #0066cc;
+        font-size: 24px;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover .card-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 5px 15px rgba(0, 102, 204, 0.15);
+    }
+    
+    .card-title {
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        margin: 10px 0;
+        color: #1d2939;
+        padding: 0 20px;
+    }
+    
+    .card-description {
+        text-align: center;
+        padding: 0 25px;
+        color: #64748b;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        flex-grow: 1;
+    }
+    
+    .card-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #0066cc, #1a8cff);
+        border: none;
+        border-radius: 100px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin: 0 auto 25px;
+        box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+    }
+    
+    .card-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+        background: linear-gradient(135deg, #005cb8, #0080ff);
+    }
+    
+    .card-button .arrow {
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+    }
+    
+    .card-button:hover .arrow {
+        transform: translateX(4px);
+    }
+    
+    /* Stats counter section */
+    .stats-section {
+        background: linear-gradient(135deg, #ffffff, #f5f9ff);
+        border-radius: 16px;
+        padding: 40px;
+        margin: 50px 0 40px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    }
+    
+    .stats-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        color: #1d2939;
+    }
+    
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 0 20px;
+        min-width: 220px;
+    }
+    
+    .stat-number {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #0066cc, #1a8cff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-label {
+        color: #64748b;
+        font-size: 16px;
+    }
+    
+    /* Footer */
+    footer {
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        padding: 60px 5%;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        margin-top: 60px;
+    }
+    
+    .footer-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .footer-column {
+        flex: 1;
+        padding: 0 20px;
+    }
+    
+    .footer-column h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    
+    .footer-column p {
+        margin-bottom: 10px;
+        color: #86868b;
+        font-size: 14px;
+    }
+    
+    .footer-column ul {
+        list-style: none;
+    }
+    
+    .footer-column ul li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-column a {
+        color: #06c;
+        text-decoration: none;
+        font-size: 14px;
+        transition: opacity 0.3s ease;
+    }
+    
+    .footer-column a:hover {
+        opacity: 0.7;
+    }
+    
+    .social-icons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .social-icons a {
+        background-color: rgba(0, 0, 0, 0.05);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+        transform: translateY(-3px);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .footer-bottom {
+        max-width: 1400px;
+        margin: 40px auto 0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-size: 12px;
+        color: #86868b;
+    }
+    
+    /* Assistant chat button */
+    .assistant-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: rgba(6, 12, 204, 0.9);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 100;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .assistant-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 992px) {
+        .footer-container {
+            flex-direction: column;
+        }
+        
+        .footer-column {
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-iframe {
+            height: 65vh;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 24px;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .dashboard-iframe {
+            height: 50vh;
+        }
+        
+        .transparency-toggle {
+            display: block;
+        }
+        
+        .transparency-toggle.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .transparency-links {
+            max-height: 0;
+            padding: 0;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        
+        .transparency-links.active {
+            max-height: 200px;
+            padding: 10px 0;
+        }
+        
+        .transparency-links a {
+            margin: 8px 0;
+            padding: 5px 0;
+        }
+    }
+    .custom-btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 12px 28px;
+font-size: 16px;
+font-weight: 600;
+color: #fff;
+background: linear-gradient(135deg, #ff6a00, #ee0979);
+border: none;
+border-radius: 999px;
+box-shadow: 0 8px 20px rgba(255, 105, 135, 0.3);
+text-decoration: none;
+transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 25px rgba(255, 105, 135, 0.5);
+background: linear-gradient(135deg, #ee0979, #ff6a00);
+}
+
+.arrow {
+margin-left: 10px;
+font-size: 18px;
+transition: transform 0.3s ease;
+}
+
+.custom-btn:hover .arrow {
+transform: translateX(4px);
+}
+/* Estilo para el contenedor de imagen circular */
+.card-icon-circle {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: #f5f5f5;
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 0 auto 15px; /* Añade margen automático a los lados */
+overflow: hidden; /* Asegura que la imagen no sobresalga del círculo */
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilo para la imagen dentro del círculo */
+.card-icon-circle img {
+width: 80%; /* Un poco menor que el contenedor para dejar margen */
+height: 80%;
+object-fit: cover; /* Cubre el área del círculo */
+border-radius: 50%; /* Hace que la imagen también sea circular */
+}
+
+.card-title {
+font-size: 1.5rem;
+color: #333;
+margin-bottom: 10px;
+text-align: center;
+}
+
+.card-description {
+color: #666;
+font-size: 0.9rem;
+margin-bottom: 20px;
+text-align: center;
+flex-grow: 1;
+}
+
+.card-button:hover {
+background-color: #0b7dda;
+}
+
+.arrow {
+margin-left: 8px;
+transition: transform 0.3s;
+}
+
+.card-button:hover .arrow {
+transform: translateX(5px);
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+.card {
+  max-width: 100%;
+}
+}
+/* Variación 1: Círculo con borde de color */
+.card-icon-circle-border {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 15px;
+overflow: hidden;
+border: 3px solid #2196F3; /* Borde azul que coincide con el botón */
+}
+
+/* Variación 2: Círculo con fondo de color */
+.card-icon-circle-colored {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: #2196F3; /* Fondo azul que coincide con el botón */
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 15px;
+overflow: hidden;
+}
+
+.card-icon-circle-colored img {
+width: 60%;
+height: 60%;
+object-fit: contain;
+filter: brightness(0) invert(1); /* Hace la imagen blanca */
+}
+
+/* Variación 3: Círculo con efecto de sombra interna */
+.card-icon-circle-shadow {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: #f5f5f5;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 15px;
+overflow: hidden;
+box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Variación 4: Círculo con efecto de resplandor */
+.card-icon-circle-glow {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: white;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 15px;
+overflow: hidden;
+box-shadow: 0 0 15px rgba(33, 150, 243, 0.5); /* Resplandor azul */
+}
+/* Estilos para la sección de estadísticas */
+.stats-section {
+  margin-top: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.stats-title {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.4em;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 10px;
+}
+
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.stat-number {
+  font-size: 2em;
+  font-weight: bold;
+  color: #2196F3;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: #555;
+  font-size: 0.9em;
+}
+
+/* Estilos para las alertas */
+.alerts-container {
+  margin-top: 20px;
+}
+
+.alert {
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-left: 5px solid;
+  border-radius: 5px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.alert-icon {
+  margin-right: 15px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.alert-danger {
+  background-color: #ffebee;
+  border-color: #f44336;
+  color: #d32f2f;
+}
+
+.alert-warning {
+  background-color: #fff8e1;
+  border-color: #ffc107;
+  color: #ff8f00;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  border-color: #2196F3;
+  color: #0d47a1;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  border-color: #4CAF50;
+  color: #2e7d32;
+}
+
+/* Mejora responsividad de los gráficos */
+.charts-container {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+margin-top: 30px;
+width: 100%;
+}
+
+.chart-container {
+flex: 1;
+min-width: 300px;
+height: 300px;
+background-color: #f9f9f9;
+border-radius: 8px;
+padding: 15px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+position: relative;
+overflow: hidden; /* Importante: evita desbordamiento */
+}
+
+@media (max-width: 768px) {
+.charts-container {
+flex-direction: column;
+}
+
+.chart-container {
+width: 100%;
+min-width: 0; /* Elimina el min-width en móvil */
+height: 250px; /* Altura reducida para móvil */
+margin-bottom: 20px;
+}
+}
+
+/* Estilos para la tabla de resumen */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.summary-table th,
+.summary-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.summary-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.summary-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  height: 8px;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  background-color: #4CAF50;
+}
+
+.progress-bar-warning {
+  background-color: #FFC107;
+}
+
+.progress-bar-danger {
+  background-color: #F44336;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .stats-container {
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    min-width: 100%;
+  }
+}
+</style>
+<body>
+    <!-- Header with logo and search -->
+            <div class="top-header">
+                <div class="logo">
+                    <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                    <div class="logo-text">
+                        <h1>ARICA</h1>
+                        <span>MUNICIPALIDAD | mejor ciudad</span>
+                    </div>
+                </div>
+            </div>
+    
+    </section>
+     <!-- Dashboard section -->
+     <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Sistema de Gestión de Mantenimiento de Vehículos y Maquinaria</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon">←<i class="fas fa-arrow-left"></i></span> Volver al Inicio
+            </button>
+        </div>
+
+        <!-- Cards for forms selection -->
+        <div class="cards-container">
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="registro de mantenimiento.jpeg" alt="Icono de Mantenimiento">
+                  </div>
+                <h3 class="card-title">Ingreso y Salida de Vehículos</h3>
+                <p class="card-description">
+                    Complete el formulario para registrar un nuevo mantenimiento o reparación de vehículos municipales.
+                </p>
+                <a href="formulario_ingreso_reparacion.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="exceeel" alt="Icono de Excel">
+                  </div>
+                <h3 class="card-title">Explorador de Registros</h3>
+                <p class="card-description">
+                    Consulte y analice los mantenimientos registrados, con opciones para filtrar por patente, año y estado.
+                </p>
+                <a href="registros_vehículos_excel.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="editar.jpeg" alt="Icono de Calendario">
+                  </div>
+                <h3 class="card-title">Modificar registros</h3>
+                <p class="card-description">
+                  Corrija registros con información errónea o incompleta relacionada con mantenimientos programados, servicios realizados o revisiones técnicas.
+                </p>
+                <a href="modificar_reparacion.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            <!-- Card 4 -->
+            <div class="card">
+              <div class="card-icon-circle">
+                  <img src="reporte-icon.png" alt="Icono de Reportes">
+                </div>
+              <h3 class="card-title">Reportes de Flota</h3>
+              <p class="card-description">
+                Genere reportes detallados sobre el estado de la flota, costos de mantenimiento y rendimiento.
+              </p>
+              <a href="reportes_flota.html" class="card-button">
+                  Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+              </a>
+          </div>
+        </div>
+        
+        <!-- Stats section -->
+        <div class="stats-section">
+            <h3 class="stats-title">Estadísticas del Sistema</h3>
+            
+            <!-- Indicadores principales -->
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-number" id="vehiculos-count">0</div>
+                <div class="stat-label">Vehículos Activos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="mantenimientos-count">0</div>
+                <div class="stat-label">Mantenimientos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="reparaciones-count">0</div>
+                <div class="stat-label">Reparaciones</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="revisiones-pendientes">0</div>
+                <div class="stat-label">Revisiones Pendientes</div>
+              </div>
+            </div>
+            
+            <!-- Alertas del sistema -->
+            <div class="alerts-container" id="alerts-container">
+              <!-- Las alertas se generarán dinámicamente -->
+            </div>
+            
+            <!-- Tabla de resumen por vehículo -->
+            <h4 class="stats-title">Resumen por Vehículo</h4>
+            <div style="overflow-x: auto;">
+              <table class="summary-table" id="vehicle-summary-table">
+                <thead>
+                  <tr>
+                    <th>Patente</th>
+                    <th>Tipo</th>
+                    <th>Kilómetros</th>
+                    <th>Próx. Revisión</th>
+                    <th>Próx. Cambio Aceite</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="vehicle-summary-body">
+                  <!-- Se llenará dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Gráficos de estadísticas -->
+            <div class="charts-container">
+              <div class="chart-container">
+                <h4 class="chart-title">Tipos de Fallas Registradas</h4>
+                <canvas id="fallaChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h4 class="chart-title">Mantenimientos por Mes</h4>
+                <canvas id="monthlyChart"></canvas>
+              </div>
+            </div>
+          </div>
+    </section>
+    
+     <!-- Footer -->
+     <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca , Arica</p>
+                <p>Anexo:6959 </p>
+                <p>Email:roberto.mamani@municipalidadarica.cl </p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica </strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            <div class="footer-column licitaciones">
+              <h3>Licitaciones</h3>
+              <ul class="licitaciones-list">
+                  <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                  <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                  <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                  <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                  <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+              </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <script>
+        // Función para ocultar indicador de carga cuando el iframe se carga
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+        
+        // Función para manejar errores de carga del iframe
+        function handleIframeError() {
+            const iframe = document.getElementById('dashboardIframe');
+            
+            // Verificar si el iframe se cargó correctamente después de 10 segundos
+            setTimeout(function() {
+                try {
+                    // Intentar acceder al contenido del iframe
+                    const iframeContent = iframe.contentWindow || iframe.contentDocument;
+                    if (!iframeContent) {
+                        // Si no hay contenido, mostrar mensaje de error
+                        showFallbackMessage();
+                    }
+                } catch (e) {
+                    // Si hay un error al acceder al contenido, mostrar mensaje
+                    showFallbackMessage();
+                }
+            }, 10000);
+        }
+        
+        // Mostrar mensaje alternativo si el dashboard no carga
+        function showFallbackMessage() {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h3 style="margin-bottom: 15px;">No se pudo cargar el dashboard</h3>
+                    <p style="margin-bottom: 20px;">Parece que hay un problema al cargar el dashboard. Por favor, intenta:</p>
+                    <a href="https://lookerstudio.google.com/reporting/da465897-8e1a-4d06-9f8e-27d84a749431" 
+                       target="_blank" 
+                       style="display: inline-block; background-color: #06c; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                        Ver dashboard en Looker Studio
+                    </a>
+                </div>
+            `;
+            loadingIndicator.style.display = 'flex';
+        }
+        
+        // Función para abrir asistencia via WhatsApp
+        function openAssistance() {
+            // Reemplaza con tu número real para WhatsApp (formato internacional sin +)
+            const phoneNumber = "56959414178"; // Reemplaza con tu número real
+            window.open(`https://wa.me/${phoneNumber}`, '_blank');
+        }
+        
+        // Código para el menú de transparencia
+        document.addEventListener('DOMContentLoaded', function() {
+            const transparencyToggle = document.querySelector('.transparency-toggle');
+            const transparencyLinks = document.querySelector('.transparency-links');
+            
+            if (transparencyToggle && transparencyLinks) {
+                transparencyToggle.addEventListener('click', function() {
+                    transparencyToggle.classList.toggle('active');
+                    transparencyLinks.classList.toggle('active');
+                });
+                
+                // Inicializar estado del menú según ancho de pantalla
+                function checkScreenWidth() {
+                    if (window.innerWidth <= 768) {
+                        transparencyLinks.classList.remove('active');
+                    } else {
+                        transparencyLinks.classList.add('active');
+                    }
+                }
+                
+                // Verificar al cargar y redimensionar
+                checkScreenWidth();
+                window.addEventListener('resize', checkScreenWidth);
+            }
+            
+            // Efecto de scroll en el header
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                }
+            });
+            
+            // Iniciar verificación de carga del iframe
+            handleIframeError();
+        });
+    </script>
+    <script>
+        // Constante de conexión - URL del script de Google Apps Script
+        const WEB_APP_URL = 'https://script.google.com/a/macros/municipalidadarica.cl/s/AKfycbyXcZUhcyDT7_TQ349UxBjHaBoW6M5Mr3YRDs2r8jZ3Y2OP2yhQh7DU4QtcDTh1-xzm/exec';
+        
+        // Variables para almacenar los datos
+        let datosVehiculos = []; // Datos de la hoja "datos"
+        let chartInstancesFalla = null;
+        let chartInstancesMonthly = null;
+        
+        // Función para formatear números con puntos como separador de miles
+        function formatearNumero(valor) {
+          if (valor === null || valor === undefined) return "0";
+          // Asegurarse de que valor sea un string para manipularlo
+          let valor2 = valor.toString().replace(/\./g, '').replace(/\D/g, '');
+          // Convertir a número y formatear con puntos
+          let numeroFormateado = new Intl.NumberFormat('es-ES').format(parseInt(valor2) || 0);
+          return numeroFormateado;
+        }
+        
+        // Función para mostrar mensajes de error en los contadores
+        function mostrarErrorEnContadores(mensaje) {
+          document.getElementById('vehiculos-count').textContent = 'Error';
+          document.getElementById('mantenimientos-count').textContent = 'Error';
+          document.getElementById('reparaciones-count').textContent = 'Error';
+          document.getElementById('revisiones-pendientes').textContent = 'Error';
+          
+          // Agregar mensaje de error en el contenedor de alertas
+          const alertasContainer = document.getElementById('alerts-container');
+          alertasContainer.innerHTML = `
+            <div class="alert alert-danger">
+              <strong>Error:</strong> ${mensaje || 'No se pudieron cargar los datos. Intente recargar la página.'}
+            </div>
+          `;
+          
+          console.error(mensaje || 'Error al cargar datos');
+        }
+        
+        // Función para cargar los datos desde la API
+        function cargarDatosEstadisticas() {
+          // Mostrar animación de carga
+          document.getElementById('vehiculos-count').innerHTML = '<div class="loading-spinner"></div>';
+          document.getElementById('mantenimientos-count').innerHTML = '<div class="loading-spinner"></div>';
+          document.getElementById('reparaciones-count').innerHTML = '<div class="loading-spinner"></div>';
+          document.getElementById('revisiones-pendientes').innerHTML = '<div class="loading-spinner"></div>';
+          
+          // Obtener los datos con manejo de errores mejorado
+          fetch(WEB_APP_URL)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Error de red: ${response.status} ${response.statusText}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              console.log('Datos recibidos:', data); // Depuración
+              
+              // Verificar que los datos tengan la estructura esperada
+              if (!data || typeof data !== 'object') {
+                throw new Error('Formato de datos inesperado');
+              }
+              
+              // Asignar los datos recibidos a las variables con verificación
+              datosVehiculos = Array.isArray(data.datos) ? data.datos : [];
+              
+              // Verificar que tenemos datos
+              if (datosVehiculos.length === 0) {
+                throw new Error('No se recibieron datos de mantenimientos');
+              }
+              
+              // Actualizar las estadísticas
+              actualizarEstadisticas();
+              
+              // Generar alertas del sistema
+              generarAlertas();
+              
+              // Actualizar tabla de resumen por vehículo
+              actualizarTablaVehiculos();
+              
+              // Crear gráficos solo si Chart.js está disponible
+              if (typeof Chart !== 'undefined') {
+                crearGraficos();
+              } else {
+                console.warn('Chart.js no está disponible. Los gráficos no se mostrarán.');
+              }
+            })
+            .catch(error => {
+              console.error('Error al obtener los datos:', error);
+              mostrarErrorEnContadores(error.message);
+            });
+        }
+        
+        // Función para actualizar las estadísticas principales
+        function actualizarEstadisticas() {
+          try {
+            // Contar vehículos únicos
+            const vehiculosUnicos = new Set();
+            datosVehiculos.forEach(fila => {
+              if (fila && fila[3]) vehiculosUnicos.add(fila[3].toString().trim().toUpperCase());
+            });
+            
+            // Contar mantenimientos (asumiendo que cada registro es un mantenimiento)
+            const mantenimientos = datosVehiculos.filter(fila => 
+              fila && fila[13] && fila[13].toString().toLowerCase().includes('mantenimiento')
+            ).length;
+            
+            // Contar reparaciones
+            const reparaciones = datosVehiculos.filter(fila => 
+              fila && fila[13] && fila[13].toString().toLowerCase().includes('reparación')
+            ).length;
+            
+            // Contar revisiones pendientes
+            const fechaActual = new Date();
+            const revisionesPendientes = datosVehiculos.filter(fila => {
+              if (fila && fila[16]) {
+                try {
+                  // Convertir fecha de próxima revisión a objeto Date (asumiendo formato DD/MM/YYYY)
+                  const partesProx = fila[16].toString().split('/');
+                  if (partesProx.length === 3) {
+                    const fechaProx = new Date(parseInt(partesProx[2]), parseInt(partesProx[1]) - 1, parseInt(partesProx[0]));
+                    // Es pendiente si la fecha es próxima (menos de 30 días) o pasada
+                    const diffTime = fechaProx - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays <= 30 && diffDays >= -15; // Revisiones pendientes o vencidas hasta hace 15 días
+                  }
+                } catch (e) {
+                  console.error('Error al procesar fecha:', fila[16], e);
+                }
+              }
+              return false;
+            }).length;
+            
+            // Actualizar los elementos HTML
+            document.getElementById('vehiculos-count').textContent = vehiculosUnicos.size;
+            document.getElementById('mantenimientos-count').textContent = mantenimientos;
+            document.getElementById('reparaciones-count').textContent = reparaciones;
+            document.getElementById('revisiones-pendientes').textContent = revisionesPendientes;
+          } catch (error) {
+            console.error('Error al actualizar estadísticas:', error);
+            mostrarErrorEnContadores('Error al procesar estadísticas');
+          }
+        }
+        
+        // Función para generar alertas del sistema
+        function generarAlertas() {
+          try {
+            const alertasContainer = document.getElementById('alerts-container');
+            alertasContainer.innerHTML = ''; // Limpiar alertas anteriores
+            
+            const fechaActual = new Date();
+            const alertas = [];
+            
+            // 1. Revisar vehículos con revisión técnica vencida o próxima a vencer
+            const vehiculosRevVencida = new Set();
+            const vehiculosRevProxima = new Set();
+            
+            datosVehiculos.forEach(fila => {
+              if (fila && fila[3] && fila[16]) {
+                try {
+                  const patente = fila[3].toString().trim().toUpperCase();
+                  const partesProx = fila[16].toString().split('/');
+                  
+                  if (partesProx.length === 3) {
+                    const fechaProx = new Date(parseInt(partesProx[2]), parseInt(partesProx[1]) - 1, parseInt(partesProx[0]));
+                    const diffTime = fechaProx - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays < 0) {
+                      vehiculosRevVencida.add(patente);
+                    } else if (diffDays <= 15) {
+                      vehiculosRevProxima.add(patente);
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error al procesar fecha de revisión:', fila[16], e);
+                }
+              }
+            });
+            
+            // 2. Revisar vehículos con cambio de aceite vencido o próximo
+            const vehiculosAceiteVencido = new Set();
+            const vehiculosAceiteProximo = new Set();
+            
+            datosVehiculos.forEach(fila => {
+              if (fila && fila[3] && fila[18]) {
+                try {
+                  const patente = fila[3].toString().trim().toUpperCase();
+                  const partesProx = fila[18].toString().split('/');
+                  
+                  if (partesProx.length === 3) {
+                    const fechaProx = new Date(parseInt(partesProx[2]), parseInt(partesProx[1]) - 1, parseInt(partesProx[0]));
+                    const diffTime = fechaProx - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays < 0) {
+                      vehiculosAceiteVencido.add(patente);
+                    } else if (diffDays <= 7) {
+                      vehiculosAceiteProximo.add(patente);
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error al procesar fecha de cambio de aceite:', fila[18], e);
+                }
+              }
+            });
+            
+            // 3. Revisar fallas críticas
+            const vehiculosFallaCritica = new Set();
+            
+            datosVehiculos.forEach(fila => {
+              if (fila && fila[3] && fila[10] && fila[10].toString().toLowerCase().includes('crítica')) {
+                const patente = fila[3].toString().trim().toUpperCase();
+                vehiculosFallaCritica.add(patente);
+              }
+            });
+            
+            // Crear alertas basadas en los hallazgos
+            if (vehiculosRevVencida.size > 0) {
+              alertas.push({
+                tipo: 'danger',
+                mensaje: `${vehiculosRevVencida.size} vehículo(s) con revisión técnica vencida.`,
+                detalle: 'rev-vencida'
+              });
+            }
+            
+            if (vehiculosRevProxima.size > 0) {
+              alertas.push({
+                tipo: 'warning',
+                mensaje: `${vehiculosRevProxima.size} vehículo(s) con revisión técnica a vencer en los próximos 15 días.`,
+                detalle: 'rev-proxima'
+              });
+            }
+            
+            if (vehiculosAceiteVencido.size > 0) {
+              alertas.push({
+                tipo: 'danger',
+                mensaje: `${vehiculosAceiteVencido.size} vehículo(s) con cambio de aceite vencido.`,
+                detalle: 'aceite-vencido'
+              });
+            }
+            
+            if (vehiculosAceiteProximo.size > 0) {
+              alertas.push({
+                tipo: 'warning',
+                mensaje: `${vehiculosAceiteProximo.size} vehículo(s) con cambio de aceite en los próximos 7 días.`,
+                detalle: 'aceite-proximo'
+              });
+            }
+            
+            if (vehiculosFallaCritica.size > 0) {
+              alertas.push({
+                tipo: 'danger',
+                mensaje: `${vehiculosFallaCritica.size} vehículo(s) con fallas críticas registradas.`,
+                detalle: 'falla-critica'
+              });
+            }
+            
+            // Mostrar las alertas en el contenedor
+            if (alertas.length > 0) {
+              alertas.forEach(alerta => {
+                alertasContainer.innerHTML += `
+                  <div class="alert alert-${alerta.tipo}">
+                    <strong>${alerta.tipo === 'danger' ? '¡Atención urgente!' : '¡Atención!'}</strong> ${alerta.mensaje}
+                    <a href="#" onclick="mostrarDetalleAlerta('${alerta.detalle}')">Ver detalles</a>
+                  </div>
+                `;
+              });
+            } else {
+              alertasContainer.innerHTML = '<div class="alert alert-success">No hay alertas pendientes en el sistema.</div>';
+            }
+          } catch (error) {
+            console.error('Error al generar alertas:', error);
+            const alertasContainer = document.getElementById('alerts-container');
+            alertasContainer.innerHTML = `
+              <div class="alert alert-danger">
+                <strong>Error:</strong> No se pudieron generar las alertas del sistema.
+              </div>
+            `;
+          }
+        }
+        
+        // Función para mostrar detalles de alertas en modal
+        function mostrarDetalleAlerta(tipo) {
+          // Implementación simple por ahora
+          alert('Funcionalidad de detalles pendiente de implementar: ' + tipo);
+          // Aquí se podría implementar un modal para mostrar detalles de la alerta
+        }
+        
+        // Función para actualizar la tabla de resumen por vehículo
+        function actualizarTablaVehiculos() {
+          try {
+            const tbody = document.getElementById('vehicle-summary-body');
+            tbody.innerHTML = ''; // Limpiar tabla
+            
+            // Agrupar datos por patente para obtener la información más reciente
+            const vehiculosPorPatente = {};
+            
+            datosVehiculos.forEach(fila => {
+              if (fila && fila[3]) {
+                const patente = fila[3].toString().trim().toUpperCase();
+                const fecha = fila[1] ? new Date(fila[1]) : new Date(0);
+                
+                if (!vehiculosPorPatente[patente] || (vehiculosPorPatente[patente].fecha < fecha)) {
+                  vehiculosPorPatente[patente] = {
+                    patente: patente,
+                    fecha: fecha,
+                    tipo: fila[5] || 'No especificado',
+                    kilometros: fila[4] || '0',
+                    proxRevision: fila[16] || 'No registrada',
+                    proxCambioAceite: fila[18] || 'No registrado',
+                    estado: fila[7] || 'Sin estado'
+                  };
+                }
+              }
+            });
+            
+            // Convertir a array para poder ordenar
+            const vehiculosArray = Object.values(vehiculosPorPatente);
+            
+            // Ordenar por estado (primero los que requieren atención)
+            vehiculosArray.sort((a, b) => {
+              const prioridadA = a.estado.toLowerCase().includes('mantención') ? 1 : 
+                                a.estado.toLowerCase().includes('reparación') ? 2 : 3;
+              const prioridadB = b.estado.toLowerCase().includes('mantención') ? 1 : 
+                                b.estado.toLowerCase().includes('reparación') ? 2 : 3;
+              return prioridadA - prioridadB;
+            });
+            
+            // Crear filas para la tabla (limitamos a 10 vehículos para no sobrecargar la UI)
+            vehiculosArray.slice(0, 10).forEach(vehiculo => {
+              const tr = document.createElement('tr');
+              
+              // Determinar clase de alerta para fecha de revisión
+              let claseRevision = '';
+              if (vehiculo.proxRevision && vehiculo.proxRevision !== 'No registrada') {
+                try {
+                  const fechaActual = new Date();
+                  const partesProx = vehiculo.proxRevision.toString().split('/');
+                  if (partesProx.length === 3) {
+                    const fechaProx = new Date(parseInt(partesProx[2]), parseInt(partesProx[1]) - 1, parseInt(partesProx[0]));
+                    const diffTime = fechaProx - fechaActual;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays < 0) {
+                      claseRevision = 'fecha-vencida';
+                    } else if (diffDays <= 15) {
+                      claseRevision = 'fecha-proxima';
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error al procesar fecha de revisión para tabla:', vehiculo.proxRevision, e);
+                }
+              }
+              
+              // Determinar clase de alerta para cambio de aceite
+if (vehiculo.proxCambioAceite && vehiculo.proxCambioAceite !== 'No registrado') {
+  try {
+    const fechaActual = new Date();
+    const partesProx = vehiculo.proxCambioAceite.toString().split('/');
+    if (partesProx.length === 3) {
+      const fechaProx = new Date(parseInt(partesProx[2]), parseInt(partesProx[1]) - 1, parseInt(partesProx[0]));
+      const diffTime = fechaProx - fechaActual;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) {
+        claseAceite = 'fecha-vencida';
+      } else if (diffDays <= 7) {
+        claseAceite = 'fecha-proxima';
+      }
+    }
+  } catch (e) {
+    console.error('Error al procesar fecha de cambio de aceite para tabla:', vehiculo.proxCambioAceite, e);
+  }
+}
+
+// Determinar clase para el estado del vehículo
+let claseEstado = '';
+if (vehiculo.estado.toLowerCase().includes('reparación')) {
+  claseEstado = 'estado-reparacion';
+} else if (vehiculo.estado.toLowerCase().includes('mantención')) {
+  claseEstado = 'estado-mantencion';
+} else if (vehiculo.estado.toLowerCase().includes('disponible')) {
+  claseEstado = 'estado-disponible';
+}
+
+// Construir la fila de la tabla
+tr.innerHTML = `
+  <td>${vehiculo.patente}</td>
+  <td>${vehiculo.tipo}</td>
+  <td>${formatearNumero(vehiculo.kilometros)} km</td>
+  <td class="${claseRevision}">${vehiculo.proxRevision}</td>
+  <td class="${claseAceite}">${vehiculo.proxCambioAceite}</td>
+  <td class="${claseEstado}">${vehiculo.estado}</td>
+`;
+
+tbody.appendChild(tr);
+});
+
+// Si no hay vehículos para mostrar
+if (vehiculosArray.length === 0) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td colspan="6" style="text-align: center;">No hay vehículos registrados</td>';
+  tbody.appendChild(tr);
+}
+} catch (error) {
+  console.error('Error al actualizar tabla de vehículos:', error);
+  const tbody = document.getElementById('vehicle-summary-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error al cargar los datos de vehículos</td></tr>';
+}
+}
+
+// Función para crear los gráficos estadísticos
+function crearGraficos() {
+  try {
+    // 1. Gráfico de tipos de fallas
+    const ctx1 = document.getElementById('fallaChart').getContext('2d');
+    
+    // Contar los tipos de fallas
+    const tiposFallas = {};
+    datosVehiculos.forEach(fila => {
+      if (fila && fila[9]) {
+        const tipoFalla = fila[9].toString().trim();
+        tiposFallas[tipoFalla] = (tiposFallas[tipoFalla] || 0) + 1;
+      }
+    });
+    
+    // Preparar datos para el gráfico
+    const labelsFallas = Object.keys(tiposFallas);
+    const dataFallas = Object.values(tiposFallas);
+    
+    // Colores para el gráfico
+    const colorsFallas = [
+      '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+      '#FF9F40', '#8C9EFF', '#FF8A80', '#82B1FF', '#B9F6CA'
+    ];
+    
+    // Destruir instancia anterior si existe
+    if (chartInstancesFalla) {
+      chartInstancesFalla.destroy();
+    }
+    
+    // Crear el gráfico de torta
+    chartInstancesFalla = new Chart(ctx1, {
+      type: 'pie',
+      data: {
+        labels: labelsFallas,
+        datasets: [{
+          data: dataFallas,
+          backgroundColor: colorsFallas.slice(0, labelsFallas.length),
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              boxWidth: 12,
+              padding: 15
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = Math.round((value / total) * 100);
+                return `${label}: ${value} (${percentage}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    // 2. Gráfico de mantenimientos por mes
+    const ctx2 = document.getElementById('monthlyChart').getContext('2d');
+    
+    // Contar mantenimientos por mes
+    const mantenimientosPorMes = {
+      'Enero': 0, 'Febrero': 0, 'Marzo': 0, 'Abril': 0,
+      'Mayo': 0, 'Junio': 0, 'Julio': 0, 'Agosto': 0,
+      'Septiembre': 0, 'Octubre': 0, 'Noviembre': 0, 'Diciembre': 0
+    };
+    
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    datosVehiculos.forEach(fila => {
+      if (fila && fila[1]) {
+        try {
+          // Convertir la fecha a objeto Date (asumiendo que está en formato DD/MM/YYYY)
+          const partesFecha = fila[1].toString().split('/');
+          if (partesFecha.length === 3) {
+            const mes = parseInt(partesFecha[1]) - 1; // Los meses en JS van de 0 a 11
+            if (mes >= 0 && mes < 12) {
+              mantenimientosPorMes[meses[mes]]++;
+            }
+          }
+        } catch (e) {
+          console.error('Error al procesar fecha para gráfico mensual:', fila[1], e);
+        }
+      }
+    });
+    
+    // Preparar datos para el gráfico
+    const dataMantenimientosMes = Object.values(mantenimientosPorMes);
+    
+    // Destruir instancia anterior si existe
+    if (chartInstancesMonthly) {
+      chartInstancesMonthly.destroy();
+    }
+    
+    // Crear el gráfico de barras
+    chartInstancesMonthly = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: meses,
+        datasets: [{
+          label: 'Mantenimientos',
+          data: dataMantenimientosMes,
+          backgroundColor: '#36A2EB',
+          borderColor: '#2980B9',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0 // Solo números enteros
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error al crear gráficos:', error);
+    
+    // Mostrar mensaje de error en los contenedores de gráficos
+    const chartContainers = document.querySelectorAll('.chart-container');
+    chartContainers.forEach(container => {
+      const canvas = container.querySelector('canvas');
+      if (canvas) {
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.font = '14px Arial';
+        context.fillStyle = 'red';
+        context.textAlign = 'center';
+        context.fillText('Error al cargar el gráfico', canvas.width / 2, canvas.height / 2);
+      }
+    });
+  }
+}
+
+// Función para exportar datos a Excel
+function exportarExcel() {
+  try {
+    // Verificar si se tienen datos para exportar
+    if (!datosVehiculos || datosVehiculos.length === 0) {
+      alert('No hay datos disponibles para exportar');
+      return;
+    }
+    
+    // Crear un libro de trabajo y una hoja
+    const wb = XLSX.utils.book_new();
+    
+    // Preparar los datos para la exportación (convertir a formato adecuado)
+    const datos = datosVehiculos.map(fila => {
+      return {
+        'ID': fila[0] || '',
+        'Fecha': fila[1] || '',
+        'Departamento': fila[2] || '',
+        'Patente': fila[3] || '',
+        'Kilómetros': fila[4] || '',
+        'Tipo Vehículo': fila[5] || '',
+        'Conductor': fila[6] || '',
+        'Estado': fila[7] || '',
+        'Observaciones': fila[8] || '',
+        'Tipo Falla': fila[9] || '',
+        'Gravedad': fila[10] || '',
+        'Descripción Falla': fila[11] || '',
+        'Sistema Afectado': fila[12] || '',
+        'Tipo Servicio': fila[13] || '',
+        'Costo': fila[14] ? `$${formatearNumero(fila[14])}` : '$0',
+        'Duración (días)': fila[15] || '',
+        'Próxima Revisión': fila[16] || '',
+        'Kilómetros Próximo Servicio': fila[17] || '',
+        'Próximo Cambio Aceite': fila[18] || ''
+      };
+    });
+    
+    // Crear la hoja y añadirla al libro
+    const ws = XLSX.utils.json_to_sheet(datos);
+    XLSX.utils.book_append_sheet(wb, ws, 'Mantenimientos');
+    
+    // Ajustar el ancho de las columnas
+    const wscols = [
+      {wch: 5},  // ID
+      {wch: 12}, // Fecha
+      {wch: 15}, // Departamento
+      {wch: 10}, // Patente
+      {wch: 12}, // Kilómetros
+      {wch: 15}, // Tipo Vehículo
+      {wch: 20}, // Conductor
+      {wch: 15}, // Estado
+      {wch: 25}, // Observaciones
+      {wch: 15}, // Tipo Falla
+      {wch: 10}, // Gravedad
+      {wch: 30}, // Descripción Falla
+      {wch: 20}, // Sistema Afectado
+      {wch: 15}, // Tipo Servicio
+      {wch: 12}, // Costo
+      {wch: 10}, // Duración
+      {wch: 15}, // Próxima Revisión
+      {wch: 18}, // Kilómetros Próximo Servicio
+      {wch: 15}  // Próximo Cambio Aceite
+    ];
+    ws['!cols'] = wscols;
+    
+    // Generar el archivo y descargarlo
+    XLSX.writeFile(wb, 'Mantenimientos_Vehiculos_Municipalidad.xlsx');
+  } catch (error) {
+    console.error('Error al exportar a Excel:', error);
+    alert('Se produjo un error al exportar los datos. Por favor, intente nuevamente.');
+  }
+}
+
+// Función para filtrar datos en la tabla
+function filtrarDatos() {
+  const filtroPatente = document.getElementById('filtroPatente').value.toUpperCase();
+  const filtroTipo = document.getElementById('filtroTipo').value.toUpperCase();
+  const filtroEstado = document.getElementById('filtroEstado').value.toUpperCase();
+  
+  const filas = document.getElementById('vehicle-summary-body').getElementsByTagName('tr');
+  
+  for (let i = 0; i < filas.length; i++) {
+    const celdas = filas[i].getElementsByTagName('td');
+    if (celdas.length > 0) {
+      const patente = celdas[0].textContent.toUpperCase();
+      const tipo = celdas[1].textContent.toUpperCase();
+      const estado = celdas[5].textContent.toUpperCase();
+      
+      const coincidePatente = patente.includes(filtroPatente);
+      const coincideTipo = tipo.includes(filtroTipo);
+      const coincideEstado = estado.includes(filtroEstado);
+      
+      if (coincidePatente && coincideTipo && coincideEstado) {
+        filas[i].style.display = '';
+      } else {
+        filas[i].style.display = 'none';
+      }
+    }
+  }
+}
+
+// Inicializar la página
+document.addEventListener('DOMContentLoaded', function() {
+  // Cargar datos de estadísticas
+  cargarDatosEstadisticas();
+  
+  // Inicializar botones de filtro si existen
+  const botonesLimpiar = document.querySelectorAll('.limpiar-filtro');
+  if (botonesLimpiar) {
+    botonesLimpiar.forEach(boton => {
+      boton.addEventListener('click', function() {
+        const inputId = this.getAttribute('data-input');
+        if (inputId) {
+          document.getElementById(inputId).value = '';
+          filtrarDatos();
+        }
+      });
+    });
+  }
+  
+  // Inicializar botón de exportar si existe
+  const botonExportar = document.getElementById('exportarExcel');
+  if (botonExportar) {
+    botonExportar.addEventListener('click', exportarExcel);
+  }
+  
+  // Inicializar filtros si existen
+  const camposFiltro = document.querySelectorAll('.filtro-campo');
+  if (camposFiltro) {
+    camposFiltro.forEach(campo => {
+      campo.addEventListener('keyup', filtrarDatos);
+      campo.addEventListener('change', filtrarDatos);
+    });
+  }
+});
+
+// Función para mostrar detalles de un vehículo
+function mostrarDetallesVehiculo(patente) {
+  // Filtrar los registros para el vehículo seleccionado
+  const registrosVehiculo = datosVehiculos.filter(fila => 
+    fila && fila[3] && fila[3].toString().trim().toUpperCase() === patente.toUpperCase()
+  );
+  
+  if (registrosVehiculo.length > 0) {
+    // Crear contenido para el modal
+    let contenidoHTML = `
+      <h3>Detalles del Vehículo: ${patente}</h3>
+      <div class="detalles-vehiculo">
+        <div class="info-principal">
+          <p><strong>Tipo:</strong> ${registrosVehiculo[0][5] || 'No especificado'}</p>
+          <p><strong>Kilómetros:</strong> ${formatearNumero(registrosVehiculo[0][4])} km</p>
+          <p><strong>Estado actual:</strong> ${registrosVehiculo[0][7] || 'No especificado'}</p>
+        </div>
+        
+        <h4>Historial de Mantenimientos</h4>
+        <table class="tabla-historial">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Descripción</th>
+              <th>Costo</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    // Agregar cada registro al historial
+    registrosVehiculo.forEach(registro => {
+      contenidoHTML += `
+        <tr>
+          <td>${registro[1] || 'N/A'}</td>
+          <td>${registro[13] || 'N/A'}</td>
+          <td>${registro[11] || 'N/A'}</td>
+          <td>$${formatearNumero(registro[14] || '0')}</td>
+        </tr>
+      `;
+    });
+    
+    contenidoHTML += `
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    // Mostrar el modal con los detalles
+    const modalDetalles = document.getElementById('modalDetalles');
+    const modalContenido = document.getElementById('modalContenido');
+    
+    modalContenido.innerHTML = contenidoHTML;
+    modalDetalles.style.display = 'block';
+  } else {
+    alert('No se encontraron registros para el vehículo: ' + patente);
+  }
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+  const modalDetalles = document.getElementById('modalDetalles');
+  modalDetalles.style.display = 'none';
+}
+
+// Añadir evento para cerrar el modal al hacer clic fuera del contenido
+window.addEventListener('click', function(event) {
+  const modalDetalles = document.getElementById('modalDetalles');
+  if (event.target === modalDetalles) {
+    cerrarModal();
+  }
+});</script>
+</body>
+</html>
