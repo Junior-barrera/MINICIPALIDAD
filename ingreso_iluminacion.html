@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Solicitudes Iluminación Pública| Municipalidad de Arica</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Dashboard container */
+        .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f7;
+            border: none;
+            border-radius: 100px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #06c;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #e9e9eb;
+            transform: translateY(-2px);
+        }
+        
+        .back-icon {
+            margin-right: 8px;
+        }
+        
+        .dashboard-iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            position: relative;
+        }
+        
+
+        /* Form Container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #000000, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-subtitle {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 15px 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 400;
+            background-color: white;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #999;
+            font-weight: 400;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Success message */
+        .success-message {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+/* Footer */
+footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 28px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            .form-container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+                margin: 0 10px;
+            }
+
+            .form-title {
+                font-size: 24px;
+            }
+
+            .dashboard-container {
+                padding: 20px 3%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with logo -->
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <img src="https://via.placeholder.com/50x50/667eea/ffffff?text=A" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Dashboard section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Ingreso de Solicitudes</h2>
+            <a href="#" class="back-button"  onclick="window.location.href='formulario-3.html'">
+                <span class="back-icon">←</span> Volver al Inicio
+            </a>
+        </div>
+        
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">Registro de Solicitud</h1>
+                <p class="form-subtitle">Complete todos los campos para registrar correctamente su solicitud</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                ✅ Solicitud registrada exitosamente
+            </div>
+    
+            <form id="solicitudForm" class="form-grid">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="solicitud">Tipo de Solicitud</label>
+                        <input type="text" id="solicitud" name="solicitud" placeholder="Ej: Reparación de luminaria" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                </div>
+    
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="procedencia">Procedencia</label>
+                        <select id="procedencia" name="procedencia" required>
+                            <option value="">Seleccione procedencia</option>
+                            <option value="presencial">🏢 Presencial</option>
+                            <option value="telefonica">📞 Telefónica</option>
+                            <option value="correo">📧 Correo electrónico</option>
+                            <option value="web">🌐 Página web</option>
+                            <option value="whatsapp">📱 WhatsApp</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sector">Sector</label>
+                        <select id="sector" name="sector" required>
+                            <option value="">Seleccione sector</option>
+                            <option value="centro">🏙️ Centro</option>
+                            <option value="norte">⬆️ Norte</option>
+                            <option value="sur">⬇️ Sur</option>
+                            <option value="este">➡️ Este</option>
+                            <option value="oeste">⬅️ Oeste</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-group full-width">
+                    <label for="poblacion">Población</label>
+                    <input type="text" id="poblacion" name="poblacion" placeholder="Ej: Villa Las Palmeras" required>
+                </div>
+    
+                <div class="form-group full-width">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" placeholder="Ej: Av. Santa María #1234" required>
+                </div>
+    
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez González" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="+56 9 1234 5678" required>
+                    </div>
+                </div>
+    
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trabajo1">Trabajo Principal</label>
+                        <select id="trabajo1" name="trabajo1" required>
+                            <option value="">Seleccione trabajo</option>
+                            <option value="mantenimiento">🔧 Mantenimiento</option>
+                            <option value="iluminacion">💡 Iluminación</option>
+                            <option value="aseo">🧹 Aseo y Ornato</option>
+                            <option value="vialidad">🛣️ Vialidad</option>
+                            <option value="obras">🏗️ Obras</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="trabajo2">Trabajo Secundario</label>
+                        <select id="trabajo2" name="trabajo2">
+                            <option value="">Seleccione trabajo adicional</option>
+                            <option value="mantenimiento">🔧 Mantenimiento</option>
+                            <option value="iluminacion">💡 Iluminación</option>
+                            <option value="aseo">🧹 Aseo y Ornato</option>
+                            <option value="vialidad">🛣️ Vialidad</option>
+                            <option value="obras">🏗️ Obras</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="form-group full-width">
+                    <label for="observacion">Observaciones</label>
+                    <textarea id="observacion" name="observacion" placeholder="Ingrese detalles adicionales, comentarios específicos sobre la solicitud, ubicación exacta del problema, etc..."></textarea>
+                </div>
+    
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span>💾</span>
+                        Guardar Solicitud
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
+                        <span>🔄</span>
+                        Limpiar Campos
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="cerrarFormulario()">
+                        <span>❌</span>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>   
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca, Arica</p>
+                <p>Anexo: 6959</p>
+                <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p>
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+
+    <!-- Assistant button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    
+    <script>
+        // Establecer fecha actual por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInput = document.getElementById('fecha');
+            const today = new Date().toISOString().split('T')[0];
+            fechaInput.value = today;
+        });
+
+        // Manejar envío del formulario
+        document.getElementById('solicitudForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos requeridos
+            const requiredFields = this.querySelectorAll('[required]');
+            let allValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    allValid = false;
+                    field.style.borderColor = '#ff6b6b';
+                    field.focus();
+                } else {
+                    field.style.borderColor = '#e1e5e9';
+                }
+            });
+            
+            if (allValid) {
+                // Mostrar mensaje de éxito
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                
+                // Simular guardado (aquí conectarías con tu backend)
+                console.log('Datos del formulario:', new FormData(this));
+                
+                // Scroll hacia arriba para mostrar el mensaje
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Opcional: limpiar formulario después de 2 segundos
+                setTimeout(() => {
+                    limpiarFormulario();
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Función para limpiar formulario
+        function limpiarFormulario() {
+            document.getElementById('solicitudForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            
+            // Limpiar estilos de error
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.style.borderColor = '#e1e5e9';
+            });
+        }
+
+        // Función para cerrar formulario
+        function cerrarFormulario() {
+            if (confirm('¿Está seguro que desea cancelar? Se perderán todos los datos ingresados.')) {
+                window.history.back();
+            }
+        }
+
+        // Función para abrir asistencia vía WhatsApp
+        function openAssistance() {
+            const phoneNumber = "56959414178";
+            const message = "Hola, necesito ayuda con el formulario de solicitudes municipales.";
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // Validación en tiempo real de campos
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.style.borderColor = '#ff6b6b';
+                } else {
+                    this.style.borderColor = '#56ab2f';
+                }
+            });
+
+            field.addEventListener('input', function() {
+                if (this.style.borderColor === 'rgb(255, 107, 107)' && this.value.trim()) {
+                    this.style.borderColor = '#e1e5e9';
+                }
+            });
+        });
+
+        // Formatear número de teléfono
+        document.getElementById('telefono').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('56')) {
+                value = '+' + value;
+            } else if (value.startsWith('9') && value.length === 9) {
+                value = '+56 ' + value;
+            }
+            e.target.value = value;
+        });
+
+        // Efecto de hover en los campos
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('mouseenter', function() {
+                if (this.style.borderColor !== 'rgb(255, 107, 107)') {
+                    this.style.borderColor = '#667eea';
+                }
+            });
+
+            field.addEventListener('mouseleave', function() {
+                if (this !== document.activeElement && this.style.borderColor !== 'rgb(255, 107, 107)') {
+                    this.style.borderColor = '#e1e5e9';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
