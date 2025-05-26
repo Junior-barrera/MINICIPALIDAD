@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Presupuesto Municipal | Municipalidad de Arica</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+       /* Reset and base styles */
+       * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            font-weight: 400;
+            color: #86868b;
+        }
+        
+        /* Dashboard container */
+        .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1900px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .pdf-button, .back-button, .capture-button, .fullscreen-button {
+            display: flex;
+            align-items: center;
+            background-color: #06c;
+            color: white;
+            border: none;
+            border-radius: 100px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button {
+            background-color: #f5f5f7;
+            color: #06c;
+        }
+
+        .capture-button {
+            background-color: #34c759;
+        }
+
+        .fullscreen-button {
+            background-color: #ff9500;
+        }
+        
+        .pdf-button:hover, .capture-button:hover, .fullscreen-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(6, 12, 204, 0.3);
+        }
+
+        .capture-button:hover {
+            background-color: #30d158;
+            box-shadow: 0 5px 15px rgba(52, 199, 89, 0.3);
+        }
+
+        .fullscreen-button:hover {
+            background-color: #ff9f0a;
+            box-shadow: 0 5px 15px rgba(255, 149, 0, 0.3);
+        }
+
+        .back-button:hover {
+            background-color: #e9e9eb;
+            transform: translateY(-2px);
+        }
+        
+        .pdf-button:disabled, .capture-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Responsive iframe styles */
+        .dashboard-iframe {
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            position: relative;
+        }
+        
+        /* Iframe container with ID for PDF capture */
+        .iframe-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* Capture preview */
+        .capture-preview {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            overflow: auto;
+        }
+
+        .capture-preview-content {
+            position: relative;
+            max-width: 90%;
+            margin: 50px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .capture-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .capture-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .capture-actions {
+            margin-top: 20px;
+            text-align: center;
+            gap: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* Overlay para mostrar mientras carga el iframe */
+        .iframe-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #06c;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Loading overlay para PDF */
+        .pdf-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+
+        .pdf-loading-content {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pdf-progress {
+            width: 300px;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .pdf-progress-bar {
+            height: 100%;
+            background-color: #06c;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Instructions panel */
+        .instructions-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .instructions-panel h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .instructions-panel ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions-panel li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .instructions-panel li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #34c759;
+            font-weight: bold;
+        }
+        
+        .dashboard-description {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-description h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-description p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        /* Floating buttons */
+        .floating-button {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .floating-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+        }
+        
+        .assistant-button {
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .camera-button {
+            bottom: 20px;
+            right: 100px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        /* Assistant chat button */
+        .assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(6, 12, 204, 0.9);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .assistant-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* RESPONSIVE IFRAME HEIGHTS */
+        
+        /* Pantallas muy grandes (1920px+) */
+        @media (min-width: 1920px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Pantallas grandes (1400px - 1919px) */
+        @media (min-width: 1400px) and (max-width: 1919px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Pantallas medianas-grandes (1200px - 1399px) */
+        @media (min-width: 1200px) and (max-width: 1399px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Pantallas medianas (992px - 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Tablets en landscape (768px - 991px) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Tablets en portrait y móviles grandes (576px - 767px) */
+        @media (min-width: 576px) and (max-width: 767px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+        }
+        
+        /* Móviles (hasta 575px) */
+        @media (max-width: 575px) {
+            .dashboard-iframe {
+    width: 100%;
+    height: calc(100vh - 200px); /* Altura basada en el viewport menos espacio para header/footer */
+    min-height: 400px; /* Altura mínima */
+    max-height: 900px; /* Altura máxima */
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+}
+            
+            .dashboard-title {
+                font-size: 20px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-buttons {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .pdf-button, .capture-button, .fullscreen-button, .back-button {
+                padding: 10px 16px;
+                font-size: 14px;
+                flex: 1;
+                min-width: calc(50% - 4px);
+            }
+
+            .pdf-loading-content {
+                margin: 0 20px;
+                padding: 20px;
+            }
+
+            .pdf-progress {
+                width: 250px;
+            }
+
+            .capture-preview-content {
+                margin: 20px auto;
+                max-width: 95%;
+            }
+        }
+
+        /* Ajustes específicos para el aspect ratio del contenido */
+        @media (min-aspect-ratio: 16/9) {
+            .dashboard-iframe {
+                height: calc(100vw * 0.5625); /* 16:9 ratio */
+                max-height: 800px;
+            }
+        }
+
+        @media (max-aspect-ratio: 4/3) {
+            .dashboard-iframe {
+                height: calc(100vw * 0.75); /* 4:3 ratio */
+                max-height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading overlay for PDF generation -->
+    <div id="pdfLoadingOverlay" class="pdf-loading-overlay">
+        <div class="pdf-loading-content">
+            <div class="loader"></div>
+            <h3 id="pdfStatusText">Preparando captura...</h3>
+            <div class="pdf-progress">
+                <div id="pdfProgressBar" class="pdf-progress-bar"></div>
+            </div>
+            <p id="pdfStepText">Iniciando proceso de captura</p>
+        </div>
+    </div>
+
+    <!-- Capture Preview Modal -->
+    <div id="capturePreview" class="capture-preview">
+        <div class="capture-preview-content">
+            <button class="capture-close" onclick="closeCapturePreview()">×</button>
+            <img id="captureImage" src="" alt="Captura del Dashboard">
+            <div class="capture-actions">
+                <button class="capture-button" onclick="downloadCapture()">
+                    📥 Descargar Imagen
+                </button>
+                <button class="pdf-button" onclick="createPDFFromCapture()">
+                    📄 Crear PDF
+                </button>
+                <!-- Agregar este botón en el preview de captura -->
+<button id="cropElementBtn" onclick="startElementSelection()" 
+style="display: none; background: #2196F3; color: white; padding: 10px 15px; 
+       border: none; border-radius: 5px; margin: 5px; cursor: pointer;">
+✂️ Elemento Específico
+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with logo -->
+  
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+
+    
+    <!-- Dashboard section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Dashboard Abastecimiento</h2>
+            <div class="header-buttons">
+                <button class="fullscreen-button" onclick="openFullscreen('dashboardIframe1')">
+                    🔍 Pantalla Completa
+                </button>
+                <button class="back-button" onclick="window.location.href='index.html'">
+                    ← Volver al Inicio
+                </button>
+            </div>
+        </div>
+        
+        <!-- Contenedor del iframe con indicador de carga -->
+        <div class="iframe-container" id="dashboard1Container">
+            <div id="loadingIndicator1" class="iframe-loading">
+                <div class="loader"></div>
+                <p>Cargando dashboard...</p>
+            </div>
+            
+            <!-- Iframe del dashboard de Looker Studio -->
+            <iframe id="dashboardIframe1" class="dashboard-iframe" 
+    src="https://lookerstudio.google.com/embed/reporting/4fe9550e-ad4e-4db6-9b03-a78055a9165f/page/p28FF?embed=true&fit=scale"
+    allowfullscreen
+    onload="hideLoading('loadingIndicator1')"></iframe>
+        </div>
+    </section>
+
+    <!-- Second Dashboard section -->
+    <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Dashboard Gestión Vehicular</h2>
+            <div class="header-buttons">
+                <button class="fullscreen-button" onclick="openFullscreen('dashboardIframe2')">
+                    🔍 Pantalla Completa
+                </button>
+            </div>
+        </div>
+
+        <div class="iframe-container" id="dashboard2Container">
+            <div id="loadingIndicator2" class="iframe-loading">
+                <div class="loader"></div>
+                <p>Cargando dashboard...</p>
+            </div>
+            
+            <!-- Iframe del dashboard de Looker Studio -->
+            <iframe id="dashboardIframe2" class="dashboard-iframe" 
+                src="https://lookerstudio.google.com/embed/reporting/1a761723-5ccf-49a0-97e7-5db4fda4ca29/page/FFtFF"
+                allowfullscreen
+                onload="hideLoading('loadingIndicator2')"></iframe>
+        </div>
+        
+        <div class="dashboard-description">
+            <h3>Panel de Abastecimiento y Gestión Vehicular</h3>
+            <p>
+                Este panel muestra información detallada sobre el abastecimiento de combustible de la flota municipal, en convenio con Copec. 
+                Aquí podrás revisar el consumo por vehículo, fechas de carga, montos asociados y seguimiento del gasto en combustible.
+            </p>
+            <p>
+                Además, se incluye un dashboard de mantenimiento vehicular, donde es posible consultar el estado actual de los vehículos municipales, 
+                si se encuentran operativos o en reparación, historial de servicios mecánicos y detalles como patentes, tipo de mantenimiento realizado 
+                y talleres asociados.
+            </p>
+            <p>
+                <strong>💡 Instrucciones de Captura:</strong> Debido a las restricciones de seguridad de Looker Studio, use el botón "📸 Capturar Pantalla" 
+                para obtener imágenes de los dashboards. También puede abrir cada dashboard en pantalla completa para una mejor visualización antes de capturar.
+            </p>
+            <p><strong>Enlaces directos:</strong> 
+                <a href="https://lookerstudio.google.com/embed/reporting/4fe9550e-ad4e-4db6-9b03-a78055a9165f/page/p28FF" target="_blank">
+                    Dashboard Combustible
+                </a> | 
+                <a href="https://lookerstudio.google.com/embed/reporting/1a761723-5ccf-49a0-97e7-5db4fda4ca29/page/FFtFF" target="_blank">
+                    Dashboard Vehículos
+                </a>
+            </p>
+        </div>
+    </section>
+<!-- Instructions Panel -->
+<section class="dashboard-container">
+    <div class="instructions-panel">
+        <h3>📋 Instrucciones para Capturar Dashboards</h3>
+        <ul>
+            <li>Los dashboards de Looker Studio tienen protección CORS que impide la captura automática</li>
+            <li>Use el botón "📸 " para tomar una screenshot manual</li>
+            <li>También puede abrir en pantalla completa para mejor visualización</li>
+            <li>Para mejores resultados, espere a que los dashboards carguen completamente</li>
+            <li>La captura incluirá todo el contenido visible en su pantalla</li>
+        </ul>
+    </div>
+</section>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca, Arica</p>
+                <p>Anexo: 6959</p>
+                <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+    
+    <!-- Assistance button -->
+    <div class="floating-button camera-button" onclick="captureScreen()" title="Capturar Pantalla">📷</div>
+    <div class="floating-button assistant-button" onclick="openAssistance()" title="Asistencia Técnica">💬</div>
+
+    <script>// Variables globales
+const _0x3413cb=_0x4f3f;(function(_0x2ff89b,_0x166353){const _0x4269d2=_0x4f3f,_0x1b97aa=_0x2ff89b();while(!![]){try{const _0x17e75e=parseInt(_0x4269d2(0x247))/0x1*(-parseInt(_0x4269d2(0x1fd))/0x2)+parseInt(_0x4269d2(0x268))/0x3+parseInt(_0x4269d2(0x266))/0x4*(-parseInt(_0x4269d2(0x24f))/0x5)+parseInt(_0x4269d2(0x224))/0x6*(parseInt(_0x4269d2(0x20d))/0x7)+parseInt(_0x4269d2(0x243))/0x8*(parseInt(_0x4269d2(0x24b))/0x9)+parseInt(_0x4269d2(0x252))/0xa*(parseInt(_0x4269d2(0x209))/0xb)+-parseInt(_0x4269d2(0x221))/0xc;if(_0x17e75e===_0x166353)break;else _0x1b97aa['push'](_0x1b97aa['shift']());}catch(_0x1631b8){_0x1b97aa['push'](_0x1b97aa['shift']());}}}(_0x4b5f,0xcd9f8));function _0x4b5f(){const _0x519602=['height','getHours','download','_Completa_AltaCalidad','2256418WIgSuS','fillStyle','none','warn','mouseup','width','href','text','cropData','Error\x20al\x20generar\x20PDF.\x20Intente\x20descargar\x20la\x20imagen\x20directamente.','jsPDF\x20no\x20está\x20disponible','4670984cxtzyH','3597kNJZqP','7ESpSpz','getMinutes','body','1174467ZiTPkF','inline-block','strokeRect','min','undefined','Generado\x20el:\x20','innerHTML','html2canvas\x20no\x20está\x20disponible','imageSmoothingEnabled','getTracks','Por\x20favor,\x20seleccione\x20un\x20área\x20primero','setFontSize','Resolución\x20original:\x20','Fecha\x20de\x20captura:\x20','Primero\x20debe\x20capturar\x20una\x20pantalla','px\x20(resolución\x20original\x20preservada)','Recorte\x20aplicado:\x20','createElement','lineWidth','srcObject','743724DrQnJW','save','4473188FgpmjG','42UzQBgI','Su\x20navegador\x20no\x20soporta\x20captura\x20de\x20pantalla.\x20Use\x20Chrome,\x20Firefox\x20o\x20Edge\x20actualizado.','Tipo:\x20Panel\x20de\x20control\x20abastecimiento\x20de\x20combustible','698175RFbVkf','round','toString','Dashboard\x20Municipal\x20-\x20Sistema\x20de\x20alta\x20calidad\x20cargado\x20correctamente','Dashboards:','PNG','putImageData','style','imageSmoothingQuality','cropElementBtn','getMonth','stop','jspdf','clientY','rgba(0,\x200,\x200,\x200.3)','_Recorte_AltaCalidad','getImageData','DIMAO\x20-\x20Dashboard\x20Abastecimiento','toLocaleString','dashboard2','Dashboard_Reporte','left','bold','.pdf','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22margin-bottom:\x2015px;\x20text-align:\x20center;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3>Recortar\x20Elemento\x20Específico\x20-\x20Alta\x20Calidad</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p>Arrastre\x20para\x20seleccionar\x20el\x20área\x20que\x20desea\x20recortar</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22font-size:\x2012px;\x20color:\x20#666;\x22>La\x20imagen\x20mantendrá\x20su\x20resolución\x20original</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22text-align:\x20center;\x20margin-bottom:\x2015px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<canvas\x20id=\x22cropCanvas\x22\x20style=\x22max-width:\x20100%;\x20max-height:\x2070vh;\x20border:\x202px\x20solid\x20#ddd;\x20cursor:\x20crosshair;\x22></canvas>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22text-align:\x20center;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22applyCrop()\x22\x20style=\x22background:\x20#4CAF50;\x20color:\x20white;\x20padding:\x2010px\x2020px;\x20border:\x20none;\x20border-radius:\x205px;\x20margin:\x205px;\x20cursor:\x20pointer;\x22>✂️\x20Aplicar\x20Recorte</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22resetCrop()\x22\x20style=\x22background:\x20#ff9800;\x20color:\x20white;\x20padding:\x2010px\x2020px;\x20border:\x20none;\x20border-radius:\x205px;\x20margin:\x205px;\x20cursor:\x20pointer;\x22>🔄\x20Resetear</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20onclick=\x22closeCropModal()\x22\x20style=\x22background:\x20#f44336;\x20color:\x20white;\x20padding:\x2010px\x2020px;\x20border:\x20none;\x20border-radius:\x205px;\x20margin:\x205px;\x20cursor:\x20pointer;\x22>❌\x20Cancelar</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','image/png','Dashboard','getElementById','118136RNyWsj','388264sYOVoF','Nota:\x20Esta\x20captura\x20refleja\x20el\x20estado\x20completo\x20de\x20los\x20dashboards','addImage','1abDEbG','screen','play','div','369BqDYRf','DOMContentLoaded','No\x20se\x20pudo\x20capturar\x20la\x20pantalla\x20automáticamente.\x0a\x0aOpciones\x20alternativas:\x0a1.\x20Use\x20la\x20tecla\x20\x22Impr\x20Pant\x22\x20(Print\x20Screen)\x20de\x20su\x20teclado\x0a2.\x20Use\x20la\x20herramienta\x20de\x20captura\x20de\x20Windows\x20(Win\x20+\x20Shift\x20+\x20S)\x0a3.\x20En\x20Mac:\x20Cmd\x20+\x20Shift\x20+\x204\x0a4.\x20Abra\x20los\x20dashboards\x20en\x20pantalla\x20completa\x20primero\x0a\x0aEl\x20archivo\x20se\x20guardará\x20en\x20su\x20portapapeles\x20o\x20carpeta\x20de\x20descargas.','webkitRequestFullscreen','15IzqblF','mousedown','es-CL','20030zBONdx','high','getDate','addEventListener','display','mediaDevices','drawImage','shift','max','orientationchange','forEach','src','strokeStyle','cropModal','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x200;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20left:\x200;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20width:\x20100%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20height:\x20100%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20rgba(0,0,0,0.8);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20justify-content:\x20center;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20align-items:\x20center;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x2010000;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','cssText','abs','innerWidth','682902yxlOFi','•\x20Dashboard\x20de\x20Abastecimiento\x20de\x20Combustible','2167424lWArdT','#ff0000','3669273kyUGoK','clientX','Fuente:\x20Dashboards\x20Looker\x20Studio','error','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x2010px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x2095vw;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-height:\x2095vh;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20overflow:\x20auto;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','flex','fillRect','getDisplayMedia','push','cropCanvas','reload','landscape','requestFullscreen','innerHeight','appendChild','💬\x20Asistencia\x20Técnica\x0a\x0aPara\x20soporte\x20con\x20los\x20dashboards\x20contacte:\x0a\x0a📧\x20Email:\x20roberto.mamani@municipalidadarica.cl\x0a📞\x20Anexo:\x206959\x0a🏢\x20Oficina:\x20Municipalidad\x20de\x20Arica\x0a\x0aHorario\x20de\x20atención:\x20Lunes\x20a\x20Viernes,\x208:00-17:00hrs\x0a\x0a¿Necesita\x20ayuda\x20con?\x0a•\x20Acceso\x20a\x20dashboards\x0a•\x20Captura\x20de\x20información\x20en\x20alta\x20calidad\x0a•\x20Recorte\x20de\x20elementos\x20específicos\x0a•\x20Generación\x20de\x20reportes\x0a•\x20Problemas\x20técnicos\x0a\x0a¡Estamos\x20aquí\x20para\x20ayudarte!','setFont','loadedmetadata','1609932dmPQWg','2646415NruQmj','mousemove','loadingIndicator1','Anexo:\x206959\x20Horario\x20de\x20atención:\x20Lunes\x20a\x20Viernes,\x208:00-17:00hrs','setTextColor','loadingIndicator2','top'];_0x4b5f=function(){return _0x519602;};return _0x4b5f();}const _0x5627b4=_0x167d;(function(_0x416791,_0x4a5613){const _0x3accfd=_0x4f3f,_0x39ad6a=_0x167d,_0x43752e=_0x416791();while(!![]){try{const _0x4ceb48=-parseInt(_0x39ad6a(0x19a))/0x1*(parseInt(_0x39ad6a(0x17e))/0x2)+-parseInt(_0x39ad6a(0x184))/0x3+-parseInt(_0x39ad6a(0x185))/0x4+parseInt(_0x39ad6a(0x1a2))/0x5+-parseInt(_0x39ad6a(0x1bf))/0x6+-parseInt(_0x39ad6a(0x166))/0x7*(parseInt(_0x39ad6a(0x16c))/0x8)+-parseInt(_0x39ad6a(0x17b))/0x9*(-parseInt(_0x39ad6a(0x1b0))/0xa);if(_0x4ceb48===_0x4a5613)break;else _0x43752e[_0x3accfd(0x1e7)](_0x43752e['shift']());}catch(_0x5c3757){_0x43752e['push'](_0x43752e[_0x3accfd(0x259)]());}}}(_0x3dfd,0xbd434));let capturedImageData=null,croppedImageData=null,dashboardsLoaded={'dashboard1':![],'dashboard2':![]},originalImageWidth=0x0,originalImageHeight=0x0,displayScale=0x1;function hideLoading(_0x2ab549){const _0xc0e162=_0x4f3f,_0x1efd92=_0x167d;document[_0x1efd92(0x194)](_0x2ab549)[_0xc0e162(0x22e)][_0x1efd92(0x19d)]=_0x1efd92(0x1df);if(_0x2ab549===_0x1efd92(0x1b9))dashboardsLoaded[_0x1efd92(0x1de)]=!![];else _0x2ab549===_0xc0e162(0x1f7)&&(dashboardsLoaded[_0x1efd92(0x1d9)]=!![]);}async function captureScreen(){const _0x15b5fa=_0x4f3f,_0x3ab100=_0x167d;try{if(!navigator[_0x3ab100(0x1ba)]||!navigator[_0x15b5fa(0x257)][_0x3ab100(0x195)]){alert(_0x3ab100(0x1bd));return;}const _0x18ada2=await navigator[_0x15b5fa(0x257)][_0x3ab100(0x195)]({'video':{'mediaSource':_0x3ab100(0x19b),'width':{'ideal':0xf00,'max':0xf00},'height':{'ideal':0x870,'max':0x870},'frameRate':{'ideal':0x1e}}}),_0x4b7c06=document['createElement'](_0x3ab100(0x1f1));_0x4b7c06[_0x3ab100(0x1e8)]=_0x18ada2,_0x4b7c06[_0x3ab100(0x1a4)](),_0x4b7c06[_0x3ab100(0x1d5)](_0x3ab100(0x190),()=>{const _0x2075d8=_0x15b5fa,_0x58fe9b=_0x3ab100,_0x293965=document['createElement'](_0x58fe9b(0x1ac));_0x293965[_0x2075d8(0x202)]=_0x4b7c06[_0x58fe9b(0x1dd)],_0x293965[_0x2075d8(0x1f9)]=_0x4b7c06[_0x58fe9b(0x169)],originalImageWidth=_0x4b7c06['videoWidth'],originalImageHeight=_0x4b7c06[_0x58fe9b(0x169)];const _0x59b7d9=_0x293965[_0x58fe9b(0x1ca)]('2d');_0x59b7d9[_0x58fe9b(0x1a3)]=!![],_0x59b7d9[_0x2075d8(0x22f)]=_0x58fe9b(0x16b),_0x59b7d9[_0x58fe9b(0x16d)](_0x4b7c06,0x0,0x0),_0x18ada2[_0x58fe9b(0x16e)]()[_0x58fe9b(0x1a9)](_0x1a5bdd=>_0x1a5bdd[_0x58fe9b(0x18d)]()),capturedImageData=_0x293965[_0x58fe9b(0x193)]('image/png',0x1),croppedImageData=null,showCapturePreview(capturedImageData);});}catch(_0x2c69cf){console[_0x3ab100(0x1b6)](_0x3ab100(0x1d8),_0x2c69cf),alert(_0x3ab100(0x1c1));}}function _0x167d(_0x10daa3,_0x9a5694){const _0x139d2c=_0x3dfd();return _0x167d=function(_0x1b293a,_0x474ac8){_0x1b293a=_0x1b293a-0x166;let _0x3e7646=_0x139d2c[_0x1b293a];return _0x3e7646;},_0x167d(_0x10daa3,_0x9a5694);}function showCapturePreview(_0x4f2490){const _0x55fd70=_0x4f3f,_0xc03f36=_0x167d,_0x36bd88=document[_0xc03f36(0x194)]('captureImage');_0x36bd88[_0x55fd70(0x25d)]=_0x4f2490,document[_0xc03f36(0x194)](_0xc03f36(0x1c6))[_0xc03f36(0x1da)][_0xc03f36(0x19d)]=_0xc03f36(0x1b7),document[_0xc03f36(0x194)](_0x55fd70(0x230))[_0xc03f36(0x1da)][_0xc03f36(0x19d)]=_0xc03f36(0x183);}function startElementSelection(){const _0x4bb9da=_0x167d;if(!capturedImageData){alert(_0x4bb9da(0x19c));return;}createCropModal();}function createCropModal(){const _0xb779c1=_0x4f3f,_0x58c332=_0x167d;let _0x505b6c=document[_0x58c332(0x194)](_0x58c332(0x191));if(!_0x505b6c){_0x505b6c=document[_0x58c332(0x1e2)](_0x58c332(0x1b1)),_0x505b6c['id']=_0x58c332(0x191),_0x505b6c[_0xb779c1(0x22e)][_0x58c332(0x1cb)]=_0x58c332(0x17f);const _0x5db4bc=document[_0xb779c1(0x21e)](_0x58c332(0x1b1));_0x5db4bc[_0x58c332(0x1da)][_0x58c332(0x1cb)]=_0x58c332(0x186),_0x5db4bc[_0x58c332(0x1d0)]=_0x58c332(0x1ad),_0x505b6c[_0x58c332(0x1e7)](_0x5db4bc),document[_0x58c332(0x1af)][_0x58c332(0x1e7)](_0x505b6c);}_0x505b6c[_0x58c332(0x1da)][_0xb779c1(0x256)]=_0x58c332(0x1b7),setupCropCanvas();}function setupCropCanvas(){const _0x47703d=_0x167d,_0x5ce3a4=document[_0x47703d(0x194)]('cropCanvas'),_0x272d9e=_0x5ce3a4[_0x47703d(0x1ca)]('2d');_0x272d9e[_0x47703d(0x1a3)]=!![],_0x272d9e[_0x47703d(0x192)]=_0x47703d(0x16b);const _0x12f52c=new Image();_0x12f52c[_0x47703d(0x19f)]=function(){const _0x5c4035=_0x4f3f,_0x2ad22e=_0x47703d,_0xa28577=Math[_0x2ad22e(0x1ea)](window[_0x2ad22e(0x1cc)]*0.8,0x4b0),_0x296b29=Math[_0x5c4035(0x210)](window[_0x2ad22e(0x1a5)]*0.6,0x320);let _0x2b837c=_0x12f52c[_0x2ad22e(0x1ab)],_0xae31ca=_0x12f52c[_0x2ad22e(0x1d6)];_0x2b837c>_0xa28577&&(_0xae31ca=_0xae31ca*_0xa28577/_0x2b837c,_0x2b837c=_0xa28577),_0xae31ca>_0x296b29&&(_0x2b837c=_0x2b837c*_0x296b29/_0xae31ca,_0xae31ca=_0x296b29),displayScale=Math[_0x5c4035(0x210)](_0x2b837c/_0x12f52c[_0x2ad22e(0x1ab)],_0xae31ca/_0x12f52c[_0x2ad22e(0x1d6)]),_0x5ce3a4[_0x2ad22e(0x1ab)]=_0x2b837c,_0x5ce3a4[_0x2ad22e(0x1d6)]=_0xae31ca,_0x5ce3a4[_0x2ad22e(0x1da)][_0x2ad22e(0x1ab)]=_0x2b837c+'px',_0x5ce3a4[_0x2ad22e(0x1da)][_0x2ad22e(0x1d6)]=_0xae31ca+'px',_0x272d9e[_0x2ad22e(0x16d)](_0x12f52c,0x0,0x0,_0x2b837c,_0xae31ca),setupCanvasSelection(_0x5ce3a4,_0x272d9e,_0x12f52c,displayScale);},_0x12f52c[_0x47703d(0x1eb)]=capturedImageData;}function setupCanvasSelection(_0x3ea372,_0x19c7d3,_0x33ef75,_0x3a575d){const _0x120c4d=_0x167d;let _0x3f8e40=![],_0x2812a2,_0x1efe0b,_0x5223bd,_0x2f611a,_0x172126;const _0x53f667=()=>{const _0x48af9d=_0x167d;_0x172126=_0x19c7d3[_0x48af9d(0x17a)](0x0,0x0,_0x3ea372[_0x48af9d(0x1ab)],_0x3ea372[_0x48af9d(0x1d6)]);};_0x53f667(),_0x3ea372[_0x120c4d(0x1d5)](_0x120c4d(0x1ec),_0x3f7b71=>{const _0x5d7907=_0x4f3f,_0x5d1d67=_0x120c4d;_0x3f8e40=!![];const _0x1f0597=_0x3ea372['getBoundingClientRect']();_0x2812a2=_0x3f7b71['clientX']-_0x1f0597[_0x5d1d67(0x1b3)],_0x1efe0b=_0x3f7b71[_0x5d1d67(0x199)]-_0x1f0597[_0x5d7907(0x1f8)],_0x5223bd=_0x2812a2,_0x2f611a=_0x1efe0b;}),_0x3ea372[_0x120c4d(0x1d5)](_0x120c4d(0x1a6),_0x718ce4=>{const _0x15b2ca=_0x4f3f,_0x2915f7=_0x120c4d;if(!_0x3f8e40)return;const _0x6cbb56=_0x3ea372[_0x2915f7(0x1b8)]();_0x5223bd=_0x718ce4[_0x2915f7(0x18b)]-_0x6cbb56[_0x2915f7(0x1b3)],_0x2f611a=_0x718ce4[_0x2915f7(0x199)]-_0x6cbb56[_0x2915f7(0x1cf)],_0x19c7d3[_0x2915f7(0x1c2)](_0x172126,0x0,0x0),_0x19c7d3[_0x15b2ca(0x25e)]=_0x2915f7(0x172),_0x19c7d3[_0x15b2ca(0x21f)]=0x2,_0x19c7d3[_0x2915f7(0x1c5)]([0x5,0x5]),_0x19c7d3[_0x2915f7(0x17c)](_0x2812a2,_0x1efe0b,_0x5223bd-_0x2812a2,_0x2f611a-_0x1efe0b),_0x19c7d3[_0x2915f7(0x174)]=_0x2915f7(0x1e1),_0x19c7d3[_0x2915f7(0x1ce)](0x0,0x0,_0x3ea372[_0x2915f7(0x1ab)],_0x3ea372[_0x2915f7(0x1d6)]),_0x19c7d3[_0x2915f7(0x196)](_0x2812a2,_0x1efe0b,_0x5223bd-_0x2812a2,_0x2f611a-_0x1efe0b);const _0x3d33eb=Math[_0x2915f7(0x1ea)](_0x2812a2,_0x5223bd),_0x23335d=Math[_0x2915f7(0x1ea)](_0x1efe0b,_0x2f611a),_0x1f2281=Math[_0x2915f7(0x19e)](_0x5223bd-_0x2812a2),_0x5ae201=Math[_0x15b2ca(0x262)](_0x2f611a-_0x1efe0b),_0x3d67ff=_0x3d33eb/_0x3a575d,_0x7d5800=_0x23335d/_0x3a575d,_0x2c4de0=_0x1f2281/_0x3a575d,_0x155a40=_0x5ae201/_0x3a575d;_0x19c7d3[_0x2915f7(0x16d)](_0x33ef75,_0x3d67ff,_0x7d5800,_0x2c4de0,_0x155a40,_0x3d33eb,_0x23335d,_0x1f2281,_0x5ae201);}),_0x3ea372[_0x120c4d(0x1d5)](_0x120c4d(0x1ed),()=>{const _0x5e9bd0=_0x4f3f,_0x1bfe1e=_0x120c4d;_0x3f8e40=![],_0x3ea372[_0x1bfe1e(0x170)]={'displayStartX':Math[_0x1bfe1e(0x1ea)](_0x2812a2,_0x5223bd),'displayStartY':Math[_0x5e9bd0(0x210)](_0x1efe0b,_0x2f611a),'displayEndX':Math[_0x1bfe1e(0x1a7)](_0x2812a2,_0x5223bd),'displayEndY':Math[_0x1bfe1e(0x1a7)](_0x1efe0b,_0x2f611a),'originalImg':_0x33ef75,'scale':_0x3a575d};});}function applyCrop(){const _0x1d6892=_0x4f3f,_0x57daca=_0x167d,_0x2be1a9=document[_0x57daca(0x194)](_0x57daca(0x17d));if(!_0x2be1a9['cropData']){alert(_0x1d6892(0x217));return;}const {displayStartX:_0x4802ed,displayStartY:_0x32affa,displayEndX:_0x510645,displayEndY:_0x49b46a,originalImg:_0x3a7dd9,scale:_0x2a2b64}=_0x2be1a9[_0x57daca(0x170)],_0x3a3c1a=Math[_0x1d6892(0x228)](_0x4802ed/_0x2a2b64),_0x37e5ad=Math[_0x57daca(0x188)](_0x32affa/_0x2a2b64),_0x5c97cd=Math[_0x57daca(0x188)]((_0x510645-_0x4802ed)/_0x2a2b64),_0x68dab1=Math[_0x57daca(0x188)]((_0x49b46a-_0x32affa)/_0x2a2b64),_0x234231=document[_0x57daca(0x1e2)](_0x57daca(0x1ac));_0x234231[_0x1d6892(0x202)]=_0x5c97cd,_0x234231[_0x1d6892(0x1f9)]=_0x68dab1;const _0x24c1cb=_0x234231[_0x57daca(0x1ca)]('2d');_0x24c1cb[_0x57daca(0x1a3)]=!![],_0x24c1cb[_0x1d6892(0x22f)]=_0x57daca(0x16b),_0x24c1cb[_0x57daca(0x16d)](_0x3a7dd9,_0x3a3c1a,_0x37e5ad,_0x5c97cd,_0x68dab1,0x0,0x0,_0x5c97cd,_0x68dab1),croppedImageData=_0x234231[_0x57daca(0x193)](_0x1d6892(0x240),0x1),document[_0x57daca(0x194)](_0x57daca(0x181))[_0x57daca(0x1eb)]=croppedImageData,closeCropModal(),console[_0x57daca(0x16f)](_0x57daca(0x180)+_0x5c97cd+'x'+_0x68dab1+_0x57daca(0x198));}function resetCrop(){const _0x23b05f=_0x4f3f,_0x15c2d6=_0x167d,_0x558de5=document[_0x15c2d6(0x194)](_0x15c2d6(0x17d)),_0x40088b=_0x558de5[_0x15c2d6(0x1ca)]('2d'),_0x5a968c=new Image();_0x5a968c[_0x15c2d6(0x19f)]=function(){const _0x53d18a=_0x4f3f,_0x2e8485=_0x15c2d6;_0x40088b[_0x2e8485(0x1a3)]=!![],_0x40088b[_0x2e8485(0x192)]=_0x53d18a(0x253),_0x40088b[_0x2e8485(0x16d)](_0x5a968c,0x0,0x0,_0x558de5[_0x53d18a(0x202)],_0x558de5[_0x53d18a(0x1f9)]),_0x558de5[_0x53d18a(0x205)]=null;},_0x5a968c[_0x23b05f(0x25d)]=capturedImageData,document[_0x23b05f(0x242)](_0x15c2d6(0x1c6))[_0x23b05f(0x22e)][_0x15c2d6(0x19d)]===_0x23b05f(0x26d)&&(document[_0x15c2d6(0x194)]('captureImage')[_0x15c2d6(0x1eb)]=capturedImageData,croppedImageData=null);}function _0x3dfd(){const _0x53fec6=_0x4f3f,_0x5e3f50=[_0x53fec6(0x23c),_0x53fec6(0x212),_0x53fec6(0x219),_0x53fec6(0x26b),_0x53fec6(0x26d),'getBoundingClientRect',_0x53fec6(0x1f4),_0x53fec6(0x257),_0x53fec6(0x1f6),_0x53fec6(0x1f5),_0x53fec6(0x225),'getFullYear',_0x53fec6(0x264),_0x53fec6(0x206),_0x53fec6(0x24d),_0x53fec6(0x22d),'_Completa_AltaCalidad',_0x53fec6(0x254),'setLineDash','capturePreview','Error\x20al\x20crear\x20PDF:',_0x53fec6(0x23b),_0x53fec6(0x229),'getContext',_0x53fec6(0x261),_0x53fec6(0x263),_0x53fec6(0x251),_0x53fec6(0x26e),_0x53fec6(0x1f8),_0x53fec6(0x213),_0x53fec6(0x23e),_0x53fec6(0x20b),'Información\x20del\x20Reporte','padStart',_0x53fec6(0x255),'height',_0x53fec6(0x246),'Error\x20al\x20capturar\x20pantalla:',_0x53fec6(0x23a),_0x53fec6(0x22e),'.png','Calidad:\x20Alta\x20resolución\x20-\x20PNG','videoWidth','dashboard1',_0x53fec6(0x1ff),_0x53fec6(0x218),_0x53fec6(0x235),_0x53fec6(0x21e),'Contacto:\x20roberto.mamani@municipalidadarica.cl',_0x53fec6(0x24e),_0x53fec6(0x1ea),_0x53fec6(0x230),_0x53fec6(0x1ed),_0x53fec6(0x220),_0x53fec6(0x265),_0x53fec6(0x210),_0x53fec6(0x25d),_0x53fec6(0x250),_0x53fec6(0x201),_0x53fec6(0x25b),_0x53fec6(0x236),_0x53fec6(0x233),'video',_0x53fec6(0x20a),_0x53fec6(0x26a),_0x53fec6(0x1fa),'videoHeight','text',_0x53fec6(0x253),_0x53fec6(0x208),_0x53fec6(0x258),_0x53fec6(0x216),'log',_0x53fec6(0x205),_0x53fec6(0x23d),_0x53fec6(0x267),_0x53fec6(0x239),_0x53fec6(0x1fe),_0x53fec6(0x22c),_0x53fec6(0x245),_0x53fec6(0x22a),'normal',_0x53fec6(0x238),_0x53fec6(0x237),_0x53fec6(0x227),_0x53fec6(0x20f),_0x53fec6(0x1e8),_0x53fec6(0x244),_0x53fec6(0x260),_0x53fec6(0x21d),'captureImage','addPage',_0x53fec6(0x20e),_0x53fec6(0x1f1),_0x53fec6(0x223),_0x53fec6(0x26c),_0x53fec6(0x1ee),_0x53fec6(0x228),_0x53fec6(0x241),_0x53fec6(0x200),_0x53fec6(0x269),_0x53fec6(0x222),_0x53fec6(0x232),'FAST',_0x53fec6(0x214),_0x53fec6(0x1f0),_0x53fec6(0x25f),_0x53fec6(0x22f),'toDataURL','getElementById',_0x53fec6(0x26f),'clearRect','setFont',_0x53fec6(0x21c),_0x53fec6(0x234),'1LLUwGi',_0x53fec6(0x248),_0x53fec6(0x21b),_0x53fec6(0x256),_0x53fec6(0x262),'onload',_0x53fec6(0x1eb),_0x53fec6(0x231),_0x53fec6(0x1f2),_0x53fec6(0x215),_0x53fec6(0x249),_0x53fec6(0x1ec),_0x53fec6(0x1f3),_0x53fec6(0x25a),_0x53fec6(0x203),_0x53fec6(0x25c),'click',_0x53fec6(0x202),'canvas',_0x53fec6(0x23f),_0x53fec6(0x211),_0x53fec6(0x20c),'360dXkhEo',_0x53fec6(0x24a),'msRequestFullscreen'];return _0x3dfd=function(){return _0x5e3f50;},_0x3dfd();}function closeCropModal(){const _0xd340a6=_0x4f3f,_0x2f7d49=_0x167d,_0x3ddf41=document[_0x2f7d49(0x194)](_0x2f7d49(0x191));_0x3ddf41&&(_0x3ddf41[_0x2f7d49(0x1da)][_0xd340a6(0x256)]=_0x2f7d49(0x1df));}function closeCapturePreview(){const _0x3f7c25=_0x4f3f,_0x36427c=_0x167d;document[_0x36427c(0x194)](_0x36427c(0x1c6))[_0x36427c(0x1da)][_0x36427c(0x19d)]=_0x36427c(0x1df),document[_0x3f7c25(0x242)](_0x36427c(0x1e6))[_0x36427c(0x1da)][_0x3f7c25(0x256)]=_0x36427c(0x1df),croppedImageData=null;}function downloadCapture(){const _0x533f29=_0x4f3f,_0x390f98=_0x167d,_0x40e404=croppedImageData||capturedImageData;if(!_0x40e404)return;const _0xb33a47=document[_0x390f98(0x1e2)]('a'),_0x25c15a=croppedImageData?'_Recorte_AltaCalidad':_0x533f29(0x1fc),_0x71da81=new Date(),_0xae78ca=_0x71da81['getFullYear']()+'-'+(_0x71da81[_0x390f98(0x1a1)]()+0x1)[_0x390f98(0x1c9)]()[_0x390f98(0x1d4)](0x2,'0')+'-'+_0x71da81[_0x390f98(0x1c4)]()[_0x390f98(0x1c9)]()[_0x390f98(0x1d4)](0x2,'0'),_0x17e5fa=_0x71da81[_0x533f29(0x1fa)]()['toString']()[_0x390f98(0x1d4)](0x2,'0')+'-'+_0x71da81[_0x390f98(0x1d2)]()[_0x390f98(0x1c9)]()[_0x390f98(0x1d4)](0x2,'0');_0xb33a47[_0x533f29(0x1fb)]=_0x390f98(0x189)+_0x25c15a+'_'+_0xae78ca+'_'+_0x17e5fa+_0x390f98(0x1db),_0xb33a47[_0x390f98(0x1a8)]=_0x40e404,_0xb33a47[_0x390f98(0x1aa)]();}function _0x4f3f(_0x3de925,_0x26ae36){const _0x4b5f82=_0x4b5f();return _0x4f3f=function(_0x4f3fef,_0x2ba20c){_0x4f3fef=_0x4f3fef-0x1e7;let _0x294d51=_0x4b5f82[_0x4f3fef];return _0x294d51;},_0x4f3f(_0x3de925,_0x26ae36);}function createPDFFromCapture(){const _0x30fa5a=_0x4f3f,_0x545cfa=_0x167d,_0x3dee1f=croppedImageData||capturedImageData;if(!_0x3dee1f)return;try{const {jsPDF:_0x115ad9}=window[_0x545cfa(0x1f0)],_0x44adde=new _0x115ad9({'orientation':_0x545cfa(0x1e5),'unit':'mm','format':'a4'});_0x44adde[_0x545cfa(0x1e0)](0x10),_0x44adde[_0x545cfa(0x1bb)](0x0,0x0,0x0),_0x44adde[_0x545cfa(0x197)](undefined,_0x545cfa(0x171));const _0x2308bc=croppedImageData?'DIMAO\x20-\x20Dashboard\x20Abastecimiento':_0x545cfa(0x179);_0x44adde[_0x545cfa(0x16a)](_0x2308bc,0x14,0x14),_0x44adde[_0x545cfa(0x1e0)](0xa),_0x44adde[_0x545cfa(0x1bb)](0x0,0x0,0x0),_0x44adde[_0x30fa5a(0x1ef)](undefined,_0x545cfa(0x178)),_0x44adde[_0x30fa5a(0x204)](_0x545cfa(0x1b4)+new Date()[_0x30fa5a(0x239)](_0x545cfa(0x1cd)),0x14,0x1e),croppedImageData?(_0x44adde[_0x545cfa(0x16a)](_0x30fa5a(0x226),0x14,0x23),_0x44adde[_0x545cfa(0x16a)](_0x30fa5a(0x219)+originalImageWidth+'x'+originalImageHeight+'px',0x14,0x28)):_0x44adde[_0x545cfa(0x16a)](_0x30fa5a(0x219)+originalImageWidth+'x'+originalImageHeight+'px',0x14,0x23);const _0x41fed3=0xfa,_0x2bd058=0x8c;_0x44adde[_0x545cfa(0x1d7)](_0x3dee1f,_0x545cfa(0x175),0x14,0x32,_0x41fed3,_0x2bd058,'',_0x545cfa(0x18e)),_0x44adde[_0x545cfa(0x182)](),_0x44adde[_0x545cfa(0x1e0)](0xe),_0x44adde[_0x545cfa(0x197)](undefined,_0x30fa5a(0x23d)),_0x44adde[_0x545cfa(0x16a)](_0x545cfa(0x1d3),0x14,0x1e),_0x44adde[_0x30fa5a(0x218)](0xa),_0x44adde[_0x545cfa(0x197)](undefined,_0x545cfa(0x178));const _0x54477b=[_0x30fa5a(0x21a)+new Date()[_0x545cfa(0x173)](_0x545cfa(0x1cd)),_0x545cfa(0x1b5)+originalImageWidth+'x'+originalImageHeight+'px',_0x545cfa(0x1dc),'',_0x30fa5a(0x22b),_0x545cfa(0x1e9),'',_0x545cfa(0x176),_0x545cfa(0x167),'',_0x545cfa(0x1e3),_0x545cfa(0x1bc)];let _0x15cad9=0x28;_0x54477b[_0x545cfa(0x1a9)](_0xf636d1=>{const _0x437b13=_0x545cfa;_0x44adde[_0x437b13(0x16a)](_0xf636d1,0x14,_0x15cad9),_0x15cad9+=0x6;});const _0x678e9c=croppedImageData?_0x545cfa(0x1ef):_0x545cfa(0x1c3),_0xccf1d9=new Date(),_0x40cddb=_0xccf1d9[_0x545cfa(0x1be)]()+'-'+(_0xccf1d9[_0x30fa5a(0x231)]()+0x1)[_0x30fa5a(0x229)]()[_0x545cfa(0x1d4)](0x2,'0')+'-'+_0xccf1d9[_0x545cfa(0x1c4)]()[_0x545cfa(0x1c9)]()[_0x545cfa(0x1d4)](0x2,'0'),_0x5e2e74=_0xccf1d9[_0x545cfa(0x168)]()[_0x545cfa(0x1c9)]()[_0x545cfa(0x1d4)](0x2,'0')+'-'+_0xccf1d9[_0x545cfa(0x1d2)]()[_0x545cfa(0x1c9)]()[_0x545cfa(0x1d4)](0x2,'0'),_0x29b894=_0x545cfa(0x1c8)+_0x678e9c+'_'+_0x40cddb+'_'+_0x5e2e74+_0x545cfa(0x1d1);_0x44adde[_0x545cfa(0x18c)](_0x29b894),closeCapturePreview();}catch(_0x217e90){console[_0x545cfa(0x1b6)](_0x545cfa(0x1c7),_0x217e90),alert(_0x545cfa(0x1c0));}}function openFullscreen(_0x211c9c){const _0x465d4f=_0x167d,_0x11f6aa=document[_0x465d4f(0x194)](_0x211c9c);if(_0x11f6aa[_0x465d4f(0x1a0)])_0x11f6aa[_0x465d4f(0x1a0)]();else{if(_0x11f6aa[_0x465d4f(0x1e4)])_0x11f6aa[_0x465d4f(0x1e4)]();else _0x11f6aa[_0x465d4f(0x1b2)]&&_0x11f6aa[_0x465d4f(0x1b2)]();}}function openAssistance(){const _0x25b23d=_0x167d;alert(_0x25b23d(0x187));}document[_0x5627b4(0x1d5)](_0x3413cb(0x24c),function(){const _0x3cfc10=_0x3413cb,_0xb37308=_0x5627b4;console[_0xb37308(0x16f)](_0xb37308(0x177)),typeof html2canvas===_0xb37308(0x1ae)&&console[_0xb37308(0x18a)](_0xb37308(0x18f)),typeof window[_0xb37308(0x1f0)]===_0xb37308(0x1ae)&&console[_0xb37308(0x18a)](_0x3cfc10(0x207));}),window[_0x5627b4(0x1d5)](_0x5627b4(0x1ee),function(){setTimeout(()=>{const _0x560f81=_0x4f3f;location[_0x560f81(0x1e9)]();},0x1f4);});
+
+</script>
+    
+</body>
+</html>
