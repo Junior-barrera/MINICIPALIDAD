@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Arica | mejor ciudad</title>
+    <link rel="stylesheet" href="styles.css">
+   <script src="comando_general.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+</head>
+<body>
+    <script src="auth.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<div class="loader">
+    <div class="loader-animation">
+        <div class="loader-circle"></div>
+        <img src="images.png" alt="Logo" class="loader-logo">
+    </div>
+</div>
+    <header>
+        <!-- Transparency links as collapsible menu -->
+        <div class="transparency-container">
+        </div>
+</div>
+</header>
+ 
+                <div class="top-header">
+                    <div class="logo">
+                        <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                        <div class="logo-text">
+                            <h1>ARICA</h1>
+                            <span>MUNICIPALIDAD | mejor ciudad</span>
+                        </div>
+                    </div>
+                </div>
+    
+    
+    <!-- Main navigation -->
+    <nav>
+        <ul class="main-menu">
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="dashboard-gps.html">GPS DIMAO</a></li>
+            <li><a href="dashboard-presupuesto.html">PRESUPUESTO ANUAL</a></li>
+            <li><a href="dashboard-abastecimiento.html">ABASTECIMIENTO</a></li>
+            <li><a href="dashboard-bodega.html">BODEGA</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero section -->
+    <section class="hero">
+        <img src="fondo.jpg" alt="JUNIOR BARRERA" class="hero-image">
+        <div class="hero-content">
+            <h2>DIMAO</h2>
+            <p>"Mejoremos Juntos"</p>
+        </div>
+    </section>
+   
+    <!-- Regular modules -->
+   <!-- Sección de formularios modernizada -->
+<section class="modules">
+    <h2 class="fade-in">Sistema Integral de Gestión DIMAO</h2>
+    <div class="module-grid">
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Gestión de Presupuesto Anual de Compra</h3>
+            <p>Este formulario permite planificar, registrar y gestionar el Presupuesto Anual de Compra (PAC) de materiales y servicios necesarios para el funcionamiento de DIMAO. Facilita la proyección de necesidades, el control del gasto y la programación de adquisiciones, asegurando una correcta administración de los recursos financieros durante el año.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario')">
+                Acceder <span class="ml-2">→</span>
+                
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">🚗</div>
+            <h3>Sistema de Gestión de Mantenimiento de Vehículos y Maquinaria </h3>
+            <p>Este formulario está diseñado para registrar solicitudes de mantenimiento preventivo y correctivo de vehículos y maquinaria pertenecientes a la institución. Por favor, asegúrese de llenar todos los campos requeridos con información clara y precisa para facilitar una atención eficiente y oportuna por parte de la Oficina de Mantenimiento.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario2')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">💡</div>
+            <h3>Sistema de Control y Mantenimiento de Iluminación Pública</h3>
+            <p>Este formulario está destinado a registrar, actualizar y gestionar información relacionada con las solicitudes, reportes, y gestiones internas de la Oficina de Iluminación Pública. Permite sistematizar datos sobre mantenimiento, instalación, stock de materiales, y atención de requerimientos ciudadanos, contribuyendo a una administración más eficiente y organizada de los recursos de iluminación urbana.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario3')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Reclamos</h3>
+            <p>Plataforma para reportar y dar seguimiento a problemas relacionados con iluminación pública, áreas verdes y espacios públicos en la comunidad.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario4')">
+                Acceder <span class="ml-2">→</span> 
+            </button>
+        </div>
+
+    </div>
+</section>
+<div class="container">
+    <!-- Header del Foro -->
+    <div class="forum-header">
+        <h1 class="forum-title">🌐 DIMAO Conecta</h1>
+        <p class="forum-subtitle">Foro de Comunicación Interdepartamental</p>
+    </div>
+
+    <!-- Contenedor del Chat -->
+    <div class="chat-container">
+        <div class="messages-area" id="messagesArea">
+            <div class="welcome-message">
+                <strong>¡Bienvenido al foro DIMAO Conecta!</strong><br>
+                Este es un espacio para la comunicación entre todos los departamentos.
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="Escribe tu mensaje aquí..."
+                    rows="1"></textarea>
+                <button id="sendButton" class="send-button">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usuarios en línea -->
+    <div class="online-users">
+        <h3>
+            <span class="online-indicator"></span>
+            Usuarios Conectados
+        </h3>
+        <div class="user-list" id="userList">
+            <!-- Los usuarios se cargarán dinámicamente -->
+        </div>
+    </div>
+</div>
+<!-- Sección DIMAO 360° Modernizada -->
+<section class="modules">
+    <h2 class="fade-in">DIMAO 360°</h2>
+    <h4>Supervisión integral operativa, táctica y estratégica en tiempo real</h4>
+ <div class="widgets-grid">
+        <!-- Widget Clima -->
+        <div class="widget weather">
+            <div class="widget-icon">🌤️</div>
+            <h3 class="widget-title">Clima en Arica</h3>
+            <div class="widget-data" id="weather-temp">--°C</div>
+            <div class="widget-details">
+                <div id="weather-desc">Cargando...</div>
+                <div>💧 <span id="weather-humidity">--%</span> | 🌬️ <span id="weather-wind">-- km/h</span></div>
+            </div>
+            <div class="update-time" id="weather-update">Actualizado: --</div>
+        </div>
+    </div>
+    <div class="container">
+
+            <div class="control-panel">
+                <div class="controls-row">
+                    <button class="control-btn" onclick="centerMap()">
+                        📍 Centrar Mapa
+                    </button>
+                    <button class="control-btn" onclick="toggleSatellite()">
+                        🛰️ Vista Satélite
+                    </button>
+                </div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+<div class="module-grid">
+  
+      <div class="module fade-in">
+        <div class="module-icon">📊</div>
+        <h3>Centro de Mando DIMAO</h3>
+        <p>Panel estratégico que consolida los indicadores clave de gestión de todas las áreas de DIMAO: iluminación, vehículos, áreas verdes, aseo, reclamos ciudadanos y PAC. Facilita la toma de decisiones rápidas y efectivas mediante visualización de datos en tiempo real y proyecciones inteligentes.</p>
+        <button class="module-button" onclick="redirectToDashboard('centroMando')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+  
+      <div class="module fade-in">
+        <div class="module-icon">🚨</div>
+        <h3>Panel de Alertas Críticas</h3>
+        <p>Herramienta de monitoreo proactivo que detecta, clasifica y notifica situaciones urgentes en los servicios municipales. Desde fallas en iluminación hasta vehículos fuera de servicio, el sistema prioriza incidentes y ayuda a coordinar una respuesta rápida con las unidades responsables.</p>
+        <button class="module-button" onclick="redirectToDashboard('alertasCriticas')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+    </div>
+
+</section>
+
+<section class="dashboard-modules">
+    <h2 class="animated-title">Visualización de Módulos</h2>
+    <p class="animated-subtitle">Accede a nuestros paneles de datos para conocer el funcionamiento de DIMAO</p>
+
+    <!-- Contenedor principal -->
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; margin-top: 40px;">
+
+        <!-- Título Asesoría Técnica -->
+        <h2>Asesoría Técnica</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff0000, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff, #ff00ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- GPS DIMAO -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('GPS.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">GPS</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">GPS DIMAO</h3>
+                    <p>Este módulo permite el seguimiento en tiempo real de los vehículos recolectores, analizando rutas, tiempos de operación y eficiencia del servicio para optimizar la gestión.</p>
+                    <a href="dashboard-gps.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cuentas de Presupuesto Anual -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('presupuesto.webp')">
+                    <div class="image-overlay">
+                        <span class="card-badge">PAC & F1</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Cuentas de Presupuesto Anual</h3>
+                    <p>Este módulo permite el seguimiento y control del presupuesto anual, analizando ingresos, egresos y su distribución para una planificación eficiente de los recursos.</p>
+                    <a href="dashboard-presupuesto.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Abastecimiento de Combustible -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('abastecimiento.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Combustible</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Abastecimiento de Combustible</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-abastecimiento.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <!-- Cuentas de toner y tintas  -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('blog-tinta-toner.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Toner & Tintas</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Inventario de Toner & Tintas </h3>
+                    <p>Este módulo permite visualizar y gestionar en tiempo real el stock de tóner y tintas disponibles. Ofrece un registro detallado y actualizado que facilita el control eficiente de insumos.</p>
+                    <a href="toner&tintas.html" class="view-dashboard">
+                        <span>Ver Inventario</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Oficina de Mantenimiento de Vehículos y Maquinaria -->
+        <h2 style="margin-top: 60px;">Oficina de Mantenimiento de Vehículos y Maquinaria</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Stock de Bodega Mecánica -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bodega.avif')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock de Bodega Mecánica</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock de Bodega Mecánica</h3>
+                    <p>Este módulo permite el control de inventario en la bodega mecánica, facilitando la gestión de repuestos, insumos y herramientas para un mantenimiento eficiente.</p>
+                    <a href="dashboard-bodega.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vehículos y Maquinaria -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('vehiculo y maquinaria .jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Vehículos y Maquinaria</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Vehículos y Maquinaria</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-vehiculosymaquinaria.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Iluminación Pública -->
+        <h2 style="margin-top: 60px;">Iluminación Pública</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #00c3ff, #ffff1c, #ff3c00); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Iluminación Pública -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('CEMAFORO.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Iluminación Pública</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Iluminación Pública</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Órdenes de Trabajo de Iluminación -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bombillas-electricas-aisladas_23-2151045845')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Órdenes de Trabajo</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Órdenes de Trabajo de Iluminación</h3>
+                    <p>Este módulo proporciona información clave sobre las órdenes de trabajo de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, estado de ejecución y ubicación geográfica de las solicitudes. Permite visualizar las intervenciones mediante mapas de calor, identificar patrones de fallas, optimizar la planificación de trabajos y mejorar la eficiencia operativa.</p>
+                    <a href="dashboard-ordenes-trabajo-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stock Bodega de Iluminación -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('iluminacion-en-bodegas.1.2.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock Bodega Iluminación</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock Bodega de Iluminación</h3>
+                    <p>El módulo "Stock bodega de iluminación" permite gestionar y visualizar en tiempo real la cantidad, tipo y estado de los productos de iluminación almacenados en la bodega. Incluye el control de entradas, salidas, stock disponible, y alertas de reposición para asegurar una adecuada disponibilidad de insumos como ampolletas, tubos, reflectores, cables, entre otros artículos relacionados.</p>
+                    <a href="dashboard-stock-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Reclamos -->
+        <h2 style="margin-top: 60px;">Reclamos</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #f00000, #f4d03f, #16a085); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Reclamos Ciudadanos -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('reclamociudadano.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Reclamos Ciudadanos</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Reclamos Ciudadanos</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-reclamos.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Municipalidad de Arica</h3>
+            <p>Renato Rocca , Arica</p>
+            <p>Anexo: 6959</p>
+            <p>Email: roberto.mamani@municipalidadarica.cl</p>
+            <div class="social-icons">
+                <a href="#">📘</a>
+                <a href="#">📱</a>
+                <a href="#">🐦</a>
+                <a href="#">📸</a>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Colaboración Interdepartamental</h3>
+            <p style="line-height: 1.6;">
+                Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+            </p>
+        </div>
+        <div class="footer-column licitaciones">
+            <h3>Licitaciones</h3>
+            <ul class="licitaciones-list">
+                <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+    </div>
+</footer>
+
+
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+      <script>
+const _0x2ef92c=_0x14e9;function _0x4c42(){const _0x3a668e=['page','block','textContent','forEach','Director','height','now','dato_ua','toLowerCase','dimao_user_activities','0\x205px\x2020px\x20rgba(0,\x200,\x200,\x200.1)','input','display','backgroundColor','22fntONe','3144784gkRcFs','<div\x20class=\x22empty-state\x22>No\x20hay\x20usuarios\x20conectados</div>','active','messagesArea','min','dashboard-reclamos','getElementById','fullName','dashboard-gps.html','.dashboard-modules','dashboard-vehiculosymaquinaria','addedNodes','href','dashboard-seguridad.html','translateY(','filter','1135329mIljcE','permission','?h=M','dashboard-iluminacion','removeLayer','json','classList','504190jRahpj','.transparency-toggle','slice','dashboard-iluminacion.html','44uMIhnW','&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto','.leaflet-control-attribution','setItem','Enter','street','zoneStatus','.view-dashboard','.fade-in','match','weather-humidity','570vPfEKz','Lluvia\x20ligera','random','Chubascos','keypress','readyState','top','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-time\x22>','weather-update','8EtjkFL','querySelectorAll','.module','click','scrollTop','zonePriority','Administrador','https://wa.me/','smooth','4PBgmBl','dashboard-bodega','style','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-color:\x20rgba(255,\x20255,\x20255,\x20','wind_speed_10m','formulario-3.html','0px\x200px\x20-100px\x200px','%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20left:\x20','addTo','currentUser','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','cursor','DOMContentLoaded','translate(','Niebla','Usuario','2-digit','.hero-buttons','dashboard-stock-iluminacion','all','?h=MUA','toLocaleTimeString','setView','remove','#ccc','addEventListener','https://script.google.com/macros/s/AKfycbws3ckXIZJebtwEdAk0nmeE1uIEaEYN4ZanWWRfJcc0ulOcG29vdfW-R8_mFPzi5w01/exec','current','trim','.module-button','addLayer','110PlOXSI','.hero-button:not(.primary)','type','1447464afOKiV','Actualizado:\x20','clientX','hero-buttons','temperature_2m','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22user-chip\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22online-indicator\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>','formulario-1.html','formulario-4.html','Tipo\x20de\x20dashboard\x20no\x20reconocido:','toggle','appendChild','Error\x20al\x20obtener\x20los\x20datos:','toLocaleString','relative_humidity_2m','includes','director','own','then','1115456EFemgn','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-author\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>','443910igQbtC','.loader','junior','Error\x20al\x20cargar\x20clima:','Nublado','target','POST','toISOString','push','color','91359ggABRu','scrollHeight','pointerEvents','disabled-button','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20height:\x20','Datos\x20no\x20disponibles','Mayormente\x20despejado','3135925aBNthV','0\x202px\x2010px\x20rgba(0,\x200,\x200,\x200.05)','mousemove','onclick','other','.hero-button.primary','stringify','map','admin','role','1740935YBuyPy','userId','Regular','&longitude=','max','combustible','scrollIntoView','number','.message','clientY','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-content\x22>','1328679azUYNS','weather-temp','cssText','dato_ac','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','message\x20','.transparency-links','27321hdxHoK','mensajes','innerHTML','none','%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','.hero','es-CL','.dashboard-image','permissions','createElement','beforeunload','querySelector','.form-input,\x20.form-select','transform','7CGUAiQ','username','formulario-2','content','value','px,\x20','formulario-4','scroll','Combustible','getAttribute','weather-wind','contains','scrollY','dato_ms','boxShadow','load','shift','catch','hidden','error','_blank','className','dashboard-gps',');\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x2050%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x20','not-allowed','documentElement','observe','.modules','satellite','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-','Sin\x20acceso\x20<span\x20class=\x22ml-2\x22>🔒</span>','innerWidth','weather_code','login.html','formulario-1','isIntersecting','2343612bwZEGZ','px)','#999','dashboard-ordenes-trabajo-iluminacion','replace','Media','weather-desc','parse','getItem','13482688FYokWZ','dashboard-presupuesto','add','preventDefault','timestamp','.hero-content','.html','959414178','messageInput','div','dashboard-abastecimiento.html','tileLayer','px)\x20scale(1.1)','in-view','10212894wGIqeQ','no-cors','email','<span>Sin\x20acceso</span>\x20<i\x20class=\x22dashboard-icon\x22>🔒</i>','key'];_0x4c42=function(){return _0x3a668e;};return _0x4c42();}(function(_0x4fef21,_0x274074){const _0x594fca=_0x14e9,_0x637e5f=_0x4fef21();while(!![]){try{const _0x25ae63=-parseInt(_0x594fca(0xeb))/0x1+parseInt(_0x594fca(0xe9))/0x2+parseInt(_0x594fca(0x8d))/0x3*(parseInt(_0x594fca(0xac))/0x4)+parseInt(_0x594fca(0x106))/0x5+parseInt(_0x594fca(0x14a))/0x6+parseInt(_0x594fca(0x126))/0x7*(parseInt(_0x594fca(0x7d))/0x8)+-parseInt(_0x594fca(0x111))/0x9*(parseInt(_0x594fca(0xd4))/0xa);if(_0x25ae63===_0x274074)break;else _0x637e5f['push'](_0x637e5f['shift']());}catch(_0xfb40ae){_0x637e5f['push'](_0x637e5f['shift']());}}}(_0x4c42,0x5c71a));const _0x2eb013=_0x40b6;(function(_0x3514ed,_0x23f7b2){const _0x3823fb=_0x14e9,_0xc8774c=_0x40b6,_0x376da4=_0x3514ed();while(!![]){try{const _0xd5a384=-parseInt(_0xc8774c(0x216))/0x1+-parseInt(_0xc8774c(0x1d0))/0x2*(parseInt(_0xc8774c(0x1ce))/0x3)+-parseInt(_0xc8774c(0x15a))/0x4*(-parseInt(_0xc8774c(0x229))/0x5)+-parseInt(_0xc8774c(0x1e3))/0x6*(parseInt(_0xc8774c(0x178))/0x7)+parseInt(_0xc8774c(0x20c))/0x8+parseInt(_0xc8774c(0x1ed))/0x9+parseInt(_0xc8774c(0x219))/0xa*(-parseInt(_0xc8774c(0x204))/0xb);if(_0xd5a384===_0x23f7b2)break;else _0x376da4['push'](_0x376da4[_0x3823fb(0x136)]());}catch(_0x4c6a68){_0x376da4[_0x3823fb(0xf3)](_0x376da4['shift']());}}}(_0x3fa6,0xd187a));const ARICA_COORDS=[-18.4746,-70.2979];function getCurrentTime(){const _0xe7c537=_0x14e9,_0x270589=_0x40b6;return new Date()[_0xe7c537(0xca)](_0x270589(0x200),{'hour':_0x270589(0x22a),'minute':_0x270589(0x22a)});}async function updateWeather(){const _0x342462=_0x14e9,_0x44db6b=_0x40b6;try{const _0x1d778a=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+ARICA_COORDS[0x0]+_0x44db6b(0x1c5)+ARICA_COORDS[0x1]+_0x44db6b(0x203)),_0x531f6d=await _0x1d778a[_0x44db6b(0x226)]();document[_0x44db6b(0x230)](_0x44db6b(0x172))[_0x44db6b(0x173)]=_0x531f6d[_0x44db6b(0x1b8)][_0x342462(0xdb)]+'°C',document[_0x44db6b(0x230)](_0x44db6b(0x22b))['textContent']=_0x531f6d[_0x44db6b(0x1b8)][_0x342462(0xe4)]+'%',document[_0x44db6b(0x230)](_0x44db6b(0x1e9))[_0x44db6b(0x173)]=_0x531f6d[_0x44db6b(0x1b8)][_0x44db6b(0x1bb)]+_0x44db6b(0x243),document[_0x44db6b(0x230)](_0x44db6b(0x15b))[_0x44db6b(0x173)]=getWeatherDescription(_0x531f6d[_0x44db6b(0x1b8)][_0x44db6b(0x1a8)]),document[_0x44db6b(0x230)](_0x44db6b(0x18d))[_0x44db6b(0x173)]=_0x44db6b(0x22d)+getCurrentTime();}catch(_0x365250){console[_0x342462(0x139)](_0x342462(0xee),_0x365250),document[_0x44db6b(0x230)](_0x44db6b(0x15b))['textContent']=_0x44db6b(0x1e4);}}function getWeatherDescription(_0x2ce727){const _0x5849b8=_0x40b6,_0x585625={0x0:_0x5849b8(0x1c7),0x1:_0x5849b8(0x1b6),0x2:_0x5849b8(0x1f8),0x3:_0x5849b8(0x1a1),0x2d:_0x5849b8(0x16a),0x3d:_0x5849b8(0x185),0x50:_0x5849b8(0x1f3)};return _0x585625[_0x2ce727]||_0x5849b8(0x1c7);}document[_0x2eb013(0x1f4)](_0x2eb013(0x217),()=>{updateWeather(),updateAirQuality(),updateAlerts(),updateTraffic(),setInterval(updateWeather,0x493e0),setInterval(updateAirQuality,0x493e0),setInterval(updateAlerts,0x493e0),setInterval(updateTraffic,0x493e0);});function _0x40b6(_0x3909d9,_0x498bca){const _0x3493f3=_0x3fa6();return _0x40b6=function(_0x344f6d,_0x2281eb){_0x344f6d=_0x344f6d-0x153;let _0x379dd6=_0x3493f3[_0x344f6d];return _0x379dd6;},_0x40b6(_0x3909d9,_0x498bca);}let map,showLighting=!![],currentBaseLayer=_0x2eb013(0x1e0),currentStatusFilter=_0x2eb013(0x1df),currentPriorityFilter=_0x2ef92c(0xc8),assignments=[],satelliteTileLayer,streetTileLayer;function initMap(){const _0x450b2f=_0x2ef92c,_0x43ddc1=_0x2eb013;map=L[_0x43ddc1(0x1ec)](_0x43ddc1(0x1ec),{'attributionControl':![]})[_0x450b2f(0xcb)]([-18.4746,-70.3045],0xd),setTimeout(removeLeafletAttribution,0x32),streetTileLayer=L[_0x43ddc1(0x238)](_0x43ddc1(0x165),{'attribution':''}),satelliteTileLayer=L[_0x450b2f(0x15e)]('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{'attribution':''}),streetTileLayer[_0x450b2f(0xbd)](map),loadRecyclingPoints(),loadMunicipalPoints(),loadLightingZones(),updateZoneSelects(),updateStats(),setupFilters();}function _0x14e9(_0x51b9a0,_0x277c70){const _0x4c420b=_0x4c42();return _0x14e9=function(_0x14e9f3,_0x553a87){_0x14e9f3=_0x14e9f3-0x77;let _0x1a4b61=_0x4c420b[_0x14e9f3];return _0x1a4b61;},_0x14e9(_0x51b9a0,_0x277c70);}function removeLeafletAttribution(){const _0x26e0c9=_0x2eb013,_0x5832ee=document[_0x26e0c9(0x232)](_0x26e0c9(0x228));_0x5832ee[_0x26e0c9(0x1c8)](_0x271386=>{const _0x5d4dd9=_0x26e0c9;_0x271386[_0x5d4dd9(0x17d)]();});}function centerMap(){const _0x331bbb=_0x2eb013;map[_0x331bbb(0x18b)]([-18.4746,-70.3045],0xd);}function toggleSatellite(){const _0x492f58=_0x2ef92c,_0xabda3a=_0x2eb013;currentBaseLayer===_0xabda3a(0x1e0)?(map[_0xabda3a(0x17f)](streetTileLayer),map[_0xabda3a(0x233)](satelliteTileLayer),currentBaseLayer=_0xabda3a(0x1c0)):(map[_0xabda3a(0x17f)](satelliteTileLayer),map[_0x492f58(0xd3)](streetTileLayer),currentBaseLayer=_0x492f58(0x9d)),removeLeafletAttribution();}function showZoneForm(){const _0x21c9c9=_0x2ef92c,_0x315b63=_0x2eb013;document[_0x21c9c9(0x83)](_0x315b63(0x22e))[_0x315b63(0x166)][_0x21c9c9(0x7a)]=_0x315b63(0x20f),document[_0x21c9c9(0xad)](_0x315b63(0x21a))[_0x315b63(0x1c8)](_0x5cef2a=>{const _0x3fed10=_0x21c9c9,_0x43f6e2=_0x315b63;_0x5cef2a[_0x43f6e2(0x237)]=_0x5cef2a[_0x3fed10(0xd6)]!==_0x43f6e2(0x1b1)?'':'';}),document[_0x315b63(0x230)](_0x315b63(0x211))[_0x315b63(0x237)]=_0x315b63(0x23f),document[_0x315b63(0x230)](_0x315b63(0x15e))[_0x315b63(0x237)]=_0x315b63(0x18e);}document[_0x2eb013(0x202)]==='loading'?document[_0x2eb013(0x1f4)](_0x2eb013(0x217),initMap):initMap();function redirectToDashboard(_0x1fe3ed){const _0x4d5a0f=_0x2ef92c,_0x9dae=_0x2eb013,_0x834f57=JSON[_0x9dae(0x212)](localStorage[_0x9dae(0x244)](_0x9dae(0x1af)));if(!_0x834f57){window[_0x9dae(0x205)][_0x4d5a0f(0x89)]=_0x9dae(0x1d4);return;}const _0xd28fed={'presupuesto':{'page':_0x4d5a0f(0x85),'permission':_0x9dae(0x1b4)},'obras':{'page':_0x9dae(0x236),'permission':_0x4d5a0f(0x154)},'servicios':{'page':_0x9dae(0x16e),'permission':_0x9dae(0x171)},'seguridad':{'page':_0x9dae(0x1e2),'permission':_0x9dae(0x183)},'formulario':{'page':_0x4d5a0f(0xdd),'permission':_0x9dae(0x239)},'formulario2':{'page':_0x9dae(0x193),'permission':'formulario-2'},'formulario3':{'page':_0x9dae(0x16d),'permission':_0x9dae(0x20d)},'formulario4':{'page':_0x9dae(0x194),'permission':_0x4d5a0f(0x12c)},'dashboard-gps':{'page':_0x9dae(0x154),'permission':_0x9dae(0x1b4)},'dashboard-presupuesto':{'page':_0x9dae(0x236),'permission':'dashboard-presupuesto'},'dashboard-abastecimiento':{'page':_0x9dae(0x16e),'permission':_0x9dae(0x171)},'dashboard-bodega':{'page':_0x9dae(0x1c9),'permission':_0x9dae(0x190)},'dashboard-reclamos':{'page':_0x9dae(0x1e5),'permission':_0x9dae(0x195)},'dashboard-vehiculosymaquinaria':{'page':_0x9dae(0x1ba),'permission':_0x9dae(0x1f2)},'dashboard-iluminacion':{'page':_0x9dae(0x1b7),'permission':_0x4d5a0f(0x90)},'dashboard-ordenes-trabajo-iluminacion':{'page':_0x9dae(0x20e),'permission':_0x9dae(0x20e)},'dashboard-stock-iluminacion':{'page':_0x9dae(0x1fe),'permission':_0x9dae(0x208)}},_0x36040a=_0xd28fed[_0x1fe3ed];if(!_0x36040a){console[_0x9dae(0x225)](_0x4d5a0f(0xdf),_0x1fe3ed);return;}hasStrictPermission(_0x834f57,_0x36040a[_0x9dae(0x1cb)])?window[_0x9dae(0x205)][_0x9dae(0x189)]=_0x36040a[_0x9dae(0x1cd)]:showAccessDeniedMessage();}function hasStrictPermission(_0x2c2a10,_0x4cf92a){const _0x5e2b97=_0x2ef92c,_0x3821bf=_0x2eb013;if(_0x2c2a10[_0x3821bf(0x21d)]===_0x5e2b97(0xe6)||_0x2c2a10[_0x5e2b97(0x105)]===_0x3821bf(0x1f0))return!![];if(_0x2c2a10[_0x3821bf(0x1d3)]){if(_0x2c2a10[_0x5e2b97(0x105)]===_0x3821bf(0x1b2)&&_0x4cf92a===_0x3821bf(0x171)&&_0x2c2a10[_0x3821bf(0x1d3)][_0x3821bf(0x177)](_0x5e2b97(0x10b)))return!![];if(_0x4cf92a===_0x3821bf(0x239)&&_0x2c2a10[_0x3821bf(0x1d3)][_0x5e2b97(0xe5)]('pac'))return!![];if(_0x2c2a10[_0x3821bf(0x1d3)][_0x3821bf(0x177)](_0x4cf92a))return!![];}return![];}function updateAccessButtonsVisibility(){const _0x3fd72f=_0x2ef92c,_0x581578=_0x2eb013,_0x451a80=JSON[_0x581578(0x212)](localStorage[_0x581578(0x244)](_0x581578(0x1af)));if(!_0x451a80)return;const _0x33db08=document[_0x581578(0x232)](_0x581578(0x1ee));_0x33db08[_0x3fd72f(0x169)](_0x480230=>{const _0x4a0cc7=_0x3fd72f,_0x4da44a=_0x581578,_0x1b2e73=_0x480230[_0x4da44a(0x1a2)](_0x4da44a(0x1d1));if(!_0x1b2e73)return;const _0x424675=_0x1b2e73[_0x4da44a(0x199)](/redirectToDashboard\(['"]([^'"]+)['"]\)/);if(!_0x424675||!_0x424675[0x1])return;const _0x307f14=_0x424675[0x1],_0x4fa714={'presupuesto':_0x4da44a(0x1b4),'obras':'dashboard-presupuesto','servicios':_0x4da44a(0x171),'seguridad':_0x4da44a(0x183),'reclamos':_0x4da44a(0x195),'vehiculos':_0x4a0cc7(0x87),'formulario':_0x4a0cc7(0x148),'formulario2':_0x4da44a(0x23e),'formulario3':'formulario-3','formulario4':_0x4da44a(0x15f),'dashboard-gps':_0x4a0cc7(0x13c),'dashboard-presupuesto':_0x4a0cc7(0x154),'dashboard-abastecimiento':_0x4da44a(0x171),'dashboard-bodega':_0x4da44a(0x190),'dashboard-reclamos':_0x4da44a(0x195),'dashboard-vehiculosymaquinaria':_0x4da44a(0x1f2),'dashboard-iluminacion':_0x4a0cc7(0x90),'dashboard-ordenes-trabajo-iluminacion':_0x4da44a(0x20e),'dashboard-stock-iluminacion':_0x4da44a(0x208)},_0x4f4871=_0x4fa714[_0x307f14];!hasStrictPermission(_0x451a80,_0x4f4871)&&(_0x480230[_0x4da44a(0x1f1)]=!![],_0x480230[_0x4da44a(0x17e)][_0x4da44a(0x16b)](_0x4da44a(0x19c)),_0x480230['style'][_0x4da44a(0x1ae)]=_0x4a0cc7(0xcd),_0x480230[_0x4da44a(0x166)][_0x4da44a(0x242)]=_0x4da44a(0x218),_0x480230['style'][_0x4da44a(0x1b3)]=_0x4da44a(0x1eb),_0x480230[_0x4a0cc7(0x11a)]=_0x4da44a(0x1a3));});const _0x33e720=document[_0x3fd72f(0xad)](_0x581578(0x21b));_0x33e720[_0x581578(0x1c8)](_0xa6a74e=>{const _0x2bd949=_0x3fd72f,_0x2d2bc9=_0x581578,_0x4d792b=_0xa6a74e[_0x2d2bc9(0x1a2)]('href');if(!_0x4d792b)return;const _0x1db414=_0x4d792b[_0x2d2bc9(0x1a0)](_0x2bd949(0x159),'');!hasStrictPermission(_0x451a80,_0x1db414)&&(_0xa6a74e[_0x2d2bc9(0x1f4)](_0x2d2bc9(0x1f9),function(_0x25237d){const _0x18eaff=_0x2bd949;_0x25237d[_0x18eaff(0x156)](),showAccessDeniedMessage();}),_0xa6a74e[_0x2d2bc9(0x17e)][_0x2bd949(0x155)]('disabled-link'),_0xa6a74e[_0x2d2bc9(0x166)][_0x2bd949(0xf4)]=_0x2bd949(0x14c),_0xa6a74e['style'][_0x2d2bc9(0x158)]=_0x2d2bc9(0x1df),_0xa6a74e[_0x2d2bc9(0x166)][_0x2bd949(0xc0)]=_0x2d2bc9(0x218),_0xa6a74e[_0x2d2bc9(0x1c1)]=_0x2bd949(0x164));});}document[_0x2eb013(0x1f4)](_0x2ef92c(0xc1),function(){checkPagePermission(),updateAccessButtonsVisibility();});function openAssistance(){const _0xf0fa61=_0x2eb013,_0x41bbc1=_0xf0fa61(0x160);window[_0xf0fa61(0x1e6)](_0xf0fa61(0x20b)+_0x41bbc1,_0xf0fa61(0x23a));}document[_0x2eb013(0x1f4)](_0x2eb013(0x217),function(){const _0x28bdbb=_0x2ef92c,_0x5e71a8=_0x2eb013,_0x28d719=document[_0x5e71a8(0x232)](_0x28bdbb(0xa0)),_0x4b9e09=new IntersectionObserver(_0x52d6bc=>{const _0x315360=_0x5e71a8;_0x52d6bc[_0x315360(0x1c8)](_0xe305d1=>{const _0x3a07d4=_0x14e9,_0x3e00cb=_0x315360;_0xe305d1[_0x3e00cb(0x1a9)]&&(_0xe305d1[_0x3e00cb(0x21f)][_0x3e00cb(0x17e)][_0x3e00cb(0x16b)](_0x3a07d4(0x160)),_0x4b9e09[_0x3e00cb(0x1a4)](_0xe305d1[_0x3e00cb(0x21f)]));});},{'threshold':0.1});_0x28d719[_0x5e71a8(0x1c8)](_0x459f6a=>{const _0x227cb3=_0x5e71a8;_0x4b9e09[_0x227cb3(0x1dc)](_0x459f6a);});const _0x447396=document[_0x5e71a8(0x214)](_0x5e71a8(0x213));let _0x3527f1=0x0;window[_0x5e71a8(0x1f4)](_0x5e71a8(0x1fd),()=>{const _0x45e4af=_0x28bdbb,_0x55b739=_0x5e71a8,_0x37d2b9=window['pageYOffset']||document[_0x45e4af(0x13f)][_0x55b739(0x22c)];_0x37d2b9>0x64?_0x447396[_0x55b739(0x166)][_0x55b739(0x170)]=_0x55b739(0x161):_0x447396[_0x55b739(0x166)][_0x55b739(0x170)]=_0x55b739(0x18f),_0x3527f1=_0x37d2b9;});}),document[_0x2ef92c(0xce)](_0x2eb013(0x217),function(){const _0x4ee527=_0x2ef92c,_0x217c48=_0x2eb013,_0x22bd91=document[_0x217c48(0x214)](_0x4ee527(0x95)),_0x51d02f=document[_0x217c48(0x214)](_0x217c48(0x174));if(_0x22bd91&&_0x51d02f){_0x22bd91[_0x217c48(0x1f4)](_0x217c48(0x1f9),function(){const _0x572110=_0x4ee527,_0x5a7544=_0x217c48;_0x22bd91[_0x5a7544(0x17e)][_0x572110(0xe0)](_0x572110(0x7f)),_0x51d02f[_0x572110(0x93)][_0x5a7544(0x245)](_0x5a7544(0x163));});function _0x24266d(){const _0x1291a3=_0x4ee527,_0x20413f=_0x217c48;window[_0x20413f(0x231)]<=0x300?_0x51d02f[_0x20413f(0x17e)][_0x1291a3(0xcc)]('active'):_0x51d02f[_0x20413f(0x17e)][_0x20413f(0x16b)](_0x20413f(0x163));}_0x24266d(),window[_0x217c48(0x1f4)](_0x217c48(0x153),_0x24266d);}}),window[_0x2eb013(0x1f4)](_0x2eb013(0x1ea),function(){setTimeout(function(){const _0x3a022d=_0x40b6;document[_0x3a022d(0x214)](_0x3a022d(0x18a))['classList'][_0x3a022d(0x16b)](_0x3a022d(0x182));},0x320);}),document[_0x2eb013(0x1f4)](_0x2ef92c(0xc1),function(){const _0x31d385=_0x2ef92c,_0x4edd88=_0x2eb013,_0x570c1e=document[_0x31d385(0x123)](_0x4edd88(0x17b)),_0xc647eb=document[_0x4edd88(0x210)](_0x4edd88(0x168));_0xc647eb[_0x4edd88(0x1b9)]=_0x4edd88(0x19a),_0x570c1e[_0x31d385(0xe1)](_0xc647eb);for(let _0x375934=0x0;_0x375934<0x32;_0x375934++){createParticle(_0xc647eb);}const _0xdacea9=document['querySelector'](_0x4edd88(0x1aa)),_0x8f3b35=document[_0x4edd88(0x210)](_0x31d385(0x15c));_0x8f3b35[_0x4edd88(0x1b9)]=_0x31d385(0xda),_0x8f3b35[_0x4edd88(0x1c1)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x20primary\x22>Explorar\x20Dashboards\x20<span>→</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x22>Conoce\x20Más\x20<span>↓</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20',_0xdacea9[_0x4edd88(0x23d)](_0x8f3b35),_0x570c1e[_0x31d385(0xce)](_0x4edd88(0x1d5),function(_0x36628b){const _0x465403=_0x31d385,_0x43a4c1=_0x4edd88,_0x206749=_0x36628b[_0x43a4c1(0x159)]/window[_0x465403(0x145)]-0.5,_0x22a054=_0x36628b[_0x43a4c1(0x1fa)]/window[_0x43a4c1(0x1b0)]-0.5,_0x448fc3=document[_0x43a4c1(0x214)](_0x43a4c1(0x1ef));_0x448fc3[_0x43a4c1(0x166)][_0x43a4c1(0x21c)]=_0x465403(0xc2)+_0x206749*0x14+_0x43a4c1(0x1be)+_0x22a054*0x14+_0x43a4c1(0x23b);const _0x1f600c=document[_0x43a4c1(0x214)](_0x465403(0x158));_0x1f600c[_0x43a4c1(0x166)][_0x43a4c1(0x21c)]=_0x43a4c1(0x1cf)+_0x206749*-0x1e+_0x465403(0x12b)+_0x22a054*-0x1e+_0x43a4c1(0x1bc);});});function createParticle(_0x5b0299){const _0x267cae=_0x2ef92c,_0x7787da=_0x2eb013,_0x11a88c=document[_0x267cae(0x121)](_0x7787da(0x168));var _0x1ac4a5=Math[_0x267cae(0xa5)]()*0x5+0x1,_0x4f5c83=Math[_0x7787da(0x23c)]()*0.5+0.1,_0x479468=Math[_0x7787da(0x23c)]()*0x64,_0x26d863=Math[_0x7787da(0x23c)]()*0x64,_0x135321=(Math[_0x267cae(0xa5)]()-0.5)*0.5,_0x2bc123=(Math[_0x7787da(0x23c)]()-0.5)*0.5;_0x11a88c[_0x7787da(0x166)][_0x7787da(0x1a7)]=_0x7787da(0x21e)+_0x1ac4a5+_0x267cae(0xf9)+_0x1ac4a5+_0x7787da(0x1ca)+_0x4f5c83+_0x7787da(0x17c)+_0x26d863+_0x267cae(0xbc)+_0x479468+_0x7787da(0x1d6),_0x5b0299[_0x7787da(0x23d)](_0x11a88c);let _0x11fa4a=_0x479468,_0x5ae8ba=_0x26d863;function _0x2f66ad(){const _0x42f691=_0x267cae,_0xe54c7a=_0x7787da;_0x11fa4a+=_0x135321,_0x5ae8ba+=_0x2bc123,(_0x11fa4a<0x0||_0x11fa4a>0x64)&&(_0x11fa4a=Math[_0xe54c7a(0x17a)](0x0,Math[_0xe54c7a(0x1de)](0x64,_0x11fa4a)),_0x135321*=-0x1),(_0x5ae8ba<0x0||_0x5ae8ba>0x64)&&(_0x5ae8ba=Math[_0xe54c7a(0x17a)](0x0,Math[_0xe54c7a(0x1de)](0x64,_0x5ae8ba)),_0x2bc123*=-0x1),_0x11a88c['style'][_0xe54c7a(0x191)]=_0x11fa4a+'%',_0x11a88c['style'][_0x42f691(0xa9)]=_0x5ae8ba+'%',requestAnimationFrame(_0x2f66ad);}_0x2f66ad();}const fadeElements=document[_0x2eb013(0x232)](_0x2eb013(0x1b5)),observer=new IntersectionObserver(_0xcfaa2f=>{const _0x151a8c=_0x2ef92c;_0xcfaa2f[_0x151a8c(0x169)](_0x41795e=>{const _0x9fa87b=_0x151a8c,_0x3c5d9d=_0x40b6;if(_0x41795e[_0x9fa87b(0x149)]){_0x41795e[_0x9fa87b(0xf0)]['classList'][_0x9fa87b(0x155)](_0x9fa87b(0x160));if(_0x41795e[_0x3c5d9d(0x21f)][_0x3c5d9d(0x17e)][_0x9fa87b(0x131)]('module-grid')){const _0x2df5a4=_0x41795e[_0x9fa87b(0xf0)]['querySelectorAll'](_0x3c5d9d(0x1bf));_0x2df5a4[_0x3c5d9d(0x1c8)]((_0x267e68,_0x29c04d)=>{setTimeout(()=>{const _0x24162b=_0x40b6;_0x267e68[_0x24162b(0x17e)][_0x24162b(0x16b)](_0x24162b(0x1c4));},_0x29c04d*0x96);});}observer[_0x3c5d9d(0x1a4)](_0x41795e[_0x3c5d9d(0x21f)]);}});},{'threshold':0.15,'rootMargin':_0x2eb013(0x19f)});fadeElements[_0x2eb013(0x1c8)](_0x5aabd0=>{const _0x32456e=_0x2eb013;observer[_0x32456e(0x1dc)](_0x5aabd0);}),window[_0x2eb013(0x1f4)](_0x2eb013(0x1fd),function(){const _0x3df3b2=_0x2eb013,_0x30fe94=window[_0x3df3b2(0x19d)];document[_0x3df3b2(0x232)](_0x3df3b2(0x209))[_0x3df3b2(0x1c8)](function(_0x2b6b24,_0x407435){const _0x4eb8ce=_0x14e9,_0x2f7d02=_0x3df3b2,_0x39c0a4=0.05*(_0x407435+0x1),_0x5c2c42=_0x30fe94*_0x39c0a4;_0x2b6b24[_0x4eb8ce(0xb7)][_0x2f7d02(0x21c)]=_0x2f7d02(0x1e7)+_0x5c2c42+_0x2f7d02(0x1bc);});}),document[_0x2eb013(0x1f4)](_0x2eb013(0x217),function(){const _0x165289=_0x2ef92c,_0x3db70b=_0x2eb013,_0x169282=document[_0x3db70b(0x214)](_0x3db70b(0x1aa)),_0x454383=new MutationObserver(function(_0x374d2e){const _0x52b13b=_0x14e9;_0x374d2e[_0x52b13b(0x169)](function(_0x4a8aeb){const _0x5349e2=_0x52b13b,_0x208926=_0x40b6;if(_0x4a8aeb[_0x208926(0x1f7)][_0x208926(0x1a5)]){const _0x56ca81=document[_0x208926(0x214)](_0x208926(0x222));if(_0x56ca81){const _0x3544a2=_0x56ca81[_0x208926(0x214)](_0x208926(0x207));_0x3544a2&&_0x3544a2[_0x208926(0x1f4)](_0x208926(0x1f9),function(){const _0x33625b=_0x14e9,_0x346804=_0x208926,_0x1e2da5=document[_0x346804(0x214)](_0x33625b(0x86));_0x1e2da5&&_0x1e2da5[_0x346804(0x197)]({'behavior':_0x346804(0x1c3)});});const _0x3a2b34=_0x56ca81[_0x208926(0x214)](_0x208926(0x1cc));_0x3a2b34&&_0x3a2b34[_0x208926(0x1f4)](_0x5349e2(0xaf),function(){const _0x38b36d=_0x5349e2,_0x37ddb8=_0x208926,_0x2b58cd=document[_0x37ddb8(0x214)](_0x37ddb8(0x1d8));_0x2b58cd&&_0x2b58cd[_0x38b36d(0x10c)]({'behavior':_0x38b36d(0xb4)});}),_0x454383['disconnect']();}}});});_0x454383['observe'](_0x169282,{'childList':!![],'subtree':!![]});const _0x29ee1c=document[_0x3db70b(0x214)](_0x3db70b(0x222));if(_0x29ee1c){const _0x5d30f1=_0x29ee1c[_0x165289(0x123)](_0x3db70b(0x207));_0x5d30f1&&_0x5d30f1[_0x165289(0xce)](_0x3db70b(0x1f9),function(){const _0x155ca8=_0x3db70b,_0x3c2715=document[_0x155ca8(0x214)](_0x155ca8(0x234));_0x3c2715&&_0x3c2715[_0x155ca8(0x197)]({'behavior':_0x155ca8(0x1c3)});});const _0x2c2a09=_0x29ee1c[_0x3db70b(0x214)](_0x3db70b(0x1cc));_0x2c2a09&&_0x2c2a09[_0x165289(0xce)](_0x165289(0xaf),function(){const _0x103144=_0x165289,_0x37fa07=_0x3db70b,_0x31d869=document[_0x37fa07(0x214)](_0x103144(0x141));_0x31d869&&_0x31d869[_0x37fa07(0x197)]({'behavior':'smooth'});});}});const WEB_APP_URL=_0x2eb013(0x1d9);var dato_ms=[],dato_pp=[],mensajesLista='';cargarDatosGenerales();const userData1={'username':_0x2eb013(0x1e8),'role':_0x2eb013(0x1f0),'fullName':_0x2eb013(0x201),'permissions':['dashboard-gps',_0x2eb013(0x1c6),'dashboard-abastecimiento','dashboard-bodega']};let currentUser=null,messages=[],onlineUsers=[];document[_0x2eb013(0x1f4)](_0x2eb013(0x217),function(){initializeForum(),setupEventListeners(),updateOnlineUsers();});function initializeForum(){const _0x547401=_0x2ef92c,_0x378638=_0x2eb013;currentUser=JSON[_0x378638(0x212)](localStorage[_0x547401(0x152)](_0x378638(0x1af)));if(!currentUser){alert(_0x378638(0x1f5)),window[_0x378638(0x205)][_0x378638(0x189)]=_0x547401(0x147);return;}updateUserActivity();}function setupEventListeners(){const _0x1b1e00=_0x2ef92c,_0x42d282=_0x2eb013,_0x359344=document[_0x42d282(0x230)](_0x1b1e00(0x15b)),_0x3ffecd=document[_0x42d282(0x230)](_0x42d282(0x179));_0x359344[_0x42d282(0x1f4)](_0x1b1e00(0xa7),function(_0x2a2928){const _0x148eb3=_0x1b1e00,_0x3ff73c=_0x42d282;_0x2a2928[_0x3ff73c(0x223)]===_0x148eb3(0x9c)&&!_0x2a2928[_0x3ff73c(0x164)]&&(_0x2a2928[_0x3ff73c(0x221)](),sendMessage());}),_0x359344[_0x1b1e00(0xce)](_0x1b1e00(0x79),function(){const _0x5a213d=_0x1b1e00,_0x2421ad=_0x42d282;this[_0x2421ad(0x166)][_0x5a213d(0x16b)]=_0x2421ad(0x192),this[_0x2421ad(0x166)][_0x2421ad(0x1d7)]=this[_0x2421ad(0x18c)]+'px';}),_0x3ffecd[_0x42d282(0x1f4)](_0x42d282(0x1f9),sendMessage),setInterval(updateOnlineUsers,0x2710);}function sendMessage(){const _0x1627e0=_0x2ef92c,_0x1873de=_0x2eb013,_0x631fd7=document[_0x1873de(0x230)](_0x1627e0(0x15b)),_0x5d5a2a=_0x631fd7[_0x1627e0(0x12a)][_0x1627e0(0xd1)]();if(!_0x5d5a2a)return;const _0x5b6742={'id':Date[_0x1627e0(0x16c)](),'author':currentUser[_0x1873de(0x169)],'role':currentUser[_0x1873de(0x21d)],'content':_0x5d5a2a,'timestamp':new Date()[_0x1873de(0x1db)](),'userId':currentUser[_0x1627e0(0x127)]||currentUser['email']};mensaje=[Date[_0x1873de(0x224)](),currentUser[_0x1627e0(0x84)],currentUser[_0x1873de(0x21d)],_0x5d5a2a,new Date()[_0x1627e0(0xf2)](),currentUser[_0x1873de(0x1da)]||currentUser[_0x1873de(0x1bd)]],enviarDatos(_0x1627e0(0x119),0x0,mensaje,0x1),messages[_0x1873de(0x19e)](_0x5b6742),saveMessages(),_0x631fd7[_0x1873de(0x237)]='',_0x631fd7[_0x1873de(0x166)][_0x1873de(0x1d7)]=_0x1873de(0x192),renderMessages(),scrollToBottom();}function loadMessages(){const _0x4402bb=_0x2ef92c,_0x4a5763=mensajesLista;_0x4a5763&&(messages=JSON[_0x4402bb(0x151)](_0x4a5763),renderMessages());}function saveMessages(){}function _0x3fa6(){const _0x103c6b=_0x2ef92c,_0x250b27=['slice',_0x103c6b(0xf8),_0x103c6b(0x132),'push',_0x103c6b(0xbb),_0x103c6b(0x14e),_0x103c6b(0xef),_0x103c6b(0x12f),_0x103c6b(0x144),'unobserve','length',_0x103c6b(0x116),_0x103c6b(0x113),_0x103c6b(0x146),_0x103c6b(0x149),_0x103c6b(0x158),_0x103c6b(0x11b),_0x103c6b(0xf1),_0x103c6b(0x102),_0x103c6b(0x7b),_0x103c6b(0xbe),'innerHeight',_0x103c6b(0x10d),_0x103c6b(0x12e),_0x103c6b(0xf4),_0x103c6b(0x13c),_0x103c6b(0xa0),_0x103c6b(0xfb),_0x103c6b(0x97),_0x103c6b(0xd0),_0x103c6b(0x13b),'dashboard-vehiculosymaquinaria.html',_0x103c6b(0xb9),_0x103c6b(0x14b),_0x103c6b(0x163),_0x103c6b(0x12b),_0x103c6b(0xae),_0x103c6b(0x142),'innerHTML',_0x103c6b(0xb2),'smooth','in-view',_0x103c6b(0x109),'dashboard-presupuesto','Despejado',_0x103c6b(0x169),'dashboard-bodega.html',_0x103c6b(0xb8),_0x103c6b(0x8e),_0x103c6b(0xd5),_0x103c6b(0x166),_0x103c6b(0xf5),_0x103c6b(0xc2),_0x103c6b(0x98),_0x103c6b(0xff),_0x103c6b(0xe2),_0x103c6b(0x120),_0x103c6b(0x147),_0x103c6b(0xfe),_0x103c6b(0x11c),'height',_0x103c6b(0x141),_0x103c6b(0xcf),'username',_0x103c6b(0xf2),_0x103c6b(0x140),_0x103c6b(0x114),_0x103c6b(0x81),_0x103c6b(0xc8),_0x103c6b(0x9d),_0x103c6b(0x8c),_0x103c6b(0x8a),_0x103c6b(0xa3),_0x103c6b(0xfa),'dashboard-reclamos.html','open',_0x103c6b(0x8b),_0x103c6b(0xed),_0x103c6b(0x130),_0x103c6b(0x135),'#666',_0x103c6b(0x103),_0x103c6b(0x161),_0x103c6b(0xd2),'.hero-image',_0x103c6b(0x104),'disabled',_0x103c6b(0x87),_0x103c6b(0xa6),'addEventListener','Debes\x20iniciar\x20sesión\x20para\x20acceder\x20al\x20foro',_0x103c6b(0xaa),_0x103c6b(0x88),'Parcialmente\x20nublado',_0x103c6b(0xaf),_0x103c6b(0x10f),'name',_0x103c6b(0x10e),_0x103c6b(0x12d),'dashboard-stock-iluminacion.html',_0x103c6b(0xdc),_0x103c6b(0x11e),'Junior\x20Alejandro\x20Barrera\x20',_0x103c6b(0xa8),_0x103c6b(0x99),_0x103c6b(0x7c),'location',_0x103c6b(0xc9),_0x103c6b(0x101),_0x103c6b(0xc7),_0x103c6b(0x11f),'userList',_0x103c6b(0xb3),_0x103c6b(0x153),'formulario-3',_0x103c6b(0x14d),_0x103c6b(0x167),'createElement',_0x103c6b(0x9e),'parse','header',_0x103c6b(0x123),_0x103c6b(0x133),_0x103c6b(0xd7),'DOMContentLoaded',_0x103c6b(0x13e),_0x103c6b(0x94),_0x103c6b(0x124),_0x103c6b(0x9f),_0x103c6b(0x125),_0x103c6b(0x105),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20width:\x20',_0x103c6b(0xf0),'author','preventDefault',_0x103c6b(0xc6),_0x103c6b(0x165),'now',_0x103c6b(0x139),_0x103c6b(0x92),_0x103c6b(0x77),_0x103c6b(0x9a),_0x103c6b(0xfc),_0x103c6b(0xc5),_0x103c6b(0xa2),_0x103c6b(0xb0),_0x103c6b(0xd8),'zoneForm',_0x103c6b(0x115),_0x103c6b(0x83),_0x103c6b(0x145),'querySelectorAll',_0x103c6b(0xd3),_0x103c6b(0x86),'lastActivity','dashboard-presupuesto.html',_0x103c6b(0x12a),'tileLayer','formulario-1',_0x103c6b(0x13a),_0x103c6b(0x15f),'random',_0x103c6b(0xe1),_0x103c6b(0x128),_0x103c6b(0x108),_0x103c6b(0x137),_0x103c6b(0x7e),_0x103c6b(0xc0),'\x20km/h','getItem','toggle','resize','dashboard-gps.html',_0x103c6b(0x129),_0x103c6b(0x16a),'join',_0x103c6b(0xf7),_0x103c6b(0xd9),_0x103c6b(0xb5),_0x103c6b(0x150),_0x103c6b(0x143),_0x103c6b(0xea),_0x103c6b(0xb1),'formulario-4',_0x103c6b(0x15a),_0x103c6b(0x78),_0x103c6b(0xe8),_0x103c6b(0x7f),'shiftKey','https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',_0x103c6b(0xb7),_0x103c6b(0x16e),'div',_0x103c6b(0x84),_0x103c6b(0xc3),_0x103c6b(0x155),_0x103c6b(0x157),_0x103c6b(0xba),_0x103c6b(0x15d),_0x103c6b(0x9b),_0x103c6b(0x134),'dashboard-abastecimiento',_0x103c6b(0x112),_0x103c6b(0x168),_0x103c6b(0x117),_0x103c6b(0x107),_0x103c6b(0x7a),_0x103c6b(0xe5),_0x103c6b(0x118),'sendButton',_0x103c6b(0x10a),_0x103c6b(0x11d),_0x103c6b(0x13d),'remove',_0x103c6b(0x93),_0x103c6b(0x91),_0x103c6b(0x100),'finally',_0x103c6b(0x138),'dashboard-seguridad',_0x103c6b(0x16d),_0x103c6b(0xa4),'scrollTo',_0x103c6b(0x80),'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-',_0x103c6b(0x89),_0x103c6b(0xec),_0x103c6b(0xcb),_0x103c6b(0xf6),_0x103c6b(0xab),_0x103c6b(0x14f),_0x103c6b(0xfd),_0x103c6b(0xb6),'left','auto','formulario-2.html',_0x103c6b(0xde),_0x103c6b(0x82),_0x103c6b(0xe7),'scrollIntoView','cargandoOverlay',_0x103c6b(0xa1),'particles-container'];return _0x3fa6=function(){return _0x250b27;},_0x3fa6();}function renderMessages(){const _0x332a9d=_0x2eb013,_0x1f32e4=document[_0x332a9d(0x230)](_0x332a9d(0x187)),_0x415217=_0x1f32e4[_0x332a9d(0x214)]('.welcome-message'),_0x3d66a3=_0x1f32e4[_0x332a9d(0x232)](_0x332a9d(0x1fc));_0x3d66a3[_0x332a9d(0x1c8)](_0x114521=>_0x114521[_0x332a9d(0x17d)]());const _0x20b703=messages['slice'](-0x32);_0x20b703['forEach'](_0x38e994=>{const _0x58e845=_0x332a9d,_0x485ce5=createMessageElement(_0x38e994);_0x1f32e4[_0x58e845(0x23d)](_0x485ce5);}),scrollToBottom();}function createMessageElement(_0x51de1c){const _0x3b3d9e=_0x2ef92c,_0x1bbcbb=_0x2eb013,_0x282ff1=document[_0x1bbcbb(0x210)](_0x3b3d9e(0x15c)),_0x4700ae=_0x51de1c[_0x1bbcbb(0x175)]===(currentUser[_0x1bbcbb(0x1da)]||currentUser[_0x1bbcbb(0x1bd)]);_0x282ff1[_0x1bbcbb(0x1b9)]=_0x1bbcbb(0x1a6)+(_0x4700ae?_0x1bbcbb(0x196):_0x1bbcbb(0x180));const _0x39540c=new Date(_0x51de1c[_0x3b3d9e(0x157)])[_0x3b3d9e(0xe3)](_0x1bbcbb(0x200),{'day':_0x1bbcbb(0x22a),'month':_0x1bbcbb(0x22a),'hour':_0x1bbcbb(0x22a),'minute':_0x1bbcbb(0x22a)});return _0x282ff1[_0x1bbcbb(0x1c1)]=_0x1bbcbb(0x15d)+_0x51de1c[_0x1bbcbb(0x220)]+_0x1bbcbb(0x188)+_0x51de1c[_0x1bbcbb(0x21d)][_0x1bbcbb(0x167)]()+'\x22>'+getRoleDisplayName(_0x51de1c[_0x3b3d9e(0x105)])+_0x1bbcbb(0x1f6)+_0x39540c+_0x3b3d9e(0x110)+escapeHtml(_0x51de1c[_0x1bbcbb(0x155)])+_0x1bbcbb(0x22f),_0x282ff1;}function updateUserActivity(){const _0x22cbe7=_0x2ef92c,_0x132968=_0x2eb013,_0x1a8ee7={'userId':currentUser[_0x132968(0x1da)]||currentUser[_0x22cbe7(0x163)],'name':currentUser[_0x132968(0x169)],'role':currentUser[_0x132968(0x21d)],'lastActivity':new Date()['toISOString']()};let _0x324bdc=JSON['parse'](localStorage[_0x132968(0x244)](_0x22cbe7(0x77))||'[]');_0x324bdc=_0x324bdc[_0x132968(0x1e1)](_0x211548=>_0x211548[_0x22cbe7(0x107)]!==_0x1a8ee7[_0x132968(0x175)]),_0x324bdc[_0x132968(0x19e)](_0x1a8ee7),localStorage[_0x132968(0x16f)](_0x132968(0x227),JSON['stringify'](_0x324bdc));}function updateOnlineUsers(){const _0x99cab2=_0x2ef92c,_0xcd50db=_0x2eb013;updateUserActivity();const _0xcda519=JSON[_0x99cab2(0x151)](localStorage[_0xcd50db(0x244)](_0xcd50db(0x227))||'[]'),_0x505e2b=new Date(Date[_0xcd50db(0x224)]()-0x5*0x3c*0x3e8);onlineUsers=_0xcda519[_0xcd50db(0x1e1)](_0x54c676=>new Date(_0x54c676[_0xcd50db(0x235)])>_0x505e2b),renderOnlineUsers();}function renderOnlineUsers(){const _0x94ea8b=_0x2ef92c,_0x2b9873=_0x2eb013,_0x4ec857=document[_0x2b9873(0x230)](_0x2b9873(0x20a));if(onlineUsers[_0x2b9873(0x1a5)]===0x0){_0x4ec857[_0x2b9873(0x1c1)]=_0x2b9873(0x241);return;}_0x4ec857[_0x2b9873(0x1c1)]=onlineUsers[_0x2b9873(0x1ec)](_0xc941=>_0x2b9873(0x1ff)+_0xc941[_0x2b9873(0x1fb)]+_0x2b9873(0x15c)+_0xc941[_0x2b9873(0x21d)][_0x94ea8b(0x16e)]()+'\x22>'+getRoleDisplayName(_0xc941[_0x2b9873(0x21d)])+_0x94ea8b(0xbf))[_0x2b9873(0x157)]('');}function getRoleDisplayName(_0x1a6d0c){const _0x155367=_0x2ef92c,_0x46500f=_0x2eb013,_0x1c17e3={'director':_0x46500f(0x156),'admin':_0x46500f(0x1c2),'combustible':_0x155367(0x12e),'user':_0x155367(0xc4)};return _0x1c17e3[_0x1a6d0c[_0x155367(0x16e)]()]||_0x1a6d0c;}function escapeHtml(_0x1beed1){const _0x3485ab=_0x2ef92c,_0xb7c89c=_0x2eb013,_0x56eb9b=document[_0xb7c89c(0x210)](_0xb7c89c(0x168));return _0x56eb9b[_0xb7c89c(0x173)]=_0x1beed1,_0x56eb9b[_0x3485ab(0x11a)];}function scrollToBottom(){const _0x31de2b=_0x2ef92c,_0x3b3919=_0x2eb013,_0x1244fb=document[_0x3b3919(0x230)](_0x3b3919(0x187));_0x1244fb[_0x31de2b(0xb0)]=_0x1244fb[_0x3b3919(0x18c)];}function cleanupOldData(){const _0xda70bb=_0x2ef92c,_0x288a14=_0x2eb013,_0x2e1d7c=new Date(Date[_0x288a14(0x224)]()-0x7*0x18*0x3c*0x3c*0x3e8);messages=messages[_0xda70bb(0x8c)](_0x27527e=>new Date(_0x27527e[_0x288a14(0x16c)])>_0x2e1d7c),saveMessages();const _0xaad599=JSON[_0x288a14(0x212)](localStorage[_0xda70bb(0x152)](_0x288a14(0x227))||'[]'),_0x571f68=new Date(Date[_0x288a14(0x224)]()-0x3c*0x3c*0x3e8),_0x23cda6=_0xaad599[_0x288a14(0x1e1)](_0x12b900=>new Date(_0x12b900['lastActivity'])>_0x571f68);localStorage[_0x288a14(0x16f)](_0x288a14(0x227),JSON[_0xda70bb(0x102)](_0x23cda6));}setInterval(cleanupOldData,0x3c*0x3c*0x3e8),window[_0x2eb013(0x1f4)](_0x2ef92c(0x122),function(){cleanupOldData();});function enviarDatos(_0x80aca0,_0x55e755,_0x355e60,_0x110865){const _0x486465=_0x2ef92c,_0x58212e=_0x2eb013;fetch(WEB_APP_URL,{'method':_0x58212e(0x1ac),'mode':_0x486465(0x162),'headers':{'Content-Type':'application/json'},'body':JSON[_0x486465(0x102)]({'pagina':_0x80aca0,'fila':_0x55e755,'datos':_0x355e60,'tipo':_0x110865})})[_0x58212e(0x162)](()=>{const _0x1cecc4=_0x486465,_0x1c2030=_0x58212e;document[_0x1c2030(0x230)](_0x1c2030(0x198))[_0x1cecc4(0xb7)][_0x1c2030(0x176)]=_0x1c2030(0x1ab),ingresar_compra1(),window[_0x1c2030(0x186)]({'top':0x0,'behavior':_0x1c2030(0x1c3)});})[_0x58212e(0x240)](_0x3a0f83=>{})[_0x58212e(0x181)](()=>{});}function cargarDatosGenerales(){const _0x59b9ac=_0x2ef92c,_0x487f7e=_0x2eb013;fetch(WEB_APP_URL+_0x487f7e(0x206))[_0x487f7e(0x162)](_0x3d5f4e=>_0x3d5f4e[_0x487f7e(0x226)]())[_0x487f7e(0x162)](_0x186b37=>{const _0x3c1d24=_0x487f7e;dato_ms=_0x186b37[_0x3c1d24(0x215)],dato_ua=_0x186b37[_0x3c1d24(0x184)],dato_ac=_0x186b37[_0x3c1d24(0x1dd)];const _0xceeb38=dato_ms[_0x3c1d24(0x19b)](0x1)[_0x3c1d24(0x1ec)](_0x1ab326=>({'id':Number(_0x1ab326[0x0]),'author':_0x1ab326[0x1],'role':_0x1ab326[0x2],'content':_0x1ab326[0x3],'timestamp':_0x1ab326[0x4],'userId':_0x1ab326[0x5]}));mensajesLista=JSON[_0x3c1d24(0x1ad)](_0xceeb38),baul=0x0,cargarMensajes();})[_0x59b9ac(0x137)](_0x35c5bd=>{const _0x56415f=_0x487f7e;console[_0x56415f(0x225)](_0x56415f(0x1d2),_0x35c5bd);});}function cargarMensajes(){loadMessages(),setInterval(function(){const _0x1f445d=_0x14e9,_0x470b3c=_0x40b6;fetch(WEB_APP_URL+_0x1f445d(0x8f))[_0x470b3c(0x162)](_0x3feaea=>_0x3feaea[_0x1f445d(0x92)]())[_0x470b3c(0x162)](_0x116730=>{const _0x44df12=_0x1f445d,_0x2abd7d=_0x470b3c;dato_pp=_0x116730[_0x2abd7d(0x215)],baul11=JSON[_0x2abd7d(0x1ad)](dato_pp),baul22=JSON[_0x2abd7d(0x1ad)](dato_ms);if(baul11!==baul22){dato_ms=_0x116730[_0x2abd7d(0x215)];const _0x2d777b=dato_ms[_0x44df12(0x96)](0x1)[_0x44df12(0x103)](_0x512c46=>({'id':Number(_0x512c46[0x0]),'author':_0x512c46[0x1],'role':_0x512c46[0x2],'content':_0x512c46[0x3],'timestamp':_0x512c46[0x4],'userId':_0x512c46[0x5]}));mensajesLista=JSON[_0x44df12(0x102)](_0x2d777b),loadMessages();}})[_0x470b3c(0x240)](_0x24b917=>{const _0x43e03c=_0x1f445d;console['error'](_0x43e03c(0xe2),_0x24b917);});},0x1388);}
+</script>
+</body>
+</html>
