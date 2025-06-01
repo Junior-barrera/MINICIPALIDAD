@@ -1821,7 +1821,8 @@ h2 {
             border-radius: 4px;
             text-align: left;
             font-size: 13px;
-        }message-type-selector {
+        }
+.message-type-selector {
             display: flex;
             gap: 10px;
             margin-bottom: 15px;
