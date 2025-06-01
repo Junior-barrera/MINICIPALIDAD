@@ -119,6 +119,20 @@
         </div>
         
         <div class="input-area">
+            <div class="message-type-selector">
+                    <div class="type-button active" onclick="setMessageType('general')">
+                        💬 General
+                    </div>
+                    <div class="type-button" onclick="setMessageType('direct')">
+                        📧 Directo
+                    </div>
+                </div>
+                
+                <div class="recipient-selector" id="recipientSelector">
+                    <select class="recipient-select" id="recipientSelect">
+                        <option value="">Seleccionar destinatario...</option>
+                    </select>
+                </div>
             <div class="input-container">
                 <textarea 
                     id="messageInput" 
