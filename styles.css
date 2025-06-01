@@ -1821,4 +1821,68 @@ h2 {
             border-radius: 4px;
             text-align: left;
             font-size: 13px;
+        }message-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .type-button {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .type-button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .recipient-selector {
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .recipient-selector.active {
+            display: block;
+        }
+
+        .recipient-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            resize: none;
+            font-family: inherit;
+            font-size: 16px;
+            max-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .message-input.invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
