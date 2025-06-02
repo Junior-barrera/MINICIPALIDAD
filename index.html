@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Arica | mejor ciudad</title>
+    <link rel="stylesheet" href="styles.css">
+   <script src="comando_general.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+</head>
+
+<body>
+    <script src="auth.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<div class="loader">
+    <div class="loader-animation">
+        <div class="loader-circle"></div>
+        <img src="images.png" alt="Logo" class="loader-logo">
+    </div>
+</div>
+    <header>
+    
+        <div class="transparency-container">
+        </div>
+</div>
+</header>
+ 
+                <div class="top-header">
+                    <div class="logo">
+                        <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                        <div class="logo-text">
+                            <h1>ARICA</h1>
+                            <span>MUNICIPALIDAD | mejor ciudad</span>
+                        </div>
+                    </div>
+                </div>
+    
+  
+
+   
+    <nav>
+        <ul class="main-menu">
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="dashboard-gps.html">GPS DIMAO</a></li>
+            <li><a href="dashboard-presupuesto.html">PRESUPUESTO ANUAL</a></li>
+            <li><a href="dashboard-abastecimiento.html">ABASTECIMIENTO</a></li>
+            <li><a href="dashboard-bodega.html">BODEGA</a></li>
+        </ul>
+    </nav>
+    
+
+    <section class="hero">
+        <img src="fondo.jpg" alt="JUNIOR BARRERA" class="hero-image">
+        <div class="hero-content">
+            <h2>DIMAO</h2>
+            <p>"Mejoremos Juntos"</p>
+        </div>
+    </section>
+   
+ 
+<section class="modules">
+    <h2 class="fade-in">Sistema Integral de Gestión DIMAO</h2>
+    <div class="module-grid">
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Gestión de Presupuesto Anual de Compra</h3>
+            <p>Este formulario permite planificar, registrar y gestionar el Presupuesto Anual de Compra (PAC) de materiales y servicios necesarios para el funcionamiento de DIMAO. Facilita la proyección de necesidades, el control del gasto y la programación de adquisiciones, asegurando una correcta administración de los recursos financieros durante el año.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario')">
+                Acceder <span class="ml-2">→</span>
+                
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">🚗</div>
+            <h3>Sistema de Gestión de Mantenimiento de Vehículos y Maquinaria </h3>
+            <p>Este formulario está diseñado para registrar solicitudes de mantenimiento preventivo y correctivo de vehículos y maquinaria pertenecientes a la institución. Por favor, asegúrese de llenar todos los campos requeridos con información clara y precisa para facilitar una atención eficiente y oportuna por parte de la Oficina de Mantenimiento.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario2')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">💡</div>
+            <h3>Sistema de Control y Mantenimiento de Iluminación Pública</h3>
+            <p>Este formulario está destinado a registrar, actualizar y gestionar información relacionada con las solicitudes, reportes, y gestiones internas de la Oficina de Iluminación Pública. Permite sistematizar datos sobre mantenimiento, instalación, stock de materiales, y atención de requerimientos ciudadanos, contribuyendo a una administración más eficiente y organizada de los recursos de iluminación urbana.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario3')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Reclamos</h3>
+            <p>Plataforma para reportar y dar seguimiento a problemas relacionados con iluminación pública, áreas verdes y espacios públicos en la comunidad.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario4')">
+                Acceder <span class="ml-2">→</span> 
+            </button>
+        </div>
+
+    </div>
+</section>
+<div class="container">
+     <div class="container">
+        <div class="forum-header">
+            <h1 class="forum-title">🌐 DIMAO Conecta</h1>
+            <p class="forum-subtitle">Foro de Comunicación Interdepartamental</p>
+        </div>
+
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <div class="welcome-message">
+                    <strong>¡Bienvenido al foro DIMAO Conecta!</strong><br>
+                    Este es un espacio para la comunicación entre todos los departamentos.
+                </div>
+            </div>
+            
+            <div class="input-area">
+                  <div class="message-type-selector">
+                    <div class="type-button active" onclick="setMessageType('general')">
+                        💬 General
+                    </div>
+                    <div class="type-button" onclick="setMessageType('direct')">
+                        📧 Directo
+                    </div>
+                </div>
+            
+                <div class="recipient-selector" id="recipientSelector">
+                    <select class="recipient-select" id="recipientSelect">
+                        <option value="">Seleccionar destinatario...</option>
+                    </select>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Escribe tu mensaje aquí..."
+                        rows="1"></textarea>
+                          
+    <button id="emojiButton" class="emoji-button" title="Seleccionar emoji">
+👋
+    </button>
+                    <button id="sendButton" class="send-button">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+
+<div id="emojiPicker" class="emoji-picker">
+    <div class="emoji-header">Selecciona un emoji</div>
+    <div class="emoji-search">
+        <input type="text" id="emojiSearch" placeholder="Buscar emoji...">
+    </div>
+    <div class="emoji-categories">
+        <button class="category-btn active" data-category="smileys">😀</button>
+        <button class="category-btn" data-category="people">👋</button>
+        <button class="category-btn" data-category="nature">🐶</button>
+        <button class="category-btn" data-category="food">🍎</button>
+        <button class="category-btn" data-category="activities">⚽</button>
+        <button class="category-btn" data-category="travel">🚗</button>
+        <button class="category-btn" data-category="objects">⌚</button>
+        <button class="category-btn" data-category="symbols">❤️</button>
+    </div>
+    <div id="emojiGrid" class="emoji-grid">
+       
+    </div>
+</div>
+        
+        <div class="online-users">
+            <h3>
+                <span class="online-indicator"></span>
+                Usuarios Conectados
+            </h3>
+            <div class="user-list" id="userList">
+             
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="modules">
+    <h2 class="fade-in">DIMAO 360°</h2>
+    <h4>Supervisión integral operativa, táctica y estratégica en tiempo real</h4>
+ <div class="widgets-grid">
+        
+        <div class="widget weather">
+            <div class="widget-icon">🌤️</div>
+            <h3 class="widget-title">Clima en Arica</h3>
+            <div class="widget-data" id="weather-temp">--°C</div>
+            <div class="widget-details">
+                <div id="weather-desc">Cargando...</div>
+                <div>💧 <span id="weather-humidity">--%</span> | 🌬️ <span id="weather-wind">-- km/h</span></div>
+            </div>
+            <div class="update-time" id="weather-update">Actualizado: --</div>
+        </div>
+    </div>
+    <div class="container">
+
+            <div class="control-panel">
+                <div class="controls-row">
+                    <button class="control-btn" onclick="centerMap()">
+                        📍 Centrar Mapa
+                    </button>
+                    <button class="control-btn" onclick="toggleSatellite()">
+                        🛰️ Vista Satélite
+                    </button>
+                </div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+<div class="module-grid">
+  
+      <div class="module fade-in">
+        <div class="module-icon">📊</div>
+        <h3>Centro de Mando DIMAO</h3>
+        <p>Panel estratégico que consolida los indicadores clave de gestión de todas las áreas de DIMAO: iluminación, vehículos, áreas verdes, aseo, reclamos ciudadanos y PAC. Facilita la toma de decisiones rápidas y efectivas mediante visualización de datos en tiempo real y proyecciones inteligentes.</p>
+        <button class="module-button" onclick="redirectToDashboard('centroMando')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+  
+      <div class="module fade-in">
+        <div class="module-icon">🚨</div>
+        <h3>Panel de Alertas Críticas</h3>
+        <p>Herramienta de monitoreo proactivo que detecta, clasifica y notifica situaciones urgentes en los servicios municipales. Desde fallas en iluminación hasta vehículos fuera de servicio, el sistema prioriza incidentes y ayuda a coordinar una respuesta rápida con las unidades responsables.</p>
+        <button class="module-button" onclick="redirectToDashboard('alertasCriticas')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+    </div>
+
+</section>
+
+<section class="dashboard-modules">
+    <h2 class="animated-title">Visualización de Módulos</h2>
+    <p class="animated-subtitle">Accede a nuestros paneles de datos para conocer el funcionamiento de DIMAO</p>
+
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; margin-top: 40px;">
+
+        <h2>Asesoría Técnica</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff0000, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff, #ff00ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('GPS.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">GPS</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">GPS DIMAO</h3>
+                    <p>Este módulo permite el seguimiento en tiempo real de los vehículos recolectores, analizando rutas, tiempos de operación y eficiencia del servicio para optimizar la gestión.</p>
+                    <a href="dashboard-gps.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('presupuesto.webp')">
+                    <div class="image-overlay">
+                        <span class="card-badge">PAC & F1</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Cuentas de Presupuesto Anual</h3>
+                    <p>Este módulo permite el seguimiento y control del presupuesto anual, analizando ingresos, egresos y su distribución para una planificación eficiente de los recursos.</p>
+                    <a href="dashboard-presupuesto.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+           
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('abastecimiento.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Combustible</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Abastecimiento de Combustible</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-abastecimiento.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('blog-tinta-toner.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Toner & Tintas</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Inventario de Toner & Tintas </h3>
+                    <p>Este módulo permite visualizar y gestionar en tiempo real el stock de tóner y tintas disponibles. Ofrece un registro detallado y actualizado que facilita el control eficiente de insumos.</p>
+                    <a href="toner&tintas.html" class="view-dashboard">
+                        <span>Ver Inventario</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Oficina de Mantenimiento de Vehículos y Maquinaria</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bodega.avif')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock de Bodega Mecánica</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock de Bodega Mecánica</h3>
+                    <p>Este módulo permite el control de inventario en la bodega mecánica, facilitando la gestión de repuestos, insumos y herramientas para un mantenimiento eficiente.</p>
+                    <a href="dashboard-bodega.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('vehiculo y maquinaria .jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Vehículos y Maquinaria</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Vehículos y Maquinaria</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-vehiculosymaquinaria.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Iluminación Pública</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #00c3ff, #ffff1c, #ff3c00); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('CEMAFORO.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Iluminación Pública</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Iluminación Pública</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bombillas-electricas-aisladas_23-2151045845')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Órdenes de Trabajo</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Órdenes de Trabajo de Iluminación</h3>
+                    <p>Este módulo proporciona información clave sobre las órdenes de trabajo de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, estado de ejecución y ubicación geográfica de las solicitudes. Permite visualizar las intervenciones mediante mapas de calor, identificar patrones de fallas, optimizar la planificación de trabajos y mejorar la eficiencia operativa.</p>
+                    <a href="dashboard-ordenes-trabajo-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('iluminacion-en-bodegas.1.2.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock Bodega Iluminación</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock Bodega de Iluminación</h3>
+                    <p>El módulo "Stock bodega de iluminación" permite gestionar y visualizar en tiempo real la cantidad, tipo y estado de los productos de iluminación almacenados en la bodega. Incluye el control de entradas, salidas, stock disponible, y alertas de reposición para asegurar una adecuada disponibilidad de insumos como ampolletas, tubos, reflectores, cables, entre otros artículos relacionados.</p>
+                    <a href="dashboard-stock-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Reclamos</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #f00000, #f4d03f, #16a085); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('reclamociudadano.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Reclamos Ciudadanos</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Reclamos Ciudadanos</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-reclamos.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section class="modules">
+    <h2 class="fade-in">Biblioteca Digital DIMAO</h2>
+    <p class="section-subtitle">Todo el conocimiento institucional organizado y accesible en un solo lugar (EN CONSTRUCCION)</p>
+    
+    <div class="library-container">
+        <div class="library-card search-card">
+            <div class="search-box">
+                <input type="text" id="docSearch" placeholder="Buscar manuales, procedimientos...">
+                <button class="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-filters">
+                <select id="categoryFilter">
+                    <option value="">Todas las categorías</option>
+                    <option value="iluminacion">Iluminación Pública</option>
+                    <option value="vehiculos">Vehículos y Maquinaria</option>
+                    <option value="areas-verdes">Áreas Verdes</option>
+                    <option value="aseo">Aseo y Ornato</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="">Todos los tipos</option>
+                    <option value="manual">Manuales</option>
+                    <option value="procedimiento">Procedimientos</option>
+                    <option value="formato">Formatos</option>
+                    <option value="video">Videotutoriales</option>
+                </select>
+            </div>
+        </div>
+        <div class="library-card category-card" data-category="iluminacion" onclick="showCategory('iluminacion')">
+            <div class="category-icon">💡</div>
+            <h3>Iluminación Pública</h3>
+            <p>Manuales técnicos, diagramas eléctricos y protocolos de mantenimiento</p>
+            <span class="doc-count">48 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="vehiculos" onclick="showCategory('vehiculos')">
+            <div class="category-icon">🚛</div>
+            <h3>Vehículos y Maquinaria</h3>
+            <p>Fichas técnicas, checklist de revisión y manuales de taller</p>
+            <span class="doc-count">32 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="areas-verdes" onclick="showCategory('areas-verdes')">
+            <div class="category-icon">🌳</div>
+            <h3>Áreas Verdes</h3>
+            <p>Guías de poda, especies recomendadas y sistemas de riego</p>
+            <span class="doc-count">25 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="aseo" onclick="showCategory('aseo')">
+            <div class="category-icon">🧹</div>
+            <h3>Aseo y Ornato</h3>
+            <p>Protocolos de limpieza, rutas de recolección y manejo de residuos</p>
+            <span class="doc-count">41 documentos</span>
+        </div>
+        <div class="library-card recent-docs">
+            <h3>📌 Documentos Recientes</h3>
+            <ul class="documents-list">
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📄</span>
+                        <span class="doc-title">Protocolo de mantenimiento preventivo - Camiones recolectores</span>
+                        <span class="doc-date">Actualizado: 15/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">🎥</span>
+                        <span class="doc-title">Videotutorial: Reparación básica de luminarias LED</span>
+                        <span class="doc-date">Publicado: 10/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📝</span>
+                        <span class="doc-title">Formulario F-007: Solicitud de materiales en bodega</span>
+                        <span class="doc-date">Versión: 2.1 (2024)</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="view-all-btn">Ver todos los documentos →</button>
+        </div>
+    </div>
+</section>
+<div id="docModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+            <h2 id="modalTitle">Manual de Procedimientos</h2>
+            <div class="doc-meta">
+                <span class="doc-category">Iluminación Pública</span>
+                <span class="doc-version">Versión 3.2</span>
+                <span class="doc-date">Actualizado: 05/06/2024</span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <iframe id="docViewer" src="" frameborder="0"></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="download-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Descargar PDF
+            </button>
+            <div class="doc-actions">
+                <button class="action-btn" title="Imprimir">🖨️</button>
+                <button class="action-btn" title="Compartir">📤</button>
+                <button class="action-btn" title="Marcar como favorito">⭐</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Municipalidad de Arica</h3>
+            <p>Renato Rocca , Arica</p>
+            <p>Anexo: 6959</p>
+            <p>Email: roberto.mamani@municipalidadarica.cl</p>
+            <div class="social-icons">
+                <a href="#">📘</a>
+                <a href="#">📱</a>
+                <a href="#">🐦</a>
+                <a href="#">📸</a>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Colaboración Interdepartamental</h3>
+            <p style="line-height: 1.6;">
+                Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+            </p>
+        </div>
+        <div class="footer-column licitaciones">
+            <h3>Licitaciones</h3>
+            <ul class="licitaciones-list">
+                <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+    </div>
+</footer>
+
+
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+
+<div class="accessibility-floating-btn" id="accessibilityBtn" title="Accesibilidad">
+    <span aria-hidden="true">♿</span>
+</div>
+
+<div class="accessibility-panel" id="accessibilityPanel">
+    <div class="accessibility-header">
+        <h3>Accesibilidad</h3>
+        <button class="close-panel" id="closePanel">&times;</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <button id="darkModeToggle">🌙 Modo oscuro</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <label>Tamaño del texto:</label>
+        <div class="font-controls">
+            <button id="fontDecrease" title="Texto más pequeño">A-</button>
+            <button id="fontReset" title="Tamaño normal">A</button>
+            <button id="fontIncrease" title="Texto más grande">A+</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const _0x4511a2=_0x113b;(function(_0x5d74f0,_0xc5b6a){const _0x43f05a=_0x113b,_0x1706d6=_0x5d74f0();while(!![]){try{const _0x1a3954=parseInt(_0x43f05a(0x27a))/0x1*(-parseInt(_0x43f05a(0x1fc))/0x2)+parseInt(_0x43f05a(0x330))/0x3+parseInt(_0x43f05a(0x34f))/0x4*(parseInt(_0x43f05a(0x295))/0x5)+parseInt(_0x43f05a(0x231))/0x6+-parseInt(_0x43f05a(0x36f))/0x7*(parseInt(_0x43f05a(0x26c))/0x8)+parseInt(_0x43f05a(0x327))/0x9+parseInt(_0x43f05a(0x353))/0xa;if(_0x1a3954===_0xc5b6a)break;else _0x1706d6['push'](_0x1706d6['shift']());}catch(_0x477926){_0x1706d6['push'](_0x1706d6['shift']());}}}(_0x48be,0x82ee9));const _0x320b50=_0x204b;(function(_0x2fc525,_0x4c2fe3){const _0x3fff3a=_0x113b,_0x2da7f6=_0x204b,_0x55422e=_0x2fc525();while(!![]){try{const _0x1c3521=parseInt(_0x2da7f6(0x280))/0x1*(-parseInt(_0x2da7f6(0x1ce))/0x2)+parseInt(_0x2da7f6(0x1a4))/0x3+parseInt(_0x2da7f6(0x1b4))/0x4+-parseInt(_0x2da7f6(0x24f))/0x5*(-parseInt(_0x2da7f6(0x273))/0x6)+parseInt(_0x2da7f6(0x28c))/0x7+parseInt(_0x2da7f6(0x213))/0x8+-parseInt(_0x2da7f6(0x222))/0x9*(parseInt(_0x2da7f6(0x253))/0xa);if(_0x1c3521===_0x4c2fe3)break;else _0x55422e[_0x3fff3a(0x2f8)](_0x55422e[_0x3fff3a(0x261)]());}catch(_0x382d51){_0x55422e[_0x3fff3a(0x2f8)](_0x55422e[_0x3fff3a(0x261)]());}}}(_0x5390,0x76840));const _0x3c2a99=_0x4b9f;(function(_0x476ca6,_0x58332b){const _0x5ee5ac=_0x113b,_0x243e54=_0x204b,_0x3e69c3=_0x4b9f,_0xffbedd=_0x476ca6();while(!![]){try{const _0x5ab2a4=parseInt(_0x3e69c3(0x2bb))/0x1*(-parseInt(_0x3e69c3(0x216))/0x2)+-parseInt(_0x3e69c3(0x1e7))/0x3+parseInt(_0x3e69c3(0x16d))/0x4+-parseInt(_0x3e69c3(0x17d))/0x5*(-parseInt(_0x3e69c3(0x1fa))/0x6)+-parseInt(_0x3e69c3(0x1ff))/0x7+parseInt(_0x3e69c3(0x1a0))/0x8*(parseInt(_0x3e69c3(0x194))/0x9)+-parseInt(_0x3e69c3(0x2aa))/0xa*(-parseInt(_0x3e69c3(0x1dc))/0xb);if(_0x5ab2a4===_0x58332b)break;else _0xffbedd[_0x243e54(0x1f9)](_0xffbedd['shift']());}catch(_0x1c9e83){_0xffbedd[_0x243e54(0x1f9)](_0xffbedd[_0x5ee5ac(0x261)]());}}}(_0x587d,0x7d0b1));const accessibilityBtn=document[_0x320b50(0x26f)](_0x320b50(0x20c)),accessibilityPanel=document[_0x4511a2(0x2d2)](_0x320b50(0x17d)),closePanel=document[_0x3c2a99(0x23e)](_0x320b50(0x24c));accessibilityBtn[_0x320b50(0x274)](_0x3c2a99(0x22a),()=>{const _0x3cf3f4=_0x4511a2,_0x6419d1=_0x320b50,_0x57c800=_0x3c2a99;accessibilityPanel[_0x57c800(0x1f6)][_0x3cf3f4(0x232)]=accessibilityPanel[_0x57c800(0x1f6)]['display']===_0x6419d1(0x1ed)?_0x57c800(0x1cc):_0x6419d1(0x1ed);}),closePanel[_0x4511a2(0x286)](_0x320b50(0x249),()=>{const _0x23b2d7=_0x3c2a99;accessibilityPanel[_0x23b2d7(0x1f6)][_0x23b2d7(0x262)]=_0x23b2d7(0x1cc);});const darkModeToggle=document[_0x3c2a99(0x23e)](_0x320b50(0x1e1));function _0x4b9f(_0x13c9d9,_0x287e4a){const _0x594196=_0x587d();return _0x4b9f=function(_0x5c46cf,_0x2ba61a){_0x5c46cf=_0x5c46cf-0x165;let _0x50651a=_0x594196[_0x5c46cf];return _0x50651a;},_0x4b9f(_0x13c9d9,_0x287e4a);}darkModeToggle[_0x3c2a99(0x1e3)](_0x3c2a99(0x22a),()=>{const _0x3c0dad=_0x4511a2,_0x25fffc=_0x320b50,_0x4acb52=_0x3c2a99;document[_0x4acb52(0x1c5)][_0x4acb52(0x22d)][_0x4acb52(0x26a)](_0x3c0dad(0x25d)),localStorage[_0x4acb52(0x2ab)](_0x4acb52(0x18d),document[_0x4acb52(0x1c5)][_0x4acb52(0x22d)][_0x4acb52(0x21f)](_0x4acb52(0x244))),darkModeToggle[_0x4acb52(0x275)]=document[_0x4acb52(0x1c5)][_0x4acb52(0x22d)]['contains'](_0x25fffc(0x200))?_0x4acb52(0x2ac):_0x4acb52(0x29f);}),document[_0x320b50(0x26f)](_0x3c2a99(0x218))[_0x3c2a99(0x1e3)](_0x4511a2(0x2fe),()=>changeFontSize(0x1)),document[_0x3c2a99(0x23e)](_0x3c2a99(0x240))[_0x3c2a99(0x1e3)](_0x3c2a99(0x22a),()=>changeFontSize(0x0)),document[_0x320b50(0x26f)](_0x320b50(0x299))[_0x3c2a99(0x1e3)](_0x3c2a99(0x22a),()=>changeFontSize(-0x1));function changeFontSize(_0x17131b){const _0x36b67c=_0x3c2a99,_0x4b84fd=[_0x36b67c(0x2ad),_0x36b67c(0x1bd),_0x36b67c(0x166)];let _0x16ac6c=localStorage[_0x36b67c(0x1fd)](_0x36b67c(0x1e9))||_0x36b67c(0x1bd),_0xd24361=_0x4b84fd[_0x36b67c(0x1ab)](_0x16ac6c);if(_0x17131b===0x1&&_0xd24361<_0x4b84fd[_0x36b67c(0x287)]-0x1)_0xd24361++;if(_0x17131b===-0x1&&_0xd24361>0x0)_0xd24361--;if(_0x17131b===0x0)_0xd24361=0x1;document[_0x36b67c(0x1c5)][_0x36b67c(0x22d)][_0x36b67c(0x1c4)](..._0x4b84fd),document[_0x36b67c(0x1c5)][_0x36b67c(0x22d)][_0x36b67c(0x195)](_0x4b84fd[_0xd24361]),localStorage[_0x36b67c(0x2ab)](_0x36b67c(0x1e9),_0x4b84fd[_0xd24361]);}function loadPreferences(){const _0xdbab63=_0x4511a2,_0x444914=_0x320b50,_0x345af3=_0x3c2a99;localStorage[_0x345af3(0x1fd)](_0x345af3(0x18d))===_0x345af3(0x264)&&(document[_0x345af3(0x1c5)][_0x444914(0x199)][_0x345af3(0x195)](_0x444914(0x200)),darkModeToggle[_0x345af3(0x275)]=_0x345af3(0x2ac));const _0x41afa4=localStorage[_0x444914(0x1ef)](_0x345af3(0x1e9));_0x41afa4&&document[_0x345af3(0x1c5)][_0x444914(0x199)][_0xdbab63(0x333)](_0x41afa4);}document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),loadPreferences);const ARICA_COORDS=[-18.4746,-70.2979];function getCurrentTime(){const _0x4dbea7=_0x3c2a99;return new Date()[_0x4dbea7(0x1d2)](_0x4dbea7(0x29a),{'hour':_0x4dbea7(0x252),'minute':_0x4dbea7(0x252)});}async function updateWeather(){const _0x96c833=_0x4511a2,_0x4ed818=_0x320b50,_0x16f78e=_0x3c2a99;try{const _0x50938d=await fetch(_0x4ed818(0x25b)+ARICA_COORDS[0x0]+_0x16f78e(0x1e4)+ARICA_COORDS[0x1]+_0x16f78e(0x193)),_0xe2dc68=await _0x50938d[_0x16f78e(0x1fc)]();document[_0x16f78e(0x23e)](_0x16f78e(0x282))[_0x16f78e(0x275)]=_0xe2dc68[_0x16f78e(0x1ad)][_0x96c833(0x2e1)]+'°C',document[_0x16f78e(0x23e)](_0x16f78e(0x284))[_0x16f78e(0x275)]=_0xe2dc68[_0x96c833(0x338)][_0x16f78e(0x256)]+'%',document[_0x16f78e(0x23e)]('weather-wind')[_0x4ed818(0x282)]=_0xe2dc68[_0x4ed818(0x1d9)][_0x16f78e(0x234)]+_0x16f78e(0x16c),document[_0x4ed818(0x26f)](_0x16f78e(0x19c))[_0x4ed818(0x282)]=getWeatherDescription(_0xe2dc68[_0x16f78e(0x1ad)][_0x16f78e(0x257)]),document[_0x16f78e(0x23e)](_0x96c833(0x2fc))[_0x16f78e(0x275)]=_0x16f78e(0x1b3)+getCurrentTime();}catch(_0x17ba70){console[_0x4ed818(0x290)](_0x16f78e(0x1f5),_0x17ba70),document[_0x16f78e(0x23e)](_0x96c833(0x223))[_0x16f78e(0x275)]=_0x4ed818(0x1a9);}}function getWeatherDescription(_0x14e9e2){const _0xdf9101=_0x320b50,_0x4426cd=_0x3c2a99,_0xfc9104={0x0:_0x4426cd(0x2bc),0x1:_0xdf9101(0x18f),0x2:_0x4426cd(0x20e),0x3:_0x4426cd(0x186),0x2d:_0x4426cd(0x276),0x3d:_0x4426cd(0x2a0),0x50:_0x4426cd(0x23c)};return _0xfc9104[_0x14e9e2]||_0x4426cd(0x2bc);}document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),()=>{updateWeather(),updateAirQuality(),updateAlerts(),updateTraffic(),setInterval(updateWeather,0x493e0),setInterval(updateAirQuality,0x493e0),setInterval(updateAlerts,0x493e0),setInterval(updateTraffic,0x493e0);});let map,showLighting=!![],currentBaseLayer=_0x320b50(0x1cf),currentStatusFilter=_0x320b50(0x1f1),currentPriorityFilter=_0x3c2a99(0x1cf),assignments=[],satelliteTileLayer,streetTileLayer;function initMap(){const _0x21cc46=_0x320b50,_0x28173a=_0x3c2a99;map=L[_0x21cc46(0x1b8)](_0x28173a(0x27d),{'attributionControl':![]})[_0x21cc46(0x2a9)]([-18.4746,-70.3045],0xd),setTimeout(removeLeafletAttribution,0x32),streetTileLayer=L[_0x28173a(0x1da)](_0x28173a(0x177),{'attribution':''}),satelliteTileLayer=L[_0x28173a(0x1da)](_0x28173a(0x298),{'attribution':''}),streetTileLayer[_0x21cc46(0x27a)](map),loadRecyclingPoints(),loadMunicipalPoints(),loadLightingZones(),updateZoneSelects(),updateStats(),setupFilters();}function removeLeafletAttribution(){const _0x38667b=_0x320b50,_0x308eef=_0x3c2a99,_0x542984=document[_0x38667b(0x1ae)](_0x38667b(0x25a));_0x542984[_0x308eef(0x2c1)](_0x20d3d4=>{const _0x2be610=_0x308eef;_0x20d3d4[_0x2be610(0x1c4)]();});}function centerMap(){const _0x532bc4=_0x3c2a99;map[_0x532bc4(0x1ee)]([-18.4746,-70.3045],0xd);}function toggleSatellite(){const _0xe72828=_0x4511a2,_0x25bdd1=_0x320b50,_0x3279bb=_0x3c2a99;currentBaseLayer===_0x3279bb(0x1de)?(map[_0xe72828(0x31c)](streetTileLayer),map[_0x3279bb(0x2b4)](satelliteTileLayer),currentBaseLayer=_0x3279bb(0x1c9)):(map[_0x3279bb(0x16e)](satelliteTileLayer),map[_0x3279bb(0x2b4)](streetTileLayer),currentBaseLayer=_0x25bdd1(0x1cf)),removeLeafletAttribution();}function showZoneForm(){const _0xc26f38=_0x4511a2,_0x3ea739=_0x320b50,_0xf9e68f=_0x3c2a99;document[_0xf9e68f(0x23e)](_0xf9e68f(0x1dd))[_0xf9e68f(0x1f6)][_0xf9e68f(0x262)]=_0xf9e68f(0x2a3),document[_0x3ea739(0x1ae)](_0xf9e68f(0x1ed))[_0xf9e68f(0x2c1)](_0x19e106=>{const _0x12336c=_0x3ea739,_0x2fdebb=_0xf9e68f;_0x19e106[_0x2fdebb(0x248)]=_0x19e106[_0x12336c(0x224)]!==_0x2fdebb(0x294)?'':'';}),document[_0xf9e68f(0x23e)](_0xf9e68f(0x1c8))[_0xf9e68f(0x248)]=_0xc26f38(0x305),document[_0x3ea739(0x26f)](_0xf9e68f(0x26d))[_0xf9e68f(0x248)]=_0xf9e68f(0x1b6);}document[_0x3c2a99(0x1eb)]===_0x320b50(0x228)?document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),initMap):initMap();function redirectToDashboard(_0x585f0e){const _0x21235c=_0x320b50,_0x404285=_0x3c2a99,_0x2d0340=JSON[_0x404285(0x29e)](localStorage[_0x404285(0x1fd)](_0x21235c(0x1ac)));if(!_0x2d0340){window[_0x404285(0x167)][_0x21235c(0x1e4)]=_0x404285(0x245);return;}const _0x59f1a9={'presupuesto':{'page':_0x404285(0x19a),'permission':_0x21235c(0x2b3)},'obras':{'page':_0x404285(0x1f4),'permission':_0x404285(0x253)},'servicios':{'page':_0x404285(0x221),'permission':_0x21235c(0x23f)},'seguridad':{'page':_0x21235c(0x209),'permission':_0x21235c(0x1f4)},'formulario':{'page':_0x404285(0x2b1),'permission':_0x404285(0x2ba)},'formulario2':{'page':_0x404285(0x26f),'permission':_0x21235c(0x1cd)},'formulario3':{'page':_0x21235c(0x25c),'permission':_0x404285(0x18c)},'formulario4':{'page':_0x404285(0x199),'permission':_0x404285(0x18a)},'dashboard-gps':{'page':_0x21235c(0x2b4),'permission':_0x404285(0x2cc)},'dashboard-presupuesto':{'page':_0x404285(0x1f4),'permission':_0x404285(0x253)},'dashboard-abastecimiento':{'page':'dashboard-abastecimiento.html','permission':_0x404285(0x1b1)},'dashboard-bodega':{'page':_0x404285(0x297),'permission':_0x21235c(0x207)},'dashboard-reclamos':{'page':_0x21235c(0x2a2),'permission':_0x404285(0x2b0)},'dashboard-vehiculosymaquinaria':{'page':_0x404285(0x29b),'permission':_0x404285(0x174)},'dashboard-iluminacion':{'page':_0x404285(0x2a4),'permission':_0x21235c(0x2d4)},'dashboard-ordenes-trabajo-iluminacion':{'page':_0x21235c(0x208),'permission':_0x404285(0x23a)},'dashboard-stock-iluminacion':{'page':_0x21235c(0x19c),'permission':_0x404285(0x1a3)}},_0x3800f4=_0x59f1a9[_0x585f0e];if(!_0x3800f4){console[_0x404285(0x237)](_0x404285(0x293),_0x585f0e);return;}hasStrictPermission(_0x2d0340,_0x3800f4[_0x404285(0x1c0)])?window[_0x404285(0x167)][_0x404285(0x254)]=_0x3800f4[_0x404285(0x19f)]:showAccessDeniedMessage();}function _0x5390(){const _0xb4c207=_0x4511a2,_0x395021=['content','🕹️',_0xb4c207(0x36c),_0xb4c207(0x215),_0xb4c207(0x253),_0xb4c207(0x234),_0xb4c207(0x23e),'scrollIntoView',_0xb4c207(0x1f1),_0xb4c207(0x226),_0xb4c207(0x33a),'estúpido',_0xb4c207(0x316),_0xb4c207(0x2e7),_0xb4c207(0x207),_0xb4c207(0x2c4),'dato_ac','getItem',_0xb4c207(0x2d0),_0xb4c207(0x279),_0xb4c207(0x2d7),'parasito','dashboard-seguridad',_0xb4c207(0x2d9),_0xb4c207(0x1fd),_0xb4c207(0x221),_0xb4c207(0x281),'push',_0xb4c207(0x285),_0xb4c207(0x2f4),'🤼‍♂️',_0xb4c207(0x278),_0xb4c207(0x2c1),'beforeunload',_0xb4c207(0x25d),'dashboard-abastecimiento.html','Junior\x20Alejandro\x20Barrera\x20',_0xb4c207(0x306),_0xb4c207(0x218),_0xb4c207(0x341),_0xb4c207(0x293),_0xb4c207(0x243),_0xb4c207(0x21e),_0xb4c207(0x308),_0xb4c207(0x222),_0xb4c207(0x313),_0xb4c207(0x297),_0xb4c207(0x2b9),_0xb4c207(0x30b),'unobserve',_0xb4c207(0x2fb),_0xb4c207(0x1f3),_0xb4c207(0x302),_0xb4c207(0x21c),'auto',_0xb4c207(0x2e5),_0xb4c207(0x2cd),_0xb4c207(0x2a3),_0xb4c207(0x2d6),_0xb4c207(0x29c),_0xb4c207(0x303),_0xb4c207(0x256),'formulario-4',_0xb4c207(0x1f5),_0xb4c207(0x271),_0xb4c207(0x34d),_0xb4c207(0x264),_0xb4c207(0x206),_0xb4c207(0x236),_0xb4c207(0x365),_0xb4c207(0x200),'top',_0xb4c207(0x334),_0xb4c207(0x36d),_0xb4c207(0x2f1),'🐻‍❄️',_0xb4c207(0x2ca),_0xb4c207(0x34a),_0xb4c207(0x21b),_0xb4c207(0x2b3),_0xb4c207(0x2dc),'.module-button',_0xb4c207(0x22d),'Nublado',_0xb4c207(0x35c),_0xb4c207(0x2ce),_0xb4c207(0x228),_0xb4c207(0x26b),'join',_0xb4c207(0x304),'drogas',_0xb4c207(0x2a5),_0xb4c207(0x2fa),_0xb4c207(0x276),_0xb4c207(0x36e),_0xb4c207(0x2ec),_0xb4c207(0x275),'dashboard-abastecimiento',_0xb4c207(0x2ef),_0xb4c207(0x254),_0xb4c207(0x209),_0xb4c207(0x205),'🖨️','te\x20mato',_0xb4c207(0x268),'.fade-in','6AQUKAt','click','Por\x20favor\x20escribe\x20un\x20mensaje',_0xb4c207(0x2ab),_0xb4c207(0x1ff),'.dashboard-modules','setSelectionRange',_0xb4c207(0x2ae),_0xb4c207(0x204),'<div\x20class=\x22empty-state\x22>No\x20hay\x20usuarios\x20conectados</div>',_0xb4c207(0x1f9),'865510QQgXTs',_0xb4c207(0x2c2),_0xb4c207(0x355),_0xb4c207(0x343),_0xb4c207(0x212),_0xb4c207(0x2ea),_0xb4c207(0x2d8),_0xb4c207(0x35a),_0xb4c207(0x2b0),_0xb4c207(0x326),'.hero-image','culero',_0xb4c207(0x2ed),_0xb4c207(0x217),_0xb4c207(0x2a1),_0xb4c207(0x347),_0xb4c207(0x325),_0xb4c207(0x27c),_0xb4c207(0x323),_0xb4c207(0x25e),_0xb4c207(0x298),_0xb4c207(0x2b1),_0xb4c207(0x2a9),_0xb4c207(0x328),_0xb4c207(0x277),_0xb4c207(0x2da),'admin',_0xb4c207(0x335),_0xb4c207(0x2d2),_0xb4c207(0x259),_0xb4c207(0x2b2),'https://script.google.com/macros/s/AKfycbws3ckXIZJebtwEdAk0nmeE1uIEaEYN4ZanWWRfJcc0ulOcG29vdfW-R8_mFPzi5w01/exec',_0xb4c207(0x310),_0xb4c207(0x286),'input','zonePriority',_0xb4c207(0x24f),_0xb4c207(0x223),_0xb4c207(0x28a),'addTo','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22user-chip\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22online-indicator\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>',_0xb4c207(0x2ff),_0xb4c207(0x257),_0xb4c207(0x2dd),'color',_0xb4c207(0x29d),'message\x20','textContent',_0xb4c207(0x20c),_0xb4c207(0x351),_0xb4c207(0x2cc),_0xb4c207(0x2e3),_0xb4c207(0x208),_0xb4c207(0x2b5),_0xb4c207(0x238),_0xb4c207(0x202),'Niebla',_0xb4c207(0x309),_0xb4c207(0x32f),_0xb4c207(0x210),_0xb4c207(0x2f6),'error',_0xb4c207(0x32e),_0xb4c207(0x364),_0xb4c207(0x229),_0xb4c207(0x2a2),_0xb4c207(0x320),_0xb4c207(0x22e),'hero-buttons',_0xb4c207(0x2f9),_0xb4c207(0x214),'🕰️',_0xb4c207(0x2e6),_0xb4c207(0x266),'disabled-link',_0xb4c207(0x21f),_0xb4c207(0x1fe),'replace',_0xb4c207(0x237),_0xb4c207(0x23f),_0xb4c207(0x203),_0xb4c207(0x363),_0xb4c207(0x35e),_0xb4c207(0x26d),_0xb4c207(0x251),'formulario-3',_0xb4c207(0x30e),_0xb4c207(0x24e),_0xb4c207(0x314),'warning','🌙\x20Modo\x20oscuro',_0xb4c207(0x27e),_0xb4c207(0x2a4),_0xb4c207(0x332),'font-small',_0xb4c207(0x2cf),_0xb4c207(0x211),_0xb4c207(0x20d),_0xb4c207(0x350),'pageYOffset',_0xb4c207(0x291),_0xb4c207(0x244),_0xb4c207(0x1f0),_0xb4c207(0x28c),_0xb4c207(0x299),_0xb4c207(0x32b),_0xb4c207(0x241),'sendButton','translateY(','string',_0xb4c207(0x2bc),_0xb4c207(0x265),_0xb4c207(0x25f),_0xb4c207(0x284),_0xb4c207(0x258),_0xb4c207(0x318),'#ccc','☀️\x20Modo\x20claro',_0xb4c207(0x25c),_0xb4c207(0x354),_0xb4c207(0x280),_0xb4c207(0x26f),_0xb4c207(0x240),_0xb4c207(0x369),_0xb4c207(0x28e),_0xb4c207(0x361),'random',_0xb4c207(0x25a),_0xb4c207(0x1f8),_0xb4c207(0x282),_0xb4c207(0x2b6),_0xb4c207(0x2c7),'value','🤼‍♀️',_0xb4c207(0x233),'chingada',_0xb4c207(0x2ee),_0xb4c207(0x219),'coño',_0xb4c207(0x246),_0xb4c207(0x356),_0xb4c207(0x2f7),_0xb4c207(0x27d),_0xb4c207(0x362),_0xb4c207(0x31d),_0xb4c207(0x29f),_0xb4c207(0x1eb),_0xb4c207(0x2bd),_0xb4c207(0x2c0),'El\x20mensaje\x20es\x20demasiado\x20corto',_0xb4c207(0x301),_0xb4c207(0x23c),_0xb4c207(0x287),_0xb4c207(0x31f),_0xb4c207(0x317),_0xb4c207(0x2fd),_0xb4c207(0x28d),_0xb4c207(0x2db),_0xb4c207(0x31c),_0xb4c207(0x300),_0xb4c207(0x27b),_0xb4c207(0x263),'toLowerCase',_0xb4c207(0x26a),_0xb4c207(0x340),_0xb4c207(0x352),_0xb4c207(0x32a),_0xb4c207(0x213),_0xb4c207(0x2a0),_0xb4c207(0x315),_0xb4c207(0x2ad),_0xb4c207(0x230),_0xb4c207(0x20e),_0xb4c207(0x23a),_0xb4c207(0x270),_0xb4c207(0x201),_0xb4c207(0x331),_0xb4c207(0x20a),_0xb4c207(0x262),'dato_ua',_0xb4c207(0x24a),_0xb4c207(0x1f2),'emojiPicker',_0xb4c207(0x1ef),_0xb4c207(0x20b),_0xb4c207(0x288),_0xb4c207(0x307),_0xb4c207(0x2f0),'innerHTML','data-category',_0xb4c207(0x1ed),_0xb4c207(0x2c8),_0xb4c207(0x336),_0xb4c207(0x2a8),'dashboard-stock-iluminacion.html',_0xb4c207(0x32d),_0xb4c207(0x33c),_0xb4c207(0x333),_0xb4c207(0x2ba),_0xb4c207(0x2f3),_0xb4c207(0x2de),_0xb4c207(0x249),_0xb4c207(0x272),_0xb4c207(0x2a6),_0xb4c207(0x2ac),'active','cssText',_0xb4c207(0x34b),_0xb4c207(0x2d1),'sexo',_0xb4c207(0x225),_0xb4c207(0x255),'querySelectorAll',_0xb4c207(0x36a),_0xb4c207(0x289),_0xb4c207(0x296),_0xb4c207(0x324),_0xb4c207(0x23b),_0xb4c207(0x283),_0xb4c207(0x242),_0xb4c207(0x339),_0xb4c207(0x232),_0xb4c207(0x2bb),_0xb4c207(0x349),'imbécil','font-large',_0xb4c207(0x34c),_0xb4c207(0x1ec),_0xb4c207(0x31a),'timestamp',_0xb4c207(0x2f2),_0xb4c207(0x252),_0xb4c207(0x2df),'addLayer',_0xb4c207(0x239),_0xb4c207(0x33d),'div','heroína',_0xb4c207(0x346),_0xb4c207(0x1f7),_0xb4c207(0x2aa),'/500\x20caracteres',_0xb4c207(0x321),_0xb4c207(0x227),_0xb4c207(0x345),_0xb4c207(0x2c6),'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-',_0xb4c207(0x2d5),_0xb4c207(0x357),'te\x20voy\x20a\x20matar',_0xb4c207(0x224),_0xb4c207(0x2c9),_0xb4c207(0x35b),_0xb4c207(0x220),_0xb4c207(0x21a),_0xb4c207(0x338),'own',_0xb4c207(0x33e),'Tipo\x20de\x20dashboard\x20no\x20reconocido:',_0xb4c207(0x25b)];return _0x5390=function(){return _0x395021;},_0x5390();}function hasStrictPermission(_0x4d7c50,_0x55cd4b){const _0x1557a4=_0x3c2a99;if(_0x4d7c50[_0x1557a4(0x1d3)]===_0x1557a4(0x259)||_0x4d7c50[_0x1557a4(0x1d3)]===_0x1557a4(0x239))return!![];if(_0x4d7c50[_0x1557a4(0x191)]){if(_0x4d7c50[_0x1557a4(0x1d3)]===_0x1557a4(0x1f9)&&_0x55cd4b===_0x1557a4(0x1b1)&&_0x4d7c50[_0x1557a4(0x191)][_0x1557a4(0x27b)](_0x1557a4(0x214)))return!![];if(_0x55cd4b===_0x1557a4(0x2ba)&&_0x4d7c50[_0x1557a4(0x191)][_0x1557a4(0x27b)](_0x1557a4(0x2b7)))return!![];if(_0x4d7c50[_0x1557a4(0x191)][_0x1557a4(0x27b)](_0x55cd4b))return!![];}return![];}function updateAccessButtonsVisibility(){const _0x18900b=_0x4511a2,_0x3f1d67=_0x3c2a99,_0x39ac86=JSON[_0x3f1d67(0x29e)](localStorage[_0x3f1d67(0x1fd)](_0x18900b(0x225)));if(!_0x39ac86)return;const _0x411a1c=document[_0x3f1d67(0x1b7)](_0x3f1d67(0x228));_0x411a1c[_0x3f1d67(0x2c1)](_0x37cdca=>{const _0x435522=_0x18900b,_0x9a9bd4=_0x204b,_0xe13435=_0x3f1d67,_0x1ffaba=_0x37cdca[_0xe13435(0x2be)](_0x9a9bd4(0x1cc));if(!_0x1ffaba)return;const _0x25a614=_0x1ffaba[_0x9a9bd4(0x168)](/redirectToDashboard\(['"]([^'"]+)['"]\)/);if(!_0x25a614||!_0x25a614[0x1])return;const _0x1012ef=_0x25a614[0x1],_0x5a7548={'presupuesto':_0xe13435(0x2cc),'obras':_0x9a9bd4(0x242),'servicios':_0xe13435(0x1b1),'seguridad':'dashboard-seguridad','reclamos':_0x9a9bd4(0x23e),'vehiculos':_0xe13435(0x174),'formulario':_0xe13435(0x2ba),'formulario2':_0x435522(0x227),'formulario3':_0xe13435(0x18c),'formulario4':_0x9a9bd4(0x21c),'dashboard-gps':_0x9a9bd4(0x2b3),'dashboard-presupuesto':_0xe13435(0x253),'dashboard-abastecimiento':_0xe13435(0x1b1),'dashboard-bodega':_0xe13435(0x1e0),'dashboard-reclamos':_0xe13435(0x2b0),'dashboard-vehiculosymaquinaria':_0xe13435(0x174),'dashboard-iluminacion':_0x9a9bd4(0x2d4),'dashboard-ordenes-trabajo-iluminacion':_0xe13435(0x23a),'dashboard-stock-iluminacion':_0xe13435(0x1a3)},_0x3e6972=_0x5a7548[_0x1012ef];!hasStrictPermission(_0x39ac86,_0x3e6972)&&(_0x37cdca[_0x435522(0x354)]=!![],_0x37cdca[_0xe13435(0x22d)][_0xe13435(0x195)](_0xe13435(0x24d)),_0x37cdca[_0xe13435(0x1f6)][_0xe13435(0x1bf)]=_0x9a9bd4(0x2c7),_0x37cdca[_0xe13435(0x1f6)][_0x9a9bd4(0x234)]=_0xe13435(0x20a),_0x37cdca[_0x9a9bd4(0x1e3)][_0xe13435(0x1f0)]=_0xe13435(0x241),_0x37cdca[_0xe13435(0x2c6)]=_0xe13435(0x251));});const _0x589d66=document[_0x3f1d67(0x1b7)](_0x3f1d67(0x277));_0x589d66[_0x3f1d67(0x2c1)](_0x5b417c=>{const _0x11f01a=_0x18900b,_0x3329b0=_0x204b,_0x3c4528=_0x3f1d67,_0x2b4d41=_0x5b417c['getAttribute'](_0x3c4528(0x254));if(!_0x2b4d41)return;const _0xc021f8=_0x2b4d41[_0x3c4528(0x1ea)](_0x3c4528(0x246),'');!hasStrictPermission(_0x39ac86,_0xc021f8)&&(_0x5b417c[_0x3c4528(0x1e3)](_0x3c4528(0x22a),function(_0x4f4ab9){const _0x153efb=_0x3c4528;_0x4f4ab9[_0x153efb(0x2c7)](),showAccessDeniedMessage();}),_0x5b417c[_0x3329b0(0x199)][_0x3c4528(0x195)](_0x3c4528(0x1ae)),_0x5b417c[_0x3c4528(0x1f6)][_0x3c4528(0x1f0)]=_0x3c4528(0x1a4),_0x5b417c[_0x3c4528(0x1f6)][_0x11f01a(0x29a)]=_0x3c4528(0x1cf),_0x5b417c[_0x3c4528(0x1f6)][_0x11f01a(0x228)]=_0x3c4528(0x20a),_0x5b417c[_0x3c4528(0x2c6)]=_0x3329b0(0x283));});}document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),function(){checkPagePermission(),updateAccessButtonsVisibility();});function openAssistance(){const _0x3a66c6=_0x320b50,_0x41c723=_0x3c2a99,_0x5b76d2=_0x41c723(0x17b);window[_0x3a66c6(0x246)](_0x41c723(0x266)+_0x5b76d2,_0x41c723(0x1a5));}document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),function(){const _0x416d48=_0x320b50,_0x32ebab=_0x3c2a99,_0xbf320=document[_0x32ebab(0x1b7)](_0x32ebab(0x1b4)),_0x611f6a=new IntersectionObserver(_0x23de82=>{const _0xc02007=_0x204b;_0x23de82[_0xc02007(0x23c)](_0x38e848=>{const _0x3a2bca=_0xc02007,_0x3f7716=_0x4b9f;_0x38e848[_0x3f7716(0x211)]&&(_0x38e848[_0x3f7716(0x23b)][_0x3f7716(0x22d)][_0x3f7716(0x195)](_0x3a2bca(0x16b)),_0x611f6a[_0x3f7716(0x21e)](_0x38e848[_0x3f7716(0x23b)]));});},{'threshold':0.1});_0xbf320[_0x32ebab(0x2c1)](_0x754dd8=>{const _0xcc9c32=_0x32ebab;_0x611f6a[_0xcc9c32(0x171)](_0x754dd8);});const _0x81599=document[_0x32ebab(0x180)](_0x416d48(0x2b2));let _0x5ef17c=0x0;window[_0x32ebab(0x1e3)](_0x32ebab(0x2a2),()=>{const _0x42843a=_0x113b,_0xf0b3b9=_0x416d48,_0xbf0f6c=_0x32ebab,_0x5951ae=window[_0xf0b3b9(0x2b6)]||document[_0xf0b3b9(0x17a)][_0xbf0f6c(0x28f)];_0x5951ae>0x64?_0x81599[_0xbf0f6c(0x1f6)][_0xbf0f6c(0x2a7)]=_0xf0b3b9(0x270):_0x81599[_0xf0b3b9(0x1e3)][_0xbf0f6c(0x2a7)]=_0x42843a(0x28f),_0x5ef17c=_0x5951ae;});}),document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),function(){const _0x9adaa=_0x4511a2,_0x1b0d5d=_0x320b50,_0x1a10d0=_0x3c2a99,_0x498372=document[_0x1b0d5d(0x205)]('.transparency-toggle'),_0x1fa5ef=document[_0x1a10d0(0x180)](_0x1b0d5d(0x1fe));if(_0x498372&&_0x1fa5ef){_0x498372[_0x1b0d5d(0x274)](_0x1a10d0(0x22a),function(){const _0x36dfa8=_0x113b,_0x3f6487=_0x1b0d5d,_0x322b7d=_0x1a10d0;_0x498372[_0x36dfa8(0x2c8)][_0x322b7d(0x26a)](_0x322b7d(0x201)),_0x1fa5ef[_0x322b7d(0x22d)][_0x322b7d(0x26a)](_0x3f6487(0x1a7));});function _0x58b287(){const _0x11bb08=_0x1a10d0;window[_0x11bb08(0x204)]<=0x300?_0x1fa5ef[_0x11bb08(0x22d)][_0x11bb08(0x1c4)](_0x11bb08(0x201)):_0x1fa5ef[_0x11bb08(0x22d)][_0x11bb08(0x195)]('active');}_0x58b287(),window[_0x9adaa(0x286)](_0x1a10d0(0x19d),_0x58b287);}}),window[_0x320b50(0x274)](_0x3c2a99(0x25d),function(){setTimeout(function(){const _0x2794cb=_0x113b,_0x2e5d81=_0x204b,_0x450bb4=_0x4b9f;document[_0x2794cb(0x341)](_0x450bb4(0x1c3))[_0x2e5d81(0x199)][_0x2e5d81(0x19f)]('hidden');},0x320);}),document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),function(){const _0x562e64=_0x320b50,_0x56f6a1=_0x3c2a99,_0x5cafe3=document[_0x56f6a1(0x180)](_0x56f6a1(0x229)),_0x21da3a=document[_0x56f6a1(0x200)](_0x56f6a1(0x274));_0x21da3a[_0x56f6a1(0x279)]='particles-container',_0x5cafe3[_0x56f6a1(0x2c3)](_0x21da3a);for(let _0x59e6d7=0x0;_0x59e6d7<0x32;_0x59e6d7++){createParticle(_0x21da3a);}const _0x281a6b=document[_0x562e64(0x205)](_0x562e64(0x1b2)),_0x1c2c45=document[_0x56f6a1(0x200)](_0x562e64(0x1c6));_0x1c2c45[_0x562e64(0x288)]=_0x56f6a1(0x172),_0x1c2c45[_0x56f6a1(0x2c6)]=_0x56f6a1(0x1db),_0x281a6b[_0x56f6a1(0x2c3)](_0x1c2c45),_0x5cafe3[_0x56f6a1(0x1e3)](_0x56f6a1(0x2a1),function(_0x182a42){const _0x2738b3=_0x113b,_0x417342=_0x562e64,_0x5e6c61=_0x56f6a1,_0x23e957=_0x182a42[_0x5e6c61(0x272)]/window[_0x5e6c61(0x204)]-0.5,_0x205fe8=_0x182a42[_0x5e6c61(0x210)]/window[_0x5e6c61(0x2b5)]-0.5,_0x4036d6=document[_0x5e6c61(0x180)](_0x417342(0x25d));_0x4036d6[_0x5e6c61(0x1f6)][_0x417342(0x233)]=_0x5e6c61(0x2a5)+_0x23e957*0x14+_0x5e6c61(0x1f2)+_0x205fe8*0x14+_0x417342(0x29e);const _0x2795ed=document[_0x5e6c61(0x180)](_0x5e6c61(0x16a));_0x2795ed[_0x417342(0x1e3)][_0x2738b3(0x2ce)]=_0x5e6c61(0x2a5)+_0x23e957*-0x1e+_0x5e6c61(0x1f2)+_0x205fe8*-0x1e+_0x5e6c61(0x21d);});});function createParticle(_0x4369ba){const _0x798b08=_0x320b50,_0x20cc8e=_0x3c2a99,_0x5ceb02=document[_0x20cc8e(0x200)](_0x20cc8e(0x274));var _0x5e9c9f=Math[_0x20cc8e(0x278)]()*0x5+0x1,_0x5b50cf=Math[_0x20cc8e(0x278)]()*0.5+0.1,_0x8b35ce=Math[_0x20cc8e(0x278)]()*0x64,_0x4673ee=Math[_0x798b08(0x2d1)]()*0x64,_0x4541b2=(Math[_0x20cc8e(0x278)]()-0.5)*0.5,_0x16ccf1=(Math[_0x20cc8e(0x278)]()-0.5)*0.5;_0x5ceb02[_0x20cc8e(0x1f6)][_0x798b08(0x1a8)]=_0x798b08(0x2ba)+_0x5e9c9f+_0x20cc8e(0x2ca)+_0x5e9c9f+_0x20cc8e(0x17f)+_0x5b50cf+_0x20cc8e(0x28b)+_0x4673ee+_0x20cc8e(0x285)+_0x8b35ce+_0x20cc8e(0x1fb),_0x4369ba[_0x20cc8e(0x2c3)](_0x5ceb02);let _0x461b5f=_0x8b35ce,_0x10eae7=_0x4673ee;function _0x240e24(){const _0x2eea4b=_0x798b08,_0x16dfa6=_0x20cc8e;_0x461b5f+=_0x4541b2,_0x10eae7+=_0x16ccf1,(_0x461b5f<0x0||_0x461b5f>0x64)&&(_0x461b5f=Math[_0x2eea4b(0x296)](0x0,Math[_0x16dfa6(0x1e5)](0x64,_0x461b5f)),_0x4541b2*=-0x1),(_0x10eae7<0x0||_0x10eae7>0x64)&&(_0x10eae7=Math[_0x16dfa6(0x27e)](0x0,Math[_0x2eea4b(0x1e6)](0x64,_0x10eae7)),_0x16ccf1*=-0x1),_0x5ceb02[_0x16dfa6(0x1f6)][_0x2eea4b(0x18a)]=_0x461b5f+'%',_0x5ceb02[_0x16dfa6(0x1f6)][_0x16dfa6(0x242)]=_0x10eae7+'%',requestAnimationFrame(_0x240e24);}_0x240e24();}const fadeElements=document[_0x3c2a99(0x1b7)](_0x3c2a99(0x1b4)),observer=new IntersectionObserver(_0x5c7088=>{const _0x445a7f=_0x3c2a99;_0x5c7088[_0x445a7f(0x2c1)](_0x597722=>{const _0x30a7b5=_0x204b,_0xf92f14=_0x445a7f;if(_0x597722[_0xf92f14(0x211)]){_0x597722[_0xf92f14(0x23b)][_0xf92f14(0x22d)][_0xf92f14(0x195)](_0xf92f14(0x2bd));if(_0x597722[_0x30a7b5(0x198)][_0xf92f14(0x22d)][_0xf92f14(0x21f)](_0xf92f14(0x1f8))){const _0x41e13b=_0x597722[_0xf92f14(0x23b)][_0xf92f14(0x1b7)](_0xf92f14(0x232));_0x41e13b[_0xf92f14(0x2c1)]((_0x4afd22,_0x5af36a)=>{setTimeout(()=>{const _0x4389b4=_0x4b9f;_0x4afd22[_0x4389b4(0x22d)][_0x4389b4(0x195)](_0x4389b4(0x2bd));},_0x5af36a*0x96);});}observer[_0xf92f14(0x21e)](_0x597722[_0x30a7b5(0x198)]);}});},{'threshold':0.15,'rootMargin':_0x3c2a99(0x1a8)});fadeElements[_0x3c2a99(0x2c1)](_0x15f042=>{const _0x3eeb37=_0x3c2a99;observer[_0x3eeb37(0x171)](_0x15f042);}),window[_0x3c2a99(0x1e3)](_0x3c2a99(0x2a2),function(){const _0x3db486=_0x320b50,_0x595901=_0x3c2a99,_0x355661=window[_0x3db486(0x262)];document[_0x595901(0x1b7)](_0x595901(0x243))[_0x595901(0x2c1)](function(_0x261d5a,_0x2af383){const _0x22f98a=_0x3db486,_0x144428=_0x595901,_0x5d37c5=0.05*(_0x2af383+0x1),_0x22e229=_0x355661*_0x5d37c5;_0x261d5a[_0x22f98a(0x1e3)][_0x22f98a(0x233)]=_0x144428(0x238)+_0x22e229+_0x144428(0x21d);});}),document[_0x4511a2(0x286)](_0x3c2a99(0x1e1),function(){const _0x3b034b=_0x4511a2,_0x26f438=_0x320b50,_0x5f2d50=_0x3c2a99,_0x58bb69=document['querySelector'](_0x5f2d50(0x16a)),_0x2f19a9=new MutationObserver(function(_0x4c5140){const _0xbbd088=_0x5f2d50;_0x4c5140[_0xbbd088(0x2c1)](function(_0xf3bc23){const _0x3e0f1f=_0x113b,_0x1a4a4f=_0x204b,_0x5f1466=_0xbbd088;if(_0xf3bc23[_0x1a4a4f(0x163)][_0x1a4a4f(0x293)]){const _0x2ce352=document[_0x5f1466(0x180)](_0x5f1466(0x1b2));if(_0x2ce352){const _0x1d476d=_0x2ce352[_0x5f1466(0x180)](_0x3e0f1f(0x1ec));_0x1d476d&&_0x1d476d[_0x1a4a4f(0x274)](_0x5f1466(0x22a),function(){const _0x196828=_0x1a4a4f,_0x386286=_0x5f1466,_0x5435f9=document[_0x196828(0x205)](_0x196828(0x24d));_0x5435f9&&_0x5435f9[_0x386286(0x178)]({'behavior':_0x386286(0x24f)});});const _0x590ce2=_0x2ce352[_0x5f1466(0x180)](_0x1a4a4f(0x20e));_0x590ce2&&_0x590ce2[_0x5f1466(0x1e3)](_0x5f1466(0x22a),function(){const _0x398680=_0x5f1466,_0x33fabd=document[_0x398680(0x180)](_0x398680(0x26b));_0x33fabd&&_0x33fabd[_0x398680(0x178)]({'behavior':_0x398680(0x24f)});}),_0x2f19a9[_0x5f1466(0x189)]();}}});});_0x2f19a9[_0x5f2d50(0x171)](_0x58bb69,{'childList':!![],'subtree':!![]});const _0x32f6ba=document[_0x5f2d50(0x180)](_0x3b034b(0x28d));if(_0x32f6ba){const _0x1baa2c=_0x32f6ba[_0x5f2d50(0x180)](_0x5f2d50(0x2a9));_0x1baa2c&&_0x1baa2c[_0x26f438(0x274)](_0x5f2d50(0x22a),function(){const _0x1278e4=_0x26f438,_0x2876a9=_0x5f2d50,_0x5ba16c=document[_0x2876a9(0x180)](_0x1278e4(0x24d));_0x5ba16c&&_0x5ba16c[_0x2876a9(0x178)]({'behavior':_0x2876a9(0x24f)});});const _0x7bb9af=_0x32f6ba[_0x5f2d50(0x180)](_0x5f2d50(0x169));_0x7bb9af&&_0x7bb9af[_0x3b034b(0x286)](_0x5f2d50(0x22a),function(){const _0x4d5454=_0x26f438,_0x4e145d=_0x5f2d50,_0x3903e8=document[_0x4d5454(0x205)](_0x4e145d(0x26b));_0x3903e8&&_0x3903e8[_0x4e145d(0x178)]({'behavior':_0x4e145d(0x24f)});});}});let currentEmojiCategory=_0x3c2a99(0x2c5),emojiPickerVisible=![];const emojiCategories={'smileys':['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶',_0x3c2a99(0x183),'😏','😒','🙄','😬',_0x3c2a99(0x190),'🤥','😔','😪','🤤','😴'],'people':['👋','🤚',_0x3c2a99(0x258),'✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆',,'👇','☝️','👍','👎','👊','✊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀'],'nature':['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼',_0x320b50(0x229),'🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🌱','🌿','🍀','🎍','🎋','🍃','🍂','🍁','🍄','🐚','🌾','💐','🌷','🌹','🥀','🌺'],'food':['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒',_0x3c2a99(0x26e),'🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥖','🍞','🥨','🥯','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭'],'activities':['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂',_0x4511a2(0x1fa),_0x3c2a99(0x207),_0x3c2a99(0x1e8),_0x3c2a99(0x184),'🤼',_0x3c2a99(0x209),_0x3c2a99(0x213),'🤸',_0x3c2a99(0x1ca),_0x3c2a99(0x1d7),'⛹️',_0x4511a2(0x2c3),'🤺'],'travel':['🚗','🚕','🚙','🚌','🚎',_0x320b50(0x1db),'🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜',_0x3c2a99(0x192),'🛵','🚲','🛴','🛹','🛼','🚁','🛸','✈️',_0x3c2a99(0x185),'🪂','⛵','🚤',_0x3c2a99(0x1e6),'🛳️','⛴️','🚢','⚓','⛽','🚧','🚦','🚥','🚏',_0x3c2a99(0x1a9),'🗿','🗽','🗼','🏰','🏯',_0x3c2a99(0x1f3),'🎡','🎢','🎠','⛲'],'objects':['⌚','📱','📲','💻','⌨️',_0x3c2a99(0x1af),_0x3c2a99(0x1c6),_0x3c2a99(0x1cb),_0x3c2a99(0x1d4),_0x3c2a99(0x22c),_0x3c2a99(0x250),'💽','💾','💿','📀','📼','📷','📸','📹','🎥',_0x3c2a99(0x255),_0x3c2a99(0x2b9),'📞','☎️','📟','📠','📺','📻',_0x3c2a99(0x1a1),_0x320b50(0x2cc),_0x3c2a99(0x263),'🧭','⏱️','⏲️','⏰',_0x3c2a99(0x17e),'⌛','⏳','📡','🔋','🔌','💡','🔦',_0x320b50(0x171),'🪔','🧯',_0x3c2a99(0x269),'💸'],'symbols':['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️',_0x3c2a99(0x1a2),'☸️','✡️','🔯','🕎','☯️','☦️','🛐','⛎','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','🆔','⚛️','🉑','☢️','☣️','📴','📳']};document[_0x320b50(0x274)](_0x3c2a99(0x1e1),function(){initializeForum(),initEmojiPicker(),setupEventListeners();});function initEmojiPicker(){const _0xe030ee=_0x4511a2,_0x1589f2=_0x320b50,_0x194ad0=_0x3c2a99,_0x233b93=document[_0x194ad0(0x23e)](_0x194ad0(0x170)),_0x3812bc=document[_0x1589f2(0x26f)](_0x1589f2(0x190)),_0x3201e1=document[_0x194ad0(0x1b7)](_0x194ad0(0x1d6)),_0x3ad17a=document[_0x194ad0(0x23e)](_0x194ad0(0x21b));if(!_0x233b93||!_0x3812bc){console[_0x194ad0(0x237)](_0x194ad0(0x247));return;}_0x233b93[_0x194ad0(0x1e3)](_0x194ad0(0x22a),function(_0x2eef9a){const _0x136e40=_0x194ad0;_0x2eef9a[_0x136e40(0x2c7)](),_0x2eef9a['stopPropagation'](),toggleEmojiPicker();}),_0x3201e1[_0x1589f2(0x23c)](_0x25ef1a=>{const _0xff7b90=_0x194ad0;_0x25ef1a[_0xff7b90(0x1e3)](_0xff7b90(0x22a),function(_0x339fd8){const _0x275884=_0x113b,_0x5c37fc=_0x204b,_0x3af65c=_0xff7b90;_0x339fd8[_0x3af65c(0x2c7)]();const _0x2ec980=this[_0x5c37fc(0x1d8)](_0x3af65c(0x22e));currentEmojiCategory=_0x2ec980,_0x3201e1[_0x275884(0x36e)](_0x365d39=>_0x365d39[_0x3af65c(0x22d)][_0x3af65c(0x1c4)](_0x3af65c(0x201))),this[_0x5c37fc(0x199)][_0x3af65c(0x195)](_0x3af65c(0x201)),loadEmojiCategory(_0x2ec980);});}),_0x3ad17a&&_0x3ad17a[_0x194ad0(0x1e3)](_0xe030ee(0x30d),function(){const _0x39cd93=_0x1589f2,_0x40cd4f=_0x194ad0,_0x3e209c=this[_0x40cd4f(0x248)][_0x39cd93(0x17c)]();_0x3e209c[_0x40cd4f(0x287)]>0x0?searchEmojis(_0x3e209c):loadEmojiCategory(currentEmojiCategory);}),document[_0x194ad0(0x1e3)](_0x1589f2(0x249),function(_0x569949){const _0x439514=_0x194ad0;!_0x3812bc[_0x439514(0x21f)](_0x569949[_0x439514(0x23b)])&&_0x569949[_0x439514(0x23b)]!==_0x233b93&&hideEmojiPicker();}),loadEmojiCategory(_0x194ad0(0x2c5));}function searchEmojis(_0x30ee76){const _0x49346c=_0x4511a2,_0x32968d=_0x320b50,_0x3f98e2=_0x3c2a99,_0x141877=document[_0x3f98e2(0x23e)](_0x49346c(0x2cb));if(!_0x141877)return;let _0x247567=[];for(const _0x78586e in emojiCategories){emojiCategories[_0x78586e][_0x32968d(0x23c)](_0x58b6ae=>{const _0x3b418d=_0x3f98e2;_0x58b6ae[_0x3b418d(0x27b)](_0x30ee76)&&_0x247567[_0x3b418d(0x176)](_0x58b6ae);});}_0x141877[_0x49346c(0x248)]=_0x247567[_0x3f98e2(0x27d)](_0x282943=>_0x3f98e2(0x280)+_0x282943+_0x3f98e2(0x206)+_0x282943+_0x3f98e2(0x1aa))[_0x3f98e2(0x283)]('');}function toggleEmojiPicker(){const _0x21fa64=_0x3c2a99,_0x5e26a4=document[_0x21fa64(0x23e)](_0x21fa64(0x182));if(!_0x5e26a4)return;emojiPickerVisible?hideEmojiPicker():showEmojiPicker();}function showEmojiPicker(){const _0x505dd3=_0x4511a2,_0x1cf59b=_0x320b50,_0x213b58=_0x3c2a99,_0x1e8c95=document[_0x213b58(0x23e)](_0x1cf59b(0x190));_0x1e8c95&&(_0x1e8c95[_0x505dd3(0x234)][_0x213b58(0x262)]='block',emojiPickerVisible=!![]);}function hideEmojiPicker(){const _0x3d31c6=_0x320b50,_0x3d83b4=_0x3c2a99,_0x3c217e=document[_0x3d31c6(0x26f)](_0x3d31c6(0x190));_0x3c217e&&(_0x3c217e[_0x3d31c6(0x1e3)][_0x3d83b4(0x262)]=_0x3d83b4(0x1cc),emojiPickerVisible=![]);}function loadEmojiCategory(_0x5548f0){const _0x19b891=_0x320b50,_0x14f959=_0x3c2a99,_0x1a7e6c=document[_0x14f959(0x23e)](_0x14f959(0x231));if(!_0x1a7e6c)return;const _0x212a88=emojiCategories[_0x5548f0]||[];_0x1a7e6c[_0x14f959(0x2c6)]=_0x212a88[_0x14f959(0x27d)](_0x5ab16b=>_0x14f959(0x280)+_0x5ab16b+_0x14f959(0x206)+_0x5ab16b+_0x19b891(0x1f6))[_0x19b891(0x236)]('');}function insertEmojiToInput(_0x160949){const _0x85a18a=_0x4511a2,_0x3eddd1=_0x320b50,_0x5f04d3=_0x3c2a99,_0x11dcd6=document[_0x5f04d3(0x23e)](_0x5f04d3(0x25e));if(!_0x11dcd6)return;const _0x47bf88=_0x11dcd6[_0x5f04d3(0x2c9)],_0x237bb8=_0x11dcd6[_0x5f04d3(0x22f)];_0x11dcd6[_0x5f04d3(0x248)]=_0x11dcd6[_0x5f04d3(0x248)][_0x5f04d3(0x265)](0x0,_0x47bf88)+_0x160949+_0x11dcd6[_0x5f04d3(0x248)][_0x5f04d3(0x265)](_0x237bb8),_0x11dcd6[_0x85a18a(0x35d)](),_0x11dcd6[_0x3eddd1(0x24e)](_0x47bf88+_0x160949[_0x5f04d3(0x287)],_0x47bf88+_0x160949[_0x5f04d3(0x287)]),hideEmojiPicker();}document[_0x320b50(0x26f)](_0x3c2a99(0x182)),document[_0x320b50(0x26f)](_0x320b50(0x190))[_0x3c2a99(0x1f6)][_0x3c2a99(0x262)]=_0x3c2a99(0x2a3);const WEB_APP_URL=_0x320b50(0x272);var dato_ms=[],dato_pp=[],mensajesLista='';cargarDatosGenerales();const userData1={'username':_0x3c2a99(0x24a),'role':_0x3c2a99(0x239),'fullName':_0x320b50(0x202),'permissions':[_0x320b50(0x2b3),_0x320b50(0x242),_0x3c2a99(0x1b1),_0x3c2a99(0x1e0)]};let currentUser=null,messages=[],onlineUsers=[];document[_0x3c2a99(0x1e3)](_0x3c2a99(0x1e1),function(){initializeForum(),setupEventListeners(),updateOnlineUsers();});function initializeForum(){const _0x1c790e=_0x320b50,_0x5a2733=_0x3c2a99;currentUser=JSON[_0x5a2733(0x29e)](localStorage[_0x5a2733(0x1fd)](_0x5a2733(0x1be)));if(!currentUser){alert(_0x1c790e(0x1b1)),window[_0x5a2733(0x167)][_0x5a2733(0x254)]=_0x5a2733(0x245);return;}updateUserActivity(),agregarEstilosValidacion(),initEmojiPicker();}function setupEventListeners(){const _0x5934b9=_0x3c2a99,_0x575bbb=document[_0x5934b9(0x23e)](_0x5934b9(0x25e)),_0x52f94f=document[_0x5934b9(0x23e)](_0x5934b9(0x299));_0x575bbb[_0x5934b9(0x1e3)](_0x5934b9(0x222),function(_0x483aa1){const _0x37a2ff=_0x5934b9;_0x483aa1[_0x37a2ff(0x1fe)]===_0x37a2ff(0x267)&&!_0x483aa1[_0x37a2ff(0x1b5)]&&(_0x483aa1[_0x37a2ff(0x2c7)](),sendMessage());}),_0x575bbb['addEventListener'](_0x5934b9(0x28d),function(){const _0x650fb0=_0x113b,_0x2dfdf7=_0x5934b9;this[_0x2dfdf7(0x1f6)][_0x2dfdf7(0x1ba)]=_0x2dfdf7(0x1a7),this[_0x2dfdf7(0x1f6)][_0x650fb0(0x1f8)]=this[_0x2dfdf7(0x18e)]+'px';}),_0x52f94f[_0x5934b9(0x1e3)](_0x5934b9(0x22a),sendMessage),setInterval(updateOnlineUsers,0x2710);}function sendMessage(){const _0x20a1f9=_0x320b50,_0x34bd7a=_0x3c2a99,_0x4ba6d6=document[_0x34bd7a(0x23e)](_0x34bd7a(0x25e)),_0x274733=_0x4ba6d6[_0x34bd7a(0x248)][_0x34bd7a(0x28a)]();if(!_0x274733){mostrarError(_0x34bd7a(0x27a));return;}const _0x523c58=validarContenido(_0x274733);if(!_0x523c58[_0x34bd7a(0x25b)]){mostrarError(_0x523c58[_0x34bd7a(0x1d0)]);const _0x443195=limpiarTexto(_0x274733);if(_0x443195&&_0x443195!==_0x274733&&_0x443195[_0x34bd7a(0x287)]>0x2){if(confirm(_0x20a1f9(0x2cb)+_0x443195+'\x22')){_0x4ba6d6[_0x34bd7a(0x248)]=_0x443195;const _0x2a9c10=validarContenido(_0x443195);_0x2a9c10[_0x34bd7a(0x25b)]&&enviarMensajeFinal(_0x443195);}}return;}enviarMensajeFinal(_0x274733);}function enviarMensajeFinal(_0x6fe660){const _0x2c131b=_0x4511a2,_0x32d0b1=_0x320b50,_0x4e50a2=_0x3c2a99,_0x213596=document[_0x4e50a2(0x23e)](_0x4e50a2(0x25e)),_0x37663d={'id':Date[_0x4e50a2(0x1b9)](),'author':currentUser[_0x4e50a2(0x173)],'role':currentUser[_0x4e50a2(0x1d3)],'content':_0x6fe660,'timestamp':new Date()[_0x32d0b1(0x23a)](),'userId':currentUser[_0x4e50a2(0x203)]||currentUser[_0x4e50a2(0x261)]},_0x21bf40=[_0x37663d['id'],_0x37663d[_0x32d0b1(0x266)],_0x37663d[_0x4e50a2(0x1d3)],_0x37663d[_0x4e50a2(0x19e)],_0x37663d[_0x4e50a2(0x2b3)],_0x37663d[_0x4e50a2(0x21a)]];enviarDatos(_0x4e50a2(0x28c),0x0,_0x21bf40,0x1),messages[_0x2c131b(0x2f8)](_0x37663d),saveMessages(),_0x213596[_0x4e50a2(0x248)]='',_0x213596[_0x4e50a2(0x1f6)][_0x4e50a2(0x1ba)]=_0x4e50a2(0x1a7),renderMessages(),scrollToBottom(),mostrarExito(_0x2c131b(0x360));}function _0x587d(){const _0x569e62=_0x4511a2,_0x1b8d1e=_0x320b50,_0x30bab0=[_0x1b8d1e(0x221),_0x1b8d1e(0x1f2),_0x1b8d1e(0x2d3),_0x1b8d1e(0x18d),_0x1b8d1e(0x169),_0x569e62(0x31e),_0x569e62(0x225),_0x1b8d1e(0x1be),_0x1b8d1e(0x232),_0x1b8d1e(0x29c),_0x569e62(0x22b),_0x1b8d1e(0x267),_0x1b8d1e(0x254),_0x1b8d1e(0x1a6),_0x1b8d1e(0x244),_0x1b8d1e(0x245),_0x569e62(0x2d3),_0x1b8d1e(0x2c3),_0x569e62(0x319),_0x1b8d1e(0x172),'none',_0x1b8d1e(0x2a4),_0x1b8d1e(0x192),'all',_0x1b8d1e(0x22e),_0x569e62(0x22a),_0x569e62(0x2e9),_0x1b8d1e(0x239),_0x1b8d1e(0x1aa),_0x569e62(0x22c),_0x1b8d1e(0x2c1),_0x1b8d1e(0x215),_0x1b8d1e(0x17c),_0x1b8d1e(0x19a),_0x569e62(0x368),_0x1b8d1e(0x260),_0x569e62(0x22f),_0x1b8d1e(0x1a3),_0x1b8d1e(0x1cf),_0x1b8d1e(0x27d),_0x1b8d1e(0x207),_0x1b8d1e(0x1e0),_0x1b8d1e(0x1e2),_0x1b8d1e(0x274),_0x1b8d1e(0x22c),_0x1b8d1e(0x1e6),_0x569e62(0x250),_0x1b8d1e(0x173),_0x1b8d1e(0x28a),_0x1b8d1e(0x1f0),_0x1b8d1e(0x2a0),_0x1b8d1e(0x217),_0x1b8d1e(0x161),_0x1b8d1e(0x28e),_0x1b8d1e(0x2a9),_0x1b8d1e(0x1c2),_0x1b8d1e(0x27f),_0x1b8d1e(0x258),_0x1b8d1e(0x185),'🏟️',_0x1b8d1e(0x210),_0x1b8d1e(0x19b),_0x1b8d1e(0x1e3),_0x1b8d1e(0x1ab),_0x569e62(0x322),_0x569e62(0x2e3),_0x1b8d1e(0x248),_0x1b8d1e(0x15c),_0x1b8d1e(0x218),_0x569e62(0x311),_0x569e62(0x366),_0x1b8d1e(0x284),_0x569e62(0x30f),_0x1b8d1e(0x1a7),_0x1b8d1e(0x1ba),_0x569e62(0x299),_0x1b8d1e(0x263),_0x569e62(0x367),_0x1b8d1e(0x182),_0x1b8d1e(0x28f),_0x569e62(0x228),_0x1b8d1e(0x1fc),_0x569e62(0x2be),'huevon',_0x569e62(0x28b),_0x1b8d1e(0x1a0),_0x1b8d1e(0x175),_0x569e62(0x2b8),_0x1b8d1e(0x257),_0x569e62(0x36b),_0x1b8d1e(0x1dd),_0x1b8d1e(0x265),_0x1b8d1e(0x1a5),_0x1b8d1e(0x1fa),_0x1b8d1e(0x187),_0x1b8d1e(0x211),_0x569e62(0x2e4),_0x1b8d1e(0x26e),_0x1b8d1e(0x16e),_0x1b8d1e(0x20b),_0x569e62(0x24c),_0x1b8d1e(0x1ec),_0x1b8d1e(0x20f),_0x1b8d1e(0x289),_0x1b8d1e(0x29f),_0x1b8d1e(0x201),_0x1b8d1e(0x204),_0x1b8d1e(0x166),_0x1b8d1e(0x230),_0x1b8d1e(0x2c6),_0x1b8d1e(0x2d2),_0x1b8d1e(0x220),_0x1b8d1e(0x22f),_0x1b8d1e(0x1d4),_0x1b8d1e(0x249),_0x1b8d1e(0x194),_0x1b8d1e(0x1df),_0x1b8d1e(0x199),_0x1b8d1e(0x197),_0x569e62(0x2bf),_0x1b8d1e(0x2aa),'emojiGrid',_0x1b8d1e(0x261),'masturbación',_0x1b8d1e(0x25f),_0x1b8d1e(0x2b7),_0x569e62(0x30c),_0x1b8d1e(0x290),_0x1b8d1e(0x2bf),_0x1b8d1e(0x26d),_0x569e62(0x21e),_0x1b8d1e(0x198),_0x569e62(0x344),_0x1b8d1e(0x243),_0x1b8d1e(0x26f),_0x569e62(0x337),_0x569e62(0x2c5),_0x1b8d1e(0x1b9),_0x1b8d1e(0x225),_0x1b8d1e(0x2bd),_0x569e62(0x25d),_0x1b8d1e(0x2a7),_0x1b8d1e(0x180),_0x569e62(0x2b4),_0x1b8d1e(0x15e),'bobo',_0x1b8d1e(0x291),'cssText',_0x1b8d1e(0x250),_0x1b8d1e(0x26c),_0x1b8d1e(0x21a),_0x1b8d1e(0x1a2),_0x1b8d1e(0x2b0),_0x1b8d1e(0x189),_0x1b8d1e(0x264),_0x1b8d1e(0x242),_0x1b8d1e(0x1e4),_0x1b8d1e(0x2ab),_0x569e62(0x2e0),'weather_code','🖐️',_0x1b8d1e(0x1d7),_0x1b8d1e(0x1b6),_0x1b8d1e(0x1e7),_0x569e62(0x267),_0x1b8d1e(0x2c9),_0x1b8d1e(0x1a1),_0x1b8d1e(0x18e),_0x1b8d1e(0x240),_0x1b8d1e(0x271),_0x569e62(0x232),_0x1b8d1e(0x16c),_0x1b8d1e(0x2c5),_0x1b8d1e(0x223),_0x569e62(0x290),_0x1b8d1e(0x17f),_0x1b8d1e(0x295),_0x1b8d1e(0x27e),_0x569e62(0x329),_0x1b8d1e(0x21d),_0x569e62(0x348),_0x1b8d1e(0x276),_0x1b8d1e(0x287),_0x1b8d1e(0x269),_0x1b8d1e(0x183),'errorMessage',_0x569e62(0x260),_0x1b8d1e(0x2a1),_0x569e62(0x2a7),_0x1b8d1e(0x282),_0x1b8d1e(0x28b),_0x1b8d1e(0x237),_0x569e62(0x23d),_0x1b8d1e(0x288),_0x1b8d1e(0x24a),_0x1b8d1e(0x252),_0x1b8d1e(0x1d5),_0x1b8d1e(0x1b8),_0x569e62(0x22e),_0x1b8d1e(0x23a),_0x569e62(0x247),_0x569e62(0x35f),_0x569e62(0x2d4),_0x569e62(0x34e),_0x1b8d1e(0x2a5),_0x1b8d1e(0x2d0),_0x1b8d1e(0x15d),_0x1b8d1e(0x293),_0x1b8d1e(0x18b),_0x1b8d1e(0x1ca),_0x1b8d1e(0x203),_0x1b8d1e(0x160),_0x1b8d1e(0x235),_0x1b8d1e(0x275),_0x1b8d1e(0x2c0),_0x569e62(0x1ee),_0x1b8d1e(0x1fd),_0x1b8d1e(0x19e),_0x1b8d1e(0x191),_0x1b8d1e(0x1dc),'number',_0x1b8d1e(0x167),_0x1b8d1e(0x1d3),_0x1b8d1e(0x1ad),_0x1b8d1e(0x21b),_0x569e62(0x21d),_0x1b8d1e(0x28d),_0x1b8d1e(0x1f8),_0x1b8d1e(0x2c2),'userList',_0x569e62(0x269),_0x1b8d1e(0x2ad),_0x1b8d1e(0x292),_0x1b8d1e(0x21e),_0x1b8d1e(0x1d1),_0x1b8d1e(0x1ed),_0x569e62(0x245),_0x1b8d1e(0x279),_0x1b8d1e(0x1d0),_0x1b8d1e(0x1d6),_0x1b8d1e(0x1c9),_0x1b8d1e(0x1bd),'18726420TVvlzI',_0x569e62(0x23b),_0x1b8d1e(0x2c8),_0x1b8d1e(0x2b1),_0x569e62(0x1f6),_0x1b8d1e(0x1d2),_0x569e62(0x275),_0x1b8d1e(0x259),_0x1b8d1e(0x1ee),_0x569e62(0x342),_0x1b8d1e(0x1c3),_0x1b8d1e(0x1fb),_0x1b8d1e(0x268),_0x569e62(0x33b),_0x1b8d1e(0x179),_0x1b8d1e(0x1ea),_0x569e62(0x30a),_0x1b8d1e(0x298),'Despejado','in-view',_0x1b8d1e(0x1d8),_0x569e62(0x26e),_0x1b8d1e(0x188),_0x1b8d1e(0x23c),_0x1b8d1e(0x17e),_0x569e62(0x29e),_0x1b8d1e(0x170),_0x569e62(0x2f5),_0x1b8d1e(0x196),_0x1b8d1e(0x20d),_0x1b8d1e(0x25e),_0x569e62(0x2af),_0x1b8d1e(0x29b),_0x569e62(0x24d),_0x1b8d1e(0x2b3),_0x1b8d1e(0x184),_0x1b8d1e(0x1bb),_0x1b8d1e(0x17b),_0x1b8d1e(0x285),_0x569e62(0x30b),_0x1b8d1e(0x1b2),_0x1b8d1e(0x24b),_0x569e62(0x33f),'437848owIoiG',_0x1b8d1e(0x178),_0x569e62(0x350),_0x569e62(0x1f4),_0x569e62(0x2b7),_0x1b8d1e(0x297),_0x1b8d1e(0x1af),_0x1b8d1e(0x1c8),_0x1b8d1e(0x181),_0x1b8d1e(0x1f9),_0x1b8d1e(0x23d),_0x1b8d1e(0x1e5),_0x1b8d1e(0x16d),_0x1b8d1e(0x2af),_0x1b8d1e(0x174),_0x1b8d1e(0x2ca),'3749645OimxQv',_0x1b8d1e(0x29a),_0x569e62(0x2e8),_0x1b8d1e(0x205),_0x1b8d1e(0x1cb),'emojiPicker','😶‍🌫️',_0x1b8d1e(0x15f),'🛩️',_0x1b8d1e(0x231),_0x1b8d1e(0x251),_0x1b8d1e(0x1c4),_0x569e62(0x292),_0x1b8d1e(0x21c),_0x1b8d1e(0x266),_0x1b8d1e(0x2a8),_0x1b8d1e(0x206),_0x1b8d1e(0x22a),_0x1b8d1e(0x2ac),_0x1b8d1e(0x216),_0x1b8d1e(0x177),_0x1b8d1e(0x1eb),_0x1b8d1e(0x1f7),_0x1b8d1e(0x255),_0x1b8d1e(0x19f),_0x1b8d1e(0x2ae),_0x1b8d1e(0x2a6),_0x569e62(0x20f),_0x1b8d1e(0x1b0),_0x1b8d1e(0x2b4),_0x1b8d1e(0x1c1),_0x1b8d1e(0x278),'resize',_0x1b8d1e(0x1de),_0x1b8d1e(0x2cf),_0x1b8d1e(0x1e8),_0x569e62(0x32c),_0x1b8d1e(0x277),_0x1b8d1e(0x2ce),_0x1b8d1e(0x22b),_0x569e62(0x235),_0x1b8d1e(0x162),_0x1b8d1e(0x214),_0x569e62(0x359),_0x1b8d1e(0x23b),_0x1b8d1e(0x1f6),_0x1b8d1e(0x1bc),_0x1b8d1e(0x1ff),_0x569e62(0x338),_0x1b8d1e(0x29d),_0x569e62(0x31b),_0x1b8d1e(0x226),_0x1b8d1e(0x23f),_0x1b8d1e(0x176),_0x1b8d1e(0x1f5),_0x1b8d1e(0x247),_0x569e62(0x27f),_0x1b8d1e(0x1b5),_0x1b8d1e(0x1ae)];return _0x587d=function(){return _0x30bab0;},_0x587d();}function setupEventListeners(){const _0x4a1687=_0x320b50,_0x3f67e9=_0x3c2a99,_0x4bc8f7=document[_0x3f67e9(0x23e)](_0x3f67e9(0x25e)),_0x50c823=document[_0x3f67e9(0x23e)](_0x4a1687(0x2be));_0x4bc8f7[_0x3f67e9(0x1e3)](_0x3f67e9(0x222),function(_0x3b8968){const _0x1e2315=_0x113b,_0x2d2587=_0x3f67e9;_0x3b8968[_0x2d2587(0x1fe)]===_0x1e2315(0x352)&&!_0x3b8968[_0x2d2587(0x1b5)]&&(_0x3b8968[_0x2d2587(0x2c7)](),sendMessage());}),_0x4bc8f7[_0x3f67e9(0x1e3)](_0x3f67e9(0x28d),function(){const _0x314bf9=_0x113b,_0x512552=_0x4a1687,_0xeccdc1=_0x3f67e9;this[_0x512552(0x1e3)][_0xeccdc1(0x1ba)]=_0xeccdc1(0x1a7),this[_0xeccdc1(0x1f6)][_0xeccdc1(0x1ba)]=this[_0xeccdc1(0x18e)]+'px';const _0x472c4a=this[_0xeccdc1(0x248)][_0xeccdc1(0x28a)](),_0x34e332=validarContenido(_0x472c4a);_0x34e332[_0x512552(0x1e7)]||_0x472c4a[_0xeccdc1(0x287)]===0x0?(_0x50c823[_0xeccdc1(0x1f6)][_0x512552(0x1be)]=_0xeccdc1(0x2ae),_0x50c823[_0xeccdc1(0x1f6)][_0xeccdc1(0x208)]=_0xeccdc1(0x2bf),_0x50c823[_0xeccdc1(0x17c)]=![],_0x50c823[_0xeccdc1(0x17a)]=_0xeccdc1(0x224)):(_0x50c823[_0xeccdc1(0x1f6)][_0x512552(0x1be)]=_0x512552(0x186),_0x50c823[_0xeccdc1(0x1f6)][_0x512552(0x234)]=_0xeccdc1(0x20a),_0x50c823[_0x314bf9(0x354)]=!![],_0x50c823[_0xeccdc1(0x17a)]=_0x34e332[_0xeccdc1(0x1d0)]);}),_0x50c823[_0x3f67e9(0x1e3)](_0x3f67e9(0x22a),sendMessage),setInterval(updateOnlineUsers,0x2710);}function agregarEstilosValidacion(){const _0x2e80fc=_0x320b50,_0x363ccc=_0x3c2a99,_0x5cf55a=document[_0x363ccc(0x200)](_0x363ccc(0x1f6));_0x5cf55a[_0x2e80fc(0x282)]=_0x363ccc(0x175),document[_0x363ccc(0x215)][_0x363ccc(0x2c3)](_0x5cf55a);}function initializeForum(){const _0x8d9417=_0x320b50,_0x11731d=_0x3c2a99;currentUser=JSON[_0x11731d(0x29e)](localStorage[_0x11731d(0x1fd)](_0x8d9417(0x1ac)));if(!currentUser){alert(_0x8d9417(0x1b1)),window[_0x11731d(0x167)][_0x11731d(0x254)]=_0x11731d(0x245);return;}agregarEstilosValidacion(),updateUserActivity();}function agregarContadorCaracteres(){const _0xab8aa3=_0x4511a2,_0x28d93e=_0x3c2a99,_0x4cae0f=document['getElementById'](_0x28d93e(0x25e));if(!_0x4cae0f)return;const _0x8f868e=document[_0x28d93e(0x200)](_0x28d93e(0x274));_0x8f868e[_0x28d93e(0x279)]=_0x28d93e(0x236),_0x8f868e['id']=_0x28d93e(0x23d),_0x4cae0f[_0x28d93e(0x230)][_0x28d93e(0x2c3)](_0x8f868e),_0x4cae0f[_0x28d93e(0x1e3)](_0xab8aa3(0x30d),function(){const _0x1aa5ba=_0x204b,_0x4876d1=_0x28d93e,_0x39b333=this[_0x4876d1(0x248)][_0x4876d1(0x287)];_0x8f868e[_0x4876d1(0x275)]=_0x39b333+_0x4876d1(0x181),_0x39b333>0x1c2?_0x8f868e[_0x4876d1(0x22d)][_0x1aa5ba(0x19f)](_0x4876d1(0x18f)):_0x8f868e['classList'][_0x4876d1(0x1c4)](_0x4876d1(0x18f));});}function loadMessages(){const _0x3249d9=_0x3c2a99,_0x27b389=mensajesLista;_0x27b389&&(messages=JSON[_0x3249d9(0x29e)](_0x27b389),renderMessages());}function saveMessages(){}function renderMessages(){const _0x290450=_0x320b50,_0x10213b=_0x3c2a99,_0x978c9f=document[_0x10213b(0x23e)](_0x10213b(0x235)),_0x1da1ce=_0x978c9f[_0x10213b(0x180)](_0x10213b(0x20c)),_0x251d7a=_0x978c9f[_0x10213b(0x1b7)](_0x10213b(0x1df));_0x251d7a[_0x10213b(0x2c1)](_0x573a8f=>_0x573a8f[_0x290450(0x254)]());const _0x7b2405=messages[_0x10213b(0x212)](-0x32);_0x7b2405[_0x10213b(0x2c1)](_0x4d11fe=>{const _0x3af239=_0x10213b,_0x4078c5=createMessageElement(_0x4d11fe);_0x978c9f[_0x3af239(0x2c3)](_0x4078c5);}),scrollToBottom();}function createMessageElement(_0x42c7b9){const _0x3418b6=_0x4511a2,_0x287cbc=_0x320b50,_0x53932d=_0x3c2a99,_0x605356=document[_0x53932d(0x200)](_0x53932d(0x274)),_0x2850de=_0x42c7b9[_0x53932d(0x21a)]===(currentUser[_0x53932d(0x203)]||currentUser[_0x287cbc(0x271)]);_0x605356[_0x53932d(0x279)]=_0x287cbc(0x281)+(_0x2850de?_0x287cbc(0x1da):_0x3418b6(0x29b));const _0x158dda=new Date(_0x42c7b9[_0x287cbc(0x1bf)])[_0x287cbc(0x256)](_0x287cbc(0x28d),{'day':_0x287cbc(0x264),'month':_0x53932d(0x252),'hour':_0x53932d(0x252),'minute':_0x53932d(0x252)});return _0x605356[_0x53932d(0x2c6)]=_0x53932d(0x219)+_0x42c7b9[_0x53932d(0x18b)]+_0x53932d(0x2a6)+_0x42c7b9[_0x53932d(0x1d3)][_0x53932d(0x1d8)]()+'\x22>'+getRoleDisplayName(_0x42c7b9[_0x53932d(0x1d3)])+_0x287cbc(0x2c4)+_0x158dda+_0x53932d(0x20f)+escapeHtml(_0x42c7b9[_0x53932d(0x19e)])+_0x53932d(0x220),_0x605356;}function updateUserActivity(){const _0x52c604=_0x4511a2,_0x31b62f=_0x320b50,_0x421dd6=_0x3c2a99,_0x44dabd={'userId':currentUser[_0x421dd6(0x203)]||currentUser[_0x421dd6(0x261)],'name':currentUser[_0x52c604(0x36a)],'role':currentUser[_0x421dd6(0x1d3)],'lastActivity':new Date()[_0x421dd6(0x27f)]()};let _0x2f0ba8=JSON[_0x421dd6(0x29e)](localStorage[_0x31b62f(0x1ef)](_0x31b62f(0x194))||'[]');_0x2f0ba8=_0x2f0ba8[_0x421dd6(0x1f1)](_0x3e660d=>_0x3e660d[_0x421dd6(0x21a)]!==_0x44dabd[_0x31b62f(0x16e)]),_0x2f0ba8[_0x31b62f(0x1f9)](_0x44dabd),localStorage[_0x421dd6(0x2ab)](_0x421dd6(0x22b),JSON[_0x421dd6(0x1b0)](_0x2f0ba8));}function updateOnlineUsers(){const _0x17edec=_0x320b50,_0x538cd4=_0x3c2a99;updateUserActivity();const _0x5b9aa6=JSON[_0x538cd4(0x29e)](localStorage[_0x538cd4(0x1fd)](_0x538cd4(0x22b))||'[]'),_0xd94927=new Date(Date[_0x538cd4(0x1b9)]()-0x5*0x3c*0x3e8);onlineUsers=_0x5b9aa6[_0x538cd4(0x1f1)](_0x173199=>new Date(_0x173199[_0x17edec(0x20a)])>_0xd94927),renderOnlineUsers();}function renderOnlineUsers(){const _0x4684b5=_0x4511a2,_0x4c8c2c=_0x320b50,_0x313c1d=_0x3c2a99,_0x18815d=document[_0x4c8c2c(0x26f)](_0x313c1d(0x29d));if(onlineUsers[_0x313c1d(0x287)]===0x0){_0x18815d[_0x313c1d(0x2c6)]=_0x313c1d(0x187);return;}_0x18815d[_0x4c8c2c(0x196)]=onlineUsers[_0x313c1d(0x27d)](_0xcbb45f=>_0x4c8c2c(0x27b)+_0xcbb45f[_0x313c1d(0x24e)]+_0x313c1d(0x292)+_0xcbb45f[_0x4c8c2c(0x239)][_0x4684b5(0x216)]()+'\x22>'+getRoleDisplayName(_0xcbb45f[_0x313c1d(0x1d3)])+_0x4684b5(0x1fb))[_0x313c1d(0x283)]('');}function getRoleDisplayName(_0xa2f967){const _0x658297=_0x4511a2,_0x12bebb=_0x320b50,_0x510c3c=_0x3c2a99,_0x58a285={'director':_0x658297(0x274),'admin':_0x510c3c(0x273),'combustible':_0x12bebb(0x286),'user':_0x510c3c(0x21c)};return _0x58a285[_0xa2f967[_0x510c3c(0x1d8)]()]||_0xa2f967;}function escapeHtml(_0x410282){const _0x5c6181=_0x3c2a99,_0x391d86=document[_0x5c6181(0x200)](_0x5c6181(0x274));return _0x391d86[_0x5c6181(0x275)]=_0x410282,_0x391d86[_0x5c6181(0x2c6)];}function _0x204b(_0x377f11,_0x1cc74e){const _0x71b1c0=_0x5390();return _0x204b=function(_0x4fdc55,_0x2f80b8){_0x4fdc55=_0x4fdc55-0x15c;let _0x1d242b=_0x71b1c0[_0x4fdc55];return _0x1d242b;},_0x204b(_0x377f11,_0x1cc74e);}function scrollToBottom(){const _0x48d19a=_0x320b50,_0x10e8ac=_0x3c2a99,_0x26da69=document[_0x10e8ac(0x23e)](_0x10e8ac(0x235));_0x26da69[_0x10e8ac(0x28f)]=_0x26da69[_0x48d19a(0x22a)];}function cleanupOldData(){const _0x17d0e8=_0x4511a2,_0x27bfad=_0x320b50,_0xaec8a1=_0x3c2a99,_0x216a63=new Date(Date[_0xaec8a1(0x1b9)]()-0x7*0x18*0x3c*0x3c*0x3e8);messages=messages[_0xaec8a1(0x1f1)](_0x30458f=>new Date(_0x30458f[_0xaec8a1(0x2b3)])>_0x216a63),saveMessages();const _0xe3bf81=JSON[_0x17d0e8(0x269)](localStorage[_0xaec8a1(0x1fd)](_0x27bfad(0x194))||'[]'),_0x28509f=new Date(Date[_0xaec8a1(0x1b9)]()-0x3c*0x3c*0x3e8),_0x6007e6=_0xe3bf81[_0xaec8a1(0x1f1)](_0x420ba9=>new Date(_0x420ba9[_0x27bfad(0x20a)])>_0x28509f);localStorage[_0x27bfad(0x1b3)](_0xaec8a1(0x22b),JSON[_0xaec8a1(0x1b0)](_0x6007e6));}setInterval(cleanupOldData,0x3c*0x3c*0x3e8),window[_0x3c2a99(0x1e3)](_0x3c2a99(0x1ac),function(){cleanupOldData();});function enviarDatos(_0x59a7a7,_0x46bf05,_0x2a8691,_0x2fb9d9){const _0x199073=_0x320b50,_0x7efd84=_0x3c2a99;fetch(WEB_APP_URL,{'method':_0x7efd84(0x19b),'mode':_0x7efd84(0x179),'headers':{'Content-Type':_0x199073(0x2a3)},'body':JSON[_0x199073(0x226)]({'pagina':_0x59a7a7,'fila':_0x46bf05,'datos':_0x2a8691,'tipo':_0x2fb9d9})})[_0x199073(0x1c2)](()=>{const _0x4f4cb7=_0x199073,_0x21cbff=_0x7efd84;document[_0x21cbff(0x23e)](_0x21cbff(0x2b8))[_0x21cbff(0x1f6)][_0x21cbff(0x262)]=_0x21cbff(0x1cc),ingresar_compra1(),window[_0x4f4cb7(0x165)]({'top':0x0,'behavior':_0x4f4cb7(0x1a2)});})[_0x7efd84(0x16f)](_0x355b85=>{})['finally'](()=>{});}function cargarDatosGenerales(){const _0x305b4c=_0x320b50,_0xd445d4=_0x3c2a99;fetch(WEB_APP_URL+_0x305b4c(0x1c5))[_0xd445d4(0x1ef)](_0x1fe74b=>_0x1fe74b[_0xd445d4(0x1fc)]())[_0xd445d4(0x1ef)](_0x513d0c=>{const _0x25cdce=_0x305b4c,_0x5381c9=_0xd445d4;dato_ms=_0x513d0c[_0x5381c9(0x2af)],dato_ua=_0x513d0c[_0x5381c9(0x1bb)],dato_ac=_0x513d0c[_0x5381c9(0x2b2)];const _0x5d0e61=dato_ms[_0x25cdce(0x1dd)](0x1)[_0x5381c9(0x27d)](_0x18f66f=>({'id':Number(_0x18f66f[0x0]),'author':_0x18f66f[0x1],'role':_0x18f66f[0x2],'content':_0x18f66f[0x3],'timestamp':_0x18f66f[0x4],'userId':_0x18f66f[0x5]}));mensajesLista=JSON[_0x5381c9(0x1b0)](_0x5d0e61),baul=0x0,cargarMensajes();})[_0xd445d4(0x16f)](_0x508a9a=>{const _0x591fea=_0xd445d4;console[_0x591fea(0x237)](_0x591fea(0x260),_0x508a9a);});}function cargarMensajes(){loadMessages(),setInterval(function(){const _0x3a6320=_0x204b,_0x47dce1=_0x4b9f;fetch(WEB_APP_URL+_0x3a6320(0x227))[_0x3a6320(0x1c2)](_0x2c9395=>_0x2c9395[_0x47dce1(0x1fc)]())[_0x3a6320(0x1c2)](_0x2bfab1=>{const _0x357da5=_0x3a6320,_0xd337f6=_0x47dce1;dato_pp=_0x2bfab1[_0xd337f6(0x2af)],baul11=JSON[_0xd337f6(0x1b0)](dato_pp),baul22=JSON[_0x357da5(0x226)](dato_ms);if(baul11!==baul22){dato_ms=_0x2bfab1[_0xd337f6(0x2af)];const _0x2d15bf=dato_ms[_0xd337f6(0x212)](0x1)[_0x357da5(0x1b8)](_0x7522f1=>({'id':Number(_0x7522f1[0x0]),'author':_0x7522f1[0x1],'role':_0x7522f1[0x2],'content':_0x7522f1[0x3],'timestamp':_0x7522f1[0x4],'userId':_0x7522f1[0x5]}));mensajesLista=JSON[_0xd337f6(0x1b0)](_0x2d15bf),loadMessages();}})[_0x3a6320(0x2b5)](_0x58c3d1=>{const _0x199912=_0x47dce1;console[_0x199912(0x237)](_0x199912(0x260),_0x58c3d1);});},0x1388);}function _0x113b(_0x28c347,_0x210887){const _0x48bea2=_0x48be();return _0x113b=function(_0x113bb2,_0x1145dd){_0x113bb2=_0x113bb2-0x1eb;let _0x1faa73=_0x48bea2[_0x113bb2];return _0x1faa73;},_0x113b(_0x28c347,_0x210887);}const palabrasProhibidas=[_0x320b50(0x212),_0x3c2a99(0x26c),_0x3c2a99(0x281),_0x3c2a99(0x196),_0x320b50(0x294),_0x3c2a99(0x268),_0x320b50(0x22d),_0x4511a2(0x358),_0x320b50(0x1e9),_0x3c2a99(0x1c2),_0x3c2a99(0x202),_0x3c2a99(0x188),_0x3c2a99(0x27c),_0x320b50(0x27c),_0x320b50(0x164),_0x3c2a99(0x289),_0x320b50(0x241),_0x3c2a99(0x2c8),_0x3c2a99(0x2a8),_0x3c2a99(0x1ec),'verga',_0x320b50(0x219),_0x3c2a99(0x20b),_0x320b50(0x2b8),_0x3c2a99(0x295),_0x3c2a99(0x223),_0x3c2a99(0x1d9),_0x3c2a99(0x249),_0x3c2a99(0x1d5),_0x3c2a99(0x291),_0x3c2a99(0x23f),_0x3c2a99(0x1bc),_0x3c2a99(0x2cb),_0x3c2a99(0x270),_0x3c2a99(0x1b8),_0x3c2a99(0x286),_0x3c2a99(0x2c0),_0x320b50(0x2bc),_0x320b50(0x1f3),_0x320b50(0x18c),_0x3c2a99(0x2c4),_0x3c2a99(0x198),_0x3c2a99(0x29c),_0x3c2a99(0x165),_0x3c2a99(0x25a),_0x320b50(0x195),_0x3c2a99(0x296),_0x3c2a99(0x1c7),_0x320b50(0x26a),_0x3c2a99(0x290),_0x3c2a99(0x1cd),_0x3c2a99(0x288),_0x3c2a99(0x1d1),_0x320b50(0x1c0),_0x320b50(0x19d),_0x320b50(0x193),_0x320b50(0x26b),_0x3c2a99(0x197),_0x3c2a99(0x1f7),_0x3c2a99(0x233),_0x3c2a99(0x16b),_0x3c2a99(0x2b6),_0x3c2a99(0x25f),_0x4511a2(0x273),_0x3c2a99(0x1ce),_0x3c2a99(0x205),_0x320b50(0x238),_0x3c2a99(0x226),_0x4511a2(0x24b),_0x320b50(0x1c7),_0x3c2a99(0x1a6)],patronesProhibidos=[/(.)\1{4,}/g,/[A-Z]{5,}/g,/(.{1,3})\1{3,}/g,/^\s*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{3,}\s*$/g];function validarContenido(_0x29aa10){const _0x10e648=_0x4511a2,_0x4da3f8=_0x320b50,_0x40828a=_0x3c2a99;if(!_0x29aa10||typeof _0x29aa10!==_0x40828a(0x28e))return{'esValido':![],'razon':_0x40828a(0x20d)};const _0xc30269=_0x29aa10[_0x40828a(0x28a)]();if(_0xc30269[_0x40828a(0x287)]<0x2)return{'esValido':![],'razon':_0x4da3f8(0x16f)};if(_0xc30269[_0x40828a(0x287)]>0x1f4)return{'esValido':![],'razon':_0x40828a(0x1e2)};const _0x5002e2=_0xc30269[_0x40828a(0x1d8)]()[_0x10e648(0x2eb)](_0x40828a(0x24c))[_0x4da3f8(0x2a0)](/[\u0300-\u036f]/g,'')[_0x40828a(0x1ea)](/[^a-z0-9\s]/gi,'\x20')[_0x40828a(0x1ea)](/\s+/g,'\x20');for(const _0x5c8469 of palabrasProhibidas){if(_0x5002e2[_0x4da3f8(0x252)](_0x5c8469[_0x40828a(0x1d8)]()))return{'esValido':![],'razon':_0x40828a(0x168)};}for(const _0x12a05a of patronesProhibidos){if(_0x12a05a[_0x4da3f8(0x2cd)](_0xc30269))return{'esValido':![],'razon':_0x4da3f8(0x16a)};}if(_0x5002e2[_0x40828a(0x28a)]()[_0x10e648(0x229)]===0x0)return{'esValido':![],'razon':_0x4da3f8(0x21f)};const _0x5141e6=/https?:\/\/[^\s]+/gi,_0x182ef6=_0xc30269[_0x4da3f8(0x168)](_0x5141e6);if(_0x182ef6&&_0x182ef6[_0x40828a(0x287)]>0x2)return{'esValido':![],'razon':_0x40828a(0x2c2)};return{'esValido':!![],'razon':null};}function limpiarTexto(_0x2346df){const _0x2f9f64=_0x320b50,_0x48b71b=_0x3c2a99;if(!_0x2346df)return'';return _0x2346df[_0x48b71b(0x1ea)](/(.)\1{3,}/g,_0x2f9f64(0x2b9))[_0x48b71b(0x1ea)](/[A-Z]{4,}/g,_0x3a7e4c=>_0x3a7e4c[_0x48b71b(0x217)](0x0)+_0x3a7e4c[_0x48b71b(0x212)](0x1)[_0x48b71b(0x1d8)]())[_0x48b71b(0x28a)]();}function _0x48be(){const _0x39b0b3=['key','coca','tileLayer','dashboard-stock-iluminacion','fullName','isIntersecting','DOMContentLoaded','?h=M','forEach','6537328fIYcYx','🎛️','.hero-button.primary','target','scrollTop','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-','$1$1','min','Mayormente\x20despejado','charAt','emojiButton','.modules','#007bff','pinche','height','includes','🏋️‍♀️','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','53282KazxZz','</button>','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','closePanel','type','Sin\x20acceso\x20<span\x20class=\x22ml-2\x22>🔒</span>','🏋️‍♂️','application/json','NFD','messageCounter','cerdo','px)','🌶️','dashboard-presupuesto','ojalá\x20te\x20mueras','marihuana','<span>Sin\x20acceso</span>\x20<i\x20class=\x22dashboard-icon\x22>🔒</i>','dashboard-gps.html','#dc3545','indio','.form-input,\x20.form-select','dashboard-gps','clientY','\x0a\x20\x20\x20\x20\x20\x20\x20\x20/*\x20Estilos\x20para\x20el\x20sistema\x20de\x20validación\x20*/\x0a\x20\x20\x20\x20\x20\x20\x20\x20#messageInput.invalid\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-color:\x20#dc3545\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x200\x200\x200.2rem\x20rgba(220,\x2053,\x2069,\x200.25)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20#messageInput.valid\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-color:\x20#28a745\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x200\x200\x200.2rem\x20rgba(40,\x20167,\x2069,\x200.25)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.content-filter-warning\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#fff3cd;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ffeaa7;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x208px\x2012px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin:\x205px\x200;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#856404;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20display:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.message-counter\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#6c757d;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20text-align:\x20right;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin-top:\x202px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.message-counter.warning\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#dc3545;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20','fontDecrease','darkModeToggle','toLowerCase','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x20primary\x22>Explorar\x20Dashboards\x20<span>→</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x22>Conoce\x20Más\x20<span>↓</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','keypress','addedNodes','getAttribute','&longitude=','5849544voYxiw','sendButton','dashboard-ordenes-trabajo-iluminacion','px)\x20scale(1.1)','director','&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto','lastActivity','weather-desc','.hero','currentUser','esValido','formulario-2','cursor','length','ojala\x20te\x20mueras','estupido','inútil','Enviar\x20mensaje','max','11Fouhrf','px,\x20','1303278wfvVKQ','display',');\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x2050%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x20','style','_blank','252uLRUxb','Administrador','contains','imbecil','8KrCNbd','setItem','🕯️','random','href','dashboard-reclamos.html','test','.dashboard-image','Media','dashboard-bodega','ojete','dashboard-iluminacion.html','scrollTo','<button\x20class=\x22emoji-item\x22\x20onclick=\x22insertEmojiToInput(\x27','innerHTML','zoneForm','penetración','cocaina','Usuario','basura','parentNode','🕉️','🛥️','login.html','POST','El\x20mensaje\x20es\x20demasiado\x20largo\x20(máximo\x20500\x20caracteres)','maricon','dashboard-bodega.html','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','.message','true','0\x205px\x2020px\x20rgba(0,\x200,\x200,\x200.1)','cocaína','slice','load','dark-mode','author','satellite','clientX','shift','lacra','location','exitoMessage','sudaca','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20right:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#27ae60;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2015px\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x208px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x204px\x2012px\x20rgba(0,0,0,0.3);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x201000;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-family:\x20Arial,\x20sans-serif;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20300px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20word-wrap:\x20break-word;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','Tu\x20mensaje\x20tiene\x20problemas.\x20¿Quieres\x20enviarlo\x20así?\x0a\x0aTexto\x20sugerido:\x20\x22','open','parse','accessibilityPanel','mensajes','8yWMXHN','porno','pointer','🎚️','cucaracha','mousemove','594963Lndkzw','penetracion','Director','dashboard-reclamos','🗺️','hijo\x20de\x20puta','muérete','all','32BsBydm','documentElement','2-digit','match','puto','shiftKey','Tu\x20mensaje\x20tiene\x20problemas.\x20¿Quieres\x20enviarlo\x20así?\x0a\x0a\x22','dashboard-vehiculosymaquinaria.html','dashboard-iluminacion','3450644mkJJgz','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-time\x22>','head','addEventListener','🖱️','desgraciado','formulario-4.html','translate(','.welcome-message','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20width:\x20','.hero-buttons','page','0\x202px\x2010px\x20rgba(0,\x200,\x200,\x200.05)','https://wa.me/','messagesArea','disconnect','darkMode','errorMessage','5bJSczI','Debes\x20iniciar\x20sesión\x20para\x20acceder\x20al\x20foro','accessibilityBtn','.loader','username','pointerEvents','other','huevón','1aRNtSJ','appendChild','in-view','\x27)\x22>','.module','cabrón','readyState','title','role','combustible','div','Error\x20al\x20cargar\x20clima:','formulario-2.html','maricón','masturbacion','body','gringo','110KsdwkL','selectionStart','https://api.open-meteo.com/v1/forecast?latitude=','orgasmo','email','pendejo','Elementos\x20del\x20emoji\x20picker\x20no\x20encontrados','className','%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','observe','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-content\x22>','preventDefault','El\x20mensaje\x20no\x20puede\x20estar\x20vacío','map','.category-btn','no-cors','not-allowed','selectionEnd','userId','.transparency-links','remove','⛹️‍♂️','block','fontReset','street','rata','classList','gilipollas','scrollHeight','emojiGrid','El\x20mensaje\x20contiene\x20lenguaje\x20inapropiado','😮‍💨','transform','header','fontSize','🖲️','getElementById','zoneStatus','weather-temp','scroll','json','now','formulario-1.html','Actualizado:\x20','disabled-button','permissions','razon','🛢️','smooth','then','relative_humidity_2m','temperature_2m','value','Combustible','fontIncrease','⛹️‍♀️','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20height:\x20','🏍️','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-color:\x20rgba(255,\x20255,\x20255,\x20','toLocaleTimeString','filter','normalize','https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png','wind_speed_10m','heroina','Error\x20al\x20obtener\x20los\x20datos:','wetback','loading','vete\x20a\x20morir','messageInput','innerHeight','smileys','🏋️','mamón','push','173291cQZSBl','toISOString','dashboard-presupuesto.html','weather-update','Parcialmente\x20nublado','click','joder','cargandoOverlay','negro\x20de\x20mierda','mierda','name','.view-dashboard','Regular','trim','dimao_user_activities','dashboard-seguridad.html','6660066bFGidA','formulario-1','.hero-button:not(.primary)','message-counter','input','setView','createElement','72654OruEHY','getItem','Por\x20favor\x20escribe\x20un\x20mensaje','emojiSearch','📽️','escoria','🎞️','959414178','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20right:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#e74c3c;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2015px\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x208px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x204px\x2012px\x20rgba(0,0,0,0.3);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x201000;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-family:\x20Arial,\x20sans-serif;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20300px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20word-wrap:\x20break-word;\x0a\x20\x20\x20\x20\x20\x20\x20\x20','🤸‍♂️','backgroundColor','🖥️','removeLayer','El\x20mensaje\x20contiene\x20patrones\x20no\x20permitidos\x20(spam,\x20exceso\x20de\x20mayúsculas,\x20etc.)','font-medium','2392752FEddkR','cabron','onclick','module-grid','🤸‍♀️','.hero-content','innerWidth','formulario-3.html','6896142wjrRcN','voy\x20a\x20matarte','toggle','.html','parásito','🎙️','maldito','junior','es-CL','5406QSUOys','left','🗜️','add','stringify','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-author\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>','tonto','fracasado','current','pocho','2488prMjdN','pac','inutil','?h=MUA','🏎️','\x20km/h','Demasiados\x20enlaces\x20en\x20el\x20mensaje','querySelector','timestamp','toLocaleString','Chubascos','202286KrWjOg','dashboard-vehiculosymaquinaria','scrollY','maraca','#666','#999','Datos\x20no\x20disponibles','indexOf','El\x20mensaje\x20debe\x20contener\x20texto\x20válido','join','1105832vNHpHP','catch','5162535CTbVqs','Enter','10610020ZlLYrD','disabled','243lyOdtU','mamon','dato_ms','idiota','0px\x200px\x20-100px\x200px','.leaflet-control-attribution','boxShadow','permission','focus','weather-humidity','puta','Mensaje\x20enviado\x20correctamente\x20✓','%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20left:\x20','perdedor','murete','Lluvia\x20ligera','substring'];_0x48be=function(){return _0x39b0b3;};return _0x48be();}function sendMessageWithValidation(){const _0x34ef09=_0x4511a2,_0x126a77=_0x320b50,_0x7898d7=_0x3c2a99,_0x57ae6b=document[_0x7898d7(0x23e)](_0x7898d7(0x25e)),_0x2f38b6=_0x57ae6b[_0x126a77(0x15e)][_0x7898d7(0x28a)]();if(!_0x2f38b6){mostrarError(_0x34ef09(0x312));return;}const _0x124e4a=validarContenido(_0x2f38b6);if(!_0x124e4a[_0x126a77(0x1e7)]){mostrarError(_0x124e4a[_0x7898d7(0x1d0)]);const _0x154546=limpiarTexto(_0x2f38b6);_0x154546&&_0x154546!==_0x2f38b6&&(confirm(_0x7898d7(0x25c)+_0x154546+'\x22')&&(_0x57ae6b[_0x126a77(0x15e)]=_0x154546));return;}const _0x49a0f4={'id':Date[_0x126a77(0x1f2)](),'author':currentUser[_0x126a77(0x1af)],'role':currentUser[_0x126a77(0x239)],'content':_0x2f38b6,'timestamp':new Date()[_0x7898d7(0x27f)](),'userId':currentUser[_0x126a77(0x2bb)]||currentUser[_0x126a77(0x271)]};mensaje=[Date[_0x7898d7(0x1b9)](),currentUser[_0x34ef09(0x36a)],currentUser[_0x7898d7(0x1d3)],_0x2f38b6,new Date()[_0x7898d7(0x27f)](),currentUser[_0x7898d7(0x203)]||currentUser[_0x126a77(0x271)]],enviarDatos(_0x7898d7(0x28c),0x0,mensaje,0x1),messages[_0x7898d7(0x176)](_0x49a0f4),saveMessages(),_0x57ae6b[_0x7898d7(0x248)]='',_0x57ae6b[_0x126a77(0x1e3)][_0x7898d7(0x1ba)]=_0x7898d7(0x1a7),renderMessages(),scrollToBottom();}function mostrarError(_0x594492){const _0x5108f8=_0x4511a2,_0x58b85d=_0x320b50,_0xc62fd5=_0x3c2a99;let _0x5bc2ed=document[_0xc62fd5(0x23e)](_0xc62fd5(0x271));!_0x5bc2ed&&(_0x5bc2ed=document[_0xc62fd5(0x200)](_0xc62fd5(0x274)),_0x5bc2ed['id']=_0x5108f8(0x294),_0x5bc2ed[_0x58b85d(0x1e3)][_0xc62fd5(0x24b)]=_0xc62fd5(0x225),document[_0xc62fd5(0x1c5)][_0xc62fd5(0x2c3)](_0x5bc2ed)),_0x5bc2ed[_0xc62fd5(0x275)]=_0x594492,_0x5bc2ed[_0x5108f8(0x234)][_0xc62fd5(0x262)]=_0x58b85d(0x1ed),setTimeout(()=>{const _0x2bf338=_0xc62fd5;_0x5bc2ed[_0x2bf338(0x1f6)][_0x2bf338(0x262)]=_0x2bf338(0x1cc);},0xfa0);}function mostrarExito(_0x2f2b78){const _0x4c4662=_0x320b50,_0xe09db=_0x3c2a99;let _0x34e42c=document[_0xe09db(0x23e)](_0xe09db(0x227));!_0x34e42c&&(_0x34e42c=document[_0xe09db(0x200)](_0xe09db(0x274)),_0x34e42c['id']=_0xe09db(0x227),_0x34e42c[_0x4c4662(0x1e3)][_0xe09db(0x24b)]=_0xe09db(0x1c1),document[_0xe09db(0x1c5)][_0xe09db(0x2c3)](_0x34e42c)),_0x34e42c[_0xe09db(0x275)]=_0x2f2b78,_0x34e42c[_0xe09db(0x1f6)][_0xe09db(0x262)]=_0xe09db(0x2a3),setTimeout(()=>{const _0x29d550=_0x4c4662,_0xa96be0=_0xe09db;_0x34e42c[_0x29d550(0x1e3)][_0x29d550(0x1b7)]=_0xa96be0(0x1cc);},0x7d0);}function validarTextoEnTiempoReal(){const _0x280859=_0x3c2a99,_0xada846=document[_0x280859(0x23e)](_0x280859(0x25e)),_0x307402=document[_0x280859(0x23e)](_0x280859(0x299));if(!_0xada846||!_0x307402)return;_0xada846[_0x280859(0x1e3)](_0x280859(0x28d),function(){const _0x45c594=_0x113b,_0x5eefb0=_0x204b,_0x1b9e42=_0x280859,_0x457061=this[_0x45c594(0x2e2)][_0x1b9e42(0x28a)](),_0x4f6552=validarContenido(_0x457061);_0x4f6552[_0x1b9e42(0x25b)]?(_0x307402[_0x1b9e42(0x1f6)][_0x1b9e42(0x1bf)]=_0x1b9e42(0x2ae),_0x307402[_0x5eefb0(0x1e3)][_0x1b9e42(0x208)]=_0x45c594(0x26e),_0x307402[_0x1b9e42(0x17c)]=![]):(_0x307402[_0x5eefb0(0x1e3)][_0x1b9e42(0x1bf)]=_0x5eefb0(0x186),_0x307402[_0x1b9e42(0x1f6)][_0x1b9e42(0x208)]=_0x1b9e42(0x20a),_0x307402[_0x5eefb0(0x2ca)]=_0x457061[_0x1b9e42(0x287)]>0x0);});} 
+</script>
+</body>
+</html>
