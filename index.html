@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Arica | mejor ciudad</title>
+    <link rel="stylesheet" href="styles.css">
+   <script src="comando_general.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+</head>
+
+<body>
+    <script src="auth.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<div class="loader">
+    <div class="loader-animation">
+        <div class="loader-circle"></div>
+        <img src="images.png" alt="Logo" class="loader-logo">
+    </div>
+</div>
+    <header>
+        <!-- Transparency links as collapsible menu -->
+        <div class="transparency-container">
+        </div>
+</div>
+</header>
+ 
+                <div class="top-header">
+                    <div class="logo">
+                        <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                        <div class="logo-text">
+                            <h1>ARICA</h1>
+                            <span>MUNICIPALIDAD | mejor ciudad</span>
+                        </div>
+                    </div>
+                </div>
+    
+  
+
+    <!-- Main navigation -->
+    <nav>
+        <ul class="main-menu">
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="dashboard-gps.html">GPS DIMAO</a></li>
+            <li><a href="dashboard-presupuesto.html">PRESUPUESTO ANUAL</a></li>
+            <li><a href="dashboard-abastecimiento.html">ABASTECIMIENTO</a></li>
+            <li><a href="dashboard-bodega.html">BODEGA</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero section -->
+    <section class="hero">
+        <img src="fondo.jpg" alt="JUNIOR BARRERA" class="hero-image">
+        <div class="hero-content">
+            <h2>DIMAO</h2>
+            <p>"Mejoremos Juntos"</p>
+        </div>
+    </section>
+   
+    <!-- Regular modules -->
+   <!-- Sección de formularios modernizada -->
+<section class="modules">
+    <h2 class="fade-in">Sistema Integral de Gestión DIMAO</h2>
+    <div class="module-grid">
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Gestión de Presupuesto Anual de Compra</h3>
+            <p>Este formulario permite planificar, registrar y gestionar el Presupuesto Anual de Compra (PAC) de materiales y servicios necesarios para el funcionamiento de DIMAO. Facilita la proyección de necesidades, el control del gasto y la programación de adquisiciones, asegurando una correcta administración de los recursos financieros durante el año.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario')">
+                Acceder <span class="ml-2">→</span>
+                
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">🚗</div>
+            <h3>Sistema de Gestión de Mantenimiento de Vehículos y Maquinaria </h3>
+            <p>Este formulario está diseñado para registrar solicitudes de mantenimiento preventivo y correctivo de vehículos y maquinaria pertenecientes a la institución. Por favor, asegúrese de llenar todos los campos requeridos con información clara y precisa para facilitar una atención eficiente y oportuna por parte de la Oficina de Mantenimiento.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario2')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">💡</div>
+            <h3>Sistema de Control y Mantenimiento de Iluminación Pública</h3>
+            <p>Este formulario está destinado a registrar, actualizar y gestionar información relacionada con las solicitudes, reportes, y gestiones internas de la Oficina de Iluminación Pública. Permite sistematizar datos sobre mantenimiento, instalación, stock de materiales, y atención de requerimientos ciudadanos, contribuyendo a una administración más eficiente y organizada de los recursos de iluminación urbana.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario3')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Reclamos</h3>
+            <p>Plataforma para reportar y dar seguimiento a problemas relacionados con iluminación pública, áreas verdes y espacios públicos en la comunidad.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario4')">
+                Acceder <span class="ml-2">→</span> 
+            </button>
+        </div>
+
+    </div>
+</section>
+<div class="container">
+     <div class="container">
+        <!-- Header del Foro -->
+        <div class="forum-header">
+            <h1 class="forum-title">🌐 DIMAO Conecta</h1>
+            <p class="forum-subtitle">Foro de Comunicación Interdepartamental</p>
+        </div>
+
+        <!-- Contenedor del Chat -->
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <div class="welcome-message">
+                    <strong>¡Bienvenido al foro DIMAO Conecta!</strong><br>
+                    Este es un espacio para la comunicación entre todos los departamentos.
+                </div>
+            </div>
+            
+            <div class="input-area">
+                  <div class="message-type-selector">
+                    <div class="type-button active" onclick="setMessageType('general')">
+                        💬 General
+                    </div>
+                    <div class="type-button" onclick="setMessageType('direct')">
+                        📧 Directo
+                    </div>
+                </div>
+            
+                <div class="recipient-selector" id="recipientSelector">
+                    <select class="recipient-select" id="recipientSelect">
+                        <option value="">Seleccionar destinatario...</option>
+                    </select>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Escribe tu mensaje aquí..."
+                        rows="1"></textarea>
+                           <!-- AGREGAR ESTE BOTÓN DE EMOJIS -->
+    <button id="emojiButton" class="emoji-button" title="Seleccionar emoji">
+👋
+    </button>
+                    <button id="sendButton" class="send-button">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+<!-- AGREGAR ESTE PANEL DE EMOJIS DESPUÉS DEL input-container -->
+<div id="emojiPicker" class="emoji-picker">
+    <div class="emoji-header">Selecciona un emoji</div>
+    <div class="emoji-search">
+        <input type="text" id="emojiSearch" placeholder="Buscar emoji...">
+    </div>
+    <div class="emoji-categories">
+        <button class="category-btn active" data-category="smileys">😀</button>
+        <button class="category-btn" data-category="people">👋</button>
+        <button class="category-btn" data-category="nature">🐶</button>
+        <button class="category-btn" data-category="food">🍎</button>
+        <button class="category-btn" data-category="activities">⚽</button>
+        <button class="category-btn" data-category="travel">🚗</button>
+        <button class="category-btn" data-category="objects">⌚</button>
+        <button class="category-btn" data-category="symbols">❤️</button>
+    </div>
+    <div id="emojiGrid" class="emoji-grid">
+        <!-- Los emojis se cargan aquí dinámicamente -->
+    </div>
+</div>
+        <!-- Usuarios en línea -->
+        <div class="online-users">
+            <h3>
+                <span class="online-indicator"></span>
+                Usuarios Conectados
+            </h3>
+            <div class="user-list" id="userList">
+                <!-- Los usuarios se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sección DIMAO 360° Modernizada -->
+<section class="modules">
+    <h2 class="fade-in">DIMAO 360°</h2>
+    <h4>Supervisión integral operativa, táctica y estratégica en tiempo real</h4>
+ <div class="widgets-grid">
+        <!-- Widget Clima -->
+        <div class="widget weather">
+            <div class="widget-icon">🌤️</div>
+            <h3 class="widget-title">Clima en Arica</h3>
+            <div class="widget-data" id="weather-temp">--°C</div>
+            <div class="widget-details">
+                <div id="weather-desc">Cargando...</div>
+                <div>💧 <span id="weather-humidity">--%</span> | 🌬️ <span id="weather-wind">-- km/h</span></div>
+            </div>
+            <div class="update-time" id="weather-update">Actualizado: --</div>
+        </div>
+    </div>
+    <div class="container">
+
+            <div class="control-panel">
+                <div class="controls-row">
+                    <button class="control-btn" onclick="centerMap()">
+                        📍 Centrar Mapa
+                    </button>
+                    <button class="control-btn" onclick="toggleSatellite()">
+                        🛰️ Vista Satélite
+                    </button>
+                </div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+<div class="module-grid">
+  
+      <div class="module fade-in">
+        <div class="module-icon">📊</div>
+        <h3>Centro de Mando DIMAO</h3>
+        <p>Panel estratégico que consolida los indicadores clave de gestión de todas las áreas de DIMAO: iluminación, vehículos, áreas verdes, aseo, reclamos ciudadanos y PAC. Facilita la toma de decisiones rápidas y efectivas mediante visualización de datos en tiempo real y proyecciones inteligentes.</p>
+        <button class="module-button" onclick="redirectToDashboard('centroMando')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+  
+      <div class="module fade-in">
+        <div class="module-icon">🚨</div>
+        <h3>Panel de Alertas Críticas</h3>
+        <p>Herramienta de monitoreo proactivo que detecta, clasifica y notifica situaciones urgentes en los servicios municipales. Desde fallas en iluminación hasta vehículos fuera de servicio, el sistema prioriza incidentes y ayuda a coordinar una respuesta rápida con las unidades responsables.</p>
+        <button class="module-button" onclick="redirectToDashboard('alertasCriticas')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+    </div>
+
+</section>
+
+<section class="dashboard-modules">
+    <h2 class="animated-title">Visualización de Módulos</h2>
+    <p class="animated-subtitle">Accede a nuestros paneles de datos para conocer el funcionamiento de DIMAO</p>
+
+    <!-- Contenedor principal -->
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; margin-top: 40px;">
+
+        <!-- Título Asesoría Técnica -->
+        <h2>Asesoría Técnica</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff0000, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff, #ff00ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- GPS DIMAO -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('GPS.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">GPS</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">GPS DIMAO</h3>
+                    <p>Este módulo permite el seguimiento en tiempo real de los vehículos recolectores, analizando rutas, tiempos de operación y eficiencia del servicio para optimizar la gestión.</p>
+                    <a href="dashboard-gps.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cuentas de Presupuesto Anual -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('presupuesto.webp')">
+                    <div class="image-overlay">
+                        <span class="card-badge">PAC & F1</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Cuentas de Presupuesto Anual</h3>
+                    <p>Este módulo permite el seguimiento y control del presupuesto anual, analizando ingresos, egresos y su distribución para una planificación eficiente de los recursos.</p>
+                    <a href="dashboard-presupuesto.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Abastecimiento de Combustible -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('abastecimiento.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Combustible</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Abastecimiento de Combustible</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-abastecimiento.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <!-- Cuentas de toner y tintas  -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('blog-tinta-toner.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Toner & Tintas</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Inventario de Toner & Tintas </h3>
+                    <p>Este módulo permite visualizar y gestionar en tiempo real el stock de tóner y tintas disponibles. Ofrece un registro detallado y actualizado que facilita el control eficiente de insumos.</p>
+                    <a href="toner&tintas.html" class="view-dashboard">
+                        <span>Ver Inventario</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Oficina de Mantenimiento de Vehículos y Maquinaria -->
+        <h2 style="margin-top: 60px;">Oficina de Mantenimiento de Vehículos y Maquinaria</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Stock de Bodega Mecánica -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bodega.avif')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock de Bodega Mecánica</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock de Bodega Mecánica</h3>
+                    <p>Este módulo permite el control de inventario en la bodega mecánica, facilitando la gestión de repuestos, insumos y herramientas para un mantenimiento eficiente.</p>
+                    <a href="dashboard-bodega.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vehículos y Maquinaria -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('vehiculo y maquinaria .jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Vehículos y Maquinaria</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Vehículos y Maquinaria</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-vehiculosymaquinaria.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Iluminación Pública -->
+        <h2 style="margin-top: 60px;">Iluminación Pública</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #00c3ff, #ffff1c, #ff3c00); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Iluminación Pública -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('CEMAFORO.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Iluminación Pública</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Iluminación Pública</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Órdenes de Trabajo de Iluminación -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bombillas-electricas-aisladas_23-2151045845')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Órdenes de Trabajo</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Órdenes de Trabajo de Iluminación</h3>
+                    <p>Este módulo proporciona información clave sobre las órdenes de trabajo de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, estado de ejecución y ubicación geográfica de las solicitudes. Permite visualizar las intervenciones mediante mapas de calor, identificar patrones de fallas, optimizar la planificación de trabajos y mejorar la eficiencia operativa.</p>
+                    <a href="dashboard-ordenes-trabajo-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stock Bodega de Iluminación -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('iluminacion-en-bodegas.1.2.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock Bodega Iluminación</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock Bodega de Iluminación</h3>
+                    <p>El módulo "Stock bodega de iluminación" permite gestionar y visualizar en tiempo real la cantidad, tipo y estado de los productos de iluminación almacenados en la bodega. Incluye el control de entradas, salidas, stock disponible, y alertas de reposición para asegurar una adecuada disponibilidad de insumos como ampolletas, tubos, reflectores, cables, entre otros artículos relacionados.</p>
+                    <a href="dashboard-stock-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Reclamos -->
+        <h2 style="margin-top: 60px;">Reclamos</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #f00000, #f4d03f, #16a085); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <!-- Reclamos Ciudadanos -->
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('reclamociudadano.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Reclamos Ciudadanos</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Reclamos Ciudadanos</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-reclamos.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Sección Biblioteca Digital (agregar después de la sección de módulos) -->
+<section class="modules">
+    <h2 class="fade-in">Biblioteca Digital DIMAO</h2>
+    <p class="section-subtitle">Todo el conocimiento institucional organizado y accesible en un solo lugar (EN CONSTRUCCION)</p>
+    
+    <div class="library-container">
+        <!-- Tarjeta de búsqueda -->
+        <div class="library-card search-card">
+            <div class="search-box">
+                <input type="text" id="docSearch" placeholder="Buscar manuales, procedimientos...">
+                <button class="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-filters">
+                <select id="categoryFilter">
+                    <option value="">Todas las categorías</option>
+                    <option value="iluminacion">Iluminación Pública</option>
+                    <option value="vehiculos">Vehículos y Maquinaria</option>
+                    <option value="areas-verdes">Áreas Verdes</option>
+                    <option value="aseo">Aseo y Ornato</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="">Todos los tipos</option>
+                    <option value="manual">Manuales</option>
+                    <option value="procedimiento">Procedimientos</option>
+                    <option value="formato">Formatos</option>
+                    <option value="video">Videotutoriales</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Tarjetas de categorías principales -->
+        <div class="library-card category-card" data-category="iluminacion" onclick="showCategory('iluminacion')">
+            <div class="category-icon">💡</div>
+            <h3>Iluminación Pública</h3>
+            <p>Manuales técnicos, diagramas eléctricos y protocolos de mantenimiento</p>
+            <span class="doc-count">48 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="vehiculos" onclick="showCategory('vehiculos')">
+            <div class="category-icon">🚛</div>
+            <h3>Vehículos y Maquinaria</h3>
+            <p>Fichas técnicas, checklist de revisión y manuales de taller</p>
+            <span class="doc-count">32 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="areas-verdes" onclick="showCategory('areas-verdes')">
+            <div class="category-icon">🌳</div>
+            <h3>Áreas Verdes</h3>
+            <p>Guías de poda, especies recomendadas y sistemas de riego</p>
+            <span class="doc-count">25 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="aseo" onclick="showCategory('aseo')">
+            <div class="category-icon">🧹</div>
+            <h3>Aseo y Ornato</h3>
+            <p>Protocolos de limpieza, rutas de recolección y manejo de residuos</p>
+            <span class="doc-count">41 documentos</span>
+        </div>
+
+        <!-- Tarjeta de documentos recientes -->
+        <div class="library-card recent-docs">
+            <h3>📌 Documentos Recientes</h3>
+            <ul class="documents-list">
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📄</span>
+                        <span class="doc-title">Protocolo de mantenimiento preventivo - Camiones recolectores</span>
+                        <span class="doc-date">Actualizado: 15/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">🎥</span>
+                        <span class="doc-title">Videotutorial: Reparación básica de luminarias LED</span>
+                        <span class="doc-date">Publicado: 10/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📝</span>
+                        <span class="doc-title">Formulario F-007: Solicitud de materiales en bodega</span>
+                        <span class="doc-date">Versión: 2.1 (2024)</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="view-all-btn">Ver todos los documentos →</button>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para visualización de documentos -->
+<div id="docModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+            <h2 id="modalTitle">Manual de Procedimientos</h2>
+            <div class="doc-meta">
+                <span class="doc-category">Iluminación Pública</span>
+                <span class="doc-version">Versión 3.2</span>
+                <span class="doc-date">Actualizado: 05/06/2024</span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <iframe id="docViewer" src="" frameborder="0"></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="download-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Descargar PDF
+            </button>
+            <div class="doc-actions">
+                <button class="action-btn" title="Imprimir">🖨️</button>
+                <button class="action-btn" title="Compartir">📤</button>
+                <button class="action-btn" title="Marcar como favorito">⭐</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Municipalidad de Arica</h3>
+            <p>Renato Rocca , Arica</p>
+            <p>Anexo: 6959</p>
+            <p>Email: roberto.mamani@municipalidadarica.cl</p>
+            <div class="social-icons">
+                <a href="#">📘</a>
+                <a href="#">📱</a>
+                <a href="#">🐦</a>
+                <a href="#">📸</a>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Colaboración Interdepartamental</h3>
+            <p style="line-height: 1.6;">
+                Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+            </p>
+        </div>
+        <div class="footer-column licitaciones">
+            <h3>Licitaciones</h3>
+            <ul class="licitaciones-list">
+                <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+    </div>
+</footer>
+
+
+    <!-- Assistance button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+ <!-- Botón flotante de accesibilidad -->
+<div class="accessibility-floating-btn" id="accessibilityBtn" title="Accesibilidad">
+    <span aria-hidden="true">♿</span>
+</div>
+
+<!-- Panel de accesibilidad -->
+<div class="accessibility-panel" id="accessibilityPanel">
+    <div class="accessibility-header">
+        <h3>Accesibilidad</h3>
+        <button class="close-panel" id="closePanel">&times;</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <button id="darkModeToggle">🌙 Modo oscuro</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <label>Tamaño del texto:</label>
+        <div class="font-controls">
+            <button id="fontDecrease" title="Texto más pequeño">A-</button>
+            <button id="fontReset" title="Tamaño normal">A</button>
+            <button id="fontIncrease" title="Texto más grande">A+</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const _0x1a6f7f=_0xc046;(function(_0xb3420c,_0x406225){const _0x28f64b=_0xc046,_0x2ef2cd=_0xb3420c();while(!![]){try{const _0x2fb1bf=-parseInt(_0x28f64b(0x2b1))/0x1*(parseInt(_0x28f64b(0x230))/0x2)+parseInt(_0x28f64b(0x28b))/0x3+parseInt(_0x28f64b(0x2fe))/0x4*(-parseInt(_0x28f64b(0x298))/0x5)+parseInt(_0x28f64b(0x348))/0x6+-parseInt(_0x28f64b(0x2ad))/0x7+-parseInt(_0x28f64b(0x2d8))/0x8+parseInt(_0x28f64b(0x324))/0x9;if(_0x2fb1bf===_0x406225)break;else _0x2ef2cd['push'](_0x2ef2cd['shift']());}catch(_0x4bc94c){_0x2ef2cd['push'](_0x2ef2cd['shift']());}}}(_0xe5a8,0x3473e));const _0x511643=_0xc62c;(function(_0x1bb989,_0x4a5353){const _0x32ac22=_0xc046,_0xd9de2f=_0xc62c,_0x216b28=_0x1bb989();while(!![]){try{const _0x3b279a=parseInt(_0xd9de2f(0x175))/0x1+-parseInt(_0xd9de2f(0x139))/0x2*(parseInt(_0xd9de2f(0x13f))/0x3)+-parseInt(_0xd9de2f(0x117))/0x4+parseInt(_0xd9de2f(0x10b))/0x5+parseInt(_0xd9de2f(0x1a5))/0x6*(parseInt(_0xd9de2f(0x16d))/0x7)+-parseInt(_0xd9de2f(0x92))/0x8+-parseInt(_0xd9de2f(0xc6))/0x9*(-parseInt(_0xd9de2f(0x111))/0xa);if(_0x3b279a===_0x4a5353)break;else _0x216b28['push'](_0x216b28[_0x32ac22(0x2d5)]());}catch(_0xa2315d){_0x216b28[_0x32ac22(0x297)](_0x216b28[_0x32ac22(0x2d5)]());}}}(_0xd0c3,0xc41d2));const accessibilityBtn=document[_0x1a6f7f(0x20b)]('accessibilityBtn'),accessibilityPanel=document[_0x1a6f7f(0x20b)]('accessibilityPanel'),closePanel=document[_0x1a6f7f(0x20b)](_0x511643(0x199));accessibilityBtn[_0x1a6f7f(0x256)](_0x511643(0xe8),()=>{const _0xdf6e36=_0x1a6f7f,_0x36400e=_0x511643;accessibilityPanel[_0x36400e(0x1a1)][_0x36400e(0x9c)]=accessibilityPanel[_0x36400e(0x1a1)][_0x36400e(0x9c)]===_0x36400e(0x89)?_0x36400e(0x156):_0xdf6e36(0x33d);}),closePanel[_0x511643(0x1c1)](_0x511643(0xe8),()=>{const _0x47b5d8=_0x1a6f7f,_0x4ad45c=_0x511643;accessibilityPanel[_0x4ad45c(0x1a1)][_0x47b5d8(0x221)]='none';});const darkModeToggle=document[_0x1a6f7f(0x20b)](_0x511643(0x1ad));darkModeToggle[_0x511643(0x1c1)](_0x511643(0xe8),()=>{const _0x4ed49b=_0x1a6f7f,_0x588a0d=_0x511643;document[_0x588a0d(0x164)]['classList'][_0x588a0d(0x1be)]('dark-mode'),localStorage[_0x588a0d(0x198)](_0x588a0d(0x1dd),document[_0x588a0d(0x164)][_0x4ed49b(0x22b)][_0x4ed49b(0x2c3)](_0x588a0d(0x19a))),darkModeToggle[_0x588a0d(0xdc)]=document[_0x588a0d(0x164)][_0x4ed49b(0x22b)][_0x4ed49b(0x2c3)](_0x588a0d(0x19a))?_0x588a0d(0xaf):_0x4ed49b(0x35a);}),document[_0x511643(0x19d)](_0x511643(0x1db))[_0x511643(0x1c1)](_0x511643(0xe8),()=>changeFontSize(0x1)),document[_0x511643(0x19d)](_0x1a6f7f(0x240))[_0x511643(0x1c1)](_0x511643(0xe8),()=>changeFontSize(0x0)),document[_0x511643(0x19d)](_0x511643(0x1cc))[_0x1a6f7f(0x256)](_0x1a6f7f(0x201),()=>changeFontSize(-0x1));function changeFontSize(_0xdbb002){const _0x482fde=_0x1a6f7f,_0x2b881c=_0x511643,_0x51e252=[_0x2b881c(0x113),_0x2b881c(0xb8),_0x2b881c(0x1eb)];let _0x324b88=localStorage[_0x482fde(0x340)](_0x2b881c(0x1cf))||_0x2b881c(0xb8),_0x49632e=_0x51e252[_0x2b881c(0x197)](_0x324b88);if(_0xdbb002===0x1&&_0x49632e<_0x51e252[_0x482fde(0x34a)]-0x1)_0x49632e++;if(_0xdbb002===-0x1&&_0x49632e>0x0)_0x49632e--;if(_0xdbb002===0x0)_0x49632e=0x1;document[_0x2b881c(0x164)][_0x482fde(0x22b)][_0x2b881c(0x11a)](..._0x51e252),document[_0x2b881c(0x164)][_0x2b881c(0x15d)][_0x2b881c(0x120)](_0x51e252[_0x49632e]),localStorage[_0x2b881c(0x198)](_0x2b881c(0x1cf),_0x51e252[_0x49632e]);}function loadPreferences(){const _0x8be73f=_0x1a6f7f,_0xdc798c=_0x511643;localStorage[_0xdc798c(0x16c)](_0x8be73f(0x277))===_0x8be73f(0x289)&&(document[_0xdc798c(0x164)][_0x8be73f(0x22b)][_0xdc798c(0x120)](_0xdc798c(0x19a)),darkModeToggle[_0xdc798c(0xdc)]=_0x8be73f(0x275));const _0xff16b4=localStorage[_0xdc798c(0x16c)](_0xdc798c(0x1cf));_0xff16b4&&document[_0x8be73f(0x215)][_0xdc798c(0x15d)][_0xdc798c(0x120)](_0xff16b4);}document['addEventListener'](_0x511643(0x145),loadPreferences);const ARICA_COORDS=[-18.4746,-70.2979];function getCurrentTime(){const _0x20c67e=_0x1a6f7f,_0x4817ac=_0x511643;return new Date()[_0x20c67e(0x1f7)](_0x4817ac(0x1b9),{'hour':_0x4817ac(0x1b3),'minute':_0x4817ac(0x1b3)});}async function updateWeather(){const _0x4f6659=_0x1a6f7f,_0x42dd94=_0x511643;try{const _0x594fbd=await fetch(_0x42dd94(0x19f)+ARICA_COORDS[0x0]+_0x4f6659(0x293)+ARICA_COORDS[0x1]+_0x42dd94(0x1bf)),_0x33e719=await _0x594fbd[_0x4f6659(0x26c)]();document[_0x42dd94(0x19d)](_0x4f6659(0x285))[_0x42dd94(0xdc)]=_0x33e719[_0x42dd94(0x17b)][_0x42dd94(0x141)]+'°C',document[_0x42dd94(0x19d)](_0x42dd94(0x160))[_0x4f6659(0x22a)]=_0x33e719['current'][_0x42dd94(0xc4)]+'%',document[_0x4f6659(0x20b)](_0x42dd94(0x110))[_0x42dd94(0xdc)]=_0x33e719[_0x4f6659(0x27b)][_0x42dd94(0xd4)]+_0x42dd94(0xfb),document[_0x42dd94(0x19d)]('weather-desc')[_0x4f6659(0x22a)]=getWeatherDescription(_0x33e719[_0x42dd94(0x17b)][_0x42dd94(0x167)]),document[_0x4f6659(0x20b)](_0x42dd94(0x14c))[_0x42dd94(0xdc)]=_0x42dd94(0x1bc)+getCurrentTime();}catch(_0x390f6f){console[_0x42dd94(0x7d)](_0x42dd94(0x1a2),_0x390f6f),document[_0x42dd94(0x19d)](_0x42dd94(0x12f))[_0x42dd94(0xdc)]=_0x4f6659(0x2a7);}}function _0xc62c(_0xdbb59d,_0xdb9411){const _0x3f9078=_0xd0c3();return _0xc62c=function(_0x46d4ea,_0x180467){_0x46d4ea=_0x46d4ea-0x72;let _0x3ada52=_0x3f9078[_0x46d4ea];return _0x3ada52;},_0xc62c(_0xdbb59d,_0xdb9411);}function getWeatherDescription(_0x32d6e2){const _0xcfec79=_0x511643,_0x5980d8={0x0:_0xcfec79(0xaa),0x1:_0xcfec79(0x189),0x2:_0xcfec79(0x1b8),0x3:_0xcfec79(0x18b),0x2d:'Niebla',0x3d:_0xcfec79(0x9f),0x50:_0xcfec79(0x1e8)};return _0x5980d8[_0x32d6e2]||_0xcfec79(0xaa);}document[_0x511643(0x1c1)](_0x511643(0x145),()=>{updateWeather(),updateAirQuality(),updateAlerts(),updateTraffic(),setInterval(updateWeather,0x493e0),setInterval(updateAirQuality,0x493e0),setInterval(updateAlerts,0x493e0),setInterval(updateTraffic,0x493e0);});let map,showLighting=!![],currentBaseLayer=_0x511643(0x172),currentStatusFilter=_0x1a6f7f(0x353),currentPriorityFilter=_0x511643(0x1da),assignments=[],satelliteTileLayer,streetTileLayer;function initMap(){const _0x563187=_0x1a6f7f,_0x41384b=_0x511643;map=L[_0x41384b(0x9b)](_0x41384b(0x9b),{'attributionControl':![]})[_0x563187(0x362)]([-18.4746,-70.3045],0xd),setTimeout(removeLeafletAttribution,0x32),streetTileLayer=L[_0x41384b(0x1e0)](_0x41384b(0x1d8),{'attribution':''}),satelliteTileLayer=L[_0x41384b(0x1e0)](_0x41384b(0x82),{'attribution':''}),streetTileLayer[_0x41384b(0x114)](map),loadRecyclingPoints(),loadMunicipalPoints(),loadLightingZones(),updateZoneSelects(),updateStats(),setupFilters();}function removeLeafletAttribution(){const _0x25926f=_0x1a6f7f,_0x301620=_0x511643,_0x1247fc=document[_0x301620(0x97)](_0x25926f(0x28e));_0x1247fc['forEach'](_0x15dce9=>{const _0x2f82f8=_0x301620;_0x15dce9[_0x2f82f8(0x11a)]();});}function centerMap(){const _0x45ad55=_0x511643;map[_0x45ad55(0x108)]([-18.4746,-70.3045],0xd);}function toggleSatellite(){const _0x589301=_0x1a6f7f,_0x3932c3=_0x511643;currentBaseLayer===_0x3932c3(0x172)?(map[_0x3932c3(0x16e)](streetTileLayer),map[_0x589301(0x21a)](satelliteTileLayer),currentBaseLayer=_0x3932c3(0x90)):(map[_0x3932c3(0x16e)](satelliteTileLayer),map[_0x589301(0x21a)](streetTileLayer),currentBaseLayer=_0x3932c3(0x172)),removeLeafletAttribution();}function showZoneForm(){const _0x3f2417=_0x1a6f7f,_0x19ab94=_0x511643;document[_0x19ab94(0x19d)](_0x19ab94(0xb7))[_0x19ab94(0x1a1)][_0x3f2417(0x221)]=_0x19ab94(0x89),document[_0x3f2417(0x248)](_0x19ab94(0x187))[_0x19ab94(0xe7)](_0x42f5a3=>{const _0x3cfd47=_0x19ab94;_0x42f5a3[_0x3cfd47(0x7a)]=_0x42f5a3[_0x3cfd47(0x178)]!==_0x3cfd47(0x95)?'':'';}),document[_0x19ab94(0x19d)](_0x19ab94(0x193))[_0x19ab94(0x7a)]=_0x19ab94(0x77),document[_0x19ab94(0x19d)](_0x19ab94(0xe5))[_0x3f2417(0x317)]=_0x19ab94(0x1d6);}document[_0x511643(0xa8)]===_0x1a6f7f(0x2ff)?document['addEventListener'](_0x511643(0x145),initMap):initMap();function redirectToDashboard(_0x348ede){const _0x55357a=_0x1a6f7f,_0x1b788c=_0x511643,_0x1f111d=JSON[_0x1b788c(0x1d7)](localStorage[_0x55357a(0x340)](_0x1b788c(0xb4)));if(!_0x1f111d){window[_0x55357a(0x2da)][_0x1b788c(0xc9)]=_0x1b788c(0x170);return;}const _0x5c9923={'presupuesto':{'page':_0x1b788c(0xf2),'permission':_0x1b788c(0xfd)},'obras':{'page':'dashboard-presupuesto.html','permission':_0x1b788c(0xc3)},'servicios':{'page':_0x1b788c(0x12d),'permission':_0x1b788c(0xc1)},'seguridad':{'page':_0x1b788c(0xc0),'permission':_0x1b788c(0x133)},'formulario':{'page':'formulario-1.html','permission':_0x1b788c(0x179)},'formulario2':{'page':_0x55357a(0x26a),'permission':_0x55357a(0x25c)},'formulario3':{'page':_0x1b788c(0xda),'permission':_0x1b788c(0xf7)},'formulario4':{'page':_0x1b788c(0x137),'permission':_0x55357a(0x31b)},'dashboard-gps':{'page':_0x1b788c(0xf2),'permission':'dashboard-gps'},'dashboard-presupuesto':{'page':'dashboard-presupuesto.html','permission':_0x1b788c(0xc3)},'dashboard-abastecimiento':{'page':_0x1b788c(0x12d),'permission':_0x1b788c(0xc1)},'dashboard-bodega':{'page':_0x1b788c(0x1a0),'permission':_0x1b788c(0x8a)},'dashboard-reclamos':{'page':_0x1b788c(0x88),'permission':_0x1b788c(0x14e)},'dashboard-vehiculosymaquinaria':{'page':_0x55357a(0x34e),'permission':_0x1b788c(0x192)},'dashboard-iluminacion':{'page':_0x1b788c(0x128),'permission':_0x1b788c(0xd3)},'dashboard-ordenes-trabajo-iluminacion':{'page':_0x1b788c(0x1b5),'permission':_0x1b788c(0x1b5)},'dashboard-stock-iluminacion':{'page':_0x1b788c(0x126),'permission':_0x1b788c(0x12c)}},_0x4c5a69=_0x5c9923[_0x348ede];if(!_0x4c5a69){console[_0x1b788c(0x7d)](_0x1b788c(0xe2),_0x348ede);return;}hasStrictPermission(_0x1f111d,_0x4c5a69[_0x1b788c(0x118)])?window[_0x1b788c(0x127)][_0x1b788c(0xc9)]=_0x4c5a69[_0x55357a(0x2a3)]:showAccessDeniedMessage();}function hasStrictPermission(_0x3c8dec,_0x2a7f34){const _0xb104f4=_0x1a6f7f,_0x1f3b9c=_0x511643;if(_0x3c8dec['role']===_0x1f3b9c(0x15e)||_0x3c8dec[_0x1f3b9c(0xe9)]===_0x1f3b9c(0xbe))return!![];if(_0x3c8dec[_0x1f3b9c(0x7e)]){if(_0x3c8dec[_0x1f3b9c(0xe9)]===_0x1f3b9c(0xed)&&_0x2a7f34===_0x1f3b9c(0xc1)&&_0x3c8dec[_0x1f3b9c(0x7e)][_0x1f3b9c(0xad)](_0x1f3b9c(0xd7)))return!![];if(_0x2a7f34===_0x1f3b9c(0x179)&&_0x3c8dec[_0xb104f4(0x304)][_0x1f3b9c(0xad)](_0x1f3b9c(0x12b)))return!![];if(_0x3c8dec[_0x1f3b9c(0x7e)][_0x1f3b9c(0xad)](_0x2a7f34))return!![];}return![];}function updateAccessButtonsVisibility(){const _0x2ae9dd=_0x1a6f7f,_0x4b5cce=_0x511643,_0x54d914=JSON[_0x4b5cce(0x1d7)](localStorage[_0x2ae9dd(0x340)](_0x4b5cce(0xb4)));if(!_0x54d914)return;const _0xf40a82=document[_0x4b5cce(0x97)](_0x2ae9dd(0x27c));_0xf40a82[_0x4b5cce(0xe7)](_0x322159=>{const _0x3b0ce4=_0x2ae9dd,_0x4249e2=_0x4b5cce,_0xf4b6c9=_0x322159[_0x4249e2(0x13e)](_0x4249e2(0x194));if(!_0xf4b6c9)return;const _0xee29ec=_0xf4b6c9[_0x4249e2(0x16a)](/redirectToDashboard\(['"]([^'"]+)['"]\)/);if(!_0xee29ec||!_0xee29ec[0x1])return;const _0x1e2707=_0xee29ec[0x1],_0x57c594={'presupuesto':_0x4249e2(0xfd),'obras':_0x4249e2(0xc3),'servicios':_0x4249e2(0xc1),'seguridad':_0x4249e2(0x133),'reclamos':_0x3b0ce4(0x2c8),'vehiculos':_0x4249e2(0x192),'formulario':_0x4249e2(0x179),'formulario2':_0x3b0ce4(0x25c),'formulario3':_0x3b0ce4(0x29a),'formulario4':'formulario-4','dashboard-gps':_0x4249e2(0xfd),'dashboard-presupuesto':_0x3b0ce4(0x1fb),'dashboard-abastecimiento':'dashboard-abastecimiento','dashboard-bodega':_0x4249e2(0x8a),'dashboard-reclamos':_0x4249e2(0x14e),'dashboard-vehiculosymaquinaria':_0x4249e2(0x192),'dashboard-iluminacion':_0x3b0ce4(0x2e8),'dashboard-ordenes-trabajo-iluminacion':_0x4249e2(0x1b5),'dashboard-stock-iluminacion':_0x4249e2(0x12c)},_0x3d3475=_0x57c594[_0x1e2707];!hasStrictPermission(_0x54d914,_0x3d3475)&&(_0x322159[_0x4249e2(0xd5)]=!![],_0x322159[_0x4249e2(0x15d)][_0x4249e2(0x120)](_0x4249e2(0xea)),_0x322159[_0x4249e2(0x1a1)][_0x4249e2(0xf6)]=_0x4249e2(0x1c8),_0x322159[_0x4249e2(0x1a1)][_0x3b0ce4(0x209)]='not-allowed',_0x322159[_0x4249e2(0x1a1)][_0x4249e2(0x122)]=_0x3b0ce4(0x279),_0x322159[_0x4249e2(0x1c3)]=_0x4249e2(0x1c7));});const _0x572f0f=document[_0x4b5cce(0x97)](_0x4b5cce(0x166));_0x572f0f[_0x4b5cce(0xe7)](_0x590afe=>{const _0x217182=_0x2ae9dd,_0x46d44e=_0x4b5cce,_0x171756=_0x590afe[_0x217182(0x269)](_0x46d44e(0xc9));if(!_0x171756)return;const _0x3d2bc5=_0x171756[_0x46d44e(0x144)](_0x217182(0x30a),'');!hasStrictPermission(_0x54d914,_0x3d2bc5)&&(_0x590afe[_0x46d44e(0x1c1)](_0x46d44e(0xe8),function(_0x44cc8f){const _0x163fc0=_0x217182;_0x44cc8f[_0x163fc0(0x2ee)](),showAccessDeniedMessage();}),_0x590afe[_0x46d44e(0x15d)][_0x46d44e(0x120)](_0x46d44e(0x134)),_0x590afe[_0x217182(0x2db)][_0x46d44e(0x122)]=_0x46d44e(0x158),_0x590afe[_0x217182(0x2db)][_0x46d44e(0x1ac)]=_0x46d44e(0x1da),_0x590afe[_0x46d44e(0x1a1)][_0x217182(0x209)]=_0x46d44e(0x169),_0x590afe[_0x217182(0x272)]=_0x46d44e(0x188));});}function _0xe5a8(){const _0x22b850=['https://wa.me/','🎚️','emojiGrid','dashboard-presupuesto','📽️',');\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x2050%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x20','dashboard-reclamos.html','toISOString','🎙️','click','rata','#dc3545','.transparency-links','#999','header','penetracion','isIntersecting','cursor','&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto','getElementById','font-large','setSelectionRange','dashboard-ordenes-trabajo-iluminacion','🕯️','🏋️‍♂️','🐻‍❄️','maricón','keypress','href','body','toggle','scrollHeight','formulario-4.html','🖱️','addLayer','onclick','now','0\x205px\x2020px\x20rgba(0,\x200,\x200,\x200.1)','catch','.message','title','display','left','🏋️','test','.hero','disabled-button','junior','parásito','coño','textContent','classList','🛳️','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','huevón','#ccc','84068hBAkPV','timestamp','huevon','🤸‍♀️','add','indexOf','Mensaje\x20enviado\x20correctamente\x20✓','px,\x20','module-grid','gilipollas','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','scrollTop','remove','relative_humidity_2m','active','0px\x200px\x20-100px\x200px','fontReset','data-category','weather-update','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-content\x22>','Tu\x20mensaje\x20tiene\x20problemas.\x20¿Quieres\x20enviarlo\x20así?\x0a\x0a\x22','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22user-chip\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22online-indicator\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>','Enviar\x20mensaje','🌶️','querySelectorAll','cargandoOverlay','fracasado','puto','pocho','dimao_user_activities','POST','resize','estúpido','dato_ms','vete\x20a\x20morir','weather_code','<button\x20class=\x22emoji-item\x22\x20onclick=\x22insertEmojiToInput(\x27','pageYOffset','addEventListener','.fade-in','Por\x20favor\x20escribe\x20un\x20mensaje','appendChild','translate(','height','formulario-2','Sin\x20acceso\x20<span\x20class=\x22ml-2\x22>🔒</span>','scroll','author','particles-container','userId','muérete','mamon','#007bff','Mayormente\x20despejado','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','createElement','Director','getAttribute','formulario-2.html','backgroundColor','json','input','in-view','fullName','Actualizado:\x20','inútil','innerHTML','pendejo','smileys','☀️\x20Modo\x20claro','.modules','darkMode','weather-humidity','#666','El\x20mensaje\x20no\x20puede\x20estar\x20vacío','current','.module-button','🏎️','dashboard-stock-iluminacion.html','.view-dashboard','drogas','parse','number','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20width:\x20','role','weather-temp','messagesArea','match','mensajes','true','Error\x20al\x20obtener\x20los\x20datos:','1135572oWtxtY','959414178','1230362mvvzNS','.leaflet-control-attribution','El\x20mensaje\x20debe\x20contener\x20texto\x20válido','clientY','dashboard-abastecimiento','/500\x20caracteres','&longitude=','.hero-image','sendButton','maricon','push','25895ZSKTKP','content','formulario-3','orgasmo','Debes\x20iniciar\x20sesión\x20para\x20acceder\x20al\x20foro','chingada','darkModeToggle','negro\x20de\x20mierda','NFD','email','Administrador','page','addedNodes','selectionEnd','error','Datos\x20no\x20disponibles','⛹️‍♀️','font-small','🤼‍♀️','desgraciado','indio','2441159wyrzXy','trim','parentNode','selectionStart','4qygLCk','es-CL','.hero-button:not(.primary)','inutil','lacra','estupido','dashboard-stock-iluminacion','head','Nublado','El\x20mensaje\x20es\x20demasiado\x20largo\x20(máximo\x20500\x20caracteres)','Lluvia\x20ligera','dashboard-vehiculosymaquinaria','string','emojiButton','escoria','Media','hero-buttons','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-author\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span>','contains','fontSize','message\x20','🛢️','porno','dashboard-reclamos','.form-input,\x20.form-select','heroina','random','auto','😶‍🌫️','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-','message-counter','DOMContentLoaded','razon','</button>','<span>Sin\x20acceso</span>\x20<i\x20class=\x22dashboard-icon\x22>🔒</i>','coca','shift','errorMessage','pointer','1550224CRESAx','masturbacion','location','style','div','Error\x20al\x20cargar\x20clima:','😮‍💨','fontDecrease','translateY(','none','Regular','.loader','charAt','toLowerCase','murete','mousemove','dashboard-iluminacion','warning','fontIncrease','cabron','basura','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20height:\x20','preventDefault','not-allowed','scrollIntoView','shiftKey','emojiPicker','joder','🗜️','⛹️‍♂️','El\x20mensaje\x20es\x20demasiado\x20corto','2-digit','font-medium','application/json','dashboard-seguridad.html','esValido','beforeunload','setItem','28gOerWM','loading','className','dato_ac','\x27)\x22>','currentUser','permissions','color','Tipo\x20de\x20dashboard\x20no\x20reconocido:','pinche','https://script.google.com/macros/s/AKfycbws3ckXIZJebtwEdAk0nmeE1uIEaEYN4ZanWWRfJcc0ulOcG29vdfW-R8_mFPzi5w01/exec','stringify','.html','_blank','dashboard-abastecimiento.html','then','\x20km/h','voy\x20a\x20matarte','Chubascos','maraca','tonto','querySelector','normalize','join','🛩️','value','https://api.open-meteo.com/v1/forecast?latitude=','top','lastActivity','formulario-4','🕹️','zoneForm','🕰️','filter','cabrón','innerWidth','El\x20mensaje\x20contiene\x20lenguaje\x20inapropiado','idiota','1872882yKYUNS','mierda','5547355vhVpOs','63tLuBIy','director','Elementos\x20del\x20emoji\x20picker\x20no\x20encontrados','addTo','Combustible','no-cors','https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png','documentElement','messageInput','smooth','formulario-1','🛥️','closePanel','🖲️','gringo','puta','.category-btn','imbecil','removeLayer','Parcialmente\x20nublado','stopPropagation','boxShadow','block','Despejado','messageCounter','getItem','dashboard-iluminacion.html','emojiSearch','innerHeight','dashboard-bodega.html','zonePriority','forEach','307158FMtoiA','2250768hxPXgU','heroína','length','load','bobo','map','dashboard-vehiculosymaquinaria.html','scrollTo','cucaracha','replace','Junior\x20Alejandro\x20Barrera\x20','all','🗺️','sudaca','imbécil','scrollY','street','dashboard-seguridad','🌙\x20Modo\x20oscuro','finally','verga','dashboard-bodega','disabled','cssText','satellite','ojala\x20te\x20mueras','setView','weather-wind','formulario-3.html','tileLayer','observe','cocaina','toLocaleTimeString'];_0xe5a8=function(){return _0x22b850;};return _0xe5a8();}document[_0x511643(0x1c1)](_0x511643(0x145),function(){checkPagePermission(),updateAccessButtonsVisibility();});function openAssistance(){const _0x1884be=_0x1a6f7f,_0x47f157=_0x511643,_0x21d7fb=_0x1884be(0x28c);window[_0x47f157(0x1aa)](_0x47f157(0x11e)+_0x21d7fb,_0x1884be(0x30b));}document[_0x1a6f7f(0x256)](_0x511643(0x145),function(){const _0x1c0d4f=_0x1a6f7f,_0x5a25dc=_0x511643,_0x1b44f3=document[_0x5a25dc(0x97)](_0x5a25dc(0x1cd)),_0x5c2307=new IntersectionObserver(_0x1f06cc=>{const _0x3425b0=_0x5a25dc;_0x1f06cc[_0x3425b0(0xe7)](_0x3c95b5=>{const _0x101b44=_0x3425b0;_0x3c95b5[_0x101b44(0xd9)]&&(_0x3c95b5['target'][_0x101b44(0x15d)][_0x101b44(0x120)](_0x101b44(0xdf)),_0x5c2307[_0x101b44(0xe1)](_0x3c95b5['target']));});},{'threshold':0.1});_0x1b44f3[_0x5a25dc(0xe7)](_0x46dc15=>{const _0x35c8a1=_0x5a25dc;_0x5c2307[_0x35c8a1(0xee)](_0x46dc15);});const _0xdcd03c=document[_0x5a25dc(0x173)](_0x1c0d4f(0x206));let _0x25ec9d=0x0;window[_0x5a25dc(0x1c1)](_0x5a25dc(0xeb),()=>{const _0xd53dd0=_0x1c0d4f,_0x2ac68d=_0x5a25dc,_0x47a1b2=window[_0x2ac68d(0x1e5)]||document[_0x2ac68d(0xae)][_0x2ac68d(0x1c9)];_0x47a1b2>0x64?_0xdcd03c[_0x2ac68d(0x1a1)][_0x2ac68d(0x10e)]=_0x2ac68d(0x1b6):_0xdcd03c[_0xd53dd0(0x2db)][_0x2ac68d(0x10e)]=_0x2ac68d(0xde),_0x25ec9d=_0x47a1b2;});}),document[_0x511643(0x1c1)](_0x511643(0x145),function(){const _0x18bbb8=_0x1a6f7f,_0x47be65=_0x511643,_0xaaaec8=document[_0x18bbb8(0x313)]('.transparency-toggle'),_0x4a7ec7=document[_0x47be65(0x173)](_0x18bbb8(0x204));if(_0xaaaec8&&_0x4a7ec7){_0xaaaec8[_0x47be65(0x1c1)](_0x47be65(0xe8),function(){const _0x16dddc=_0x47be65;_0xaaaec8[_0x16dddc(0x15d)][_0x16dddc(0x1be)](_0x16dddc(0x104)),_0x4a7ec7[_0x16dddc(0x15d)]['toggle']('active');});function _0x271339(){const _0x1ccdba=_0x18bbb8,_0x5124b4=_0x47be65;window[_0x5124b4(0xf1)]<=0x300?_0x4a7ec7[_0x5124b4(0x15d)][_0x5124b4(0x11a)](_0x1ccdba(0x23e)):_0x4a7ec7[_0x1ccdba(0x22b)][_0x5124b4(0x120)](_0x5124b4(0x104));}_0x271339(),window[_0x47be65(0x1c1)](_0x47be65(0x1bb),_0x271339);}}),window[_0x511643(0x1c1)](_0x511643(0xa4),function(){setTimeout(function(){const _0x1d729b=_0xc046,_0x2d07f6=_0xc62c;document[_0x2d07f6(0x173)](_0x1d729b(0x2e3))[_0x1d729b(0x22b)][_0x2d07f6(0x120)]('hidden');},0x320);}),document[_0x1a6f7f(0x256)](_0x511643(0x145),function(){const _0x4bb183=_0x1a6f7f,_0x539b4b=_0x511643,_0x182f52=document[_0x4bb183(0x313)](_0x539b4b(0x9e)),_0x1e69f7=document[_0x539b4b(0x155)](_0x539b4b(0xa5));_0x1e69f7[_0x539b4b(0x11d)]=_0x539b4b(0x1e7),_0x182f52[_0x539b4b(0x1df)](_0x1e69f7);for(let _0x21eeba=0x0;_0x21eeba<0x32;_0x21eeba++){createParticle(_0x1e69f7);}const _0x2b02e5=document[_0x539b4b(0x173)](_0x539b4b(0x11f)),_0x37cf78=document[_0x539b4b(0x155)](_0x4bb183(0x2dc));_0x37cf78[_0x539b4b(0x11d)]=_0x539b4b(0x14d),_0x37cf78[_0x539b4b(0x1c3)]=_0x539b4b(0x132),_0x2b02e5[_0x4bb183(0x259)](_0x37cf78),_0x182f52[_0x539b4b(0x1c1)](_0x539b4b(0x119),function(_0x222b67){const _0x41b1fa=_0x4bb183,_0x1906bc=_0x539b4b,_0x3582a3=_0x222b67['clientX']/window[_0x1906bc(0xf1)]-0.5,_0x24a6d4=_0x222b67[_0x41b1fa(0x290)]/window[_0x1906bc(0xe3)]-0.5,_0x3e1392=document[_0x1906bc(0x173)](_0x41b1fa(0x294));_0x3e1392[_0x41b1fa(0x2db)][_0x1906bc(0xb0)]=_0x1906bc(0x11c)+_0x3582a3*0x14+_0x41b1fa(0x237)+_0x24a6d4*0x14+'px)\x20scale(1.1)';const _0x37b269=document[_0x1906bc(0x173)](_0x1906bc(0x11f));_0x37b269['style'][_0x1906bc(0xb0)]='translate('+_0x3582a3*-0x1e+_0x1906bc(0xa2)+_0x24a6d4*-0x1e+_0x1906bc(0x18a);});});function createParticle(_0x18181c){const _0x2aaf1e=_0x1a6f7f,_0x45e0b7=_0x511643,_0x12272f=document[_0x2aaf1e(0x267)](_0x45e0b7(0xa5));var _0x444972=Math[_0x45e0b7(0x94)]()*0x5+0x1,_0x52b38a=Math[_0x45e0b7(0x94)]()*0.5+0.1,_0x1fbb91=Math[_0x45e0b7(0x94)]()*0x64,_0x263964=Math[_0x45e0b7(0x94)]()*0x64,_0x1f6c1d=(Math[_0x45e0b7(0x94)]()-0.5)*0.5,_0x456684=(Math[_0x45e0b7(0x94)]()-0.5)*0.5;_0x12272f[_0x45e0b7(0x1a1)][_0x45e0b7(0xb6)]=_0x2aaf1e(0x283)+_0x444972+_0x45e0b7(0x1a8)+_0x444972+_0x45e0b7(0xca)+_0x52b38a+_0x45e0b7(0x130)+_0x263964+'%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20left:\x20'+_0x1fbb91+_0x45e0b7(0x15a),_0x18181c[_0x45e0b7(0x1df)](_0x12272f);let _0x4cda1d=_0x1fbb91,_0x466a25=_0x263964;function _0x1e0a55(){const _0x338556=_0x2aaf1e,_0x1499ff=_0x45e0b7;_0x4cda1d+=_0x1f6c1d,_0x466a25+=_0x456684,(_0x4cda1d<0x0||_0x4cda1d>0x64)&&(_0x4cda1d=Math[_0x1499ff(0x171)](0x0,Math[_0x1499ff(0xff)](0x64,_0x4cda1d)),_0x1f6c1d*=-0x1),(_0x466a25<0x0||_0x466a25>0x64)&&(_0x466a25=Math[_0x1499ff(0x171)](0x0,Math['min'](0x64,_0x466a25)),_0x456684*=-0x1),_0x12272f[_0x338556(0x2db)][_0x1499ff(0x16f)]=_0x4cda1d+'%',_0x12272f[_0x1499ff(0x1a1)][_0x1499ff(0x143)]=_0x466a25+'%',requestAnimationFrame(_0x1e0a55);}_0x1e0a55();}const fadeElements=document[_0x511643(0x97)](_0x511643(0x1cd)),observer=new IntersectionObserver(_0x43fa22=>{const _0x2d0421=_0x511643;_0x43fa22[_0x2d0421(0xe7)](_0x353b92=>{const _0x41c528=_0xc046,_0x4cf326=_0x2d0421;if(_0x353b92[_0x41c528(0x208)]){_0x353b92[_0x4cf326(0x162)][_0x4cf326(0x15d)][_0x4cf326(0x120)]('in-view');if(_0x353b92[_0x4cf326(0x162)][_0x4cf326(0x15d)][_0x41c528(0x2c3)](_0x41c528(0x238))){const _0x52a637=_0x353b92[_0x4cf326(0x162)][_0x4cf326(0x97)](_0x4cf326(0x1cb));_0x52a637[_0x41c528(0x346)]((_0x2b9b7c,_0x2b2121)=>{setTimeout(()=>{const _0x283a74=_0xc046,_0x4076cd=_0xc62c;_0x2b9b7c[_0x283a74(0x22b)][_0x4076cd(0x120)](_0x4076cd(0xdf));},_0x2b2121*0x96);});}observer[_0x4cf326(0xe1)](_0x353b92[_0x4cf326(0x162)]);}});},{'threshold':0.15,'rootMargin':_0x511643(0x8b)});fadeElements[_0x511643(0xe7)](_0x20350b=>{const _0x3d3d7c=_0x1a6f7f;observer[_0x3d3d7c(0x1f5)](_0x20350b);}),window[_0x511643(0x1c1)](_0x511643(0xeb),function(){const _0x4093ef=_0x1a6f7f,_0x43021e=_0x511643,_0x156025=window[_0x43021e(0x1c6)];document[_0x4093ef(0x248)](_0x43021e(0x84))[_0x4093ef(0x346)](function(_0x5f020a,_0x9131ea){const _0x9aa7a6=_0x43021e,_0x5bf4c8=0.05*(_0x9131ea+0x1),_0x393a6d=_0x156025*_0x5bf4c8;_0x5f020a[_0x9aa7a6(0x1a1)][_0x9aa7a6(0xb0)]=_0x9aa7a6(0xb1)+_0x393a6d+_0x9aa7a6(0x18a);});}),document[_0x1a6f7f(0x256)](_0x511643(0x145),function(){const _0x78534d=_0x1a6f7f,_0x8564de=_0x511643,_0x198469=document['querySelector'](_0x8564de(0x11f)),_0x472bc8=new MutationObserver(function(_0x21ffe0){const _0x90b87b=_0x8564de;_0x21ffe0[_0x90b87b(0xe7)](function(_0x2cc3fe){const _0x2f4265=_0xc046,_0x281606=_0x90b87b;if(_0x2cc3fe[_0x281606(0x1d1)][_0x281606(0x1a3)]){const _0x3474c0=document[_0x281606(0x173)](_0x281606(0x81));if(_0x3474c0){const _0x1c9098=_0x3474c0[_0x281606(0x173)](_0x281606(0x9d));_0x1c9098&&_0x1c9098[_0x281606(0x1c1)](_0x281606(0xe8),function(){const _0x42b329=_0xc046,_0x42639b=_0x281606,_0x2bb55b=document[_0x42b329(0x313)](_0x42639b(0x1e3));_0x2bb55b&&_0x2bb55b[_0x42639b(0xa0)]({'behavior':_0x42639b(0x10c)});});const _0x424be1=_0x3474c0[_0x2f4265(0x313)](_0x281606(0x14a));_0x424be1&&_0x424be1[_0x281606(0x1c1)](_0x281606(0xe8),function(){const _0x44d509=_0x2f4265,_0x2d343e=_0x281606,_0x112ce1=document[_0x2d343e(0x173)](_0x2d343e(0x1ae));_0x112ce1&&_0x112ce1[_0x44d509(0x2f0)]({'behavior':_0x44d509(0x330)});}),_0x472bc8['disconnect']();}}});});_0x472bc8[_0x8564de(0xee)](_0x198469,{'childList':!![],'subtree':!![]});const _0x7b7f13=document[_0x8564de(0x173)](_0x8564de(0x81));if(_0x7b7f13){const _0x15e56e=_0x7b7f13[_0x8564de(0x173)](_0x8564de(0x9d));_0x15e56e&&_0x15e56e[_0x8564de(0x1c1)](_0x8564de(0xe8),function(){const _0x12b4fe=_0xc046,_0x5bf717=_0x8564de,_0x384b2e=document[_0x5bf717(0x173)](_0x5bf717(0x1e3));_0x384b2e&&_0x384b2e[_0x12b4fe(0x2f0)]({'behavior':_0x12b4fe(0x330)});});const _0x3dac45=_0x7b7f13[_0x8564de(0x173)](_0x78534d(0x2b3));_0x3dac45&&_0x3dac45[_0x8564de(0x1c1)](_0x8564de(0xe8),function(){const _0xf3f1fc=_0x78534d,_0x93c466=_0x8564de,_0x10fb22=document[_0xf3f1fc(0x313)](_0xf3f1fc(0x276));_0x10fb22&&_0x10fb22[_0x93c466(0xa0)]({'behavior':_0x93c466(0x10c)});});}});let currentEmojiCategory=_0x1a6f7f(0x274),emojiPickerVisible=![];const emojiCategories={'smileys':['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶',_0x511643(0x184),'😏','😒','🙄','😬',_0x1a6f7f(0x2de),'🤥','😔','😪','🤤','😴'],'people':['👋','🤚',_0x511643(0x1c2),'✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆',,'👇','☝️','👍','👎','👊','✊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀'],'nature':['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼',_0x511643(0x176),'🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🌱','🌿','🍀','🎍','🎋','🍃','🍂','🍁','🍄','🐚','🌾','💐','🌷','🌹','🥀','🌺'],'food':['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒',_0x511643(0xb9),'🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥖','🍞','🥨','🥯','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭'],'activities':['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂',_0x511643(0x100),_0x511643(0x86),_0x511643(0x11b),_0x1a6f7f(0x2aa),'🤼',_0x511643(0x129),_0x511643(0x152),'🤸',_0x511643(0x73),_0x511643(0x109),'⛹️',_0x511643(0x96),'🤺'],'travel':['🚗','🚕','🚙','🚌','🚎',_0x511643(0x1d2),'🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜',_0x511643(0x1af),'🛵','🚲','🛴','🛹','🛼','🚁','🛸','✈️',_0x511643(0x19b),'🪂','⛵','🚤',_0x511643(0x8f),_0x1a6f7f(0x22c),'⛴️','🚢','⚓','⛽','🚧','🚦','🚥','🚏',_0x1a6f7f(0x354),'🗿','🗽','🗼','🏰','🏯',_0x511643(0x87),'🎡','🎢','🎠','⛲'],'objects':['⌚','📱','📲','💻','⌨️','🖥️',_0x511643(0x16b),_0x511643(0xf4),_0x511643(0x83),_0x511643(0x7b),_0x1a6f7f(0x2f4),'💽','💾','💿','📀','📼','📷','📸','📹','🎥',_0x511643(0x15f),_0x511643(0x1d4),'📞','☎️','📟','📠','📺','📻',_0x1a6f7f(0x200),_0x511643(0xd6),_0x511643(0x195),'🧭','⏱️','⏲️','⏰',_0x511643(0x1ec),'⌛','⏳','📡','🔋','🔌','💡','🔦',_0x511643(0xdb),'🪔','🧯',_0x511643(0x115),'💸'],'symbols':['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️','🕉️','☸️','✡️','🔯','🕎','☯️','☦️','🛐','⛎','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','🆔','⚛️','🉑','☢️','☣️','📴','📳']};document[_0x511643(0x1c1)](_0x511643(0x145),function(){initializeForum(),initEmojiPicker(),setupEventListeners();});function initEmojiPicker(){const _0x4ccffd=_0x1a6f7f,_0x318eaa=_0x511643,_0x291506=document[_0x4ccffd(0x20b)](_0x318eaa(0x1ba)),_0x4e8d85=document[_0x318eaa(0x19d)](_0x318eaa(0xc7)),_0x22ae1e=document[_0x318eaa(0x97)](_0x318eaa(0x10f)),_0x65a682=document['getElementById'](_0x318eaa(0xac));if(!_0x291506||!_0x4e8d85){console[_0x318eaa(0x7d)](_0x318eaa(0xf0));return;}_0x291506[_0x4ccffd(0x256)](_0x318eaa(0xe8),function(_0x3ef05c){const _0x4a5953=_0x318eaa;_0x3ef05c[_0x4a5953(0xb2)](),_0x3ef05c[_0x4a5953(0x12a)](),toggleEmojiPicker();}),_0x22ae1e[_0x4ccffd(0x346)](_0x1c261f=>{const _0x2d621b=_0x4ccffd,_0x23516a=_0x318eaa;_0x1c261f[_0x23516a(0x1c1)](_0x2d621b(0x201),function(_0x23927b){const _0x386960=_0x2d621b,_0x32129b=_0x23516a;_0x23927b[_0x386960(0x2ee)]();const _0xfb21b=this[_0x386960(0x269)](_0x32129b(0x13d));currentEmojiCategory=_0xfb21b,_0x22ae1e[_0x32129b(0xe7)](_0x311570=>_0x311570[_0x32129b(0x15d)][_0x32129b(0x11a)](_0x32129b(0x104))),this[_0x32129b(0x15d)]['add'](_0x32129b(0x104)),loadEmojiCategory(_0xfb21b);});}),_0x65a682&&_0x65a682[_0x318eaa(0x1c1)](_0x4ccffd(0x26d),function(){const _0x3d7a18=_0x318eaa,_0x3a9e3b=this[_0x3d7a18(0x7a)][_0x3d7a18(0x138)]();_0x3a9e3b[_0x3d7a18(0x1a3)]>0x0?searchEmojis(_0x3a9e3b):loadEmojiCategory(currentEmojiCategory);}),document[_0x4ccffd(0x256)](_0x318eaa(0xe8),function(_0x226852){const _0x322792=_0x4ccffd,_0x418a3b=_0x318eaa;!_0x4e8d85[_0x322792(0x2c3)](_0x226852[_0x418a3b(0x162)])&&_0x226852['target']!==_0x291506&&hideEmojiPicker();}),loadEmojiCategory(_0x318eaa(0x1d3));}function searchEmojis(_0x3e238f){const _0x3b021b=_0x1a6f7f,_0x466814=_0x511643,_0x234618=document[_0x466814(0x19d)](_0x466814(0x150));if(!_0x234618)return;let _0x2014bb=[];for(const _0xc3a680 in emojiCategories){emojiCategories[_0xc3a680][_0x466814(0xe7)](_0x4052df=>{const _0xb4f49=_0x466814;_0x4052df[_0xb4f49(0xad)](_0x3e238f)&&_0x2014bb[_0xb4f49(0x17e)](_0x4052df);});}_0x234618[_0x466814(0x1c3)]=_0x2014bb[_0x3b021b(0x34d)](_0x32a45d=>_0x466814(0x124)+_0x32a45d+_0x466814(0x116)+_0x32a45d+_0x3b021b(0x2d2))[_0x466814(0x18e)]('');}function toggleEmojiPicker(){const _0x2fe560=_0x511643,_0x375a1b=document[_0x2fe560(0x19d)](_0x2fe560(0xc7));if(!_0x375a1b)return;emojiPickerVisible?hideEmojiPicker():showEmojiPicker();}function showEmojiPicker(){const _0x6a008f=_0x1a6f7f,_0x5c876e=_0x511643,_0x549144=document[_0x5c876e(0x19d)](_0x6a008f(0x2f2));_0x549144&&(_0x549144[_0x5c876e(0x1a1)][_0x6a008f(0x221)]=_0x5c876e(0x89),emojiPickerVisible=!![]);}function hideEmojiPicker(){const _0x4140a2=_0x511643,_0x221a6f=document[_0x4140a2(0x19d)](_0x4140a2(0xc7));_0x221a6f&&(_0x221a6f['style'][_0x4140a2(0x9c)]=_0x4140a2(0x156),emojiPickerVisible=![]);}function loadEmojiCategory(_0x591679){const _0x17be26=_0x1a6f7f,_0x3767ed=_0x511643,_0x55ff02=document[_0x3767ed(0x19d)](_0x17be26(0x1fa));if(!_0x55ff02)return;const _0x40d4b2=emojiCategories[_0x591679]||[];_0x55ff02[_0x3767ed(0x1c3)]=_0x40d4b2[_0x3767ed(0x9b)](_0x22fff4=>_0x3767ed(0x124)+_0x22fff4+_0x3767ed(0x116)+_0x22fff4+_0x3767ed(0xf9))[_0x17be26(0x315)]('');}function insertEmojiToInput(_0x36c13e){const _0x5acd1b=_0x1a6f7f,_0x534ec0=_0x511643,_0x5b7f2d=document[_0x534ec0(0x19d)](_0x534ec0(0x15c));if(!_0x5b7f2d)return;const _0x107e59=_0x5b7f2d[_0x5acd1b(0x2b0)],_0x223bef=_0x5b7f2d[_0x534ec0(0x112)];_0x5b7f2d[_0x5acd1b(0x317)]=_0x5b7f2d[_0x534ec0(0x7a)][_0x534ec0(0xcf)](0x0,_0x107e59)+_0x36c13e+_0x5b7f2d[_0x5acd1b(0x317)][_0x534ec0(0xcf)](_0x223bef),_0x5b7f2d[_0x534ec0(0x1b4)](),_0x5b7f2d[_0x534ec0(0x190)](_0x107e59+_0x36c13e['length'],_0x107e59+_0x36c13e[_0x534ec0(0x1a3)]),hideEmojiPicker();}document[_0x511643(0x19d)](_0x511643(0xc7)),document[_0x1a6f7f(0x20b)](_0x511643(0xc7))[_0x511643(0x1a1)][_0x511643(0x9c)]=_0x511643(0x89);const WEB_APP_URL=_0x511643(0x1c5);var dato_ms=[],dato_pp=[],mensajesLista='';cargarDatosGenerales();const userData1={'username':_0x1a6f7f(0x227),'role':_0x511643(0xbe),'fullName':_0x511643(0x13b),'permissions':[_0x511643(0xfd),_0x511643(0xc3),_0x511643(0xc1),_0x511643(0x8a)]};function _0xc046(_0x5ee876,_0x45946c){const _0xe5a8b1=_0xe5a8();return _0xc046=function(_0xc046ae,_0x5cfb5c){_0xc046ae=_0xc046ae-0x1f3;let _0x36b71d=_0xe5a8b1[_0xc046ae];return _0x36b71d;},_0xc046(_0x5ee876,_0x45946c);}let currentUser=null,messages=[],onlineUsers=[];document['addEventListener'](_0x511643(0x145),function(){initializeForum(),setupEventListeners(),updateOnlineUsers();});function initializeForum(){const _0x523e67=_0x1a6f7f,_0xe3d01a=_0x511643;currentUser=JSON[_0x523e67(0x281)](localStorage[_0xe3d01a(0x16c)](_0xe3d01a(0xb4)));if(!currentUser){alert(_0x523e67(0x29c)),window[_0xe3d01a(0x127)][_0x523e67(0x214)]=_0xe3d01a(0x170);return;}updateUserActivity(),agregarEstilosValidacion(),initEmojiPicker();}function setupEventListeners(){const _0x1a1f92=_0x511643,_0x2f5d27=document[_0x1a1f92(0x19d)](_0x1a1f92(0x15c)),_0x1256d7=document[_0x1a1f92(0x19d)](_0x1a1f92(0x18f));_0x2f5d27[_0x1a1f92(0x1c1)](_0x1a1f92(0x142),function(_0x107c8e){const _0x2cfc4f=_0xc046,_0x429763=_0x1a1f92;_0x107c8e[_0x429763(0xab)]===_0x429763(0x17a)&&!_0x107c8e[_0x429763(0x18d)]&&(_0x107c8e[_0x2cfc4f(0x2ee)](),sendMessage());}),_0x2f5d27[_0x1a1f92(0x1c1)](_0x1a1f92(0x14b),function(){const _0x47b2c0=_0xc046,_0x3c5f32=_0x1a1f92;this[_0x3c5f32(0x1a1)][_0x3c5f32(0x19c)]=_0x47b2c0(0x2cc),this[_0x3c5f32(0x1a1)]['height']=this[_0x3c5f32(0x1e2)]+'px';}),_0x1256d7[_0x1a1f92(0x1c1)](_0x1a1f92(0xe8),sendMessage),setInterval(updateOnlineUsers,0x2710);}function sendMessage(){const _0x56a22e=_0x1a6f7f,_0x254916=_0x511643,_0xfac0=document[_0x56a22e(0x20b)]('messageInput'),_0x3c7ce1=_0xfac0[_0x254916(0x7a)][_0x254916(0xdd)]();if(!_0x3c7ce1){mostrarError(_0x254916(0xa1));return;}const _0x3f777d=validarContenido(_0x3c7ce1);if(!_0x3f777d[_0x56a22e(0x2fb)]){mostrarError(_0x3f777d[_0x254916(0x1ca)]);const _0xf7345c=limpiarTexto(_0x3c7ce1);if(_0xf7345c&&_0xf7345c!==_0x3c7ce1&&_0xf7345c[_0x254916(0x1a3)]>0x2){if(confirm(_0x56a22e(0x244)+_0xf7345c+'\x22')){_0xfac0[_0x254916(0x7a)]=_0xf7345c;const _0x4f6f95=validarContenido(_0xf7345c);_0x4f6f95[_0x254916(0x168)]&&enviarMensajeFinal(_0xf7345c);}}return;}enviarMensajeFinal(_0x3c7ce1);}function enviarMensajeFinal(_0x1bc51f){const _0x47f1e1=_0x1a6f7f,_0x4ca1e6=_0x511643,_0x1ce1ab=document['getElementById'](_0x4ca1e6(0x15c)),_0x2f4d94={'id':Date[_0x4ca1e6(0x121)](),'author':currentUser[_0x4ca1e6(0x1ea)],'role':currentUser[_0x4ca1e6(0xe9)],'content':_0x1bc51f,'timestamp':new Date()['toISOString'](),'userId':currentUser[_0x4ca1e6(0xfe)]||currentUser[_0x4ca1e6(0x1d9)]},_0x172ca6=[_0x2f4d94['id'],_0x2f4d94[_0x4ca1e6(0x1c4)],_0x2f4d94[_0x4ca1e6(0xe9)],_0x2f4d94[_0x4ca1e6(0x183)],_0x2f4d94[_0x4ca1e6(0xa3)],_0x2f4d94[_0x4ca1e6(0x180)]];enviarDatos(_0x4ca1e6(0x1a9),0x0,_0x172ca6,0x1),messages[_0x47f1e1(0x297)](_0x2f4d94),saveMessages(),_0x1ce1ab[_0x4ca1e6(0x7a)]='',_0x1ce1ab['style'][_0x47f1e1(0x25b)]=_0x4ca1e6(0xfa),renderMessages(),scrollToBottom(),mostrarExito(_0x4ca1e6(0xcc));}function setupEventListeners(){const _0x256ef6=_0x1a6f7f,_0x231a28=_0x511643,_0x4262c3=document[_0x231a28(0x19d)](_0x256ef6(0x32f)),_0x51d798=document['getElementById'](_0x231a28(0x18f));_0x4262c3['addEventListener'](_0x231a28(0x142),function(_0x42596e){const _0x12879f=_0x231a28;_0x42596e[_0x12879f(0xab)]===_0x12879f(0x17a)&&!_0x42596e[_0x12879f(0x18d)]&&(_0x42596e[_0x12879f(0xb2)](),sendMessage());}),_0x4262c3[_0x231a28(0x1c1)](_0x231a28(0x14b),function(){const _0x1ae0ee=_0x256ef6,_0x5a5c7b=_0x231a28;this[_0x1ae0ee(0x2db)][_0x5a5c7b(0x19c)]=_0x5a5c7b(0xfa),this[_0x5a5c7b(0x1a1)][_0x5a5c7b(0x19c)]=this[_0x5a5c7b(0x1e2)]+'px';const _0x345929=this[_0x1ae0ee(0x317)][_0x5a5c7b(0xdd)](),_0xcdd938=validarContenido(_0x345929);_0xcdd938[_0x5a5c7b(0x168)]||_0x345929[_0x5a5c7b(0x1a3)]===0x0?(_0x51d798[_0x5a5c7b(0x1a1)][_0x5a5c7b(0xf6)]=_0x5a5c7b(0x185),_0x51d798[_0x1ae0ee(0x2db)][_0x5a5c7b(0xc8)]=_0x5a5c7b(0x72),_0x51d798[_0x1ae0ee(0x35e)]=![],_0x51d798[_0x5a5c7b(0x75)]=_0x5a5c7b(0x1b7)):(_0x51d798[_0x5a5c7b(0x1a1)][_0x5a5c7b(0xf6)]=_0x5a5c7b(0x1e1),_0x51d798[_0x5a5c7b(0x1a1)][_0x5a5c7b(0xc8)]=_0x5a5c7b(0x169),_0x51d798[_0x5a5c7b(0xd5)]=!![],_0x51d798[_0x5a5c7b(0x75)]=_0xcdd938[_0x5a5c7b(0x1ca)]);}),_0x51d798[_0x231a28(0x1c1)](_0x231a28(0xe8),sendMessage),setInterval(updateOnlineUsers,0x2710);}function agregarEstilosValidacion(){const _0x297393=_0x511643,_0x5291bf=document[_0x297393(0x155)](_0x297393(0x1a1));_0x5291bf[_0x297393(0xdc)]=_0x297393(0x103),document[_0x297393(0x10a)][_0x297393(0x1df)](_0x5291bf);}function initializeForum(){const _0x57cbb1=_0x1a6f7f,_0x846d4a=_0x511643;currentUser=JSON[_0x846d4a(0x1d7)](localStorage[_0x846d4a(0x16c)](_0x846d4a(0xb4)));if(!currentUser){alert(_0x846d4a(0x165)),window[_0x57cbb1(0x2da)][_0x846d4a(0xc9)]=_0x846d4a(0x170);return;}agregarEstilosValidacion(),updateUserActivity();}function agregarContadorCaracteres(){const _0xa720f6=_0x1a6f7f,_0x3dc571=_0x511643,_0x5e65e6=document[_0x3dc571(0x19d)](_0x3dc571(0x15c));if(!_0x5e65e6)return;const _0x510c0c=document[_0x3dc571(0x155)](_0x3dc571(0xa5));_0x510c0c[_0xa720f6(0x300)]=_0x3dc571(0x1a7),_0x510c0c['id']=_0xa720f6(0x33f),_0x5e65e6[_0x3dc571(0xa7)][_0x3dc571(0x1df)](_0x510c0c),_0x5e65e6[_0x3dc571(0x1c1)](_0x3dc571(0x14b),function(){const _0x365a8b=_0xa720f6,_0x2281c0=_0x3dc571,_0x561845=this[_0x2281c0(0x7a)][_0x2281c0(0x1a3)];_0x510c0c[_0x2281c0(0xdc)]=_0x561845+_0x2281c0(0xbb),_0x561845>0x1c2?_0x510c0c[_0x2281c0(0x15d)][_0x2281c0(0x120)](_0x2281c0(0x15b)):_0x510c0c[_0x2281c0(0x15d)][_0x365a8b(0x23c)](_0x2281c0(0x15b));});}function loadMessages(){const _0x5cb3a3=_0x1a6f7f,_0x28b78f=mensajesLista;_0x28b78f&&(messages=JSON[_0x5cb3a3(0x281)](_0x28b78f),renderMessages());}function saveMessages(){}function renderMessages(){const _0x3c4e58=_0x1a6f7f,_0x3f4240=_0x511643,_0x17c0c2=document[_0x3f4240(0x19d)](_0x3c4e58(0x286)),_0x568a0e=_0x17c0c2[_0x3f4240(0x173)]('.welcome-message'),_0x3e95d8=_0x17c0c2[_0x3f4240(0x97)](_0x3f4240(0x181));_0x3e95d8[_0x3f4240(0xe7)](_0xd13a64=>_0xd13a64[_0x3f4240(0x11a)]());const _0x2c0a61=messages[_0x3f4240(0x148)](-0x32);_0x2c0a61[_0x3c4e58(0x346)](_0xf400d8=>{const _0x34fcf5=_0x3f4240,_0x45de64=createMessageElement(_0xf400d8);_0x17c0c2[_0x34fcf5(0x1df)](_0x45de64);}),scrollToBottom();}function createMessageElement(_0x1a6dbc){const _0x37db6e=_0x1a6f7f,_0x3eccb9=_0x511643,_0x534e5f=document[_0x3eccb9(0x155)](_0x3eccb9(0xa5)),_0x391a32=_0x1a6dbc[_0x3eccb9(0x180)]===(currentUser['username']||currentUser[_0x3eccb9(0x1d9)]);_0x534e5f[_0x37db6e(0x300)]=_0x37db6e(0x2c5)+(_0x391a32?'own':_0x3eccb9(0x1dc));const _0x4f42a3=new Date(_0x1a6dbc[_0x37db6e(0x231)])['toLocaleString'](_0x3eccb9(0x1b9),{'day':_0x37db6e(0x2f7),'month':_0x3eccb9(0x1b3),'hour':_0x3eccb9(0x1b3),'minute':'2-digit'});return _0x534e5f[_0x37db6e(0x272)]=_0x3eccb9(0x174)+_0x1a6dbc[_0x37db6e(0x25f)]+_0x3eccb9(0x1ab)+_0x1a6dbc[_0x3eccb9(0xe9)][_0x37db6e(0x2e5)]()+'\x22>'+getRoleDisplayName(_0x1a6dbc[_0x37db6e(0x284)])+'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22message-time\x22>'+_0x4f42a3+_0x3eccb9(0xd2)+escapeHtml(_0x1a6dbc[_0x37db6e(0x299)])+_0x3eccb9(0x1a6),_0x534e5f;}function updateUserActivity(){const _0x425a67=_0x1a6f7f,_0x568bfe=_0x511643,_0x4cd1f8={'userId':currentUser[_0x568bfe(0xfe)]||currentUser[_0x425a67(0x2a1)],'name':currentUser[_0x568bfe(0x1ea)],'role':currentUser[_0x568bfe(0xe9)],'lastActivity':new Date()[_0x568bfe(0x17c)]()};let _0x165fa9=JSON[_0x568bfe(0x1d7)](localStorage[_0x568bfe(0x16c)](_0x568bfe(0x91))||'[]');_0x165fa9=_0x165fa9[_0x425a67(0x31f)](_0x532cd3=>_0x532cd3[_0x568bfe(0x180)]!==_0x4cd1f8[_0x568bfe(0x180)]),_0x165fa9[_0x568bfe(0x17e)](_0x4cd1f8),localStorage[_0x568bfe(0x198)](_0x425a67(0x24d),JSON[_0x568bfe(0xf8)](_0x165fa9));}function updateOnlineUsers(){const _0x3025ce=_0x1a6f7f,_0x2e07d6=_0x511643;updateUserActivity();const _0x47ecd7=JSON[_0x2e07d6(0x1d7)](localStorage[_0x2e07d6(0x16c)](_0x3025ce(0x24d))||'[]'),_0x5e644b=new Date(Date[_0x2e07d6(0x121)]()-0x5*0x3c*0x3e8);onlineUsers=_0x47ecd7[_0x3025ce(0x31f)](_0x42e587=>new Date(_0x42e587[_0x2e07d6(0xf5)])>_0x5e644b),renderOnlineUsers();}function renderOnlineUsers(){const _0x335743=_0x1a6f7f,_0x5bc34c=_0x511643,_0x3911ad=document[_0x5bc34c(0x19d)]('userList');if(onlineUsers[_0x5bc34c(0x1a3)]===0x0){_0x3911ad[_0x5bc34c(0x1c3)]=_0x5bc34c(0x74);return;}_0x3911ad[_0x335743(0x272)]=onlineUsers[_0x335743(0x34d)](_0x5426d6=>_0x5bc34c(0xbf)+_0x5426d6[_0x5bc34c(0x123)]+_0x5bc34c(0x80)+_0x5426d6[_0x5bc34c(0xe9)][_0x5bc34c(0x138)]()+'\x22>'+getRoleDisplayName(_0x5426d6[_0x5bc34c(0xe9)])+_0x335743(0x23a))[_0x5bc34c(0x18e)]('');}function _0xd0c3(){const _0x4059e8=_0x1a6f7f,_0x2c166f=[_0x4059e8(0x2c4),'parasito',_0x4059e8(0x2a4),_0x4059e8(0x27d),_0x4059e8(0x274),'🎞️',_0x4059e8(0x2f9),_0x4059e8(0x2c0),'parse',_0x4059e8(0x32d),'email',_0x4059e8(0x353),_0x4059e8(0x2ea),'other',_0x4059e8(0x277),_0x4059e8(0x2ab),'appendChild',_0x4059e8(0x1f4),_0x4059e8(0x203),_0x4059e8(0x217),'.dashboard-modules',_0x4059e8(0x350),_0x4059e8(0x255),_0x4059e8(0x239),_0x4059e8(0x260),_0x4059e8(0x310),_0x4059e8(0x2bf),'fullName',_0x4059e8(0x20c),_0x4059e8(0x31e),_0x4059e8(0x2d7),'🤸‍♂️','<div\x20class=\x22empty-state\x22>No\x20hay\x20usuarios\x20conectados</div>',_0x4059e8(0x220),_0x4059e8(0x28a),_0x4059e8(0x2e2),_0x4059e8(0x30f),_0x4059e8(0x212),_0x4059e8(0x317),_0x4059e8(0x31c),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20right:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#e74c3c;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2015px\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x208px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x204px\x2012px\x20rgba(0,0,0,0.3);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x201000;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-family:\x20Arial,\x20sans-serif;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20300px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20word-wrap:\x20break-word;\x0a\x20\x20\x20\x20\x20\x20\x20\x20',_0x4059e8(0x2a6),_0x4059e8(0x304),_0x4059e8(0x232),'</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22role-badge\x20role-','.hero-buttons',_0x4059e8(0x22d),_0x4059e8(0x334),'.dashboard-image',_0x4059e8(0x336),_0x4059e8(0x223),'🏟️',_0x4059e8(0x1fe),'block',_0x4059e8(0x35d),_0x4059e8(0x23f),'mamón','marihuana',_0x4059e8(0x22e),_0x4059e8(0x332),_0x4059e8(0x360),_0x4059e8(0x24d),'8498800zwQmoy','Tu\x20mensaje\x20tiene\x20problemas.\x20¿Quieres\x20enviarlo\x20así?\x0a\x0aTexto\x20sugerido:\x20\x22',_0x4059e8(0x2cb),_0x4059e8(0x282),_0x4059e8(0x2f5),'querySelectorAll',_0x4059e8(0x271),_0x4059e8(0x355),_0x4059e8(0x29f),_0x4059e8(0x34d),_0x4059e8(0x221),'.hero-button.primary',_0x4059e8(0x225),_0x4059e8(0x2bb),'scrollIntoView',_0x4059e8(0x258),_0x4059e8(0x237),_0x4059e8(0x231),_0x4059e8(0x34b),_0x4059e8(0x2dc),_0x4059e8(0x338),_0x4059e8(0x2af),'readyState',_0x4059e8(0x2e4),_0x4059e8(0x33e),'key',_0x4059e8(0x342),'includes',_0x4059e8(0x32e),_0x4059e8(0x275),'transform',_0x4059e8(0x2e0),_0x4059e8(0x2ee),_0x4059e8(0x31f),_0x4059e8(0x303),_0x4059e8(0x2f3),_0x4059e8(0x35f),_0x4059e8(0x31d),_0x4059e8(0x2f8),_0x4059e8(0x247),_0x4059e8(0x2d6),_0x4059e8(0x292),_0x4059e8(0x2ba),'sexo','admin',_0x4059e8(0x245),_0x4059e8(0x2fa),_0x4059e8(0x291),_0x4059e8(0x323),_0x4059e8(0x1fb),_0x4059e8(0x23d),_0x4059e8(0x1f6),_0x4059e8(0x327),'emojiPicker',_0x4059e8(0x209),'href','px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-color:\x20rgba(255,\x20255,\x20255,\x20','then',_0x4059e8(0x236),_0x4059e8(0x335),'hijo\x20de\x20puta','substring','cocaína',_0x4059e8(0x322),_0x4059e8(0x243),_0x4059e8(0x2e8),'wind_speed_10m',_0x4059e8(0x35e),_0x4059e8(0x1f9),'combustible',_0x4059e8(0x251),'isIntersecting',_0x4059e8(0x1f3),_0x4059e8(0x20f),'textContent',_0x4059e8(0x2ae),'0\x202px\x2010px\x20rgba(0,\x200,\x200,\x200.05)',_0x4059e8(0x26e),_0x4059e8(0x2d9),'unobserve',_0x4059e8(0x306),_0x4059e8(0x343),_0x4059e8(0x34f),_0x4059e8(0x345),'ojalá\x20te\x20mueras','forEach','click',_0x4059e8(0x284),_0x4059e8(0x226),_0x4059e8(0x25e),_0x4059e8(0x2b6),_0x4059e8(0x32b),'observe',_0x4059e8(0x296),_0x4059e8(0x329),_0x4059e8(0x321),'dashboard-gps.html',_0x4059e8(0x2a0),_0x4059e8(0x219),'lastActivity',_0x4059e8(0x26b),_0x4059e8(0x29a),'stringify',_0x4059e8(0x2d2),_0x4059e8(0x2cc),_0x4059e8(0x30e),_0x4059e8(0x32c),'dashboard-gps','username','min','🏋️‍♀️',_0x4059e8(0x35c),_0x4059e8(0x26c),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20/*\x20Estilos\x20para\x20el\x20sistema\x20de\x20validación\x20*/\x0a\x20\x20\x20\x20\x20\x20\x20\x20#messageInput.invalid\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-color:\x20#dc3545\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x200\x200\x200.2rem\x20rgba(220,\x2053,\x2069,\x200.25)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20#messageInput.valid\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-color:\x20#28a745\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x200\x200\x200.2rem\x20rgba(40,\x20167,\x2069,\x200.25)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.content-filter-warning\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#fff3cd;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20#ffeaa7;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x208px\x2012px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin:\x205px\x200;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#856404;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2012px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20display:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.message-counter\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x2011px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#6c757d;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20text-align:\x20right;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin-top:\x202px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20.message-counter.warning\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#dc3545;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20',_0x4059e8(0x23e),_0x4059e8(0x24c),_0x4059e8(0x2e6),'Demasiados\x20enlaces\x20en\x20el\x20mensaje',_0x4059e8(0x362),_0x4059e8(0x2a8),_0x4059e8(0x2b8),_0x4059e8(0x326),_0x4059e8(0x330),_0x4059e8(0x314),_0x4059e8(0x33c),_0x4059e8(0x337),_0x4059e8(0x363),'3544120qfOpiV',_0x4059e8(0x2a5),_0x4059e8(0x2a9),_0x4059e8(0x32a),_0x4059e8(0x2c6),_0x4059e8(0x302),'6384896URFpXE','permission',_0x4059e8(0x2e7),_0x4059e8(0x23c),_0x4059e8(0x210),_0x4059e8(0x25a),_0x4059e8(0x300),_0x4059e8(0x1f8),'.hero-content',_0x4059e8(0x234),_0x4059e8(0x21c),_0x4059e8(0x305),'name',_0x4059e8(0x254),'maldito',_0x4059e8(0x27e),_0x4059e8(0x2da),_0x4059e8(0x341),'🤼‍♂️',_0x4059e8(0x33b),'pac',_0x4059e8(0x2b7),_0x4059e8(0x30c),'El\x20mensaje\x20contiene\x20patrones\x20no\x20permitidos\x20(spam,\x20exceso\x20de\x20mayúsculas,\x20etc.)','weather-desc',_0x4059e8(0x1fd),_0x4059e8(0x2b4),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x20primary\x22>Explorar\x20Dashboards\x20<span>→</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22hero-button\x22>Conoce\x20Más\x20<span>↓</span></button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20',_0x4059e8(0x359),'disabled-link','exitoMessage','dato_ua',_0x4059e8(0x218),_0x4059e8(0x2e5),'6mZartb',_0x4059e8(0x356),_0x4059e8(0x352),_0x4059e8(0x21e),_0x4059e8(0x241),'getAttribute','1410054QPSBTV','?h=M','temperature_2m',_0x4059e8(0x213),_0x4059e8(0x319),_0x4059e8(0x351),_0x4059e8(0x2d0),_0x4059e8(0x262),_0x4059e8(0x252),'slice',_0x4059e8(0x202),_0x4059e8(0x2b3),_0x4059e8(0x26d),_0x4059e8(0x242),_0x4059e8(0x2c1),_0x4059e8(0x2c8),_0x4059e8(0x228),_0x4059e8(0x1fa),_0x4059e8(0x24b),_0x4059e8(0x233),_0x4059e8(0x2ac),'Usuario','createElement',_0x4059e8(0x2e1),_0x4059e8(0x29d),_0x4059e8(0x205),_0x4059e8(0x2a2),'%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20',_0x4059e8(0x2e9),'messageInput',_0x4059e8(0x22b),_0x4059e8(0x328),_0x4059e8(0x1fc),_0x4059e8(0x278),_0x4059e8(0x28f),'target','te\x20mato','body','Debes\x20iniciar\x20sesión\x20para\x20acceder\x20al\x20foro',_0x4059e8(0x27f),_0x4059e8(0x253),_0x4059e8(0x2fb),_0x4059e8(0x2ef),_0x4059e8(0x287),'🖨️',_0x4059e8(0x340),'7fNjmrR',_0x4059e8(0x339),_0x4059e8(0x222),'login.html','max',_0x4059e8(0x358),_0x4059e8(0x313),_0x4059e8(0x2c2),_0x4059e8(0x28d),_0x4059e8(0x211),_0x4059e8(0x311),'type',_0x4059e8(0x331),'Enter',_0x4059e8(0x27b),'toISOString',_0x4059e8(0x2eb),_0x4059e8(0x297),_0x4059e8(0x307),_0x4059e8(0x261),_0x4059e8(0x21f),'$1$1','content',_0x4059e8(0x2cd),_0x4059e8(0x264),_0x4059e8(0x2ec),_0x4059e8(0x2c9),_0x4059e8(0x2d3),_0x4059e8(0x265),'px)',_0x4059e8(0x2b9),'ojete',_0x4059e8(0x2f1),'join',_0x4059e8(0x295),_0x4059e8(0x20d),'perdedor',_0x4059e8(0x2bc),'zoneStatus',_0x4059e8(0x21b),'🎛️',_0x4059e8(0x273),_0x4059e8(0x235),_0x4059e8(0x2fd),_0x4059e8(0x333),'dark-mode',_0x4059e8(0x316),'height',_0x4059e8(0x20b),_0x4059e8(0x2ca),_0x4059e8(0x318),_0x4059e8(0x344),'style',_0x4059e8(0x2dd),'length',_0x4059e8(0x280),_0x4059e8(0x347),_0x4059e8(0x266),_0x4059e8(0x2cf),_0x4059e8(0x2ed),'mensajes','open',_0x4059e8(0x2ce),'pointerEvents',_0x4059e8(0x29e),'.modules','🏍️',_0x4059e8(0x249),_0x4059e8(0x2fc),_0x4059e8(0x24a),'2-digit','focus',_0x4059e8(0x20e),_0x4059e8(0x21d),_0x4059e8(0x246),_0x4059e8(0x33a),_0x4059e8(0x2b2),_0x4059e8(0x2be),_0x4059e8(0x24f),_0x4059e8(0x270),_0x4059e8(0x250),_0x4059e8(0x216),_0x4059e8(0x20a),_0x4059e8(0x301),_0x4059e8(0x256),'🖐️',_0x4059e8(0x272),_0x4059e8(0x25f),_0x4059e8(0x308),_0x4059e8(0x357),_0x4059e8(0x25d),_0x4059e8(0x22f),_0x4059e8(0x23b),_0x4059e8(0x2d1),'.module',_0x4059e8(0x2df),_0x4059e8(0x257),_0x4059e8(0x263)];return _0xd0c3=function(){return _0x2c166f;},_0xd0c3();}function getRoleDisplayName(_0xf65376){const _0x29a097=_0x1a6f7f,_0x45dc1e=_0x511643,_0x52bf37={'director':_0x29a097(0x268),'admin':_0x45dc1e(0x159),'combustible':_0x45dc1e(0xed),'user':_0x45dc1e(0x154)};return _0x52bf37[_0xf65376[_0x45dc1e(0x138)]()]||_0xf65376;}function escapeHtml(_0x501356){const _0x1d183d=_0x1a6f7f,_0x58daab=_0x511643,_0x292089=document[_0x58daab(0x155)](_0x58daab(0xa5));return _0x292089[_0x58daab(0xdc)]=_0x501356,_0x292089[_0x1d183d(0x272)];}function scrollToBottom(){const _0x1ef694=_0x1a6f7f,_0x179ddf=_0x511643,_0x328756=document[_0x179ddf(0x19d)](_0x1ef694(0x286));_0x328756[_0x179ddf(0x1c9)]=_0x328756[_0x1ef694(0x217)];}function cleanupOldData(){const _0x2e91ef=_0x1a6f7f,_0x2ee719=_0x511643,_0x3640e0=new Date(Date[_0x2ee719(0x121)]()-0x7*0x18*0x3c*0x3c*0x3e8);messages=messages[_0x2ee719(0xb3)](_0x27b4cd=>new Date(_0x27b4cd[_0x2ee719(0xa3)])>_0x3640e0),saveMessages();const _0x490e6b=JSON[_0x2ee719(0x1d7)](localStorage['getItem'](_0x2ee719(0x91))||'[]'),_0x290b91=new Date(Date[_0x2e91ef(0x21c)]()-0x3c*0x3c*0x3e8),_0x1b6975=_0x490e6b[_0x2e91ef(0x31f)](_0x15f029=>new Date(_0x15f029[_0x2e91ef(0x31a)])>_0x290b91);localStorage['setItem'](_0x2ee719(0x91),JSON[_0x2ee719(0xf8)](_0x1b6975));}setInterval(cleanupOldData,0x3c*0x3c*0x3e8),window['addEventListener'](_0x511643(0x1b1),function(){cleanupOldData();});function enviarDatos(_0x1ea7fc,_0x2f3f70,_0x4f67be,_0x4d2eb3){const _0x46f70b=_0x1a6f7f,_0x6dc9d7=_0x511643;fetch(WEB_APP_URL,{'method':_0x46f70b(0x24e),'mode':_0x6dc9d7(0xfc),'headers':{'Content-Type':_0x6dc9d7(0x1d5)},'body':JSON[_0x6dc9d7(0xf8)]({'pagina':_0x1ea7fc,'fila':_0x2f3f70,'datos':_0x4f67be,'tipo':_0x4d2eb3})})[_0x46f70b(0x30d)](()=>{const _0x4f3efd=_0x46f70b,_0x2667da=_0x6dc9d7;document[_0x4f3efd(0x20b)](_0x2667da(0x1b0))[_0x2667da(0x1a1)][_0x2667da(0x9c)]=_0x4f3efd(0x2e1),ingresar_compra1(),window[_0x2667da(0xe4)]({'top':0x0,'behavior':_0x2667da(0x10c)});})[_0x6dc9d7(0x13c)](_0x249010=>{})[_0x46f70b(0x35b)](()=>{});}function cargarDatosGenerales(){const _0x39e87f=_0x1a6f7f,_0x23215a=_0x511643;fetch(WEB_APP_URL+'?h=MUA')[_0x23215a(0xcb)](_0x237c55=>_0x237c55[_0x23215a(0x102)]())[_0x23215a(0xcb)](_0x11866d=>{const _0x4c7877=_0xc046,_0xe16b5e=_0x23215a;dato_ms=_0x11866d[_0x4c7877(0x251)],dato_ua=_0x11866d[_0xe16b5e(0x136)],dato_ac=_0x11866d[_0xe16b5e(0x1c0)];const _0x12e252=dato_ms[_0xe16b5e(0x148)](0x1)[_0xe16b5e(0x9b)](_0x59533f=>({'id':Number(_0x59533f[0x0]),'author':_0x59533f[0x1],'role':_0x59533f[0x2],'content':_0x59533f[0x3],'timestamp':_0x59533f[0x4],'userId':_0x59533f[0x5]}));mensajesLista=JSON[_0xe16b5e(0xf8)](_0x12e252),baul=0x0,cargarMensajes();})[_0x39e87f(0x21e)](_0x53a827=>{const _0x17187d=_0x23215a;console[_0x17187d(0x7d)](_0x17187d(0x76),_0x53a827);});}function cargarMensajes(){loadMessages(),setInterval(function(){const _0x47a730=_0xc62c;fetch(WEB_APP_URL+_0x47a730(0x140))[_0x47a730(0xcb)](_0x422895=>_0x422895[_0x47a730(0x102)]())[_0x47a730(0xcb)](_0x202cde=>{const _0x242d53=_0xc046,_0x1ee9c8=_0x47a730;dato_pp=_0x202cde[_0x1ee9c8(0xd8)],baul11=JSON['stringify'](dato_pp),baul22=JSON[_0x242d53(0x309)](dato_ms);if(baul11!==baul22){dato_ms=_0x202cde[_0x1ee9c8(0xd8)];const _0x30d030=dato_ms[_0x1ee9c8(0x148)](0x1)[_0x242d53(0x34d)](_0x1d4129=>({'id':Number(_0x1d4129[0x0]),'author':_0x1d4129[0x1],'role':_0x1d4129[0x2],'content':_0x1d4129[0x3],'timestamp':_0x1d4129[0x4],'userId':_0x1d4129[0x5]}));mensajesLista=JSON[_0x242d53(0x309)](_0x30d030),loadMessages();}})[_0x47a730(0x13c)](_0x1d9d3f=>{const _0x3c702b=_0x47a730;console[_0x3c702b(0x7d)](_0x3c702b(0x76),_0x1d9d3f);});},0x1388);}const palabrasProhibidas=[_0x1a6f7f(0x325),_0x511643(0x177),_0x511643(0x85),_0x511643(0x151),_0x1a6f7f(0x320),_0x511643(0x17d),_0x511643(0x196),_0x511643(0xc2),_0x511643(0x1bd),_0x511643(0xec),_0x511643(0x13a),_0x511643(0xa6),_0x511643(0x1e6),_0x511643(0xb5),_0x1a6f7f(0x229),_0x511643(0x79),_0x511643(0xef),'culero',_0x511643(0x17f),_0x511643(0x157),_0x511643(0x101),_0x511643(0x8e),_0x511643(0x7f),_0x511643(0x18c),_0x511643(0x8c),_0x511643(0x1ce),_0x1a6f7f(0x312),_0x1a6f7f(0x34c),_0x511643(0x98),_0x511643(0x131),_0x511643(0x1b2),_0x511643(0x191),_0x511643(0x186),_0x511643(0x1e9),'cerdo',_0x511643(0x149),_0x511643(0x1e4),_0x511643(0x14f),_0x511643(0x1d0),_0x1a6f7f(0x2b5),_0x511643(0x9a),_0x511643(0x153),_0x511643(0x99),_0x511643(0xcd),_0x511643(0x105),'wetback','te\x20voy\x20a\x20matar',_0x511643(0x163),_0x511643(0x78),_0x511643(0x146),_0x511643(0x106),_0x511643(0xe6),_0x1a6f7f(0x361),_0x511643(0x147),_0x511643(0x125),_0x511643(0x1de),_0x511643(0xce),_0x1a6f7f(0x2c7),_0x511643(0xbd),'masturbación',_0x511643(0xe0),_0x1a6f7f(0x29b),'penetración',_0x1a6f7f(0x207),_0x511643(0x8d),_0x1a6f7f(0x2d4),_0x511643(0x1a4),_0x511643(0xd0),_0x511643(0xc5),_0x1a6f7f(0x349),_0x511643(0x19e)],patronesProhibidos=[/(.)\1{4,}/g,/[A-Z]{5,}/g,/(.{1,3})\1{3,}/g,/^\s*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{3,}\s*$/g];function validarContenido(_0x35c8db){const _0x2f99c4=_0x1a6f7f,_0x2e8da8=_0x511643;if(!_0x35c8db||typeof _0x35c8db!==_0x2f99c4(0x2bd))return{'esValido':![],'razon':_0x2f99c4(0x27a)};const _0xada78d=_0x35c8db['trim']();if(_0xada78d[_0x2e8da8(0x1a3)]<0x2)return{'esValido':![],'razon':_0x2f99c4(0x2f6)};if(_0xada78d[_0x2e8da8(0x1a3)]>0x1f4)return{'esValido':![],'razon':_0x2e8da8(0xbc)};const _0x2446ca=_0xada78d[_0x2f99c4(0x2e5)]()[_0x2e8da8(0x10d)](_0x2e8da8(0xf3))[_0x2e8da8(0x144)](/[\u0300-\u036f]/g,'')[_0x2e8da8(0x144)](/[^a-z0-9\s]/gi,'\x20')[_0x2e8da8(0x144)](/\s+/g,'\x20');for(const _0x4caf41 of palabrasProhibidas){if(_0x2446ca[_0x2e8da8(0xad)](_0x4caf41[_0x2e8da8(0x138)]()))return{'esValido':![],'razon':_0x2e8da8(0xd1)};}for(const _0xff4712 of patronesProhibidos){if(_0xff4712[_0x2f99c4(0x224)](_0xada78d))return{'esValido':![],'razon':_0x2e8da8(0x12e)};}if(_0x2446ca[_0x2f99c4(0x2ae)]()[_0x2f99c4(0x34a)]===0x0)return{'esValido':![],'razon':_0x2e8da8(0x161)};const _0x100051=/https?:\/\/[^\s]+/gi,_0x1af3e6=_0xada78d[_0x2f99c4(0x287)](_0x100051);if(_0x1af3e6&&_0x1af3e6[_0x2e8da8(0x1a3)]>0x2)return{'esValido':![],'razon':_0x2e8da8(0x107)};return{'esValido':!![],'razon':null};}function limpiarTexto(_0x20c105){const _0x224208=_0x511643;if(!_0x20c105)return'';return _0x20c105[_0x224208(0x144)](/(.)\1{3,}/g,_0x224208(0x182))['replace'](/[A-Z]{4,}/g,_0x338fb2=>_0x338fb2[_0x224208(0xa9)](0x0)+_0x338fb2[_0x224208(0x148)](0x1)[_0x224208(0x138)]())[_0x224208(0xdd)]();}function sendMessageWithValidation(){const _0x59bcf0=_0x1a6f7f,_0x5966c9=_0x511643,_0x23b5f6=document[_0x5966c9(0x19d)](_0x59bcf0(0x32f)),_0x4b02c4=_0x23b5f6[_0x5966c9(0x7a)][_0x5966c9(0xdd)]();if(!_0x4b02c4){mostrarError(_0x5966c9(0xa1));return;}const _0x41dbfe=validarContenido(_0x4b02c4);if(!_0x41dbfe[_0x5966c9(0x168)]){mostrarError(_0x41dbfe[_0x5966c9(0x1ca)]);const _0x459c8f=limpiarTexto(_0x4b02c4);_0x459c8f&&_0x459c8f!==_0x4b02c4&&(confirm(_0x5966c9(0x93)+_0x459c8f+'\x22')&&(_0x23b5f6[_0x5966c9(0x7a)]=_0x459c8f));return;}const _0x220d8f={'id':Date[_0x5966c9(0x121)](),'author':currentUser[_0x59bcf0(0x26f)],'role':currentUser[_0x5966c9(0xe9)],'content':_0x4b02c4,'timestamp':new Date()[_0x59bcf0(0x1ff)](),'userId':currentUser[_0x5966c9(0xfe)]||currentUser[_0x5966c9(0x1d9)]};mensaje=[Date[_0x59bcf0(0x21c)](),currentUser[_0x5966c9(0x1ea)],currentUser[_0x5966c9(0xe9)],_0x4b02c4,new Date()[_0x59bcf0(0x1ff)](),currentUser[_0x5966c9(0xfe)]||currentUser[_0x59bcf0(0x2a1)]],enviarDatos(_0x59bcf0(0x288),0x0,mensaje,0x1),messages[_0x5966c9(0x17e)](_0x220d8f),saveMessages(),_0x23b5f6[_0x5966c9(0x7a)]='',_0x23b5f6[_0x5966c9(0x1a1)][_0x5966c9(0x19c)]=_0x5966c9(0xfa),renderMessages(),scrollToBottom();}function mostrarError(_0xb95ab6){const _0xa5c2c0=_0x1a6f7f,_0x1b3449=_0x511643;let _0x5cc0a4=document[_0x1b3449(0x19d)]('errorMessage');!_0x5cc0a4&&(_0x5cc0a4=document[_0x1b3449(0x155)](_0x1b3449(0xa5)),_0x5cc0a4['id']=_0x1b3449(0xba),_0x5cc0a4[_0x1b3449(0x1a1)][_0x1b3449(0xb6)]=_0x1b3449(0x7c),document[_0xa5c2c0(0x215)][_0x1b3449(0x1df)](_0x5cc0a4)),_0x5cc0a4[_0x1b3449(0xdc)]=_0xb95ab6,_0x5cc0a4['style'][_0x1b3449(0x9c)]=_0xa5c2c0(0x33d),setTimeout(()=>{const _0x279bdc=_0xa5c2c0,_0xbaae=_0x1b3449;_0x5cc0a4[_0xbaae(0x1a1)][_0x279bdc(0x221)]=_0xbaae(0x156);},0xfa0);}function mostrarExito(_0x3a86ec){const _0x569ad1=_0x1a6f7f,_0x397616=_0x511643;let _0x739c98=document[_0x397616(0x19d)](_0x397616(0x135));!_0x739c98&&(_0x739c98=document[_0x397616(0x155)](_0x397616(0xa5)),_0x739c98['id']=_0x397616(0x135),_0x739c98[_0x397616(0x1a1)][_0x569ad1(0x35f)]='\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20fixed;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20right:\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#27ae60;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x2015px\x2020px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x208px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x204px\x2012px\x20rgba(0,0,0,0.3);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x201000;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-family:\x20Arial,\x20sans-serif;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20max-width:\x20300px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20word-wrap:\x20break-word;\x0a\x20\x20\x20\x20\x20\x20\x20\x20',document[_0x397616(0x164)][_0x397616(0x1df)](_0x739c98)),_0x739c98[_0x397616(0xdc)]=_0x3a86ec,_0x739c98[_0x397616(0x1a1)][_0x397616(0x9c)]=_0x397616(0x89),setTimeout(()=>{const _0x481075=_0x569ad1,_0x8faa95=_0x397616;_0x739c98[_0x8faa95(0x1a1)][_0x481075(0x221)]=_0x8faa95(0x156);},0x7d0);}function validarTextoEnTiempoReal(){const _0x562644=_0x1a6f7f,_0x2156f0=_0x511643,_0xb82713=document[_0x2156f0(0x19d)](_0x562644(0x32f)),_0x26c49e=document[_0x2156f0(0x19d)](_0x2156f0(0x18f));if(!_0xb82713||!_0x26c49e)return;_0xb82713[_0x562644(0x256)](_0x2156f0(0x14b),function(){const _0x340219=_0x2156f0,_0x547c1d=this[_0x340219(0x7a)][_0x340219(0xdd)](),_0x55adcc=validarContenido(_0x547c1d);_0x55adcc[_0x340219(0x168)]?(_0x26c49e[_0x340219(0x1a1)][_0x340219(0xf6)]=_0x340219(0x185),_0x26c49e[_0x340219(0x1a1)][_0x340219(0xc8)]=_0x340219(0x72),_0x26c49e[_0x340219(0xd5)]=![]):(_0x26c49e[_0x340219(0x1a1)][_0x340219(0xf6)]=_0x340219(0x1e1),_0x26c49e[_0x340219(0x1a1)][_0x340219(0xc8)]=_0x340219(0x169),_0x26c49e[_0x340219(0xd5)]=_0x547c1d['length']>0x0);});}   
+</script>
+</body>
+</html>
