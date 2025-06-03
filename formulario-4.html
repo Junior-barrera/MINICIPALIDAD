@@ -1488,7 +1488,7 @@
                     container.innerHTML = reclamosPendientes.map(reclamo => {
 
                         if (numerar == 0) {
-                            baul = reclamo.departamento;
+                            var baul = reclamo.departamento;
                             inform[0] = "0";
                             inform[1] = reclamo.estado.toString().toUpperCase();
                             inform[2] = reclamo.departamento.toString().toUpperCase();
