@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Ingreso y Salida de Vehículos | Municipalidad de Arica</title>
+    <base target="_top">
+    <script src="dir_formularioapps.js"></script>
+    <meta charset="UTF-8">
+
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Header styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            font-weight: 400;
+            color: #86868b;
+        }
+
+        /* Form styles */
+        .form-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #06c;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #06c;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .color_suggestions {
+            color: #06c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Specific form elements */
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"] {
+            text-transform: uppercase;
+        }
+
+        textarea {
+            text-transform: uppercase;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .form-check label {
+            font-size: 14px;
+        }
+
+        /* Info panels */
+        .info-alert {
+            background-color: rgba(0, 102, 204, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #06c;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #06c, #09c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff33cc, #ff66cc);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 51, 204, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 51, 204, 0.4);
+        }
+
+        /* Hidden fields */
+        .hidden-fields {
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+
+            .footer-column {
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-group {
+                min-width: 100%;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* ------- Mensaje de Cargando Datos (INICIAL) ------- */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(155, 155, 158, 0.6);
+            /* sombra oscura */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            /* encima de todo */
+            visibility: hidden;
+            /* inicialmente oculto */
+        }
+
+        .loading-message {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-size: 1.7em;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 10px black;
+        }
+    </style>
+
+</head>
+
+<body onload="iniciando()">
+
+    <!-- Header with logo and search -->
+
+    <div id="loading-overlay">
+        <div class="loading-message">Cargando datos...<br>por favor espere</div>
+    </div>
+
+    <header>
+        <div class="top-header">
+            <div class="logo">
+                <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                <div class="logo-text">
+                    <h1>ARICA</h1>
+                    <span>MUNICIPALIDAD | mejor ciudad</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <h2 class="form-title">Registro de Ingreso y Salida de Vehículos</h2>
+
+        <form id="formulario">
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Ingreso</label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" onchange="cambiarFecha()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">N° de Control</label>
+                        <span id="ident" name="ident" class="form-control" style="display: inline-block;"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Movimiento</label>
+                        <select class="form-select" name="movimiento" id="movimiento" onchange="updateSelect()">
+                            <option value="ENTRADA">ENTRADA</option>
+                            <option value="SALIDA">SALIDA</option>
+                            <option value="EN PROCESO">EN PROCESO</option>
+                            <option value="ENTRADA/SALIDA">ENTRADA/SALIDA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Conductor</label>
+                        <input type="text" class="form-control" id="conductor" name="conductor"
+                            placeholder="Ingresa el nombre del conductor" oninput="showSuggestionsConductor()">
+                        <div class="color_suggestions" id="suggestionsConductor"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Patente</label>
+                        <input type="text" class="form-control" id="patente" name="patente"
+                            placeholder="Ingresa la patente del vehículo" oninput="showSuggestionsPatente()">
+                        <div class="color_suggestions" id="suggestionsPatente"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" name="estado" id="estado">
+                            <option value="OPERATIVA">OPERATIVA</option>
+                            <option value="EN REPARACION">EN REPARACION</option>
+                            <option value="DE BAJA">DE BAJA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Días en Taller</label>
+                        <input class="form-control" type="number" name="dias" id="dias" value="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Kilometraje Actual</label>
+                        <input class="form-control" type="text" name="kilometraje" id="kilometraje"
+                            placeholder="Ingresa el kilometraje actual" oninput="formatearNumero(this)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion"
+                            placeholder="Ingresa la dirección" oninput="showSuggestionsDireccion()">
+                        <div class="color_suggestions" id="suggestionsDireccion"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Vehículo</label>
+                        <select class="form-select" id="tipoVehic" name="tipoVehic">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado de Documentación</label>
+                        <select class="form-select" name="documentacion" id="documentacion">
+                            <option value="AL DIA">AL DIA</option>
+                            <option value="ATRASADO">ATRASADO</option>
+                            <option value="EN TRAMITES">EN TRAMITES</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 style="width: 100%; margin-bottom: 15px; font-size: 18px; color: #1d1d1f;">Información de Mantención
+                </h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Revisión Técnica</label>
+                        <input type="date" class="form-control" id="revTecnica" name="revTecnica"
+                            onchange="cambiarFechaRev1()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Próxima Revisión</label>
+                        <input type="date" class="form-control" id="proxRev" name="proxRev"
+                            onchange="cambiarFechaRev2()">
+                        <div id="alerta1" style="color: #ff3b30; font-size: 13px; margin-top: 5px;"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Último Cambio de Aceite (km)</label>
+                        <input type="text" class="form-control" id="aceiteActual" name="aceiteActual"
+                            oninput="formatearNumero(this)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Próximo Cambio (km)</label>
+                        <input type="text" class="form-control" id="aceiteProx" name="aceiteProx"
+                            oninput="formatearNumero(this)">
+                        <div id="alerta2" style="color: #ff3b30; font-size: 13px; margin-top: 5px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 style="width: 100%; margin-bottom: 15px; font-size: 18px; color: #1d1d1f;">Información de Fallas y
+                    Reparaciones</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Sistema Afectado</label>
+                        <select class="form-select" name="sistema" id="sistema">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nivel de Falla</label>
+                        <select class="form-select" name="nivelFalla" id="nivelFalla">
+                            <option value="LEVE">LEVE</option>
+                            <option value="MODERADO">MODERADO</option>
+                            <option value="GRAVE">GRAVE</option>
+                            <option value="SEVERA">SEVERA</option>
+                            <option value="EXTREMA">EXTREMA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Falla</label>
+                        <!-- <select class="form-select" name="tipoFalla" id="tipoFalla"> -->
+                        <input type="text" class="form-control" id="tipoFalla" name="tipoFalla"
+                            placeholder="Describe el tipo de falla" oninput="showSuggestionsTipoFalla()">
+                        <div class="color_suggestions" id="suggestionsTipoFalla"></div>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1 0 100%;">
+                        <label class="form-label">Trabajos a Realizar</label>
+                        <input type="text" class="form-control" id="jobType" name="jobType"
+                            placeholder="Describe el tipo de trabajo a realizar" oninput="showSuggestionsTrabajo()">
+                        <div class="color_suggestions" id="suggestionsTrabajo"></div>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="check1" name="check1" onchange="mostrarMas()">
+                    <label for="check1">Agregar observaciones adicionales</label>
+                </div>
+
+                <textarea class="form-control" name="observ" id="observ" style="display:none; margin-top: 10px;"
+                    rows="3" placeholder="Escribe tus observaciones..."></textarea>
+            </div>
+
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Operario Responsable</label>
+                        <input type="text" class="form-control" id="operario" name="operario"
+                            placeholder="Ingresa el nombre del operario" oninput="showSuggestionsOperario()">
+                        <div class="color_suggestions" id="suggestionsOperario"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden fields -->
+            <div class="hidden-fields">
+                <input type="text" name="fecha2" id="fecha2">
+                <input type="text" name="fecha3" id="fecha3">
+                <input type="text" name="ident9" id="ident9">
+                <input type="text" name="sistem" id="sistem">
+                <input type="text" name="tfalla" id="tfalla">
+                <input type="text" name="tdirec" id="tdirec">
+                <input type="text" name="tcondu" id="tcondu">
+                <input type="text" name="tpaten" id="tpaten">
+                <input type="text" name="topera" id="topera">
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-primary" type="button" onclick="enviarFormulario1()">GUARDAR REGISTRO</button>
+                <button class="btn btn-primary" type="button" onclick="nuevoFormulario1()">NUEVO REGISTRO</button>
+                <button class="btn btn-primary" type="button" onclick="window.location.href='formulario-2.html'">VOLVER
+                    ATRÁS</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca , Arica</p>
+                <p>Anexo:6959 </p>
+                <p>Email:roberto.mamani@municipalidadarica.cl </p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales,
+                    como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y
+                        Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica</strong> y más, en
+                    un solo sistema integral.
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor
+                        control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la
+                    <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            <div class="footer-column licitaciones">
+                <h3>Licitaciones</h3>
+                <ul class="licitaciones-list">
+                    <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                    <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                    <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                    <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                    <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+            <p>Desarrollado por Junior Barrera</p>
+        </div>
+    </footer>
+</body>
+
+<script>
+
+    mostrarCargando_1(1);
+
+    var nuevo = new Array();         // Array para guardar los datos del formulario
+
+    var kmActual = 0;
+    var aceitAnt = 0;
+    var aceitPrx = 0;
+    var ultimoId = 0;
+
+    var dat_PAT = new Array();
+    var dato_dt = new Array();
+    var dato_v1 = new Array();
+
+    var tipTraba = new Array();      // Tipos de Trabajos
+    var tipPaten = new Array();      // Listado de Patentes
+    var tipVehic = new Array();      // Tipos de Vehiculos
+    var tipDirec = new Array();      // Listado de Direcciones
+    var tipFalla = new Array();      // Tipos de Falla segun categoria
+    var tipOpera = new Array();      // Listado de Operarios
+    var tipCondu = new Array();      // Listado de Conductores
+
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwG3r3xvcwIWFJXR9fWSRRPNulRqLgbD03QDza7WTkun05ySJxaWn-5q9c1ENEwsFGv/exec";     // Implementacion
+    // const WEB_APP_URL = dir_mec;
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        mostrarFormulario();
+    });
+
+
+    function mostrarFormulario() {
+        var modalContainer = document.getElementById('modalContainer');
+        var modalContent = document.getElementById('modalContent');
+        setTimeout(function () {
+            // modalContent.classList.add('show');
+        }, 100);
+    }
+
+
+    function iniciando() {
+
+        // updateDateTime1();
+        document.getElementById("fecha").value = obtenerFechaActual();
+        cambiarFecha();
+        // mostrarValor();
+        cargarDatosGenerales();
+        updateSelect();
+
+    }
+
+
+    function cambiarFecha() {
+        fech99 = document.getElementById("fecha").value;
+        document.getElementById("fecha2").value = fech99;
+        const fechaInput = fech99;
+
+        if (fechaInput) {
+            // Dividir la fecha en año, mes y día
+            const [year, month, day] = fechaInput.split('-');
+
+            // Reorganizar la fecha en formato dd-mm-aaaa
+            const fechaFormateada = `${day}-${month}-${year}`;
+
+            // Colocar la fecha formateada en el input fecha3
+            document.getElementById("fecha3").value = fechaFormateada;
+        }
+    }
+    // ###############################################################################
+    // Pasar la fecha de TEXTO DD/MM/YYYY a una FECHA YYYY-MM-DD (DATE)
+    function oficesarFechaTexto(fechaTexto) {
+        const partes = fechaTexto.split('/');
+        if (partes.length !== 3) return null; // Verifica que el formato sea correcto
+
+        const dia2 = partes[0].padStart(2, '0');  // Asegura 2 dígitos para el día
+        const mes2 = partes[1].padStart(2, '0');  // Asegura 2 dígitos para el mes
+        const ano2 = partes[2].padStart(4, '0');  // Asegura 4 dígitos para el año
+
+        // Devuelve la fecha en formato YYYY-MM-DD
+        return `${ano2}-${mes2}-${dia2}`;
+    }
+
+    // *******************************************************************************
+
+    // Pasar la fecha de un DATE YYY-MM-DD a un texto en formato DD/MM/YYYY
+    function transformarFecha(fechaInput) {
+        if (!fechaInput) {
+            console.log("No se seleccionó una fecha.");
+            return null;
+        }
+
+        // Crear un objeto de fecha a partir del valor del input (YYYY-MM-DD)
+        const fecha1 = new Date(fechaInput);
+        fecha1.setHours(fecha1.getHours() + 12);
+
+        // Extraer día, mes y año, asegurando 2 dígitos para día y mes y 4 digitos para el año
+        const dia1 = String(fecha1.getDate()).padStart(2, '0');
+        const mes1 = String(fecha1.getMonth() + 1).padStart(2, '0');   // Los meses empiezan en 0
+        const ano1 = String(fecha1.getFullYear());
+
+        // Formatear la fecha como DD/MM/YYYY
+        const fechaTexto = `${dia1}/${mes1}/${ano1}`;
+        return fechaTexto;
+    }
+
+
+    // *******************************************************************************
+
+    function enviarFormulario1() {            // Envio de datos a guardar el formulario
+
+        var error = 0;
+        var terror = new Array();
+
+        if (document.getElementById("patente").value == "") { terror[error] = "falta la patente"; error++; }
+        if (document.getElementById("direccion").value == "") { terror[error] = "falta la direccion"; error++; }
+        if (document.getElementById("tipoVehic").value == "") { terror[error] = "falta tipo de vehiculo"; error++; }
+        if (document.getElementById("jobType").value == "") { terror[error] = "falta categoria de la,falla"; error++; }
+        if (document.getElementById("tipoFalla").value == "") { terror[error] = "falta el subtipo de falla"; error++; }
+        if (document.getElementById("operario").value == "") { terror[error] = "falta el operario"; error++; }
+        if (document.getElementById("kilometraje").value == "") { terror[error] = "falta el kilometraje"; error++; }
+        if (document.getElementById("dias").value == "") { terror[error] = "faltan los dias en taller"; error++; }
+
+        if (error == 0) {
+            if (ultimoId != document.getElementById('ident9').value) {
+                ultimoId = document.getElementById('ident9').value;
+            } else {
+                error = 99;
+                alert("Este dato ya ha sido guardado");
+            }
+        }
+
+        if (error == 0) {
+
+            var observ1 = document.getElementById("observ").value;
+            if (observ1 == "") { observ1 = "SIN NOVEDAD"; }
+
+            document.getElementById("tfalla").value = document.getElementById("jobType").value;
+            document.getElementById("tcondu").value = document.getElementById("conductor").value;
+            document.getElementById("topera").value = document.getElementById("operario").value;
+            document.getElementById("tdirec").value = document.getElementById("direccion").value;
+            document.getElementById("tpaten").value = document.getElementById("patente").value;
+
+            nuevo[0] = (document.getElementById("ident9").value).toString().toUpperCase();
+            nuevo[1] = transformarFecha(document.getElementById("fecha").value);
+            nuevo[2] = (document.getElementById("movimiento").value).toString().toUpperCase();
+            nuevo[3] = (document.getElementById("tpaten").value).toString().toUpperCase();
+            nuevo[4] = (document.getElementById("kilometraje").value).replace(/\./g, '').replace(/\D/g, '');
+            nuevo[5] = (document.getElementById("tipoVehic").value).toString().toUpperCase();
+            nuevo[6] = (document.getElementById("documentacion").value).toString().toUpperCase();
+            nuevo[7] = (document.getElementById("tdirec").value).toString().toUpperCase();
+            nuevo[8] = (document.getElementById("estado").value).toString().toUpperCase();
+            nuevo[9] = (document.getElementById("tcondu").value).toString().toUpperCase();
+            nuevo[10] = (document.getElementById("tipoFalla").value).toString().toUpperCase();
+            nuevo[11] = (document.getElementById("nivelFalla").value).toString().toUpperCase();
+            nuevo[12] = (document.getElementById("sistem").value).toString().toUpperCase();
+            nuevo[13] = (document.getElementById("operario").value).toString().toUpperCase();
+            nuevo[14] = (document.getElementById("tfalla").value).toString().toUpperCase();
+            nuevo[15] = (document.getElementById("dias").value).toString().toUpperCase();
+            nuevo[16] = "HUGO ARAYA DELGADO";
+            nuevo[17] = (observ1).toString().toUpperCase();
+            nuevo[18] = transformarFecha(document.getElementById("revTecnica").value);
+            nuevo[19] = transformarFecha(document.getElementById("proxRev").value);
+            nuevo[20] = (document.getElementById("aceiteActual").value).toString().toUpperCase();
+            nuevo[21] = (document.getElementById("aceiteProx").value).toString().toUpperCase();
+            pp = 0;
+
+            patente = (document.getElementById("patente").value).toUpperCase();
+
+            enviarDatos("Datos", 0, nuevo, 1);             // Enviar la modificacion de los DATOS
+
+            let nivSistem = (document.getElementById("sistem").value).toString().toUpperCase();
+            let tipoFalla = (document.getElementById("tipoFalla").value).toString().toUpperCase();
+            let baul0 = 0;
+            let baul1 = 0;
+            for (tt = 0; tt < dato_v1[0].length; tt++) {     // Buscar la fila de los tipos de trabajo
+                baul0++;
+                if (dato_v1[0][tt] == "") { break; }
+                if (dato_v1[0][tt].toUpperCase() == nivSistem) { baul1 = tt + 1; break }
+            }
+            if (baul1 > 0) {
+                baul1 = baul1 - 1;
+                let baul2 = 0;
+                let baul3 = 1;
+                for (tt = 1; tt < dato_v1.length; tt++) {     // Buscar la fila de los tipos de trabajo
+                    baul3++;
+                    if (dato_v1[tt][baul1] == "") { break; }
+                    if (dato_v1[tt][baul1].toUpperCase() == tipoFalla) { baul2 = tt; break }
+                }
+                if (baul2 == 0) {
+                    filan = baul3;
+                    var trabajo = new Array();
+                    if (filan == 0) {
+                        trabajo = dato_v1[0];
+                        for (pp = 0; pp < trabajo.length; pp++) { trabajo[pp] = ""; }
+                    } else {
+                        trabajo = dato_v1[filan - 1];
+                    }
+                    trabajo[baul1] = tipoFalla;
+                    enviarDatos0("Variable1", filan, trabajo, 1);     // Enviar la modificacion del TIPO DE TRABAJO
+                }
+            }
+
+            ffila = 0;
+            for (tt = 1; tt < dat_PAT.length; tt++) {      // Buscar la fila de la patente
+                if (dat_PAT[tt][0] == "") { break; }
+                baul = 0;
+                if (dat_PAT[tt][0].toUpperCase() == patente) {
+                    ffila = tt + 2;
+                    // Datos 1 es de los DATOS
+                    // Datos 2 es de la PATENTE
+                    kactual1 = parseInt((document.getElementById("kilometraje").value).replace(/\./g, '').replace(/\D/g, ''));
+                    kactual2 = parseInt(dat_PAT[tt][6].replace(/\./g, '').replace(/\D/g, ''));
+                    revisio1 = document.getElementById("revTecnica").value;
+                    revisio2 = oficesarFechaTexto(dat_PAT[tt][4]);
+                    proximo1 = document.getElementById("proxRev").value;
+                    proximo2 = oficesarFechaTexto(dat_PAT[tt][5]);
+                    aceitnw1 = parseInt((document.getElementById("aceiteActual").value).replace(/\./g, '').replace(/\D/g, ''));
+                    aceitnw2 = parseInt(dat_PAT[tt][7].replace(/\./g, '').replace(/\D/g, ''));
+                    aceitpr1 = parseInt((document.getElementById("aceiteProx").value).replace(/\./g, '').replace(/\D/g, ''));
+                    aceitpr2 = parseInt(dat_PAT[tt][8].replace(/\./g, '').replace(/\D/g, ''));
+                    direcci1 = (document.getElementById("direccion").value).toUpperCase();
+                    direcci2 = dat_PAT[tt][3].toUpperCase();
+
+                    if (kactual1 != kactual2) {
+                        dat_PAT[tt][6] = kactual1.toString();
+                        baul++;
+                    }
+                    if (revisio1 != revisio2) {
+                        dat_PAT[tt][4] = transformarFecha(revisio1);
+                        baul++;
+                    }
+                    if (proximo1 != proximo2) {
+                        dat_PAT[tt][5] = transformarFecha(proximo1);
+                        baul++;
+                    }
+                    if (aceitnw1 != aceitnw2) {
+                        dat_PAT[tt][7] = (aceitnw1).toString();
+                        baul++;
+                    }
+                    if (aceitpr1 != aceitpr2) {
+                        dat_PAT[tt][8] = (aceitpr1).toString();
+                        baul++;
+                    }
+                    if (direcci1 != direcci2) {
+                        dat_PAT[tt][3] = (direcci1).toString().toUpperCase();
+                        baul++;
+                    }
+                    if ((baul > 0) && (ffila > 0)) {     // Si hubo cambios en la PATENTE
+                        baul = 0;
+                        enviarDatos0("PATENTES", ffila, dat_PAT[tt], 1);     // Enviar la modificacion de la PATENTE
+                        ffila = 0;
+                    }
+                }
+            }
+
+            if (ffila == 0) {     // Si no se encontro la patente, entonces se agrega una nueva
+
+                let patentn = (document.getElementById("patente").value).toString().toUpperCase();
+                let datorev = prompt("Esta ingresando un nuevo vehiculo " + patentn + "\nPor favor ingrese si la revision tecnica es anual (A) o semestral (S)");
+                datorev = datorev.toUpperCase();
+                if (datorev == "A" || datorev == "S") {
+                    ffila = dat_PAT.length;
+                    dat_PAT[ffila] = new Array();
+                    dat_PAT[ffila] = dat_PAT[ffila - 1];
+                    dat_PAT[ffila][0] = patentn;
+                    dat_PAT[ffila][1] = document.getElementById("tipoVehic").value.toString().toUpperCase();
+                    dat_PAT[ffila][2] = datorev;
+                    dat_PAT[ffila][3] = (document.getElementById("direccion").value).toUpperCase();
+                    dat_PAT[ffila][4] = transformarFecha(document.getElementById("revTecnica").value);
+                    dat_PAT[ffila][5] = transformarFecha(document.getElementById("proxRev").value);
+                    dat_PAT[ffila][6] = (document.getElementById("kilometraje").value).replace(/\./g, '').replace(/\D/g, '');
+                    dat_PAT[ffila][7] = (document.getElementById("aceiteActual").value).replace(/\./g, '').replace(/\D/g, '');
+                    dat_PAT[ffila][8] = (document.getElementById("aceiteProx").value).replace(/\./g, '').replace(/\D/g, '');
+                    enviarDatos0("PATENTES", ffila + 2, dat_PAT[ffila], 1);     // Enviar la nueva PATENTE
+                }
+
+            } else {
+
+                if (error < 99) {
+                    baul = "";
+                    for (tt = 0; tt < terror.length; tt++) { baul = baul + "\n - " + terror[tt]; }
+                    alert("ERROR - Falta rellenar los siguientes campos:" + baul);
+                }
+            }
+        }
+    }
+
+
+    function enviarDatos0(pagina, fila, datos, tipo) {        // Graba los datos pero no muestra ningun mensaje ni scroll
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pagina, fila, datos, tipo })
+        })
+            .then(() => {
+
+            })
+            .catch(error => {
+
+            })
+            .finally(() => {
+            });
+
+    }
+
+    function enviarDatos(pagina, fila, datos, tipo) {       // Graba los datos y muestra un mensaje de exito y scroll al inicio
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pagina, fila, datos, tipo })
+        })
+            .then(() => {
+                // mostrarToast('Datos enviados exitosamente 🎉', '#27ae60');
+                // alert('Datos enviados exitosamente');
+                // document.getElementById("cargandoOverlay").style.display = "none";     // Ocultar mensaje Cargando ...
+                // ingresar_compra1();
+                window.scrollTo({ top: 0, behavior: 'smooth' });                          // Scroll al inicio con animacion                                            // Scroll sin animación
+            })
+            .catch(error => {
+                // console.error('Error al enviar datos:', error);
+                // mostrarToast('Error al enviar los datos.', '#e74c3c');
+                alert('Error al enviar los datos');
+            })
+            .finally(() => {
+            });
+
+    }
+
+    function nuevoFormulario1() {
+        // Limpiar campos de entrada
+        document.getElementById("fecha").value = obtenerFechaActual();
+        document.getElementById("conductor").value = "";
+        document.getElementById("patente").value = "";
+        document.getElementById("direccion").value = "";
+        document.getElementById("kilometraje").value = "";
+        document.getElementById("tipoVehic").value = "";
+        document.getElementById("jobType").value = "";
+        document.getElementById("operario").value = "";
+        document.getElementById("revTecnica").value = "";
+        document.getElementById("proxRev").value = "";
+        document.getElementById("aceiteActual").value = "";
+        document.getElementById("aceiteProx").value = "";
+        document.getElementById("observ").value = "";
+
+        // Restablecer checkbox y ocultar campo de observaciones
+        document.getElementById("check1").checked = false;
+        document.getElementById("observ").style.display = "none";
+
+        // Restablecer alertas
+        document.getElementById("alerta1").innerHTML = "";
+        document.getElementById("alerta2").innerHTML = "";
+
+        // Generar un nuevo número de control
+        maxId++;
+        document.getElementById('ident').innerHTML = maxId;
+        document.getElementById('ident9').value = maxId;
+
+        // Restablecer selects a sus valores predeterminados
+        document.getElementById("movimiento").selectedIndex = 0;
+        document.getElementById("estado").selectedIndex = 0;
+        document.getElementById("documentacion").selectedIndex = 0;
+        document.getElementById("nivelFalla").selectedIndex = 0;
+        document.getElementById("sistema").selectedIndex = 0;
+
+        // Actualizar selects dependientes
+        updateSelect();
+
+        // Desplazarse suavemente al principio del formulario
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Mostrar mensaje
+        alert("Formulario listo para un nuevo registro");
+    }
+
+    function mostrarMas() {
+        var check1 = document.getElementById("check1").checked;
+        var observ = document.getElementById("observ");
+        if (check1) {
+            observ.style.display = 'block';
+        } else {
+            observ.style.display = 'none';
+        }
+    }
+
+    function updateDateTime1() {
+        // Actualizar fecha y hora cada segundo
+        var now = new Date();
+        document.getElementById("fecha").value = now.toLocaleDateString('es-ES');
+        document.getElementById("fecha9").value = now.toLocaleDateString('es-ES');
+        // updateDateTime2();
+    }
+    // ###########################################################
+
+    // Llamada para obtener las patentes y rellenar el select
+
+    function cargarDatosGenerales() {
+
+        aanum = 0;
+        fetch(WEB_APP_URL + "?h=PDV")           // Lee las hojas PATENTE, DATOS y Variable1
+            .then(response => response.json())
+            .then(data => {
+                // Asigna los datos recibidos a las variables bidimensionales
+                dat_PATx = data.dat_PAT;    // Datos de la hoja "PATENTE"
+                dato_dtx = data.dato_dt;    // Datos de la hoja "Datos"
+                dato_v1 = data.dato_v1;     // Datos de la hoja "Variable1"
+                var papel = 0;
+
+                mostrarCargando_1(0);
+
+                if (dat_PATx.length > 0) {
+                    for (ii = 0; ii < dat_PATx.length; ii++) {
+                        if (dat_PATx[ii][0] == "") { break; }
+                        if (ii > 0) {
+                            jj = ii - 1;
+                            tipVehic[jj] = dat_PATx[ii][1];    // Columna B
+                            tipPaten[jj] = dat_PATx[ii][0];    // Columna A
+                            tipDirec[jj] = dat_PATx[ii][3];    // Columna D
+                            dat_PAT[jj] = dat_PATx[ii];
+                        }
+                    }
+                }
+                if (dato_dtx.length > 0) {
+                    baul2 = 0;
+                    for (ii = 0; ii < dato_dtx.length; ii++) {
+                        if (dato_dtx[ii][0] == "") { break; }
+                        tipCondu[ii] = dato_dtx[ii][9].toUpperCase();        // Columna 9
+                        tipOpera[ii] = dato_dtx[ii][13].toUpperCase();        // Columna 13
+                        tipTraba[ii] = dato_dtx[ii][14].toUpperCase();        // Columna 14
+                        baul1 = parseInt(dato_dtx[ii][0]);
+                        dato_dt[ii] = dato_dtx[ii];
+                        dato_dt[ii][6] = dato_dt[ii][6].replace(/\./g, '').replace(/\D/g, '');
+                        dato_dt[ii][7] = dato_dt[ii][7].replace(/\./g, '').replace(/\D/g, '');
+                        dato_dt[ii][8] = dato_dt[ii][8].replace(/\./g, '').replace(/\D/g, '');
+                        if (baul1 > baul2) { baul2 = baul1; }
+                    }
+                    if (baul2 > 0) {
+                        maxId = baul2 + 1;
+                        document.getElementById('ident').innerHTML = maxId;
+                        document.getElementById('ident9').value = maxId;
+                    }
+
+                }
+
+                tipVehic = [...new Set(tipVehic)].sort();
+                tipPaten = [...new Set(tipPaten)].sort();
+                tipDirec = [...new Set(tipDirec)].sort();
+                tipOpera = [...new Set(tipOpera)].sort();
+                tipCondu = [...new Set(tipCondu)].sort();
+                tipTraba = [...new Set(tipTraba)].sort();
+
+                if ((dat_PAT.length > 0) && (dato_dt.length > 0) && (dato_v1.length > 0)) {
+                    cargarDatosFallas();
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+    }
+
+
+    // Función para cargar los datos cuando cambia la patente seleccionada
+    function cargarDatos() {
+        var patenteSeleccionada = document.getElementById('patente').value;
+        aanum = -5;
+        for (tt = 0; tt < tipPaten.length; tt++) {
+            if ((tipPaten[tt] == patenteSeleccionada) && (aanum < 0)) { aanum = 5; }
+        }
+        if ((patenteSeleccionada) && (aanum > 0)) {
+            document.getElementById("suggestionsPatente").innerHTML = '';
+            aanum = 0;
+            // Llama a la función para obtener el tipo de vehículo y dirección
+            for (ii = 0; ii < dat_PAT.length; ii++) {
+                if (patenteSeleccionada.toUpperCase() == dat_PAT[ii][0].toUpperCase()) {
+                    aanum++;
+                    document.getElementById('tipoVehic').value = dat_PAT[ii][1];
+                    document.getElementById('direccion').value = dat_PAT[ii][3];
+                    document.getElementById('kilometraje').value = formatearNumero2((dat_PAT[ii][6]).replace(/\./g, '').replace(/\D/g, ''));
+                    let fechaFormateada1 = oficesarFechaTexto(dat_PAT[ii][4]);
+                    let fechaFormateada2 = oficesarFechaTexto(dat_PAT[ii][5]);
+                    document.getElementById('revTecnica').value = fechaFormateada1;        // Hoja DATOS
+                    document.getElementById('proxRev').value = fechaFormateada2;           // Hoja DATOS
+                    document.getElementById('aceiteActual').value = formatearNumero2((dat_PAT[ii][7]).replace(/\./g, '').replace(/\D/g, ''));        // Hoja DATOS
+                    document.getElementById('aceiteProx').value = formatearNumero2((dat_PAT[ii][8]).replace(/\./g, '').replace(/\D/g, ''));          // Hoja DATOS
+
+                    kmActual = parseInt(dat_PAT[ii][6]);
+                    fchActua = document.getElementById('fecha').value;
+                    revAntig = (fechaFormateada1).toString();
+                    revProxi = (fechaFormateada2).toString();
+                    aceitAnt = parseInt(dat_PAT[ii][6]);
+                    aceitPrx = parseInt(dat_PAT[ii][8]);
+                }
+            }
+            if (aanum == 0) {
+                document.getElementById('tipoVehic').value = '';
+                document.getElementById('direccion').value = '';
+                document.getElementById('revTecnica').value = '';
+                document.getElementById('proxRev').value = '';
+                document.getElementById('aceiteActual').value = '';
+                document.getElementById('aceiteProx').value = '';
+            }
+        } else {
+
+            // Si no hay ninguna patente seleccionada, vacía los campos
+            document.getElementById('tipoVehic').value = '';
+            document.getElementById('direccion').value = '';
+            document.getElementById('revTecnica').value = '';
+            document.getElementById('proxRev').value = '';
+            document.getElementById('aceiteActual').value = '';
+            document.getElementById('aceiteProx').value = '';
+
+        }
+
+    }
+    function revisar_alertas() {
+
+        // let fechaInicio = new Date(2000, 0, 1);      // Fecha desde el 1/1/2000
+        fpart = fchActua.split('-');
+        fdia = parseInt(fpart[2]);
+        fmes = parseInt(fpart[1]) - 1;          // Los meses en JavaScript van de 0 a 11
+        fano = parseInt(fpart[0]);
+        fechaUsuario = new Date(fano, fmes, fdia);
+        dias = Math.floor(fechaUsuario / (1000 * 60 * 60 * 24));
+
+        var ultReg = dias;
+        fpart = revAntig.split('/');
+        fdia = parseInt(fpart[0]);
+        fmes = parseInt(fpart[1]) - 1;          // Los meses en JavaScript van de 0 a 11
+        fano = parseInt(fpart[2]);
+        fechaUsuario = new Date(fano, fmes, fdia);
+        dias = Math.floor(fechaUsuario / (1000 * 60 * 60 * 24));
+
+        var diaRev = dias;
+
+        fpart = revProxi.split('/');
+        fdia = parseInt(fpart[0]);
+        fmes = parseInt(fpart[1]) - 1;          // Los meses en JavaScript van de 0 a 11
+        fano = parseInt(fpart[2]);
+        fechaUsuario = new Date(fano, fmes, fdia);
+        dias = Math.floor(fechaUsuario / (1000 * 60 * 60 * 24));
+
+        var diaProx = dias;
+
+        // alert(ultReg + "\n" + diaRev + "\n" + diaProx);
+
+        document.getElementById("alerta1").innerHTML = "";
+        document.getElementById("alerta2").innerHTML = "";
+
+        if ((kmActual + 1) > aceitPrx) {
+            document.getElementById("alerta2").innerHTML = "&nbsp;&nbsp;<b>!!!!!!</b>";
+            document.getElementById("alerta2").style.color = "red";
+        } else {
+            if (kmActual > (aceitPrx - 1000)) {
+                document.getElementById("alerta2").innerHTML = "&nbsp;&nbsp;<b>!!!</b>";
+                document.getElementById("alerta2").style.color = "purple";
+            } else {
+                document.getElementById("alerta2").innerHTML = "";
+                document.getElementById("alerta2").style.color = "black";
+            }
+        }
+
+
+        if ((ultReg + 1) > diaProx) {
+            document.getElementById("alerta1").innerHTML = "<b>!!!!!!</b>";
+            document.getElementById("alerta1").style.color = "red";
+        } else {
+            if (ultReg > (diaProx - 30)) {
+                document.getElementById("alerta1").innerHTML = "<b>!!!</b>";
+                document.getElementById("alerta1").style.color = "purple";
+            } else {
+                document.getElementById("alerta1").innerHTML = "";
+                document.getElementById("alerta1").style.color = "black";
+            }
+        }
+
+    }
+    // ##############################################################
+    // Función para cargar las variables desde Apps Script
+    function cargarDatosFallas() {
+
+        let selectSistema = document.getElementById('sistema');
+        let selectTipoFalla = document.getElementById('tipoFalla');
+
+        // Limpiar ambos select
+        selectSistema.innerHTML = '';
+        selectTipoFalla.innerHTML = '';
+
+        // Cargar las opciones en el select de "sistema"
+        for (ii = 0; ii < dato_v1[0].length; ii++) {
+            let option = document.createElement('option');
+            option.value = ii;
+            option.text = dato_v1[0][ii]; // Mostrar los valores de la primera fila
+            selectSistema.appendChild(option);
+        }
+
+
+        let tipoVehic = document.getElementById('tipoVehic');
+
+        // Limpiar ambos select
+        tipoVehic.innerHTML = '';
+
+        // Cargar las opciones en el select de "sistema"
+        for (ii = 0; ii < tipVehic.length; ii++) {
+            let option = document.createElement('option');
+            option.value = tipVehic[ii];
+            option.text = tipVehic[ii]; // Mostrar los valores de la primera fila
+            tipoVehic.appendChild(option);
+        }
+
+
+        // Función para cargar el select de "tipoFalla" según la columna seleccionada
+        function cargarTipoFalla(colIndex) {
+            selectTipoFalla.value = ''; // Limpiar el select de "tipoFalla"
+            // Cargar los valores correspondientes en "tipoFalla"
+            tipFalla.length = 0;
+            var qq = 0;
+            for (jj = 1; jj < dato_v1.length; jj++) {
+                if (dato_v1[jj][colIndex]) { // Verificar si hay un valor en esa celda
+                    tipFalla[qq] = dato_v1[jj][colIndex].toUpperCase(); // Guardar el valor en el array
+                    qq++;
+                }
+            }
+            tipFalla = [...new Set(tipFalla)].sort();
+        }
+
+        // Cargar los valores en "tipoFalla" para la primera columna (columna 0)
+        cargarTipoFalla(0);
+        document.getElementById("sistem").value = dato_v1[0][0];
+
+        // Evento para cambiar los valores en "tipoFalla" cuando cambia "sistema"
+        selectSistema.addEventListener('click', function () {
+            let colIndex = selectSistema.value; // Obtener el índice de la columna seleccionada
+            cargarTipoFalla(colIndex); // Llamar a la función para actualizar "tipoFalla"
+            document.getElementById("sistem").value = dato_v1[0][colIndex];
+        });
+    }
+    // ***************************************************************************************************************
+    // ***************************************************************************************************************
+    function showSuggestionsTrabajo() {
+        const input = document.getElementById("jobType").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsTrabajo");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipTraba.filter(job => job.toLowerCase().includes(input));
+
+            filteredJobs.forEach(job => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = job;
+                suggestionItem.onclick = () => selectJob(job);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        }
+    }
+
+    function selectJob(job) {
+        document.getElementById("jobType").value = job;
+        document.getElementById("suggestionsTrabajo").innerHTML = '';  // Limpiar las sugerencias una vez seleccionado
+    }
+    // ***************************************************************************************************************
+    function showSuggestionsPatente() {
+        const input = document.getElementById("patente").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsPatente");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipPaten.filter(paten => paten.toLowerCase().includes(input));
+
+            filteredJobs.forEach(paten => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = paten;
+                suggestionItem.onclick = () => selectPaten(paten);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+            cargarDatos();
+        }
+    }
+
+    function selectPaten(paten) {
+        document.getElementById("patente").value = paten;
+        document.getElementById("suggestionsPatente").innerHTML = '';     // Limpiar las sugerencias una vez seleccionado
+        cargarDatos();
+    }
+    // ***************************************************************************************************************
+    function showSuggestionsConductor() {
+        const input = document.getElementById("conductor").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsConductor");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipCondu.filter(condu => condu.toLowerCase().includes(input));
+
+            filteredJobs.forEach(condu => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = condu;
+                suggestionItem.onclick = () => selectCond(condu);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        }
+    }
+
+    function selectCond(condu) {
+        document.getElementById("conductor").value = condu;
+        document.getElementById("suggestionsConductor").innerHTML = '';   // Limpiar las sugerencias una vez seleccionado
+    }
+    // ***************************************************************************************************************
+    function showSuggestionsOperario() {
+        const input = document.getElementById("operario").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsOperario");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipOpera.filter(opera => opera.toLowerCase().includes(input));
+
+            filteredJobs.forEach(opera => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = opera;
+                suggestionItem.onclick = () => selectOpera(opera);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        }
+    }
+
+    function selectOpera(opera) {
+        document.getElementById("operario").value = opera;
+        document.getElementById("suggestionsOperario").innerHTML = '';   // Limpiar las sugerencias una vez seleccionado
+    }
+    // ***************************************************************************************************************
+    function showSuggestionsDireccion() {
+        const input = document.getElementById("direccion").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsDireccion");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipDirec.filter(direc => direc.toLowerCase().includes(input));
+
+            filteredJobs.forEach(direc => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = direc;
+                suggestionItem.onclick = () => selectDir(direc);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        }
+    }
+    function selectDir(direc) {
+        document.getElementById("direccion").value = direc;
+        document.getElementById("suggestionsDireccion").innerHTML = '';   // Limpiar las sugerencias una vez seleccionado
+    }
+
+    // #############################################################
+    function showSuggestionsTipoFalla() {
+        const input = document.getElementById("tipoFalla").value.toLowerCase();
+        const suggestionsDiv = document.getElementById("suggestionsTipoFalla");
+        suggestionsDiv.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+            const filteredJobs = tipFalla.filter(fall => fall.toLowerCase().includes(input));
+
+            filteredJobs.forEach(fall => {
+                const suggestionItem = document.createElement("div");
+                suggestionItem.textContent = fall;
+                suggestionItem.onclick = () => selectFalla(fall);
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        }
+    }
+    function selectFalla(fall) {
+        document.getElementById("tipoFalla").value = fall;
+        document.getElementById("suggestionsTipoFalla").innerHTML = '';   // Limpiar las sugerencias una vez seleccionado
+    }
+    // #############################################################
+    function obtenerFechaActual() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
+        const day = String(today.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
+        return `${year}-${month}-${day}`;
+    }
+    function updateSelect() {
+        valorin = document.getElementById("movimiento").value;
+        if (valorin == "ENTRADA/SALIDA") {
+            document.getElementById('dias').value = "1";
+            document.getElementById('dias').setAttribute('readonly', true);
+        } else {
+            document.getElementById('dias').removeAttribute('readonly');
+        }
+    }
+    function cambiarFechaRev1() { }
+
+    function cambiarFechaRev2() { }
+
+    function mostrarCargando_1(nn) {
+        var overlay = document.getElementById('loading-overlay');
+        if (nn == 1) { overlay.style.visibility = 'visible'; }
+        if (nn == 0) { overlay.style.visibility = 'hidden'; }
+    }
+
+    // ************************************************************************
+
+    function formatearNumero(input) {
+        // Eliminar puntos y caracteres no numéricos
+        let valor3 = input.value.replace(/\./g, '').replace(/\D/g, '');
+        // Convertir a número y formatear con puntos
+        // Insertar puntos de miles manualmente
+        let numeroFormateado = valor3.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        // Actualizar el valor del input con el formato correcto
+        input.value = numeroFormateado;
+    }
+
+    function formatearNumero2(valor1) {
+        // Eliminar puntos y caracteres no numéricos
+        let valor2 = valor1.replace(/\./g, '').replace(/\D/g, '');
+        // Convertir a número y formatear con puntos
+        // Insertar puntos de miles manualmente
+        let numeroFormateado = valor2.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        // Actualizar el valor del input con el formato correcto
+        return numeroFormateado;
+    }
+
+</script>
+</body>
+
+</html>
