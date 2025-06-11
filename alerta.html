@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Alertas Críticas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .alerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .alert-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .alert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--accent-color);
+        }
+
+        .alert-card.microbasurales {
+            --accent-color: #e74c3c;
+        }
+
+        .alert-card.luminaria {
+            --accent-color: #f39c12;
+        }
+
+        .alert-card.vehiculos {
+            --accent-color: #3498db;
+        }
+
+        .alert-card.reclamos {
+            --accent-color: #9b59b6;
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .alert-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            color: white;
+            background: var(--accent-color);
+        }
+
+        .alert-title {
+            flex: 1;
+        }
+
+        .alert-title h3 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .alert-count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .alert-items {
+            margin: 20px 0;
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.2s ease;
+        }
+
+        .alert-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-location {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .item-details {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .item-priority {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .priority-critical {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .priority-high {
+            background: #f39c12;
+            color: white;
+        }
+
+        .priority-medium {
+            background: #3498db;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .timestamp {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #bdc3c7;
+            background: rgba(0,0,0,0.05);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .alerts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 Panel de Alertas Críticas</h1>
+            <p>Monitoreo en tiempo real para respuesta rápida y eficiente</p>
+        </div>
+
+        <div class="alerts-grid">
+            <!-- Microbasurales Reincidentes -->
+            <div class="alert-card microbasurales pulse">
+                <div class="timestamp">Actualizado: 14:32</div>
+                <div class="alert-header">
+                    <div class="alert-icon">🗑️</div>
+                    <div class="alert-title">
+                        <h3>Microbasurales Reincidentes</h3>
+                        <div class="alert-count">7</div>
+                    </div>
+                </div>
+                <div class="alert-items">
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Av. San Martín 1250</div>
+                            <div class="item-details">3ra reincidencia en 15 días</div>
+                        </div>
+                        <div class="item-priority priority-critical">Crítico</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Barrio Las Flores</div>
+                            <div class="item-details">2da reincidencia esta semana</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Plaza Central</div>
+                            <div class="item-details">Acumulación persistente</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Programar Limpieza</button>
+                    <button class="btn btn-secondary">Ver Detalles</button>
+                </div>
+            </div>
+
+            <!-- Zonas sin Luminaria Crítica -->
+            <div class="alert-card luminaria">
+                <div class="timestamp">Actualizado: 14:28</div>
+                <div class="alert-header">
+                    <div class="alert-icon">💡</div>
+                    <div class="alert-title">
+                        <h3>Luminaria Crítica</h3>
+                        <div class="alert-count">12</div>
+                    </div>
+                </div>
+                <div class="alert-items">
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Calle Bolívar (4 cuadras)</div>
+                            <div class="item-details">Sin iluminación desde hace 3 días</div>
+                        </div>
+                        <div class="item-priority priority-critical">Crítico</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Parque Municipal</div>
+                            <div class="item-details">50% de luminarias fuera de servicio</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Av. Costanera Norte</div>
+                            <div class="item-details">Sector completo sin luz</div>
+                        </div>
+                        <div class="item-priority priority-critical">Crítico</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Asignar Técnico</button>
+                    <button class="btn btn-secondary">Ver Mapa</button>
+                </div>
+            </div>
+
+            <!-- Vehículos Detenidos -->
+            <div class="alert-card vehiculos">
+                <div class="timestamp">Actualizado: 14:35</div>
+                <div class="alert-header">
+                    <div class="alert-icon">🚛</div>
+                    <div class="alert-title">
+                        <h3>Vehículos Sin Operar</h3>
+                        <div class="alert-count">5</div>
+                    </div>
+                </div>
+                <div class="alert-items">
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Camión Recolector #003</div>
+                            <div class="item-details">Detenido por falla mecánica - 2 días</div>
+                        </div>
+                        <div class="item-priority priority-critical">Crítico</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Barredora Municipal #007</div>
+                            <div class="item-details">En mantenimiento preventivo</div>
+                        </div>
+                        <div class="item-priority priority-medium">Medio</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Camión Cisterna #002</div>
+                            <div class="item-details">Esperando repuestos</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Gestionar Flota</button>
+                    <button class="btn btn-secondary">Estado Detallado</button>
+                </div>
+            </div>
+
+            <!-- Reclamos Sin Atención -->
+            <div class="alert-card reclamos pulse">
+                <div class="timestamp">Actualizado: 14:40</div>
+                <div class="alert-header">
+                    <div class="alert-icon">📋</div>
+                    <div class="alert-title">
+                        <h3>Reclamos Críticos</h3>
+                        <div class="alert-count">23</div>
+                    </div>
+                </div>
+                <div class="alert-items">
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Fuga de agua - Reclamo #1847</div>
+                            <div class="item-details">Sin respuesta hace 8 días</div>
+                        </div>
+                        <div class="item-priority priority-critical">Crítico</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Bache peligroso - Reclamo #1852</div>
+                            <div class="item-details">Pendiente hace 6 días</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                    <div class="alert-item">
+                        <div class="item-info">
+                            <div class="item-location">Ruidos molestos - Reclamo #1839</div>
+                            <div class="item-details">Sin asignar hace 5 días</div>
+                        </div>
+                        <div class="item-priority priority-high">Alto</div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Asignar Urgente</button>
+                    <button class="btn btn-secondary">Ver Todos</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de Estadísticas Resumen -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <h4>47</h4>
+                <p>Total Alertas Activas</p>
+            </div>
+            <div class="stat-item">
+                <h4>12</h4>
+                <p>Críticas</p>
+            </div>
+            <div class="stat-item">
+                <h4>18</h4>
+                <p>Altas</p>
+            </div>
+            <div class="stat-item">
+                <h4>17</h4>
+                <p>Medias</p>
+            </div>
+            <div class="stat-item">
+                <h4>85%</h4>
+                <p>Tiempo Respuesta</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de actualización en tiempo real
+        function updateTimestamps() {
+            const timestamps = document.querySelectorAll('.timestamp');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            timestamps.forEach(timestamp => {
+                timestamp.textContent = `Actualizado: ${timeString}`;
+            });
+        }
+
+        // Efecto de pulsación para alertas críticas
+        function togglePulse() {
+            const criticalCards = document.querySelectorAll('.alert-card.microbasurales, .alert-card.reclamos');
+            criticalCards.forEach(card => {
+                card.classList.toggle('pulse');
+            });
+        }
+
+        // Interactividad de botones
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardTitle = this.closest('.alert-card').querySelector('h3').textContent;
+                const buttonText = this.textContent;
+                
+                // Efecto visual de clic
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                // Simulación de acción
+                setTimeout(() => {
+                    alert(`Acción "${buttonText}" ejecutada para: ${cardTitle}`);
+                }, 200);
+            });
+        });
+
+        // Actualizar timestamps cada minuto
+        setInterval(updateTimestamps, 60000);
+        
+        // Alternar pulsación cada 3 segundos
+        setInterval(togglePulse, 3000);
+
+        // Efectos de hover para items
+        document.querySelectorAll('.alert-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '';
+            });
+        });
+    </script>
+</body>
+</html>

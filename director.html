@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CENTRO DE MANDO DIRECTOR DIMAO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333333;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px 30px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .timestamp {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            background: #ecf0f1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #34495e;
+        }
+
+        .nav-tabs {
+            background: #ffffff;
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .nav-tab {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            color: #34495e;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-tab:hover,
+        .nav-tab.active {
+            background: #34495e;
+            border-color: #2c3e50;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            max-width: 1900px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .executive-summary {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #34495e;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-green { background: #27ae60; }
+        .status-yellow { background: #f39c12; }
+        .status-red { background: #e74c3c; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .kpi-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            background: #f1f1f1;
+            transform: translateY(-3px);
+        }
+
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .progress-green { background: #27ae60; }
+        .progress-yellow { background: #f39c12; }
+        .progress-red { background: #e74c3c; }
+
+        .map-container {
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #34495e;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-btn {
+            background: #34495e;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .map-btn:hover {
+            background: #2c3e50;
+            transform: scale(1.05);
+        }
+
+        .map-points {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .point-reclamo { background: #e74c3c; }
+        .point-cuadrilla { background: #27ae60; }
+        .point-vehiculo { background: #f39c12; }
+        .point-basural { background: #e67e22; }
+        .point-supervisor { background: #3498db; }
+
+        .alerts-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .alert-item {
+            background: #fef2f2;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #fee2e2;
+            color: #333;
+        }
+
+        .alert-item:hover {
+            background: #fee2e2;
+            transform: translateX(5px);
+        }
+
+        .alert-item.warning {
+            background: #fffbeb;
+            border-left-color: #f39c12;
+            border-color: #fef3c7;
+        }
+
+        .alert-item.info {
+            background: #eff6ff;
+            border-left-color: #3498db;
+            border-color: #dbeafe;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: #34495e;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: #2c3e50;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            color: #34495e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #34495e;
+            border-color: #2c3e50;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .inbox-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #34495e;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .inbox-item:hover {
+            background: #f1f1f1;
+        }
+
+        .inbox-time {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            float: right;
+            font-weight: 500;
+        }
+
+        .critical-notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 500px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .notification-item {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .executive-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .executive-summary {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .timestamp {
+                position: static;
+                transform: none;
+                margin-top: 15px;
+            }
+            .nav-tabs {
+                padding: 10px 15px;
+            }
+        }
+        .ia-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ia-status {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #27ae60;
+        }
+
+        .ia-panel {
+            background: #ffffff;
+        }
+
+        .ia-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ia-prediction {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dbeafe;
+        }
+
+        .ia-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .ia-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+</style>
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CENTRO DE MANDO DIRECTOR DIMAO</h1>
+        <div class="header-subtitle">🌐 Vista Única — Control Total</div>
+        <div class="timestamp" id="currentTime"></div>
+    </div>
+   
+    <div class="nav-tabs">
+        <div class="nav-tab active" data-tab="resumen">📊 Resumen Ejecutivo</div>
+        <div class="nav-tab" data-tab="alertas">🔔 Alertas Críticas</div>
+        <div class="nav-tab" data-tab="territorial">🏙️ Control Territorial</div>
+        <div class="nav-tab" data-tab="aseo">🧹 Aseo y Recolección</div>
+        <div class="nav-tab" data-tab="iluminacion">💡 Iluminación</div>
+        <div class="nav-tab" data-tab="verdes">🌳 Áreas Verdes</div>
+        <div class="nav-tab" data-tab="taller">🧰 Taller</div>
+        <div class="nav-tab" data-tab="bodega">📦 Bodega</div>
+        <div class="nav-tab" data-tab="pac">🛒 PAC</div>
+        <div class="nav-tab" data-tab="reclamos">💬 Reclamos</div>
+        <div class="nav-tab" data-tab="personal">🧑‍💼 Personal</div>
+        <div class="nav-tab" data-tab="informes">📊 Informes</div>
+    </div>
+
+    <!-- Botón de notificaciones -->
+    <button class="notification-toggle" onclick="toggleNotifications()">🔔</button>
+    
+    <!-- Panel de notificaciones críticas -->
+    <div class="critical-notifications" id="notificationsPanel">
+        <div class="notification-item">🚨 CRÍTICO: 3 camiones fuera de servicio</div>
+        <div class="notification-item">⚠️ Stock LED bajo mínimo crítico</div>
+        <div class="notification-item">🔴 15 reclamos sin atención +48h</div>
+    </div>
+    <div class="panel ia-panel">
+        <h3 class="panel-title">🤖 INTELIGENCIA ARTIFICIAL <span class="status-indicator status-green"></span></h3>
+        <div class="ia-content">
+            <div class="ia-prediction">
+                <div class="ia-value">23</div>
+                <div class="ia-label">Reclamos predichos hoy</div>
+            </div>
+            <div class="ia-prediction">
+                <div class="ia-value">78%</div>
+                <div class="ia-label">Satisfacción ciudadana</div>
+            </div>
+            <button class="action-btn" onclick="executeCommand('prediccion-ia')">🔄 Actualizar predicciones</button>
+        </div>
+    </div>
+    <!-- Contenido de pestañas -->
+    <div class="tab-content active" id="resumen">
+        <div class="executive-summary">
+            <div class="panel">
+                <h3 class="panel-title">📊 RESUMEN EJECUTIVO <span class="status-indicator status-yellow"></span></h3>
+                <div class="filter-bar">
+                    <button class="filter-btn active">Hoy</button>
+                    <button class="filter-btn">Semana</button>
+                    <button class="filter-btn">Mes</button>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #00ff88;">87</div>
+                        <div class="kpi-label">Reclamos Cerrados</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-green" style="width: 87%;"></div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #ff4444;">23</div>
+                        <div class="kpi-label">Reclamos Abiertos</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #ffcc00;">12/15</div>
+                        <div class="kpi-label">Vehículos Operativos</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #00ff88;">8</div>
+                        <div class="kpi-label">OT Completadas</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3 class="panel-title">📈 INDICADORES CRÍTICOS <span class="status-indicator status-red"></span></h3>
+                <table class="data-table">
+                    <tr><th>Indicador</th><th>Actual</th><th>Meta</th><th>Estado</th></tr>
+                    <tr><td>% Reclamos Resueltos</td><td>87%</td><td>≥90%</td><td>🟡</td></tr>
+                    <tr><td>Camiones Operativos</td><td>12/15</td><td>≥14</td><td>🔴</td></tr>
+                    <tr><td>Stock LED 100W</td><td>45 uds</td><td>≥100</td><td>🔴</td></tr>
+                    <tr><td>Ejecución PAC</td><td>68%</td><td>≥70%</td><td>🟡</td></tr>
+                    <tr><td>Espacios Verdes</td><td>5</td><td>≥3</td><td>🟢</td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3 class="panel-title">⚙️ COMANDOS RÁPIDOS <span class="status-indicator status-green"></span></h3>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="executeCommand('reporte')">📤 Reporte Semanal</button>
+                    <button class="action-btn" onclick="executeCommand('ot-masiva')">🚀 OT Masiva</button>
+                    <button class="action-btn" onclick="executeCommand('reprogramar')">📅 Reprogramar</button>
+                    <button class="action-btn" onclick="executeCommand('historico')">🔍 Ver Histórico</button>
+                    <button class="action-btn" onclick="executeCommand('recursos')">🎯 Desplegar Recursos</button>
+                    <button class="action-btn" onclick="executeCommand('analisis')">📊 Análisis IA</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h3 class="panel-title">📥 INBOX EJECUTIVO <span class="status-indicator status-yellow"></span></h3>
+                <div class="inbox-item">
+                    <span class="inbox-time">08:45</span>
+                    <strong>Supervisor Zona Sur:</strong> Completado mantenimiento sector comercial
+                </div>
+                <div class="inbox-item">
+                    <span class="inbox-time">09:12</span>
+                    <strong>Coordinador Limpieza:</strong> Ruta modificada por evento municipal
+                </div>
+                <div class="inbox-item">
+                    <span class="inbox-time">09:30</span>
+                    <strong>Sistema Automático:</strong> Detectado patrón de reclamos en Av. Principal
+                </div>
+                <div class="inbox-item">
+                    <span class="inbox-time">10:05</span>
+                    <strong>Cuadrilla A:</strong> Solicita apoyo adicional zona industrial
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="alertas">
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h3 class="panel-title">🚨 ALERTAS CRÍTICAS <span class="status-indicator status-red"></span></h3>
+                <div class="alerts-list">
+                    <div class="alert-item">
+                        🚨 <strong>CRÍTICO:</strong> Vehículo recolector N°4 lleva 3 días inactivo
+                        <div style="margin-top: 8px;">
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Asignar Tarea</button>
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Notificar Encargado</button>
+                        </div>
+                    </div>
+                    <div class="alert-item warning">
+                        ⚠️ <strong>ATENCIÓN:</strong> Zona Norte sin cuadrilla asignada hoy
+                        <div style="margin-top: 8px;">
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Reasignar Cuadrilla</button>
+                        </div>
+                    </div>
+                    <div class="alert-item">
+                        🔴 <strong>URGENTE:</strong> +10 reclamos sin atención en Av. Tucapel
+                        <div style="margin-top: 8px;">
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Derivar Trabajo</button>
+                        </div>
+                    </div>
+                    <div class="alert-item warning">
+                        📦 <strong>STOCK:</strong> Luminarias LED bajo stock crítico (45/100)
+                        <div style="margin-top: 8px;">
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Validar Compras</button>
+                        </div>
+                    </div>
+                    <div class="alert-item info">
+                        🌧️ <strong>EVENTO:</strong> Lluvia fuerte pronosticada para mañana
+                        <div style="margin-top: 8px;">
+                            <button class="action-btn" style="padding: 8px 12px; font-size: 0.8rem;">Preparar Recursos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="territorial">
+        <div class="dashboard-grid">
+            <div class="map-container" style="grid-column: 1 / -1;">
+                <div class="map-overlay">
+                    🗺️ MAPA OPERACIONAL EN VIVO
+                    <br>🟢 Cuadrillas Activas: 4
+                    <br>🟡 Vehículos en Ruta: 12
+                    <br>🔴 Alertas Activas: 7
+                    <br>🔵 Supervisores en Terreno: 3
+                </div>
+                <div class="map-controls">
+                    <button class="map-btn">📍 Reclamos</button>
+                    <button class="map-btn">🚛 Vehículos</button>
+                    <button class="map-btn">👷 Cuadrillas</button>
+                    <button class="map-btn">🗑️ Basurales</button>
+                    <button class="map-btn">🧑‍💼 Supervisores</button>
+                </div>
+                <div class="map-points">
+                    <div class="map-point point-reclamo" style="top: 30%; left: 25%;" title="Reclamo Activo"></div>
+                    <div class="map-point point-cuadrilla" style="top: 60%; left: 70%;" title="Cuadrilla Trabajando"></div>
+                    <div class="map-point point-vehiculo" style="top: 45%; left: 50%;" title="Vehículo en Ruta"></div>
+                    <div class="map-point point-basural" style="top: 20%; left: 80%;" title="Microbasural"></div>
+                    <div class="map-point point-supervisor" style="top: 70%; left: 30%;" title="Supervisor en Terreno"></div>
+                    <div class="map-point point-reclamo" style="top: 25%; left: 60%;"></div>
+                    <div class="map-point point-vehiculo" style="top: 80%; left: 75%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="aseo">
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h3 class="panel-title">🧹 DEPARTAMENTO DE ASEO Y RECOLECCIÓN <span class="status-indicator status-yellow"></span></h3>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #ffcc00;">12/15</div>
+                        <div class="kpi-label">Flota Operativa</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #00ff88;">85%</div>
+                        <div class="kpi-label">Rutas Cubiertas</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" style="color: #ff6b35;">45 ton</div>
+                        <div class="kpi-label">Residuos Hoy</div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn">🔄 Reprogramar Rutas</button>
+                    <button class="action-btn">🎯 Priorizar Barrios</button>
+                    <button class="action-btn">🔧 Mantenimiento</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 class="panel-title">📊 ESTADO DE FLOTA</h3>
+                <table class="data-table">
+                    <tr><th>Vehículo</th><th>Estado</th><th>Zona</th><th>Última Mantención</th></tr>
+                    <tr><td>Camión 001</td><td>🟢 Operativo</td><td>Centro</td><td>15/05/2025</td></tr>
+                    <tr><td>Camión 002</td><td>🟡 En R
+<script>
+   // ========================================
+// CENTRO DE MANDO DIRECTOR DIMAO - VERSIÓN MEJORADA
+// ========================================
+
+class DIMAODashboard {
+    constructor() {
+        // Variables de estado
+        this.currentTab = 'resumen';
+        this.notificationsVisible = false;
+        this.mapView = 'general';
+        this.executiveMode = false;
+        this.darkMode = false;
+        
+        // Datos del sistema
+        this.alertData = [];
+        this.kpiData = {};
+        this.financialData = {};
+        this.aiPredictions = {};
+        
+        // Inicialización
+        this.init();
+    }
+    
+    // ========================================
+    // INICIALIZACIÓN DEL SISTEMA
+    // ========================================
+    init() {
+        console.log('🧭 Inicializando Centro de Mando DIMAO...');
+        
+        // Configurar eventos
+        this.setupEventListeners();
+        
+        // Cargar datos iniciales
+        this.loadInitialData();
+        
+        // Iniciar servicios
+        this.updateClock();
+        this.clockInterval = setInterval(() => this.updateClock(), 1000);
+        this.dataRefreshInterval = setInterval(() => this.refreshData(), 30000);
+        this.aiInterval = setInterval(() => this.updatePredictiveAnalysis(), 300000);
+        
+        this.initializeAI();
+        this.loadFinancialDashboard();
+        
+        this.showNotification('Sistema iniciado correctamente', 'success');
+        this.updateSystemStatus();
+        this.checkExecutiveMode();
+        this.loadUserPreferences();
+    }
+    
+    // ========================================
+    // RELOJ Y TIEMPO
+    // ========================================
+    updateClock() {
+        const now = new Date();
+        const options = { 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit',
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: false
+        };
+        
+        const timeString = now.toLocaleDateString('es-CL', options)  
+                         
+        
+        const clockElement = document.getElementById('currentTime');
+        if (clockElement) {
+            clockElement.textContent = timeString;
+        }
+    }
+    
+    // ========================================
+    // SISTEMA DE PESTAÑAS
+    // ========================================
+    setupEventListeners() {
+        // Pestañas de navegación
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                this.switchTab(tabId);
+            });
+        });
+
+        // Filtros
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.activateFilter(btn);
+            });
+        });
+
+        // Botones de mapa
+        document.querySelectorAll('.map-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.toggleMapLayer(btn.textContent);
+            });
+        });
+        
+        // Botón de notificaciones
+        const notificationToggle = document.querySelector('.notification-toggle');
+        if (notificationToggle) {
+            notificationToggle.addEventListener('click', () => this.toggleNotifications());
+        }
+    }
+    
+    switchTab(tabId) {
+        // Desactivar pestaña actual
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Activar nueva pestaña
+        const activeTab = document.querySelector(`[data-tab="${tabId}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                this.currentTab = tabId;
+                this.loadTabData(tabId);
+            }
+        }
+        
+        console.log(`📋 Cambiando a pestaña: ${tabId}`);
+    }
+    
+    activateFilter(button) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+        this.refreshData();
+    }
+    
+    toggleMapLayer(layer) {
+        console.log(`🗺️ Cambiando capa del mapa a: ${layer}`);
+        this.mapView = layer.toLowerCase();
+        // Aquí iría la lógica para actualizar el mapa
+    }
+    
+    // ========================================
+    // CARGA DE DATOS
+    // ========================================
+    loadInitialData() {
+        // Datos KPIs
+        this.kpiData = {
+            reclamosCerrados: Math.floor(Math.random() * 20) + 80,
+            reclamosAbiertos: Math.floor(Math.random() * 15) + 15,
+            vehiculosOperativos: Math.floor(Math.random() * 3) + 12,
+            otCompletadas: Math.floor(Math.random() * 5) + 6,
+            stockLED: Math.floor(Math.random() * 30) + 30,
+            ejecucionPAC: Math.floor(Math.random() * 15) + 65
+        };
+
+        // Alertas iniciales
+        this.alertData = [
+            {
+                id: 1,
+                type: 'critical',
+                message: 'Vehículo recolector N°4 lleva 3 días inactivo',
+                zone: 'Centro',
+                time: new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+                actions: ['Asignar Tarea', 'Notificar Encargado']
+            },
+            {
+                id: 2,
+                type: 'warning',
+                message: 'Zona Norte sin cuadrilla asignada hoy',
+                zone: 'Norte',
+                time: new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+                actions: ['Reasignar Cuadrilla']
+            }
+        ];
+
+        this.updateKPIs();
+    }
+    
+    refreshData() {
+        console.log('🔄 Actualizando datos del sistema...');
+        // Simular actualización de datos
+        this.kpiData.reclamosCerrados += Math.floor(Math.random() * 3);
+        this.kpiData.reclamosAbiertos = Math.max(0, this.kpiData.reclamosAbiertos + Math.floor(Math.random() * 3) - 1);
+        
+        this.updateKPIs();
+        this.updateNotifications();
+    }
+    
+    updateKPIs() {
+        // Actualizar valores en el DOM
+        const kpiCards = document.querySelectorAll('.kpi-value');
+        if (kpiCards.length >= 4) {
+            kpiCards[0].textContent = this.kpiData.reclamosCerrados;
+            kpiCards[1].textContent = this.kpiData.reclamosAbiertos;
+            kpiCards[2].textContent = `${this.kpiData.vehiculosOperativos}/15`;
+            kpiCards[3].textContent = this.kpiData.otCompletadas;
+        }
+
+        // Actualizar barras de progreso
+        this.updateProgressBars();
+    }
+    
+    updateProgressBars() {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach((bar, index) => {
+            let percentage = 0;
+            switch(index) {
+                case 0: percentage = this.kpiData.reclamosCerrados; break;
+                case 1: percentage = (this.kpiData.vehiculosOperativos / 15) * 100; break;
+                case 2: percentage = this.kpiData.ejecucionPAC; break;
+            }
+            bar.style.width = percentage + '%';
+        });
+    }
+    
+    // ========================================
+    // SISTEMA DE NOTIFICACIONES
+    // ========================================
+    toggleNotifications() {
+        const panel = document.getElementById('notificationsPanel');
+        this.notificationsVisible = !this.notificationsVisible;
+        
+        if (this.notificationsVisible) {
+            panel.style.display = 'block';
+            this.updateNotifications();
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+    
+    updateNotifications() {
+        const panel = document.getElementById('notificationsPanel');
+        const criticalAlerts = this.alertData.filter(alert => alert.type === 'critical');
+        
+        panel.innerHTML = criticalAlerts.map(alert => 
+            `<div class="notification-item" onclick="dimaoDashboard.handleAlert(${alert.id})">
+                🚨 ${alert.message}
+            </div>`
+        ).join('');
+    }
+    
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification-item ${type}`;
+        notification.textContent = message;
+        notification.style.position = 'fixed';
+        notification.style.top = '100px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '1002';
+        notification.style.animation = 'slideIn 0.5s ease';
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.5s ease';
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 5000);
+    }
+    
+    handleAlert(alertId) {
+        const alert = this.alertData.find(a => a.id === alertId);
+        if (alert) {
+            console.log(`🛎️ Manejo de alerta: ${alert.message}`);
+            this.showNotification(`Alert ID ${alertId} manejada`, 'success');
+        }
+    }
+    
+    // ========================================
+    // INTELIGENCIA ARTIFICIAL PREDICTIVA
+    // ========================================
+    initializeAI() {
+        this.aiPredictions = {
+            reclamos: 0,
+            weather: 0,
+            vehicleFailures: [],
+            citizenSatisfaction: 0,
+            optimalRoutes: [],
+            resourceNeeds: {}
+        };
+
+        this.updatePredictiveAnalysis();
+    }
+    
+    updatePredictiveAnalysis() {
+        // Predictor de reclamos basado en patrones
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const hour = today.getHours();
+
+        // Lunes tienen 40% más reclamos
+        let baseReclamos = 15;
+        if (dayOfWeek === 1) baseReclamos *= 1.4;
+        
+        // Horas pico (8-10 AM, 6-8 PM)
+        if ((hour >= 8 && hour <= 10) || (hour >= 18 && hour <= 20)) {
+            baseReclamos *= 1.2;
+        }
+
+        this.aiPredictions.reclamos = Math.round(baseReclamos + (Math.random() * 5));
+        this.aiPredictions.vehicleFailures = this.predictVehicleFailures();
+        this.aiPredictions.citizenSatisfaction = this.calculateCitizenSatisfaction();
+        this.aiPredictions.optimalRoutes = this.generateOptimalRoutes();
+        this.aiPredictions.resourceNeeds = this.predictResourceNeeds();
+
+        console.log('🤖 Análisis predictivo actualizado:', this.aiPredictions);
+        this.generatePredictiveAlerts();
+    }
+    
+    predictVehicleFailures() {
+        const vehicles = ['Camión 001', 'Camión 002', 'Camión 003', 'Compactador 001'];
+        const failures = [];
+
+        vehicles.forEach(vehicle => {
+            const riskScore = Math.random();
+            if (riskScore > 0.8) {
+                failures.push({
+                    vehicle: vehicle,
+                    risk: 'alto',
+                    prediction: 'Falla probable en 48-72 horas',
+                    maintenance: 'Revisar sistema hidráulico'
+                });
+            }
+        });
+
+        return failures;
+    }
+    
+    calculateCitizenSatisfaction() {
+        const satisfactionBase = (this.kpiData.reclamosCerrados / (this.kpiData.reclamosCerrados + this.kpiData.reclamosAbiertos)) * 100;
+        const vehicleAvailability = (this.kpiData.vehiculosOperativos / 15) * 100;
+        const finalSatisfaction = (satisfactionBase * 0.4 + vehicleAvailability * 0.3 + 85 * 0.3);
+        
+        return Math.round(finalSatisfaction);
+    }
+    
+    generateOptimalRoutes() {
+        const zones = ['Norte', 'Sur', 'Centro', 'Oriente'];
+        return zones.map(zone => ({
+            zone: zone,
+            optimalTime: `${Math.floor(Math.random() * 3) + 7}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
+            efficiency: Math.floor(Math.random() * 20) + 80,
+            fuelSaving: Math.floor(Math.random() * 15) + 5
+        }));
+    }
+    
+    predictResourceNeeds() {
+        return {
+            vehiclesNeeded: Math.max(0, 15 - this.kpiData.vehiculosOperativos + Math.floor(Math.random() * 2)),
+            crewsNeeded: Math.floor(Math.random() * 3) + 1,
+            materials: {
+                bolsas: Math.floor(Math.random() * 500) + 200,
+                combustible: Math.floor(Math.random() * 200) + 100,
+                ledBulbs: Math.max(0, 100 - this.kpiData.stockLED)
+            }
+        };
+    }
+    
+    generatePredictiveAlerts() {
+        if (this.aiPredictions.reclamos > 20) {
+            this.addAlert({
+                type: 'predictive',
+                message: `IA predice ${this.aiPredictions.reclamos} reclamos hoy (+33% promedio)`,
+                actions: ['Preparar Recursos', 'Alertar Supervisores'],
+                zone: 'General'
+            });
+        }
+
+        this.aiPredictions.vehicleFailures.forEach(failure => {
+            this.addAlert({
+                type: 'predictive',
+                message: `${failure.vehicle}: ${failure.prediction}`,
+                actions: ['Programar Mantención', 'Asignar Reemplazo'],
+                zone: 'Taller'
+            });
+        });
+
+        if (this.aiPredictions.citizenSatisfaction < 70) {
+            this.addAlert({
+                type: 'warning',
+                message: `Satisfacción ciudadana bajo 70% (${this.aiPredictions.citizenSatisfaction}%)`,
+                actions: ['Analizar Causas', 'Plan de Mejora'],
+                zone: 'General'
+            });
+        }
+    }
+    
+    // ========================================
+    // DASHBOARD FINANCIERO
+    // ========================================
+    loadFinancialDashboard() {
+        this.financialData = {
+            totalBudget: 2500000,
+            spentBudget: 1687500,
+            remainingBudget: 812500,
+            executionPercentage: 67.5,
+            trend: 'ascendente',
+            departmentCosts: {
+                aseo: 850000,
+                iluminacion: 420000,
+                verdes: 280000,
+                taller: 137500
+            },
+            monthlyProjection: 125000,
+            alerts: []
+        };
+
+        if (this.financialData.executionPercentage > 80) {
+            this.financialData.alerts.push({
+                type: 'warning',
+                message: 'Ejecución presupuestaria sobre 80%'
+            });
+        }
+
+        this.updateFinancialKPIs();
+    }
+    
+    updateFinancialKPIs() {
+        const costPerService = {
+            reclamoAtendido: Math.round(this.financialData.spentBudget / this.kpiData.reclamosCerrados),
+            vehiculoMes: Math.round(this.financialData.departmentCosts.aseo / 12),
+            ciudadanoMes: Math.round(this.financialData.totalBudget / 185000)
+        };
+
+        console.log('💰 KPIs Financieros actualizados:', costPerService);
+    }
+    
+    // ========================================
+    // MODO EJECUTIVO
+    // ========================================
+    toggleExecutiveMode() {
+        this.executiveMode = !this.executiveMode;
+        
+        if (this.executiveMode) {
+            document.body.classList.add('executive-mode');
+            this.showNotification('👔 Modo Ejecutivo Activado - Vista Simplificada', 'success');
+            this.showExecutiveDashboard();
+        } else {
+            document.body.classList.remove('executive-mode');
+            this.showNotification('🔧 Modo Técnico Activado - Vista Completa', 'info');
+            this.showFullDashboard();
+        }
+    }
+    
+    showExecutiveDashboard() {
+        const essentialData = {
+            criticalAlerts: this.alertData.filter(alert => alert.type === 'critical').length,
+            budgetStatus: `${this.financialData.executionPercentage}%`,
+            citizenSatisfaction: `${this.aiPredictions.citizenSatisfaction}%`,
+            operationalVehicles: `${this.kpiData.vehiculosOperativos}/15`,
+            todaysPrediction: this.aiPredictions.reclamos
+        };
+
+        console.log('👔 Dashboard Ejecutivo:', essentialData);
+    }
+    
+    showFullDashboard() {
+        console.log('🔧 Dashboard Completo Activado');
+    }
+    
+    // ========================================
+    // CENTRO DE CRISIS
+    // ========================================
+    activateEmergencyProtocol(emergencyType) {
+        const crisisCenter = new CrisisCenter();
+        return crisisCenter.activateProtocol(emergencyType);
+    }
+    
+    // ========================================
+    // BRIEFING MATUTINO
+    // ========================================
+    generateMorningBriefing() {
+        const briefing = {
+            date: new Date().toLocaleDateString('es-CL'),
+            weather: 'Parcialmente nublado, 18°C',
+            criticalAlerts: this.alertData.filter(alert => alert.type === 'critical').length,
+            budgetStatus: this.financialData.executionPercentage,
+            predictedComplaints: this.aiPredictions.reclamos,
+            vehicleStatus: `${this.kpiData.vehiculosOperativos}/15 operativos`,
+            priorityActions: [
+                'Revisar vehículos fuera de servicio',
+                'Seguimiento reclamos +48h sin atención'
+            ]
+        };
+
+        console.log('📋 BRIEFING MATUTINO DIMAO:', briefing);
+        this.showNotification('📋 Briefing matutino generado', 'success');
+        return briefing;
+    }
+    
+    // ========================================
+    // COMANDOS EJECUTIVOS
+    // ========================================
+    executeCommand(command) {
+        console.log(`🎯 Ejecutando comando: ${command}`);
+        
+        switch(command) {
+            case 'briefing-matutino':
+                return this.generateMorningBriefing();
+            case 'modo-ejecutivo':
+                this.toggleExecutiveMode();
+                break;
+            case 'optimizar-recursos':
+                return this.optimizeResources();
+            case 'analisis-satisfaccion':
+                return this.analyzeCitizenSatisfaction();
+            case 'simulador-crisis':
+                return this.activateEmergencyProtocol('lluvia fuerte');
+            case 'prediccion-ia':
+                this.updatePredictiveAnalysis();
+                this.showNotification(`🤖 IA predice: ${this.aiPredictions.reclamos} reclamos`, 'info');
+                break;
+            case 'dashboard-financiero':
+                this.loadFinancialDashboard();
+                this.showNotification(`💰 Presupuesto: ${this.financialData.executionPercentage}% ejecutado`, 'success');
+                break;
+            default:
+                this.showNotification(`Comando "${command}" no reconocido`, 'warning');
+        }
+    }
+    
+    // ========================================
+    // FUNCIONES DE UTILIDAD
+    // ========================================
+    addAlert(alertData) {
+        const newAlert = {
+            id: Date.now(),
+            time: new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+            ...alertData
+        };
+        
+        this.alertData.push(newAlert);
+        this.updateNotifications();
+    }
+    
+    loadUserPreferences() {
+        const preferences = {
+            theme: 'light',
+            executiveMode: false,
+            notifications: true
+        };
+        
+        if (preferences.theme === 'dark') {
+            this.toggleDarkMode();
+        }
+        
+        console.log('⚙️ Preferencias de usuario cargadas:', preferences);
+    }
+    
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        document.body.classList.toggle('dark-mode', this.darkMode);
+        this.showNotification(`🌙 Modo ${this.darkMode ? 'oscuro' : 'claro'} activado`, 'info');
+    }
+    
+    updateSystemStatus() {
+        // Implementar lógica de estado del sistema
+        console.log('🔄 Actualizando estado del sistema...');
+    }
+    
+    checkExecutiveMode() {
+        // Implementar lógica para verificar si debe iniciar en modo ejecutivo
+    }
+    
+    loadTabData(tabId) {
+        // Implementar carga específica por pestaña
+        console.log(`📂 Cargando datos para pestaña: ${tabId}`);
+    }
+    
+    optimizeResources() {
+        // Implementar optimización de recursos
+        console.log('🔄 Optimizando recursos...');
+        return 'Recursos optimizados';
+    }
+    
+    analyzeCitizenSatisfaction() {
+        // Implementar análisis de satisfacción
+        console.log('📊 Analizando satisfacción ciudadana...');
+        return `Satisfacción ciudadana: ${this.aiPredictions.citizenSatisfaction}%`;
+    }
+    
+    exportData(format = 'csv') {
+        // Implementar exportación de datos
+        console.log(`📤 Exportando datos en formato ${format}...`);
+        return `Datos exportados como ${format}`;
+    }
+    
+    resetSystem() {
+        // Implementar reinicio del sistema
+        console.log('🔄 Reiniciando sistema...');
+        this.loadInitialData();
+        return 'Sistema reiniciado';
+    }
+}
+
+// Clase para el Centro de Crisis
+class CrisisCenter {
+    constructor() {
+        this.protocols = {
+            'lluvia fuerte': ['Activar cuadrillas de emergencia', 'Revisar drenajes', 'Alertar ciudadanía'],
+            'terremoto': ['Evaluar infraestructura', 'Coordinar con ONEMI', 'Habilitar albergues'],
+            'corte masivo agua': ['Activar camiones aljibe', 'Coordinar con ESSAL', 'Puntos de distribución']
+        };
+        this.emergencyContacts = [
+            { name: 'ONEMI Regional', phone: '+56-58-2234567' },
+            { name: 'Bomberos Arica', phone: '132' }
+        ];
+    }
+
+    activateProtocol(emergencyType) {
+        const protocol = this.protocols[emergencyType];
+        if (!protocol) return 'Protocolo no encontrado';
+
+        console.log(`🚨 ACTIVANDO PROTOCOLO: ${emergencyType.toUpperCase()}`);
+        
+        protocol.forEach((step, index) => {
+            setTimeout(() => {
+                // Usar showNotification del dashboard principal
+                if (window.dimaoDashboard) {
+                    window.dimaoDashboard.showNotification(`📋 Paso ${index + 1}: ${step}`, 'warning');
+                }
+            }, index * 2000);
+        });
+
+        return `Protocolo ${emergencyType} activado con ${protocol.length} pasos`;
+    }
+}
+
+// Inicializar el dashboard cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    window.dimaoDashboard = new DIMAODashboard();
+    
+    // Exponer funciones globales necesarias
+    window.executeCommand = (cmd) => window.dimaoDashboard.executeCommand(cmd);
+    window.toggleExecutiveMode = () => window.dimaoDashboard.toggleExecutiveMode();
+    window.toggleDarkMode = () => window.dimaoDashboard.toggleDarkMode();
+    window.generateMorningBriefing = () => window.dimaoDashboard.generateMorningBriefing();
+    window.toggleNotifications = () => window.dimaoDashboard.toggleNotifications();
+    window.switchTab = (tab) => window.dimaoDashboard.switchTab(tab);
+    window.exportData = (format) => window.dimaoDashboard.exportData(format);
+    window.resetSystem = () => window.dimaoDashboard.resetSystem();
+    window.handleAlert = (id) => window.dimaoDashboard.handleAlert(id);
+});
+
+// Añadir animación fadeOut al CSS (debería ir en el <style>)
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(100%); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
