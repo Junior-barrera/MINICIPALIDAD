@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Presupuesto Municipal | Municipalidad de Arica</title>
+    <script src="dir_formularioapps.js"></script>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+            /* Header styles */
+header {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+}
+
+.top-header {
+  display: flex;
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center;
+  padding: 15px 5%;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el texto debajo del logo */
+  margin-left: 0;
+}
+
+.logo-text h1 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #86868b;
+}
+        
+        /* Transparency links */
+        .transparency-container {
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
+        
+        .transparency-toggle {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: none;
+            color: #06c;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .transparency-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .toggle-icon {
+            display: inline-block;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .transparency-links {
+            background-color: rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            transition: max-height 0.4s ease;
+        }
+        
+        .transparency-links a {
+            color: #06c;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 400;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .transparency-links a:hover {
+            opacity: 0.7;
+            transform: translateY(-1px);
+        }
+        
+        /* Navigation menu */
+        nav {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .main-menu {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+            overflow-x: auto;
+        }
+        
+        .main-menu li {
+            position: relative;
+        }
+        
+        .main-menu a {
+            display: block;
+            padding: 15px 20px;
+            color: #1d1d1f;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .main-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 20px;
+            height: 2px;
+            background-color: #06c;
+            transition: transform 0.3s ease;
+        }
+        
+        .main-menu a:hover {
+            color: #06c;
+        }
+        
+        .main-menu a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+        
+         /* Dashboard container */
+         .dashboard-container {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1d2939;
+            position: relative;
+        }
+        
+        .dashboard-title:after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #0066cc, #1a8cff);
+            border-radius: 2px;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #0066cc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #f5f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+        }
+        
+        .back-icon {
+            margin-right: 8px;
+        }
+        
+        /* Card Grid System */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .card {
+          flex: 0 1 calc(50% - 20px); /* dos tarjetas por fila, restando el gap */
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #0066cc, #1a8cff);
+            z-index: 2;
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto 15px;
+            color: #0066cc;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.15);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            margin: 10px 0;
+            color: #1d2939;
+            padding: 0 20px;
+        }
+        
+        .card-description {
+            text-align: center;
+            padding: 0 25px;
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+        
+        .card-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #0066cc, #1a8cff);
+            border: none;
+            border-radius: 100px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0 auto 25px;
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+        }
+        
+        .card-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+            background: linear-gradient(135deg, #005cb8, #0080ff);
+        }
+        
+        .card-button .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card-button:hover .arrow {
+            transform: translateX(4px);
+        }
+        
+        /* Stats counter section */
+        .stats-section {
+            background: linear-gradient(135deg, #ffffff, #f5f9ff);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 50px 0 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+        }
+        
+        .stats-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #1d2939;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0 20px;
+            min-width: 220px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #0066cc, #1a8cff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 16px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            padding: 60px 5%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-column p {
+            margin-bottom: 10px;
+            color: #86868b;
+            font-size: 14px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #06c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            opacity: 0.7;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        /* Assistant chat button */
+        .assistant-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(6, 12, 204, 0.9);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .assistant-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            
+            .footer-column {
+                margin-bottom: 40px;
+            }
+            
+            .dashboard-iframe {
+                height: 65vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                font-size: 24px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .dashboard-iframe {
+                height: 50vh;
+            }
+            
+            .transparency-toggle {
+                display: block;
+            }
+            
+            .transparency-toggle.active .toggle-icon {
+                transform: rotate(180deg);
+            }
+            
+            .transparency-links {
+                max-height: 0;
+                padding: 0;
+                overflow: hidden;
+                flex-direction: column;
+            }
+            
+            .transparency-links.active {
+                max-height: 200px;
+                padding: 10px 0;
+            }
+            
+            .transparency-links a {
+                margin: 8px 0;
+                padding: 5px 0;
+            }
+        }
+        .custom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(255, 105, 135, 0.3);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .custom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 105, 135, 0.5);
+    background: linear-gradient(135deg, #ee0979, #ff6a00);
+  }
+
+  .arrow {
+    margin-left: 10px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  .custom-btn:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  .card-icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+
+  .card-icon-circle img {
+    width: 80%; 
+    height: 80%;
+    object-fit: cover; 
+    border-radius: 50%; 
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .card-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .card-button:hover {
+    background-color: #0b7dda;
+  }
+  
+  .arrow {
+    margin-left: 8px;
+    transition: transform 0.3s;
+  }
+  
+  .card-button:hover .arrow {
+    transform: translateX(5px);
+  }
+  
+ 
+  @media (max-width: 768px) {
+    .card {
+      max-width: 100%;
+    }
+  }
+  
+.card-icon-circle-border {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  border: 3px solid #2196F3; 
+}
+
+
+.card-icon-circle-colored {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #2196F3; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.card-icon-circle-colored img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  filter: brightness(0) invert(1); 
+}
+
+
+.card-icon-circle-shadow {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+.card-icon-circle-glow {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(33, 150, 243, 0.5); 
+}
+
+.stats-section {
+      margin-top: 30px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    
+    .stats-title {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.4em;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .stat-item {
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    
+    .stat-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      color: #2196F3;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: #555;
+      font-size: 0.9em;
+    }
+    
+    
+    .alerts-container {
+      margin-top: 20px;
+    }
+    
+    .alert {
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border-left: 5px solid;
+      border-radius: 5px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert-icon {
+      margin-right: 15px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .alert-danger {
+      background-color: #ffebee;
+      border-color: #f44336;
+      color: #d32f2f;
+    }
+    
+    .alert-warning {
+      background-color: #fff8e1;
+      border-color: #ffc107;
+      color: #ff8f00;
+    }
+    
+    .alert-info {
+      background-color: #e3f2fd;
+      border-color: #2196F3;
+      color: #0d47a1;
+    }
+    
+    .alert-success {
+      background-color: #e8f5e9;
+      border-color: #4CAF50;
+      color: #2e7d32;
+    }
+    
+   
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.chart-container {
+  flex: 1;
+  min-width: 300px;
+  height: 300px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden; 
+}
+
+@media (max-width: 768px) {
+  .charts-container {
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    width: 100%;
+    min-width: 0; 
+    height: 250px; 
+    margin-bottom: 20px;
+  }
+}
+    
+    
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    
+    .summary-table th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+    
+    .summary-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      height: 8px;
+      margin-top: 5px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      background-color: #4CAF50;
+    }
+    
+    .progress-bar-warning {
+      background-color: #FFC107;
+    }
+    
+    .progress-bar-danger {
+      background-color: #F44336;
+    }
+    
+    
+    @media screen and (max-width: 768px) {
+      .stats-container {
+        flex-direction: column;
+      }
+      
+      .chart-container {
+        min-width: 100%;
+      }
+    }
+    </style>
+</head>
+<body>
+    
+            <div class="top-header">
+                <div class="logo">
+                    <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                    <div class="logo-text">
+                        <h1>ARICA</h1>
+                        <span>MUNICIPALIDAD | mejor ciudad</span>
+                    </div>
+                </div>
+            </div>
+    
+
+
+    </section>
+     
+     <section class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Sistema de Gestión de Presupuestos</h2>
+            <button class="back-button" onclick="window.location.href='index.html'">
+                <span class="back-icon"><i class="fas fa-arrow-left"></i></span> Volver al Inicio
+            </button>
+        </div>
+
+        
+        <div class="cards-container">
+           
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="Presupuesto-Ingresos.webp" alt="Icono de Presupuesto">
+                  </div>
+                <h3 class="card-title">Ingreso de Compras</h3>
+                <p class="card-description">
+                    Complete el formulario para registrar un nuevo presupuesto anual de compra para su departamento o área municipal.
+                </p>
+                <a href="Formulario_agregar_compra.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            
+            <div class="card">
+                <div class="card-icon-circle">
+                    <img src="exceeel" alt="Icono de Presupuesto">
+                  </div>
+                <h3 class="card-title">Explorador de Compras</h3>
+                <p class="card-description">
+                    Consulte y analice los presupuestos ingresados, con opciones para filtrar por departamento, período y estado.
+                </p>
+                <a href="exportador_datos.html" class="card-button">
+                    Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+            
+            
+<div class="card">
+    <div class="card-icon-circle">
+        <img src="imagenpac.jpeg" alt="Icono de Presupuesto">
+    </div>
+    <h3 class="card-title">Ingreso de PAC</h3>
+    <p class="card-description">
+        Área restringida para personal autorizado. Ingrese con sus credenciales.
+    </p>
+    <a href="#" id="accederPacBtn" class="card-button">
+        Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+    </a>
+</div>
+
+<div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); width: 90%; max-width: 400px;">
+        <h3 style="margin-bottom: 20px; font-size: 20px; text-align: center;">Acceso Restringido</h3>
+        <p style="margin-bottom: 15px; text-align: center;">Ingrese la contraseña para acceder al sistema ingreso de PAC:</p>
+        <div style="margin-bottom: 20px;">
+            <input type="password" id="passwordInput" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;" placeholder="Contraseña">
+        </div>
+        <div id="passwordError" style="color: #e74c3c; margin-bottom: 15px; text-align: center; display: none;">
+            Contraseña incorrecta. Inténtelo nuevamente.
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <button id="cancelPasswordBtn" style="background-color: #e0e0e0; border: none; border-radius: 6px; padding: 10px 20px; cursor: pointer;">Cancelar</button>
+            <button id="submitPasswordBtn" style="background: linear-gradient(135deg, #06c, #09c); color: white; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600; cursor: pointer;">Verificar</button>
+        </div>
+    </div>
+</div>
+            <!-- Card 4 -->
+            <div class="card">
+              <div class="card-icon-circle">
+                  <img src="exceeel" alt="Icono de Presupuesto">
+                </div>
+              <h3 class="card-title">Explorador de PAC</h3>
+              <p class="card-description">
+                Consulte y analice los Presupuesto Anual de Compras, con opciones para filtrar por departamento, período y estado.
+              </p>
+              <a href="exportador_de_datos_PAC.html" class="card-button">
+                  Acceder <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+              </a>
+          </div>
+        </div>
+        
+        
+        <div class="stats-section">
+            <h3 class="stats-title">Estadísticas del Sistema</h3>
+            
+            
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-number" id="presupuestos-count">0</div>
+                <div class="stat-label">Presupuestos Activos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="departments-count">0</div>
+                <div class="stat-label">Departamentos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="compras-count">0</div>
+                <div class="stat-label">Compras Registradas</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="total-year">$0</div>
+                <div class="stat-label">Total Comprometido</div>
+              </div>
+            </div>
+            
+            
+            <div class="alerts-container" id="alerts-container">
+              
+            </div>
+            
+            
+            <h4 class="stats-title">Resumen por Departamento</h4>
+            <div style="overflow-x: auto;">
+              <table class="summary-table" id="dept-summary-table">
+                <thead>
+                  <tr>
+                    <th>Departamento</th>
+                    <th>Presupuesto Anual</th>
+                    <th>Comprometido</th>
+                    <th>Gastado</th>
+                    <th>% Ejecución</th>
+                    <th>Estado</th>
+                   
+                  </tr>
+                </thead>
+                <tbody id="dept-summary-body">
+                 
+                </tbody>
+              </table>
+            </div>
+            
+            
+            <div class="charts-container">
+              <div class="chart-container">
+                <h4 class="chart-title">Distribución de Saldo Comprometido por Departamento</h4>
+                <canvas id="departmentChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h4 class="chart-title">Ejecución Presupuestaria Mensual</h4>
+                <canvas id="monthlyChart"></canvas>
+              </div>
+            </div>
+          </div>
+    </section>
+
+     <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Municipalidad de Arica</h3>
+                <p>Renato Rocca , Arica</p>
+                <p>Anexo:6959 </p>
+                <p>Email:roberto.mamani@municipalidadarica.cl </p>
+                <div class="social-icons">
+                    <a href="#">📘</a>
+                    <a href="#">📱</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📸</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Colaboración Interdepartamental</h3>
+                <p style="line-height: 1.6;">
+                    Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Tecnica </strong> y más, en un solo sistema integral. 
+                    Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+                </p>
+            </div>
+            <div class="footer-column licitaciones">
+              <h3>Licitaciones</h3>
+              <ul class="licitaciones-list">
+                  <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                  <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                  <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                  <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                  <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+              </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p
+            <p> Desarrollado por Junior Barrera</p
+        </div>
+    </footer>
+   
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+    <script>
+(function(_0x4da31c,_0x594e8b){const _0x434041=_0x218b,_0x26d88c=_0x4da31c();while(!![]){try{const _0x33a0a7=-parseInt(_0x434041(0x1a3))/0x1+-parseInt(_0x434041(0x1d8))/0x2*(-parseInt(_0x434041(0x1c2))/0x3)+-parseInt(_0x434041(0x1cb))/0x4+-parseInt(_0x434041(0x1bc))/0x5*(-parseInt(_0x434041(0xfc))/0x6)+-parseInt(_0x434041(0xe8))/0x7+parseInt(_0x434041(0x101))/0x8*(parseInt(_0x434041(0x122))/0x9)+parseInt(_0x434041(0x144))/0xa;if(_0x33a0a7===_0x594e8b)break;else _0x26d88c['push'](_0x26d88c['shift']());}catch(_0x2195e1){_0x26d88c['push'](_0x26d88c['shift']());}}}(_0x40f4,0x8282b));const _0x2463c3=_0x1f53;(function(_0xa81a7d,_0x238c2e){const _0x842b5b=_0x218b,_0x54fdd4=_0x1f53,_0x301d66=_0xa81a7d();while(!![]){try{const _0x199735=-parseInt(_0x54fdd4(0x180))/0x1*(parseInt(_0x54fdd4(0x1bd))/0x2)+-parseInt(_0x54fdd4(0x294))/0x3*(-parseInt(_0x54fdd4(0x1ea))/0x4)+parseInt(_0x54fdd4(0x1cb))/0x5*(parseInt(_0x54fdd4(0x193))/0x6)+parseInt(_0x54fdd4(0x1ae))/0x7+-parseInt(_0x54fdd4(0x210))/0x8+-parseInt(_0x54fdd4(0x1de))/0x9+parseInt(_0x54fdd4(0x17c))/0xa;if(_0x199735===_0x238c2e)break;else _0x301d66[_0x842b5b(0x1ae)](_0x301d66[_0x842b5b(0xc3)]());}catch(_0x4ef947){_0x301d66['push'](_0x301d66[_0x842b5b(0xc3)]());}}}(_0x180e,0xbb4da));const _0x140ae4=_0x3e58;(function(_0x278122,_0x48016a){const _0x30cceb=_0x1f53,_0x1b5c4c=_0x3e58,_0x8e524c=_0x278122();while(!![]){try{const _0x325830=parseInt(_0x1b5c4c(0x1b9))/0x1+-parseInt(_0x1b5c4c(0x282))/0x2*(-parseInt(_0x1b5c4c(0x17c))/0x3)+-parseInt(_0x1b5c4c(0x248))/0x4+-parseInt(_0x1b5c4c(0x1a0))/0x5*(parseInt(_0x1b5c4c(0x2a2))/0x6)+-parseInt(_0x1b5c4c(0x181))/0x7*(-parseInt(_0x1b5c4c(0x1a2))/0x8)+parseInt(_0x1b5c4c(0x1d6))/0x9*(-parseInt(_0x1b5c4c(0x188))/0xa)+parseInt(_0x1b5c4c(0x1a1))/0xb;if(_0x325830===_0x48016a)break;else _0x8e524c[_0x30cceb(0x1c9)](_0x8e524c[_0x30cceb(0x175)]());}catch(_0x557847){_0x8e524c[_0x30cceb(0x1c9)](_0x8e524c[_0x30cceb(0x175)]());}}}(_0x3676,0xe28ec));function _0x1f53(_0x68b062,_0x492af1){const _0x296156=_0x180e();return _0x1f53=function(_0x4f1610,_0x4077d1){_0x4f1610=_0x4f1610-0x171;let _0x16c04b=_0x296156[_0x4f1610];return _0x16c04b;},_0x1f53(_0x68b062,_0x492af1);}const CORRECT_PASSWORD=_0x140ae4(0x1e8),accederPacBtn=document[_0x2463c3(0x258)](_0x140ae4(0x21c)),passwordModal=document[_0x140ae4(0x205)](_0x140ae4(0x296)),passwordInput=document[_0x140ae4(0x205)](_0x140ae4(0x1da)),submitPasswordBtn=document[_0x140ae4(0x205)](_0x140ae4(0x274)),cancelPasswordBtn=document[_0x140ae4(0x205)](_0x140ae4(0x23c)),passwordError=document[_0x2463c3(0x258)](_0x140ae4(0x172));accederPacBtn[_0x140ae4(0x1c8)](_0x140ae4(0x1e9),function(_0x1185ba){const _0x317704=_0x2463c3,_0x15aca1=_0x140ae4;_0x1185ba[_0x15aca1(0x186)](),passwordInput[_0x15aca1(0x18c)]='',passwordError[_0x15aca1(0x1f9)][_0x15aca1(0x229)]='none',passwordModal[_0x15aca1(0x1f9)][_0x15aca1(0x229)]=_0x317704(0x1da),setTimeout(()=>passwordInput[_0x15aca1(0x1cc)](),0x64);}),cancelPasswordBtn[_0x140ae4(0x1c8)](_0x140ae4(0x1e9),function(){const _0x8f69cd=_0x2463c3,_0x4b08a9=_0x140ae4;passwordModal[_0x8f69cd(0x1a2)][_0x8f69cd(0x1a3)]=_0x4b08a9(0x199);});function validatePassword(){const _0x3a0ee3=_0x218b,_0x186771=_0x2463c3,_0x211fc2=_0x140ae4,_0x41a762=passwordInput['value'][_0x186771(0x252)]();_0x41a762===CORRECT_PASSWORD?(passwordModal[_0x186771(0x1a2)][_0x3a0ee3(0x195)]=_0x3a0ee3(0xac),window[_0x3a0ee3(0x1bd)][_0x211fc2(0x17a)]=_0x211fc2(0x271)):(passwordError[_0x211fc2(0x1f9)][_0x211fc2(0x229)]=_0x211fc2(0x218),passwordInput[_0x211fc2(0x18c)]='',passwordInput[_0x211fc2(0x1cc)](),passwordInput[_0x211fc2(0x1f9)][_0x211fc2(0x249)]=_0x211fc2(0x252),setTimeout(()=>passwordInput[_0x211fc2(0x1f9)][_0x211fc2(0x249)]='',0x1f4));}submitPasswordBtn[_0x140ae4(0x1c8)](_0x140ae4(0x1e9),validatePassword),passwordInput[_0x140ae4(0x1c8)](_0x140ae4(0x1c0),function(_0x2b69f0){const _0xb9fedb=_0x140ae4;if(_0x2b69f0[_0xb9fedb(0x234)]===_0xb9fedb(0x230))validatePassword();}),passwordModal[_0x140ae4(0x1c8)](_0x140ae4(0x1e9),function(_0x17f49f){const _0x57fd4b=_0x2463c3,_0x1fb8eb=_0x140ae4;_0x17f49f[_0x1fb8eb(0x1f5)]===passwordModal&&(passwordModal[_0x57fd4b(0x1a2)][_0x1fb8eb(0x229)]=_0x1fb8eb(0x199));}),document[_0x140ae4(0x1d8)][_0x2463c3(0x1db)](_0x140ae4(0x17e),_0x140ae4(0x170));function hideLoading(){const _0x2277a8=_0x2463c3,_0x4eacbe=_0x140ae4;document[_0x2277a8(0x258)](_0x4eacbe(0x200))[_0x4eacbe(0x1f9)][_0x4eacbe(0x229)]=_0x4eacbe(0x199);}function handleIframeError(){const _0x589c07=_0x140ae4,_0x7ace50=document[_0x589c07(0x205)](_0x589c07(0x24c));setTimeout(function(){const _0x5aee1f=_0x589c07;try{const _0x1361c1=_0x7ace50[_0x5aee1f(0x215)]||_0x7ace50[_0x5aee1f(0x19a)];!_0x1361c1&&showFallbackMessage();}catch(_0x24a003){showFallbackMessage();}},0x2710);}function showFallbackMessage(){const _0x5e9d59=_0x140ae4,_0x527478=document[_0x5e9d59(0x205)](_0x5e9d59(0x200));_0x527478[_0x5e9d59(0x27e)]=_0x5e9d59(0x1b5),_0x527478[_0x5e9d59(0x1f9)][_0x5e9d59(0x229)]=_0x5e9d59(0x1db);}function _0x3676(){const _0x43c9f6=_0x218b,_0x1f5685=_0x2463c3,_0x2ef6f0=[_0x43c9f6(0x1c9),_0x1f5685(0x265),_0x1f5685(0x290),_0x43c9f6(0x18e),_0x43c9f6(0xfe),_0x43c9f6(0x109),_0x1f5685(0x1ef),_0x1f5685(0x20f),_0x1f5685(0x270),_0x1f5685(0x24a),_0x1f5685(0x179),_0x1f5685(0x1e4),_0x43c9f6(0x17f),_0x1f5685(0x20d),_0x1f5685(0x1c7),'addEventListener',_0x1f5685(0x171),_0x1f5685(0x1f3),_0x1f5685(0x224),_0x1f5685(0x20c),_0x1f5685(0x1d3),_0x1f5685(0x260),_0x1f5685(0x203),_0x1f5685(0x223),_0x1f5685(0x1a8),_0x1f5685(0x19f),_0x1f5685(0x214),_0x1f5685(0x28c),_0x1f5685(0x236),_0x1f5685(0x17a),_0x1f5685(0x267),_0x1f5685(0x209),_0x1f5685(0x18c),_0x1f5685(0x1b5),_0x1f5685(0x1da),'cancel',_0x1f5685(0x244),_0x1f5685(0x1ee),'Error\x20al\x20cargar\x20Chart.js',_0x1f5685(0x178),_0x1f5685(0x23d),_0x43c9f6(0x1a5),_0x1f5685(0x219),_0x1f5685(0x25c),_0x43c9f6(0xbc),_0x1f5685(0x197),_0x1f5685(0x261),_0x1f5685(0x1c1),_0x1f5685(0x1d2),_0x1f5685(0x278),_0x1f5685(0x19b),_0x1f5685(0x18d),_0x1f5685(0x241),_0x1f5685(0x22f),_0x1f5685(0x29e),'Error\x20al\x20inicializar\x20el\x20sistema:',_0x43c9f6(0xf7),_0x1f5685(0x26d),_0x1f5685(0x207),_0x1f5685(0x253),_0x1f5685(0x23f),_0x1f5685(0x232),_0x1f5685(0x1f5),_0x1f5685(0x29d),_0x1f5685(0x1a2),_0x1f5685(0x1e6),_0x1f5685(0x23c),_0x1f5685(0x22c),_0x1f5685(0x289),_0x1f5685(0x1dc),_0x1f5685(0x1b3),_0x1f5685(0x29f),_0x1f5685(0x221),_0x1f5685(0x279),_0x1f5685(0x268),_0x43c9f6(0x171),_0x1f5685(0x258),_0x1f5685(0x293),_0x1f5685(0x1e1),_0x43c9f6(0x166),_0x1f5685(0x255),_0x43c9f6(0x10c),'0\x205px\x2020px\x20rgba(0,\x200,\x200,\x200.1)',_0x1f5685(0x1e0),_0x43c9f6(0xbf),'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td>$',_0x1f5685(0x2a2),_0x1f5685(0x29b),_0x43c9f6(0x194),_0x1f5685(0x28d),_0x43c9f6(0x123),_0x1f5685(0x24c),_0x43c9f6(0x142),_0x1f5685(0x18b),_0x1f5685(0x252),_0x1f5685(0x182),_0x1f5685(0x243),_0x1f5685(0x190),_0x1f5685(0x188),_0x1f5685(0x233),_0x43c9f6(0x1b7),_0x1f5685(0x1ac),_0x43c9f6(0x1db),_0x1f5685(0x20b),_0x1f5685(0x173),_0x1f5685(0x211),_0x43c9f6(0x10d),_0x1f5685(0x264),_0x1f5685(0x20a),_0x1f5685(0x287),_0x1f5685(0x1a7),_0x1f5685(0x1f4),_0x1f5685(0x1a3),_0x1f5685(0x1d7),_0x1f5685(0x286),_0x1f5685(0x192),_0x43c9f6(0x16f),_0x43c9f6(0x1b0),_0x1f5685(0x298),_0x43c9f6(0x129),_0x1f5685(0x262),_0x1f5685(0x174),_0x1f5685(0x19e),_0x1f5685(0x1f0),_0x1f5685(0x1cc),_0x43c9f6(0x1bf),_0x1f5685(0x238),_0x43c9f6(0x106),_0x1f5685(0x1e7),_0x1f5685(0x28f),_0x43c9f6(0x1d2),_0x1f5685(0x2a4),_0x1f5685(0x1ec),_0x1f5685(0x23b),_0x1f5685(0x1ff),_0x1f5685(0x184),_0x1f5685(0x1e9),_0x1f5685(0x239),_0x1f5685(0x1fd),_0x1f5685(0x202),_0x1f5685(0x183),_0x1f5685(0x1d6),_0x43c9f6(0xb3),_0x1f5685(0x2a8),_0x1f5685(0x1d1),_0x1f5685(0x256),_0x43c9f6(0x119),_0x43c9f6(0x1af),_0x1f5685(0x273),_0x1f5685(0x266),_0x1f5685(0x1d4),_0x1f5685(0x24b),_0x1f5685(0x283),_0x1f5685(0x281),_0x1f5685(0x208),_0x1f5685(0x235),_0x1f5685(0x23e),_0x1f5685(0x215),_0x1f5685(0x24d),_0x1f5685(0x22a),_0x1f5685(0x25d),_0x1f5685(0x1ba),_0x1f5685(0x20e),_0x1f5685(0x240),'#FFEB3B','script',_0x1f5685(0x222),_0x1f5685(0x204),_0x43c9f6(0x181),_0x1f5685(0x249),_0x1f5685(0x24e),_0x1f5685(0x1c4),_0x43c9f6(0x16e),'name',_0x1f5685(0x28b),_0x1f5685(0x23a),_0x1f5685(0x26f),_0x1f5685(0x22b),_0x1f5685(0x1b7),_0x1f5685(0x245),_0x1f5685(0x1b1),_0x1f5685(0x1c3),_0x43c9f6(0x19b),'Escape',_0x1f5685(0x24f),_0x43c9f6(0x120),_0x1f5685(0x18e),_0x1f5685(0x271),_0x1f5685(0x21f),_0x1f5685(0x299),_0x1f5685(0x17e),_0x1f5685(0x1ab),_0x43c9f6(0x150),_0x43c9f6(0x160),_0x43c9f6(0x112),_0x1f5685(0x228),_0x43c9f6(0x191),_0x1f5685(0x189),'\x0a\x20\x20\x20\x20.btn-stop\x20{\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#e74c3c;\x0a\x20\x20\x20\x20\x20\x20color:\x20white;\x0a\x20\x20\x20\x20\x20\x20border:\x20none;\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x20\x20\x20\x20\x20\x20padding:\x208px\x2015px;\x0a\x20\x20\x20\x20\x20\x20margin:\x205px;\x0a\x20\x20\x20\x20\x20\x20cursor:\x20pointer;\x0a\x20\x20\x20\x20\x20\x20font-size:\x2014px;\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x20\x20\x20\x20\x20\x20display:\x20flex;\x0a\x20\x20\x20\x20\x20\x20align-items:\x20center;\x0a\x20\x20\x20\x20\x20\x20justify-content:\x20center;\x0a\x20\x20\x20\x20\x20\x20gap:\x205px;\x0a\x20\x20\x20\x20\x20\x20transition:\x20background-color\x200.3s;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20.btn-stop:hover\x20{\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#c0392b;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20#btn-explicacion:disabled\x20{\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#95a5a6;\x0a\x20\x20\x20\x20\x20\x20cursor:\x20not-allowed;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20.toast-mensaje\x20{\x0a\x20\x20\x20\x20\x20\x20opacity:\x201;\x0a\x20\x20\x20\x20\x20\x20transition:\x20opacity\x200.5s\x20ease-in-out;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20@keyframes\x20fadeOut\x20{\x0a\x20\x20\x20\x20\x20\x20from\x20{\x20opacity:\x201;\x20}\x0a\x20\x20\x20\x20\x20\x20to\x20{\x20opacity:\x200;\x20}\x0a\x20\x20\x20\x20}\x0a\x20\x20',_0x1f5685(0x216),_0x43c9f6(0xb0),'2297854UMiped','visibilityState',_0x1f5685(0x1d5),_0x1f5685(0x1bc),'.stats-container',_0x1f5685(0x2a6),_0x1f5685(0x199),'\x20tiene\x20solo\x20un\x20',_0x1f5685(0x28a),_0x43c9f6(0x17a),_0x1f5685(0x1af),_0x43c9f6(0x1c8),_0x43c9f6(0x165),_0x1f5685(0x1bb),_0x1f5685(0x21a),_0x1f5685(0x272),_0x43c9f6(0x15d),_0x1f5685(0x230),'Las\x20alertas\x20de\x20advertencia\x20indican\x20departamentos\x20con\x20baja\x20ejecución\x20presupuestaria\x20que\x20deben\x20ser\x20monitoreados.','rgb(54,\x20162,\x20235)',_0x1f5685(0x2a1),_0x1f5685(0x26e),_0x1f5685(0x284),_0x1f5685(0x229),_0x43c9f6(0x10a),_0x43c9f6(0x10e),_0x1f5685(0x17b),_0x1f5685(0x201),_0x1f5685(0x1aa),_0x1f5685(0x1f7),'<div\x20class=\x22alert\x20alert-success\x22>No\x20hay\x20alertas\x20pendientes\x20en\x20el\x20sistema.</div>',_0x1f5685(0x1b4),_0x1f5685(0x1e8),_0x1f5685(0x285),_0x1f5685(0x1a4),_0x1f5685(0x274),_0x1f5685(0x1e3),_0x1f5685(0x1a9),'nombre',_0x1f5685(0x251),_0x43c9f6(0xd2),_0x1f5685(0x295),_0x1f5685(0x1fa),'%</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td\x20class=\x22',_0x43c9f6(0x1ce),'\x20alertas\x20que\x20requieren\x20atención,\x20principalmente\x20de\x20tipo\x20',_0x1f5685(0x27f),_0x1f5685(0x1df),'Explicación\x20completada',_0x1f5685(0x176),_0x1f5685(0x1fc),_0x1f5685(0x250),_0x1f5685(0x177),_0x1f5685(0x237),_0x1f5685(0x181),_0x1f5685(0x2a7),_0x1f5685(0x19c),_0x1f5685(0x1ad),_0x1f5685(0x25b),_0x1f5685(0x234),_0x1f5685(0x1cf),_0x43c9f6(0x157),_0x43c9f6(0x161),_0x1f5685(0x18f),_0x43c9f6(0xc7),_0x1f5685(0x1be),_0x1f5685(0x212),_0x1f5685(0x1f6),_0x43c9f6(0x167),_0x1f5685(0x25e),_0x43c9f6(0x16a),_0x1f5685(0x1f2),_0x1f5685(0x1e5),_0x1f5685(0x1b6),_0x1f5685(0x22d),'value',_0x43c9f6(0x111),_0x43c9f6(0x125),_0x1f5685(0x1ce),_0x1f5685(0x254),_0x43c9f6(0x164),_0x1f5685(0x213),'Error\x20al\x20actualizar\x20estadísticas:',_0x1f5685(0x18a),_0x1f5685(0x1d9),_0x1f5685(0x1c9),_0x1f5685(0x1d0),_0x43c9f6(0x110),_0x43c9f6(0xac),_0x43c9f6(0xcc),_0x1f5685(0x195),_0x1f5685(0x21c),_0x1f5685(0x220),'padding',_0x1f5685(0x246),_0x1f5685(0x1fb),_0x1f5685(0x1b2),_0x1f5685(0x1c5),_0x43c9f6(0x197),_0x1f5685(0x1eb),_0x1f5685(0x205),'\x20\x0a\x20\x20\x20\x20\x20\x20una\x20ejecución\x20inferior\x20al\x2030%,\x20lo\x20que\x20representa\x20un\x20punto\x20de\x20atención\x20urgente.\x0a\x20\x20\x20\x20',_0x1f5685(0x27c),_0x43c9f6(0x127),_0x43c9f6(0xd4),_0x1f5685(0x291),_0x1f5685(0x259),_0x1f5685(0x282),_0x1f5685(0x21e),_0x1f5685(0x292),_0x1f5685(0x21d),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20Específicamente,\x20',_0x1f5685(0x186),_0x1f5685(0x226),_0x1f5685(0x1f1),_0x1f5685(0x1b9),_0x1f5685(0x1b0),_0x1f5685(0x187),_0x1f5685(0x19a),_0x1f5685(0x1c8)];return _0x3676=function(){return _0x2ef6f0;},_0x3676();}function openAssistance(){const _0x17b87b=_0x2463c3,_0x203382=_0x140ae4,_0x3fdbf0=_0x203382(0x189);window[_0x17b87b(0x2a3)](_0x203382(0x25f)+_0x3fdbf0,_0x203382(0x203));}document[_0x2463c3(0x275)](_0x140ae4(0x1f6),function(){const _0x5c7c35=_0x218b,_0x3b8573=_0x2463c3,_0x3b0c46=_0x140ae4,_0x5b69c4=document[_0x3b0c46(0x29a)](_0x3b0c46(0x1fb)),_0x49fbc2=document[_0x3b0c46(0x29a)](_0x5c7c35(0x1d7));if(_0x5b69c4&&_0x49fbc2){_0x5b69c4[_0x3b0c46(0x1c8)](_0x3b0c46(0x1e9),function(){const _0x21495c=_0x1f53,_0x539d09=_0x3b0c46;_0x5b69c4[_0x21495c(0x220)][_0x539d09(0x1fc)](_0x539d09(0x211)),_0x49fbc2[_0x539d09(0x19d)][_0x539d09(0x1fc)](_0x21495c(0x22e));});function _0x23b0fe(){const _0xcc5244=_0x5c7c35,_0x2e5901=_0x1f53,_0x2ece58=_0x3b0c46;window[_0x2ece58(0x293)]<=0x300?_0x49fbc2[_0x2ece58(0x19d)][_0xcc5244(0x11a)](_0x2e5901(0x22e)):_0x49fbc2[_0x2ece58(0x19d)][_0x2ece58(0x20d)](_0x2ece58(0x211));}_0x23b0fe(),window[_0x3b8573(0x275)](_0x3b0c46(0x1ad),_0x23b0fe);}const _0x55deeb=document[_0x3b8573(0x1c2)](_0x3b0c46(0x27c));window[_0x3b0c46(0x1c8)](_0x3b8573(0x1e2),()=>{const _0x4b059e=_0x3b8573,_0x1ec64f=_0x3b0c46,_0x55de78=window[_0x1ec64f(0x1de)]||document[_0x1ec64f(0x28c)][_0x1ec64f(0x260)];_0x55de78>0x64?_0x55deeb[_0x1ec64f(0x1f9)][_0x1ec64f(0x228)]=_0x1ec64f(0x20b):_0x55deeb[_0x1ec64f(0x1f9)][_0x4b059e(0x1f4)]=_0x1ec64f(0x244);}),handleIframeError();});const WEB_APP_URL=dir_pac;let dat_PAC=[],chartInstancesDep=null,chartInstancesMonthly=null,aniosDisponibles=[],anioSeleccionado=new Date()[_0x2463c3(0x1f1)]()[_0x140ae4(0x23b)]();function formatearNumero(_0x8bed18){const _0x4f301a=_0x218b,_0x41da44=_0x140ae4;if(_0x8bed18===null||_0x8bed18===undefined)return'0';let _0x2e6800=_0x8bed18[_0x41da44(0x23b)]()[_0x4f301a(0x10c)](/\./g,'')[_0x41da44(0x20a)](/\D/g,''),_0x3c5243=new Intl[(_0x41da44(0x18f))](_0x41da44(0x1ed))[_0x41da44(0x1f3)](parseInt(_0x2e6800)||0x0);return _0x3c5243;}function mostrarErrorEnContadores(_0x4d2706){const _0x22184c=_0x218b,_0x115406=_0x2463c3,_0x17895f=_0x140ae4;document[_0x17895f(0x205)](_0x115406(0x21d))[_0x17895f(0x22f)]=_0x17895f(0x291),document[_0x17895f(0x205)](_0x115406(0x28e))[_0x17895f(0x22f)]=_0x17895f(0x291),document[_0x115406(0x258)](_0x115406(0x20d))[_0x17895f(0x22f)]=_0x17895f(0x291),document[_0x17895f(0x205)](_0x17895f(0x1e2))[_0x22184c(0x186)]=_0x17895f(0x291);const _0x4f3cdc=document[_0x17895f(0x205)](_0x17895f(0x29f));_0x4f3cdc[_0x17895f(0x27e)]=_0x17895f(0x1bf)+(_0x4d2706||_0x17895f(0x1ef))+_0x17895f(0x261),console[_0x17895f(0x1f8)](_0x4d2706||_0x115406(0x263));}function crearSelectorAnios(){const _0x30714b=_0x2463c3,_0x409072=_0x140ae4;aniosDisponibles=Array[_0x30714b(0x280)](new Set(dat_PAC[_0x409072(0x23e)](_0x19f939=>_0x19f939&&_0x19f939[0x0])[_0x409072(0x1e4)](_0x4eaaa4=>_0x4eaaa4[0x0][_0x409072(0x23b)]()))),aniosDisponibles[_0x409072(0x22e)]((_0x4e644d,_0x55da28)=>_0x55da28-_0x4e644d),!aniosDisponibles[_0x409072(0x222)](anioSeleccionado)&&aniosDisponibles[_0x409072(0x27d)]>0x0&&(anioSeleccionado=aniosDisponibles[0x0]);const _0xdd60c=document[_0x409072(0x29a)](_0x409072(0x1a3));let _0x5a2575=document[_0x409072(0x205)](_0x30714b(0x1c4));if(!_0x5a2575){const _0x13c6ef=document[_0x409072(0x227)](_0x409072(0x1ba));_0x13c6ef[_0x409072(0x254)]=_0x409072(0x184),_0x13c6ef[_0x409072(0x27e)]=_0x409072(0x173),_0xdd60c[_0x409072(0x1bb)](_0x13c6ef,_0xdd60c[_0x409072(0x29a)](_0x409072(0x224))),_0x5a2575=document[_0x30714b(0x258)](_0x30714b(0x1c4)),_0x5a2575[_0x409072(0x1c8)](_0x409072(0x18b),function(){const _0x3dcc2a=_0x409072;anioSeleccionado=this[_0x3dcc2a(0x18c)],actualizarEstadisticas(),generarAlertas(),actualizarTablaDepartamentos(),crearGraficos();});}_0x5a2575[_0x409072(0x27e)]='',aniosDisponibles[_0x409072(0x1cb)](_0x3f1910=>{const _0x2c4b08=_0x218b,_0x4a3d3d=_0x30714b,_0x474a2f=_0x409072,_0x57160d=document[_0x4a3d3d(0x1a7)](_0x474a2f(0x1b1));_0x57160d[_0x474a2f(0x18c)]=_0x3f1910,_0x57160d[_0x2c4b08(0x186)]=_0x3f1910,_0x57160d[_0x4a3d3d(0x26b)]=_0x3f1910===anioSeleccionado,_0x5a2575[_0x4a3d3d(0x1f8)](_0x57160d);});const _0x2d0520=document[_0x30714b(0x1c2)](_0x409072(0x191));_0x2d0520&&(_0x2d0520[_0x409072(0x22f)]=_0x409072(0x29e)+anioSeleccionado+')');}function cargarDatosEstadisticas(){const _0x499d9c=_0x2463c3,_0x416a64=_0x140ae4;document[_0x499d9c(0x258)](_0x416a64(0x1af))[_0x416a64(0x27e)]=_0x416a64(0x268),document[_0x416a64(0x205)](_0x416a64(0x28e))[_0x499d9c(0x189)]=_0x416a64(0x268),document[_0x416a64(0x205)](_0x416a64(0x1c6))[_0x499d9c(0x189)]=_0x416a64(0x268),document[_0x416a64(0x205)](_0x416a64(0x1e2))[_0x416a64(0x27e)]=_0x416a64(0x268),fetch(WEB_APP_URL)[_0x416a64(0x29d)](_0x31cda0=>{const _0x30c4e6=_0x499d9c,_0x3fef17=_0x416a64;if(!_0x31cda0['ok'])throw new Error(_0x30c4e6(0x257)+_0x31cda0[_0x30c4e6(0x27b)]+'\x20'+_0x31cda0[_0x3fef17(0x20c)]);return _0x31cda0[_0x3fef17(0x207)]();})[_0x416a64(0x29d)](_0x47e25d=>{const _0x4c0f29=_0x416a64;console[_0x4c0f29(0x26c)](_0x4c0f29(0x28b),_0x47e25d);if(!_0x47e25d||typeof _0x47e25d!==_0x4c0f29(0x197))throw new Error(_0x4c0f29(0x1a7));dat_PAC=Array[_0x4c0f29(0x1d9)](_0x47e25d[_0x4c0f29(0x180)])?_0x47e25d[_0x4c0f29(0x180)]:[];if(dat_PAC[_0x4c0f29(0x27d)]===0x0)throw new Error(_0x4c0f29(0x177));actualizarEstadisticas(),generarAlertas(),actualizarTablaDepartamentos(),typeof Chart!==_0x4c0f29(0x1ca)?crearGraficos():console[_0x4c0f29(0x206)](_0x4c0f29(0x240));})[_0x416a64(0x25a)](_0x263641=>{const _0x46f68e=_0x218b,_0x273c20=_0x416a64;console[_0x273c20(0x1f8)](_0x46f68e(0x148),_0x263641),mostrarErrorEnContadores(_0x263641['message']);});}function actualizarEstadisticas(){const _0x39bced=_0x218b,_0x3cfeb4=_0x2463c3,_0xa97a37=_0x140ae4;try{const _0x4b1cb2=new Date()[_0xa97a37(0x1b3)]()[_0xa97a37(0x23b)](),_0x3c7f4c=dat_PAC[_0xa97a37(0x23e)](_0x24691a=>_0x24691a&&Array[_0xa97a37(0x1d9)](_0x24691a)&&_0x24691a[0x0]&&_0x24691a[0x0][_0xa97a37(0x23b)]()===_0x4b1cb2),_0x4fcbc6=new Set();_0x3c7f4c[_0xa97a37(0x1cb)](_0x1255bd=>{const _0x3963be=_0xa97a37;if(_0x1255bd&&_0x1255bd[0x4])_0x4fcbc6[_0x3963be(0x20d)](_0x1255bd[0x4][_0x3963be(0x23b)]()[_0x3963be(0x217)]()[_0x3963be(0x1c1)]());});const _0x29e1b5=new Set();_0x3c7f4c[_0xa97a37(0x1cb)](_0x3fa98b=>{const _0x20f36a=_0x1f53,_0x52937f=_0xa97a37;if(_0x3fa98b&&_0x3fa98b[0x1])_0x29e1b5[_0x52937f(0x20d)](_0x3fa98b[0x1][_0x20f36a(0x185)]()[_0x52937f(0x217)]()[_0x52937f(0x1c1)]());});const _0x5e0936=_0x3c7f4c[_0xa97a37(0x27d)];let _0x3e8bc4=0x0;_0x3c7f4c[_0xa97a37(0x1cb)](_0x1bb04e=>{const _0x1251da=_0xa97a37;if(_0x1bb04e&&_0x1bb04e[0x7]){const _0x109759=_0x1bb04e[0x7][_0x1251da(0x23b)]()[_0x1251da(0x20a)](/\./g,'')[_0x1251da(0x20a)](/\D/g,'');_0x3e8bc4+=parseInt(_0x109759)||0x0;}}),document[_0x3cfeb4(0x258)](_0x3cfeb4(0x21d))[_0xa97a37(0x22f)]=_0x4fcbc6[_0xa97a37(0x1f7)],document[_0xa97a37(0x205)](_0xa97a37(0x28e))[_0x3cfeb4(0x298)]=_0x29e1b5[_0xa97a37(0x1f7)],document[_0xa97a37(0x205)](_0x3cfeb4(0x20d))[_0x3cfeb4(0x298)]=_0x5e0936,document[_0xa97a37(0x205)](_0x3cfeb4(0x288))[_0xa97a37(0x22f)]='$'+formatearNumero(_0x3e8bc4);}catch(_0x2336cf){console[_0xa97a37(0x1f8)](_0xa97a37(0x193),_0x2336cf),mostrarErrorEnContadores(_0x39bced(0x1b8));}}function generarAlertas(){const _0x216a59=_0x218b,_0x279d9b=_0x2463c3,_0x25ac19=_0x140ae4;try{const _0x5bda1e=document[_0x216a59(0xc6)](_0x25ac19(0x29f));_0x5bda1e[_0x25ac19(0x27e)]='';const _0x5c7e93=new Date()[_0x279d9b(0x1f1)]()[_0x25ac19(0x23b)](),_0x2cf63d={},_0x4b8ae5={},_0x53789e={};dat_PAC[_0x25ac19(0x1cb)](_0x4dd977=>{const _0x538d8d=_0x279d9b,_0x196dfd=_0x25ac19;if(_0x4dd977&&_0x4dd977[0x0]&&_0x4dd977[0x0][_0x196dfd(0x23b)]()===_0x5c7e93&&_0x4dd977[0x1]){const _0x3b8ba6=_0x4dd977[0x1][_0x196dfd(0x23b)]()[_0x196dfd(0x217)]()[_0x196dfd(0x1c1)](),_0x34c9a1=_0x4dd977[0x7]?parseInt(_0x4dd977[0x7][_0x538d8d(0x185)]()['replace'](/\./g,'')[_0x538d8d(0x1fe)](/\D/g,''))||0x0:0x0,_0x53213b=_0x4dd977[0x11]?parseInt(_0x4dd977[0x11][_0x196dfd(0x23b)]()[_0x196dfd(0x20a)](/\./g,'')[_0x196dfd(0x20a)](/\D/g,''))||0x0:0x0,_0x1b8327=_0x4dd977[0x13]?parseInt(_0x4dd977[0x13][_0x196dfd(0x23b)]()[_0x196dfd(0x20a)](/\./g,'')[_0x538d8d(0x1fe)](/\D/g,''))||0x0:0x0;_0x2cf63d[_0x3b8ba6]=(_0x2cf63d[_0x3b8ba6]||0x0)+_0x34c9a1,_0x4b8ae5[_0x3b8ba6]=(_0x4b8ae5[_0x3b8ba6]||0x0)+_0x53213b,_0x53789e[_0x3b8ba6]=(_0x53789e[_0x3b8ba6]||0x0)+_0x1b8327;}});const _0x264afd=[];for(const _0x48a17c in _0x2cf63d){if(_0x2cf63d[_0x48a17c]>0x0){const _0x1c11f9=_0x53789e[_0x48a17c]/_0x2cf63d[_0x48a17c]*0x64;_0x1c11f9<0x1e&&_0x264afd[_0x25ac19(0x196)]({'nombre':_0x48a17c,'porcentaje':_0x1c11f9[_0x25ac19(0x29c)](0x2)});}}if(_0x264afd[_0x279d9b(0x26c)]>0x0){const _0x38df55=_0x25ac19(0x166)+_0x264afd[_0x279d9b(0x26c)]+_0x279d9b(0x1ca);_0x5bda1e[_0x216a59(0x172)]+=_0x38df55;}const _0x1cb1af=[];for(const _0x42a21b in _0x2cf63d){if(_0x2cf63d[_0x42a21b]>0x0){const _0x13b79c=_0x53789e[_0x42a21b]/_0x2cf63d[_0x42a21b]*0x64;_0x13b79c>0x5a&&_0x1cb1af[_0x25ac19(0x196)]({'nombre':_0x42a21b,'porcentaje':_0x13b79c[_0x25ac19(0x29c)](0x2)});}}if(_0x1cb1af[_0x25ac19(0x27d)]>0x0){const _0x4abbc7=_0x25ac19(0x1ac)+_0x1cb1af['length']+_0x25ac19(0x1ff);_0x5bda1e[_0x279d9b(0x189)]+=_0x4abbc7;}const _0x12b1ce=[];for(const _0x5ec39e in _0x4b8ae5){if(_0x4b8ae5[_0x5ec39e]>0x0){const _0x1d15c3=_0x53789e[_0x5ec39e]/_0x4b8ae5[_0x5ec39e]*0x64;_0x1d15c3<0x32&&_0x4b8ae5[_0x5ec39e]>_0x2cf63d[_0x5ec39e]*0.5&&_0x12b1ce[_0x25ac19(0x196)]({'nombre':_0x5ec39e,'comprometido':formatearNumero(_0x4b8ae5[_0x5ec39e]),'gastado':formatearNumero(_0x53789e[_0x5ec39e]),'porcentaje':_0x1d15c3[_0x279d9b(0x17b)](0x2)});}}if(_0x12b1ce[_0x25ac19(0x27d)]>0x0){const _0x39df1e=_0x25ac19(0x245)+_0x12b1ce[_0x25ac19(0x27d)]+_0x25ac19(0x25c);_0x5bda1e[_0x25ac19(0x27e)]+=_0x39df1e;}_0x5bda1e[_0x25ac19(0x27e)]===''&&(_0x5bda1e[_0x279d9b(0x189)]=_0x25ac19(0x2a0));}catch(_0x2eefff){console[_0x25ac19(0x1f8)](_0x25ac19(0x182),_0x2eefff);const _0x31d3d0=document[_0x25ac19(0x205)](_0x25ac19(0x29f));_0x31d3d0[_0x25ac19(0x27e)]=_0x25ac19(0x277);}}function actualizarTablaDepartamentos(){const _0x31ca37=_0x218b,_0x1d9501=_0x2463c3,_0x3462d1=_0x140ae4;try{const _0x40b31d=document[_0x1d9501(0x258)](_0x3462d1(0x185));_0x40b31d[_0x3462d1(0x27e)]='';const _0x33dcba=new Date()['getFullYear']()[_0x3462d1(0x23b)](),_0x514752={};dat_PAC[_0x1d9501(0x224)](_0x2c026e=>{const _0x49480b=_0x1d9501,_0x43a954=_0x3462d1;if(_0x2c026e&&_0x2c026e[0x0]&&_0x2c026e[0x0][_0x43a954(0x23b)]()===_0x33dcba&&_0x2c026e[0x1]){const _0x501e1e=_0x2c026e[0x1]['toString']()[_0x43a954(0x217)]()[_0x43a954(0x1c1)](),_0x4d6aa8=_0x2c026e[0x7]?parseInt(_0x2c026e[0x7][_0x43a954(0x23b)]()[_0x43a954(0x20a)](/\./g,'')[_0x43a954(0x20a)](/\D/g,''))||0x0:0x0,_0x2deb7a=_0x2c026e[0x11]?parseInt(_0x2c026e[0x11][_0x43a954(0x23b)]()[_0x43a954(0x20a)](/\./g,'')[_0x43a954(0x20a)](/\D/g,''))||0x0:0x0,_0x985573=_0x2c026e[0x13]?parseInt(_0x2c026e[0x13][_0x49480b(0x185)]()[_0x49480b(0x1fe)](/\./g,'')[_0x43a954(0x20a)](/\D/g,''))||0x0:0x0;!_0x514752[_0x501e1e]&&(_0x514752[_0x501e1e]={'presupuesto':0x0,'comprometido':0x0,'gastado':0x0}),_0x514752[_0x501e1e][_0x43a954(0x212)]+=_0x4d6aa8,_0x514752[_0x501e1e][_0x43a954(0x213)]+=_0x2deb7a,_0x514752[_0x501e1e][_0x43a954(0x208)]+=_0x985573;}});const _0x5821ed=Object[_0x1d9501(0x250)](_0x514752)[_0x3462d1(0x1e4)](_0xc83637=>({'nombre':_0xc83637,'presupuesto':_0x514752[_0xc83637][_0x3462d1(0x212)],'comprometido':_0x514752[_0xc83637][_0x3462d1(0x213)],'gastado':_0x514752[_0xc83637][_0x3462d1(0x208)],'porcentajeEjecucion':_0x514752[_0xc83637][_0x3462d1(0x212)]>0x0?(_0x514752[_0xc83637][_0x31ca37(0x166)]/_0x514752[_0xc83637][_0x1d9501(0x28d)]*0x64)[_0x3462d1(0x29c)](0x2):0x0}));_0x5821ed[_0x3462d1(0x22e)]((_0x2c0a09,_0xe509fd)=>_0xe509fd[_0x3462d1(0x212)]-_0x2c0a09[_0x3462d1(0x212)]),_0x5821ed[_0x1d9501(0x224)](_0x35587a=>{const _0x520112=_0x1d9501,_0x3b4c9a=_0x3462d1;let _0x5a9730='',_0x45ecd7='';const _0x56b3c3=parseFloat(_0x35587a[_0x520112(0x1a1)]);if(_0x56b3c3>=0x5a)_0x5a9730=_0x520112(0x2a5),_0x45ecd7=_0x3b4c9a(0x2a1);else{if(_0x56b3c3>=0x46)_0x5a9730=_0x3b4c9a(0x280),_0x45ecd7=_0x3b4c9a(0x1aa);else _0x56b3c3>=0x1e?(_0x5a9730=_0x3b4c9a(0x19b),_0x45ecd7=_0x3b4c9a(0x204)):(_0x5a9730=_0x3b4c9a(0x1f4),_0x45ecd7=_0x3b4c9a(0x18a));}const _0x17f8ad=document[_0x520112(0x1a7)]('tr');_0x17f8ad[_0x3b4c9a(0x27e)]=_0x3b4c9a(0x297)+_0x35587a[_0x3b4c9a(0x167)]+_0x3b4c9a(0x20e)+formatearNumero(_0x35587a[_0x3b4c9a(0x212)])+_0x3b4c9a(0x20e)+formatearNumero(_0x35587a[_0x3b4c9a(0x213)])+_0x520112(0x277)+formatearNumero(_0x35587a[_0x520112(0x269)])+_0x3b4c9a(0x209)+_0x35587a[_0x3b4c9a(0x187)]+_0x3b4c9a(0x16c)+_0x45ecd7+'\x22>'+_0x5a9730+_0x520112(0x276),_0x40b31d[_0x3b4c9a(0x28d)](_0x17f8ad);});}catch(_0x387d59){console[_0x3462d1(0x1f8)](_0x1d9501(0x297),_0x387d59);const _0x13e375=document[_0x3462d1(0x205)](_0x3462d1(0x185));_0x13e375[_0x3462d1(0x27e)]=_0x3462d1(0x273);}}function crearGraficos(){const _0x564198=_0x140ae4;if(typeof Chart===_0x564198(0x1ca)){console[_0x564198(0x1f8)](_0x564198(0x168));return;}try{crearGraficoDepartamentos(),crearGraficoMensual();}catch(_0x4c8257){console[_0x564198(0x1f8)](_0x564198(0x1b6),_0x4c8257);}}function crearGraficoDepartamentos(){const _0x4c1af8=_0x218b,_0x22184=_0x2463c3,_0x1caaf1=_0x140ae4;try{const _0x2afce4=document[_0x1caaf1(0x205)](_0x1caaf1(0x256));if(!_0x2afce4){console[_0x1caaf1(0x1f8)](_0x4c1af8(0x130));return;}const _0x546f76=_0x2afce4[_0x1caaf1(0x1dd)]('2d'),_0x19d7a4=new Date()[_0x1caaf1(0x1b3)]()[_0x1caaf1(0x23b)](),_0x32cf8e={};dat_PAC[_0x1caaf1(0x1cb)](_0x35d93b=>{const _0x32a7bf=_0x4c1af8,_0x3c72cc=_0x1f53,_0x33f282=_0x1caaf1;if(_0x35d93b&&_0x35d93b[0x0]&&_0x35d93b[0x0][_0x32a7bf(0x1d2)]()===_0x19d7a4&&_0x35d93b[0x1]){const _0x14e370=_0x35d93b[0x1][_0x3c72cc(0x185)]()[_0x33f282(0x217)]()[_0x33f282(0x1c1)](),_0x559371=_0x35d93b[0x8]?parseInt(_0x35d93b[0x8][_0x33f282(0x23b)]()[_0x33f282(0x20a)](/\./g,'')[_0x33f282(0x20a)](/\D/g,''))||0x0:0x0;!_0x32cf8e[_0x14e370]&&(_0x32cf8e[_0x14e370]=0x0),_0x32cf8e[_0x14e370]+=_0x559371;}});const _0x3befdd=Object[_0x1caaf1(0x174)](_0x32cf8e),_0x7d4c0f=Object[_0x1caaf1(0x1d5)](_0x32cf8e),_0x172416=[_0x1caaf1(0x22b),_0x1caaf1(0x175),_0x4c1af8(0x1c6),_0x1caaf1(0x1a4),_0x1caaf1(0x1ec),_0x1caaf1(0x1a9),_0x1caaf1(0x22a),_0x1caaf1(0x231),_0x1caaf1(0x25d),_0x1caaf1(0x1be)];chartInstancesDep&&chartInstancesDep[_0x1caaf1(0x16d)](),chartInstancesDep=new Chart(_0x546f76,{'type':_0x1caaf1(0x1bc),'data':{'labels':_0x3befdd,'datasets':[{'data':_0x7d4c0f,'backgroundColor':_0x172416[_0x22184(0x1bb)](0x0,_0x3befdd[_0x22184(0x26c)]),'borderWidth':0x1}]},'options':{'responsive':!![],'maintainAspectRatio':![],'plugins':{'legend':{'position':_0x1caaf1(0x21b),'labels':{'boxWidth':0xf,'font':{'size':0xa}}},'tooltip':{'callbacks':{'label':function(_0x819574){const _0x248a03=_0x1caaf1,_0x10ef22=_0x819574[_0x248a03(0x269)]||'',_0x4e0916=_0x819574[_0x248a03(0x1eb)];return _0x10ef22+_0x248a03(0x22c)+formatearNumero(_0x4e0916);}}}}}});}catch(_0xfc79d9){console[_0x1caaf1(0x1f8)](_0x1caaf1(0x1d0),_0xfc79d9);}}function crearGraficoDepartamentos(){const _0x13ba4d=_0x218b,_0x2f58d0=_0x2463c3,_0x1dcd1f=_0x140ae4;try{const _0x4631be=document[_0x2f58d0(0x258)](_0x1dcd1f(0x256));if(!_0x4631be){console[_0x2f58d0(0x29d)](_0x2f58d0(0x1c0));return;}const _0x133489=_0x4631be[_0x2f58d0(0x244)]('2d'),_0x12e23b=new Date()[_0x1dcd1f(0x1b3)]()[_0x1dcd1f(0x23b)](),_0x18ed25={};dat_PAC[_0x1dcd1f(0x1cb)](_0x350baf=>{const _0x1d56f6=_0x2f58d0,_0x2444c0=_0x1dcd1f;if(_0x350baf&&_0x350baf[0x0]&&_0x350baf[0x0][_0x2444c0(0x23b)]()===_0x12e23b&&_0x350baf[0x1]){const _0x2f509d=_0x350baf[0x1][_0x2444c0(0x23b)]()[_0x2444c0(0x217)]()[_0x2444c0(0x1c1)](),_0x1f2c39=_0x350baf[0x7]?parseInt(_0x350baf[0x7][_0x2444c0(0x23b)]()[_0x1d56f6(0x1fe)](/\./g,'')[_0x2444c0(0x20a)](/\D/g,''))||0x0:0x0;!_0x18ed25[_0x2f509d]&&(_0x18ed25[_0x2f509d]=0x0),_0x18ed25[_0x2f509d]+=_0x1f2c39;}});const _0x2bc31d=Object[_0x1dcd1f(0x174)](_0x18ed25),_0x45259c=Object[_0x13ba4d(0x1be)](_0x18ed25),_0x4406a4=[_0x1dcd1f(0x22b),_0x1dcd1f(0x175),_0x1dcd1f(0x255),_0x1dcd1f(0x1a4),_0x1dcd1f(0x1ec),_0x1dcd1f(0x1a9),_0x2f58d0(0x1d7),_0x13ba4d(0x1cd),_0x1dcd1f(0x25d),_0x1dcd1f(0x1be)];chartInstancesDep&&chartInstancesDep[_0x2f58d0(0x1cd)](),chartInstancesDep=new Chart(_0x133489,{'type':_0x1dcd1f(0x1bc),'data':{'labels':_0x2bc31d,'datasets':[{'data':_0x45259c,'backgroundColor':_0x4406a4[_0x1dcd1f(0x28f)](0x0,_0x2bc31d[_0x2f58d0(0x26c)]),'borderWidth':0x1}]},'options':{'responsive':!![],'maintainAspectRatio':![],'plugins':{'legend':{'position':_0x1dcd1f(0x21b),'labels':{'boxWidth':0xf,'font':{'size':0xa}}},'tooltip':{'callbacks':{'label':function(_0x100398){const _0x5444f9=_0x2f58d0,_0x2c29b5=_0x1dcd1f,_0xbf7224=_0x100398[_0x2c29b5(0x269)]||'',_0x8d0c00=_0x100398[_0x5444f9(0x19b)];return _0xbf7224+_0x2c29b5(0x22c)+formatearNumero(_0x8d0c00);}}}}}});}catch(_0x1c1e94){console[_0x1dcd1f(0x1f8)](_0x1dcd1f(0x1d0),_0x1c1e94);}}function crearGraficoMensual(){const _0x26a8bf=_0x218b,_0x41be56=_0x2463c3,_0x541563=_0x140ae4;try{const _0x2850fb=document[_0x541563(0x205)](_0x541563(0x198));if(!_0x2850fb){console[_0x541563(0x1f8)](_0x26a8bf(0x1c3));return;}const _0x362f4a=_0x2850fb[_0x541563(0x1dd)]('2d'),_0xec1a2=new Date()[_0x541563(0x1b3)]()[_0x541563(0x23b)](),_0x248807={};dat_PAC[_0x26a8bf(0x1a7)](_0x426938=>{const _0x1efb90=_0x1f53,_0x49aae1=_0x541563;if(_0x426938&&_0x426938[0x0]&&_0x426938[0x0][_0x49aae1(0x23b)]()===_0xec1a2&&_0x426938[0x1]){const _0x9be12d=_0x426938[0x1][_0x49aae1(0x23b)]()[_0x49aae1(0x217)]()[_0x49aae1(0x1c1)]();!_0x248807[_0x9be12d]&&(_0x248807[_0x9be12d]={'presupuesto':0x0,'comprometido':0x0,'gastado':0x0});const _0x27befc=_0x426938[0x7]?parseInt(_0x426938[0x7][_0x49aae1(0x23b)]()[_0x49aae1(0x20a)](/\./g,'')[_0x49aae1(0x20a)](/\D/g,''))||0x0:0x0,_0xd2e04a=_0x426938[0x11]?parseInt(_0x426938[0x11][_0x49aae1(0x23b)]()[_0x1efb90(0x1fe)](/\./g,'')[_0x49aae1(0x20a)](/\D/g,''))||0x0:0x0,_0x1c4ed5=_0x426938[0x13]?parseInt(_0x426938[0x13][_0x49aae1(0x23b)]()[_0x49aae1(0x20a)](/\./g,'')[_0x1efb90(0x1fe)](/\D/g,''))||0x0:0x0;_0x248807[_0x9be12d][_0x1efb90(0x28d)]+=_0x27befc,_0x248807[_0x9be12d][_0x49aae1(0x213)]+=_0xd2e04a,_0x248807[_0x9be12d][_0x49aae1(0x208)]+=_0x1c4ed5;}});const _0x2848ce=Object[_0x541563(0x174)](_0x248807),_0x4c1962=[],_0xec7307=[],_0x19b6a1=[],_0x51ea8e=_0x2848ce[_0x41be56(0x25c)](_0x483b8c=>({'nombre':_0x483b8c,'presupuesto':_0x248807[_0x483b8c][_0x541563(0x212)]}))[_0x541563(0x22e)]((_0x130da4,_0x5c1bae)=>_0x5c1bae[_0x541563(0x212)]-_0x130da4[_0x541563(0x212)])[_0x26a8bf(0x1a2)](0x0,0x8)[_0x541563(0x1e4)](_0xbc50ad=>_0xbc50ad[_0x541563(0x167)]);_0x51ea8e[_0x541563(0x1cb)](_0x2b609f=>{const _0x5b661a=_0x41be56,_0x4e68c0=_0x541563;_0x4c1962[_0x4e68c0(0x196)](_0x248807[_0x2b609f][_0x4e68c0(0x212)]),_0xec7307[_0x4e68c0(0x196)](_0x248807[_0x2b609f][_0x4e68c0(0x213)]),_0x19b6a1[_0x5b661a(0x1c9)](_0x248807[_0x2b609f][_0x4e68c0(0x208)]);}),chartInstancesMonthly&&chartInstancesMonthly[_0x541563(0x16d)](),chartInstancesMonthly=new Chart(_0x362f4a,{'type':_0x541563(0x1f1),'data':{'labels':_0x51ea8e,'datasets':[{'label':_0x541563(0x23d),'data':_0x4c1962,'backgroundColor':_0x541563(0x258),'borderColor':_0x26a8bf(0x159),'borderWidth':0x1},{'label':_0x541563(0x1d4),'data':_0xec7307,'backgroundColor':_0x541563(0x1e1),'borderColor':_0x541563(0x295),'borderWidth':0x1},{'label':_0x541563(0x1d7),'data':_0x19b6a1,'backgroundColor':_0x541563(0x25b),'borderColor':_0x541563(0x292),'borderWidth':0x1}]},'options':{'indexAxis':'y','responsive':!![],'maintainAspectRatio':![],'scales':{'x':{'beginAtZero':!![],'ticks':{'callback':function(_0x321567){const _0x244cee=_0x541563;if(_0x321567>=0xf4240)return'$'+(_0x321567/0xf4240)[_0x244cee(0x29c)](0x1)+'M';else{if(_0x321567>=0x3e8)return'$'+(_0x321567/0x3e8)[_0x244cee(0x29c)](0x1)+'K';}return'$'+_0x321567;}}}},'plugins':{'legend':{'position':_0x541563(0x1d3)},'title':{'display':!![],'text':_0x41be56(0x194)},'tooltip':{'callbacks':{'label':function(_0x20ee4c){const _0x751160=_0x26a8bf,_0x40b9f4=_0x41be56,_0x4b3866=_0x541563,_0xafd6bc=_0x20ee4c[_0x4b3866(0x1fd)][_0x751160(0x1b3)]||'',_0x2eb672=_0x20ee4c[_0x40b9f4(0x19b)];return _0xafd6bc+_0x40b9f4(0x192)+formatearNumero(_0x2eb672);}}}}}});}catch(_0x2c4b7d){console[_0x541563(0x1f8)](_0x541563(0x18e),_0x2c4b7d);}}function _0x180e(){const _0x24119b=_0x218b,_0x1ccfcf=['catch','slice',_0x24119b(0x19e),_0x24119b(0x149),_0x24119b(0x1c4),_0x24119b(0x15f),_0x24119b(0x130),_0x24119b(0x13d),_0x24119b(0x10a),_0x24119b(0xff),_0x24119b(0x113),'148968XWdEMg',_0x24119b(0x1a8),'no-referrer',_0x24119b(0xd3),_0x24119b(0x1ae),_0x24119b(0xee),'31730cMncKV','toLowerCase',_0x24119b(0x1ce),_0x24119b(0xdb),_0x24119b(0xc9),_0x24119b(0xbb),'animation','click','referrerPolicy',_0x24119b(0x12c),'bold',_0x24119b(0xaf),'#E91E63',_0x24119b(0xf4),_0x24119b(0x145),'flex','insertAdjacentHTML',_0x24119b(0xe9),_0x24119b(0xe6),_0x24119b(0x1d4),_0x24119b(0x121),_0x24119b(0xe7),_0x24119b(0xcf),_0x24119b(0x19c),_0x24119b(0x11e),_0x24119b(0x15e),'56959414178',_0x24119b(0x163),_0x24119b(0x1d0),'9654102Vvzpnp',_0x24119b(0x18f),_0x24119b(0x128),'#FF5722',_0x24119b(0xc8),_0x24119b(0x170),'pageYOffset',_0x24119b(0xef),_0x24119b(0x175),_0x24119b(0x14b),_0x24119b(0x1ac),_0x24119b(0x138),_0x24119b(0xb6),_0x24119b(0x1d3),_0x24119b(0x176),'alerts-container',_0x24119b(0x1c8),_0x24119b(0x1cf),_0x24119b(0x18a),_0x24119b(0x140),_0x24119b(0x192),_0x24119b(0x14f),'replace',_0x24119b(0xc1),_0x24119b(0x196),_0x24119b(0x1b9),_0x24119b(0xe5),'parentNode',_0x24119b(0xb2),_0x24119b(0x187),_0x24119b(0x1b1),_0x24119b(0xba),'position',_0x24119b(0x14d),_0x24119b(0x146),_0x24119b(0x133),_0x24119b(0x15c),_0x24119b(0xb8),'rgba(255,\x2099,\x20132,\x200.5)','keyup',_0x24119b(0x103),_0x24119b(0x139),'querySelectorAll',_0x24119b(0x1d6),_0x24119b(0xed),_0x24119b(0x13f),_0x24119b(0xbe),'color','round',_0x24119b(0x11d),_0x24119b(0x1c1),_0x24119b(0x1c0),'crossOrigin','presupuestos-count',_0x24119b(0xd5),_0x24119b(0x1d1),_0x24119b(0x18c),_0x24119b(0x147),_0x24119b(0x199),'Error\x20al\x20crear\x20gráfico\x20de\x20departamentos:',_0x24119b(0x1a7),_0x24119b(0x1aa),'speechSynthesis',_0x24119b(0xde),_0x24119b(0xc0),_0x24119b(0x136),'rgba(75,\x20192,\x20192,\x200.5)',_0x24119b(0x118),_0x24119b(0x108),_0x24119b(0xae),_0x24119b(0x194),_0x24119b(0x12d),_0x24119b(0xdd),_0x24119b(0x104),_0x24119b(0x12e),_0x24119b(0xf6),'3wGNqrZ',_0x24119b(0x132),_0x24119b(0x1be),'0\x202px\x2010px\x20rgba(0,0,0,0.2)',_0x24119b(0x10b),_0x24119b(0x169),'<div\x20class=\x22loading-spinner\x22></div>',_0x24119b(0x18d),_0x24119b(0x189),_0x24119b(0x193),_0x24119b(0x1c6),_0x24119b(0xf8),'\x20departamento(s)\x20tienen\x20menos\x20del\x2050%\x20de\x20ejecución\x20sobre\x20su\x20presupuesto\x20comprometido.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22#\x22\x20onclick=\x22mostrarDetalleAlerta(\x27deptos-diferencia\x27)\x22>Ver\x20detalles</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20',_0x24119b(0xb1),'\x20departamentos,\x20con\x20un\x20total\x20de\x20',_0x24119b(0x154),_0x24119b(0xb9),_0x24119b(0x174),'lang',_0x24119b(0x1ad),_0x24119b(0x124),'Explicación\x20detenida','\x0a\x20\x20\x20\x20\x20\x20Destaca\x20positivamente\x20que\x20',_0x24119b(0xfb),'\x20ítems\x20registrados\x20en\x20el\x20PAC.\x0a\x20\x20\x20\x20El\x20presupuesto\x20total\x20asignado\x20es\x20de\x20','.\x0a\x20\x20\x20\x20\x20\x20','\x20muestra',_0x24119b(0x115),'keys',_0x24119b(0x1bb),_0x24119b(0x1a4),_0x24119b(0x1b2),_0x24119b(0x183),'</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td>',_0x24119b(0x13b),_0x24119b(0x19f),'getElementById',_0x24119b(0x198),_0x24119b(0xce),_0x24119b(0x182),_0x24119b(0x1a9),_0x24119b(0x180),_0x24119b(0xcd),_0x24119b(0x18b),_0x24119b(0x1b4),_0x24119b(0x177),_0x24119b(0x1cd),_0x24119b(0xdf),_0x24119b(0xf0),_0x24119b(0x14a),'fixed','Ejecutado',_0x24119b(0x131),_0x24119b(0x166),'\x0a\x20\x20\x20\x20\x20\x20el\x20departamento\x20',_0x24119b(0x1a1),_0x24119b(0x191),_0x24119b(0x162),_0x24119b(0x16b),_0x24119b(0x1b3),_0x24119b(0xf9),_0x24119b(0xda),'Error',_0x24119b(0xfa),_0x24119b(0x1ca),'addEventListener',_0x24119b(0x1b5),_0x24119b(0x151),_0x24119b(0x100),_0x24119b(0xad),'disabled',_0x24119b(0xab),'Formato\x20de\x20datos\x20inesperado',_0x24119b(0x1dd),_0x24119b(0x158),_0x24119b(0xf5),_0x24119b(0x17d),_0x24119b(0x184),_0x24119b(0x1a6),_0x24119b(0x17c),_0x24119b(0x178),_0x24119b(0x12f),_0x24119b(0x13a),_0x24119b(0xd8),_0x24119b(0x1a5),'dataset',_0x24119b(0xb4),_0x24119b(0xd1),_0x24119b(0x141),'presupuesto',_0x24119b(0x165),'mujer',_0x24119b(0x153),_0x24119b(0x152),_0x24119b(0x168),_0x24119b(0xc5),_0x24119b(0xeb),'Inicializando\x20sistema\x20de\x20estadísticas\x20del\x20PAC...',_0x24119b(0x1b0),_0x24119b(0x16c),_0x24119b(0x186),_0x24119b(0xc2),'Error\x20al\x20iniciar\x20la\x20explicación',_0x24119b(0xd9),_0x24119b(0x12b),_0x24119b(0x13e),_0x24119b(0x1c5),_0x24119b(0x185),_0x24119b(0xca),'passwordModal',_0x24119b(0x126),_0x24119b(0x155),_0x24119b(0x1c7),_0x24119b(0x1da),'voice','find','598732nUXkQF',_0x24119b(0x105),_0x24119b(0x11b),_0x24119b(0xf2),_0x24119b(0xd7),_0x24119b(0xc3),_0x24119b(0x11f),_0x24119b(0x188),_0x24119b(0x137),'\x0a\x20\x20\x20\x20\x20\x20\x20\x20El\x20departamento\x20','3348OsgDbk',_0x24119b(0xea),_0x24119b(0x1ba),_0x24119b(0x15b),_0x24119b(0xb7),'\x0a\x20\x20\x20\x20\x20\x20Sería\x20recomendable\x20programar\x20reuniones\x20con\x20los\x20responsables\x20de\x20estos\x20departamentos\x20para\x20revisar\x20las\x20causas\x20de\x20esta\x20baja\x20ejecución,\x0a\x20\x20\x20\x20\x20\x20proporcionar\x20apoyo\x20administrativo\x20en\x20los\x20procesos\x20de\x20compra\x20y,\x20si\x20fuera\x20necesario,\x20evaluar\x20la\x20posibilidad\x20de\x20reasignar\x20\x0a\x20\x20\x20\x20\x20\x20recursos\x20que\x20no\x20se\x20utilizarán\x20antes\x20del\x20cierre\x20del\x20período\x20fiscal.\x0a\x20\x20\x20\x20',_0x24119b(0x102),_0x24119b(0xe2),_0x24119b(0x116),_0x24119b(0x1b6),_0x24119b(0x156),_0x24119b(0x1d2),_0x24119b(0x1ab),'Error\x20al\x20crear\x20gráficos:',_0x24119b(0x17b),_0x24119b(0x172),_0x24119b(0xbd),_0x24119b(0x143),_0x24119b(0xc4),_0x24119b(0x1dc),_0x24119b(0x190),_0x24119b(0xe4),'cursor','#3498db',_0x24119b(0x17e),_0x24119b(0x15a),_0x24119b(0x1d5),_0x24119b(0xe0),_0x24119b(0x107),_0x24119b(0xcb),'name',_0x24119b(0x16d),_0x24119b(0x114),_0x24119b(0x179),'toast-mensaje',_0x24119b(0x106),_0x24119b(0x1d9),_0x24119b(0xb5),_0x24119b(0x117),_0x24119b(0x16a),'style',_0x24119b(0x195),_0x24119b(0xfd),_0x24119b(0x12a),_0x24119b(0xd6),'createElement',_0x24119b(0x13c),_0x24119b(0xf3),_0x24119b(0xf1),'Tu\x20navegador\x20no\x20soporta\x20la\x20síntesis\x20de\x20voz',_0x24119b(0xe1),_0x24119b(0xdc),_0x24119b(0xd0),'documentElement','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22text-align:\x20center;\x20padding:\x2020px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h3\x20style=\x22margin-bottom:\x2015px;\x22>No\x20se\x20pudo\x20cargar\x20el\x20dashboard</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<p\x20style=\x22margin-bottom:\x2020px;\x22>Parece\x20que\x20hay\x20un\x20problema\x20al\x20cargar\x20el\x20dashboard.\x20Por\x20favor,\x20intenta:</p>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22https://lookerstudio.google.com/reporting/da465897-8e1a-4d06-9f8e-27d84a749431\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20target=\x22_blank\x22\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20style=\x22display:\x20inline-block;\x20background-color:\x20#06c;\x20color:\x20white;\x20padding:\x2010px\x2020px;\x20border-radius:\x205px;\x20text-decoration:\x20none;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Ver\x20dashboard\x20en\x20Looker\x20Studio\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20',_0x24119b(0x11a),'30799868vnmtye','\x20departamento(s)\x20han\x20ejecutado\x20más\x20del\x2090%\x20de\x20su\x20presupuesto.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22#\x22\x20onclick=\x22mostrarDetalleAlerta(\x27deptos-alta-ejecucion\x27)\x22>Ver\x20detalles</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20',_0x24119b(0x19a),_0x24119b(0x173),_0x24119b(0x14c),_0x24119b(0x1cc),_0x24119b(0x11c),_0x24119b(0x134)];return _0x180e=function(){return _0x1ccfcf;},_0x180e();}function _0x40f4(){const _0x50d370=['estado-normal','innerHTML','passwordInput','log','key','year-selector-container','gap','nextSibling','raw','Datos\x20recibidos:','right','éxito','from',':\x20$','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css','\x20concentra\x20aproximadamente\x20el\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','btn-stop','opacity\x200.5s\x20ease-in-out','shake\x200.5s','loadingIndicator','textContent','keydown','#2196F3','.transparency-toggle','justifyContent','speak','classList','filter','pie','onerror','\x0a\x20\x20\x20\x20\x20\x20<tr>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td\x20colspan=\x226\x22\x20style=\x22text-align:center;\x20color:red;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Error\x20al\x20cargar\x20los\x20datos\x20de\x20la\x20tabla.\x20Intente\x20recargar\x20la\x20página.\x0a\x20\x20\x20\x20\x20\x20\x20\x20</td>\x0a\x20\x20\x20\x20\x20\x20</tr>\x0a\x20\x20\x20\x20','length','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22selector-anios\x22>Año:\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<select\x20id=\x22selector-anios\x22\x20class=\x22year-selector\x22></select>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','rgba(54,\x20162,\x20235,\x200.5)','active','display','female','.dashboard-header','btn-explicacion','https://wa.me/','estado-optimo','\x0a\x20\x20\x20\x20\x20\x20Atención:\x20el\x20sistema\x20muestra\x20alertas\x20de\x20peligro\x20que\x20requieren\x20atención\x20inmediata.\x20\x0a\x20\x20\x20\x20\x20\x20Recomiendo\x20revisar\x20los\x20errores\x20indicados\x20y\x20solucionar\x20los\x20problemas\x20técnicos\x20que\x20puedan\x20estar\x20afectando\x20al\x20sistema.\x0a\x20\x20\x20\x20','scroll','style','body','Error\x20de\x20red:\x20','alert-danger','selected','slice','715070ScjxNd','trim','total-year','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22alert\x20alert-success\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>¡Excelente!</strong>\x20','forEach','\x0a\x20\x20\x20\x20/*\x20Estilos\x20para\x20alertas\x20*/\x0a\x20\x20\x20\x20.alert\x20{\x0a\x20\x20\x20\x20\x20\x20padding:\x2012px;\x0a\x20\x20\x20\x20\x20\x20margin-bottom:\x2015px;\x0a\x20\x20\x20\x20\x20\x20border:\x201px\x20solid\x20transparent;\x0a\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.alert-success\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#155724;\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#d4edda;\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#c3e6cb;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.alert-info\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#0c5460;\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#d1ecf1;\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#bee5eb;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.alert-warning\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#856404;\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#fff3cd;\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#ffeeba;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.alert-danger\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#721c24;\x0a\x20\x20\x20\x20\x20\x20background-color:\x20#f8d7da;\x0a\x20\x20\x20\x20\x20\x20border-color:\x20#f5c6cb;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.alert\x20a\x20{\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x20\x20\x20\x20\x20\x20text-decoration:\x20underline;\x0a\x20\x20\x20\x20\x20\x20color:\x20inherit;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20/*\x20Estilos\x20para\x20estados\x20*/\x0a\x20\x20\x20\x20.estado-critico\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#721c24;\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.estado-avanzado\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#856404;\x0a\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.estado-normal\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#155724;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20.estado-bajo\x20{\x0a\x20\x20\x20\x20\x20\x20color:\x20#0c5460;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20/*\x20Animación\x20de\x20carga\x20*/\x0a\x20\x20\x20\x20.loading-spinner\x20{\x0a\x20\x20\x20\x20\x20\x20width:\x2020px;\x0a\x20\x20\x20\x20\x20\x20height:\x2020px;\x0a\x20\x20\x20\x20\x20\x20border:\x203px\x20solid\x20rgba(0,\x200,\x200,\x200.1);\x0a\x20\x20\x20\x20\x20\x20border-radius:\x2050%;\x0a\x20\x20\x20\x20\x20\x20border-top-color:\x20#333;\x0a\x20\x20\x20\x20\x20\x20animation:\x20spin\x201s\x20ease-in-out\x20infinite;\x0a\x20\x20\x20\x20\x20\x20margin:\x200\x20auto;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20@keyframes\x20spin\x20{\x0a\x20\x20\x20\x20\x20\x20to\x20{\x20transform:\x20rotate(360deg);\x20}\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20/*\x20Mejorar\x20responsividad\x20de\x20los\x20gráficos\x20*/\x0a\x20\x20\x20\x20.chart-container\x20{\x0a\x20\x20\x20\x20\x20\x20height:\x20300px;\x0a\x20\x20\x20\x20\x20\x20position:\x20relative;\x0a\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20@media\x20(max-width:\x20768px)\x20{\x0a\x20\x20\x20\x20\x20\x20.charts-container\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20flex-direction:\x20column;\x0a\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20.chart-container\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20width:\x20100%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20margin-bottom:\x2020px;\x0a\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20}\x0a\x20\x20','map','Error\x20al\x20iniciar\x20la\x20síntesis\x20de\x20voz:','option','49760pzPcBJ','sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==','push','dashboardIframe','sort','\x0a\x20\x20\x20\x20Analizando\x20la\x20distribución\x20del\x20presupuesto,\x20','Bajo','label','src','</td>\x0a\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22alert\x20alert-info\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>Información:</strong>\x20','https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js','Error\x20al\x20procesar\x20estadísticas\x20del\x20PAC','then','5155090NpARfL','Chart.js\x20no\x20está\x20disponible','90TCaYhF','location','values','\x0a\x20\x20\x20\x20\x20\x20En\x20cuanto\x20a\x20los\x20','Escuchar\x20explicación\x20detallada\x20del\x20dashboard','onmouseover','72933CpCiyX','Canvas\x20para\x20gráfico\x20mensual\x20no\x20encontrado','Error\x20al\x20generar\x20alertas:','No\x20se\x20pudieron\x20cargar\x20los\x20datos.\x20Intente\x20recargar\x20la\x20página.','#FFC107','cancelPasswordBtn','appendChild','235038uJwtSf','onvoiceschanged','4048508RnLgWS','rate','#00BCD4','destroy','margin','<i\x20class=\x22fas\x20fa-stop\x22></i>\x20Detener\x20explicación','Las\x20alertas\x20de\x20éxito\x20indican\x20departamentos\x20con\x20alta\x20ejecución,\x20lo\x20que\x20refleja\x20una\x20buena\x20gestión.','toString','size','11697813pRREiY','Comparativa\x20Presupuesto-Ejecución\x20por\x20Departamento','.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Comenzando\x20con\x20un\x20resumen\x20general,\x20el\x20dashboard\x20muestra\x20que\x20tenemos\x20','.transparency-links','68FIGbFs','\x20lidera\x20con\x20un\x20','Óptimo','\x0a\x20\x20\x20\x20Análisis\x20del\x20Dashboard\x20de\x20Estadísticas\x20del\x20Plan\x20Anual\x20de\x20Compras\x20para\x20el\x20año\x20','#9C27B0','zIndex','status','none','\x20de\x20ejecución.\x0a\x20\x20\x20\x20\x20\x20','change','borderRadius','advertencia','es-ES','scrollTop','Explicando\x20el\x20dashboard\x20de\x20estadísticas...','contains','peligro','boxShadow','\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22alert\x20alert-danger\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<strong>Error:</strong>\x20No\x20se\x20pudieron\x20generar\x20las\x20alertas\x20del\x20sistema.\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20','compras-count','getContext','format','object','transition','%\x20del\x20presupuesto\x20total,\x0a\x20\x20\x20\x20\x20\x20lo\x20que\x20evidencia\x20su\x20relevancia\x20estratégica\x20dentro\x20de\x20la\x20organización.\x0a\x20\x20\x20\x20','Avanzado','add','header','Chart.js\x20cargado\x20correctamente','\x20pesos\x20chilenos.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20En\x20cuanto\x20a\x20la\x20ejecución\x20presupuestaria,\x20','shift','isArray','warn','getElementById','133cJlBYU','Presupuesto\x20Anual','estilos-voz','bottom','alert-info','contentDocument','preventDefault','Sin\x20embargo,\x20','json','8324750IwiGix','\x20con\x20apenas\x20','#3498db','8px\x2015px','#3F51B5','resize','\x0a\x20\x20\x20\x20\x20\x20\x20\x20Un\x20punto\x20importante\x20a\x20considerar\x20es\x20que\x20','\x20\x0a\x20\x20\x20\x20\x20\x20presenta','\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20de\x20ejecución,\x20demostrando\x20una\x20gestión\x20eficiente\x20de\x20sus\x20recursos.\x0a\x20\x20\x20\x20\x20\x20','\x20departamentos\x20con\x20ejecución\x20entre\x2030%\x20y\x2080%,\x20\x0a\x20\x20\x20\x20\x20\x20muestran\x20un\x20avance\x20aceptable\x20pero\x20requieren\x20seguimiento\x20para\x20asegurar\x20que\x20completen\x20su\x20ejecución\x20\x0a\x20\x20\x20\x20\x20\x20presupuestaria\x20antes\x20del\x20cierre\x20del\x20período.\x0a\x20\x20\x20\x20','submitPasswordBtn','NumberFormat','href','innerWidth','.year-selector-container','Error\x20al\x20cargar\x20datos','Normal','#333','No\x20se\x20recibieron\x20datos\x20del\x20PAC','onload','dat_PAC','0\x202px\x2010px\x20rgba(0,\x200,\x200,\x200.05)','nombre','statusText','1102549hrNbqn','integrity','toFixed','80991sttNpW','\x20una\x20ejecución\x20presupuestaria\x20superior\x20al\x2080%.\x0a\x20\x20\x20\x20','top','\x20departamento(s)\x20con\x20menos\x20del\x2030%\x20del\x20presupuesto\x20ejecutado.\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22#\x22\x20onclick=\x22mostrarDetalleAlerta(\x27deptos-baja-ejecucion\x27)\x22>Ver\x20detalles</a>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22alert\x20alert-danger\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>Error:</strong>\x20','.back-button','Estadísticas\x20del\x20Sistema\x20(','#2980b9','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22alert\x20alert-warning\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<strong>¡Atención!</strong>\x20','rel','detener-explicacion','accederPacBtn','bar','target','toUpperCase','Las\x20alertas\x20informativas\x20muestran\x20diferencias\x20entre\x20presupuesto\x20comprometido\x20y\x20ejecutado\x20que\x20deben\x20ser\x20revisadas.','\x20departamento','254424vxTJDZ','fontWeight','stylesheet','visible','link[href*=\x22font-awesome\x22]','44560ZFeGXe','2297qvqJRV','7795776xhzIiL','\x20productos\x20o\x20servicios\x20únicos\x0a\x20\x20\x20\x20distribuidos\x20en\x20','button','\x20con\x20','\x0a\x20\x20\x20\x20A\x20modo\x20de\x20recomendación\x20general,\x20sugiero:\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Primero,\x20realizar\x20seguimiento\x20cercano\x20a\x20los\x20departamentos\x20con\x20ejecución\x20inferior\x20al\x2030%,\x20identificando\x20barreras\x20\x0a\x20\x20\x20\x20en\x20los\x20procesos\x20de\x20compra\x20y\x20ofreciendo\x20apoyo\x20administrativo\x20cuando\x20sea\x20necesario.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Segundo,\x20evaluar\x20la\x20posibilidad\x20de\x20redistribuir\x20recursos\x20desde\x20departamentos\x20con\x20baja\x20ejecución\x20hacia\x20aquellos\x20\x0a\x20\x20\x20\x20que\x20están\x20ejecutando\x20eficientemente\x20y\x20podrían\x20requerir\x20recursos\x20adicionales.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Tercero,\x20verificar\x20que\x20los\x20compromisos\x20presupuestarios\x20se\x20materialicen\x20en\x20gastos\x20efectivos,\x20especialmente\x20\x0a\x20\x20\x20\x20en\x20aquellos\x20departamentos\x20donde\x20existe\x20una\x20brecha\x20importante\x20entre\x20lo\x20comprometido\x20y\x20lo\x20ejecutado.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Y\x20finalmente,\x20felicitar\x20a\x20los\x20departamentos\x20con\x20alta\x20ejecución,\x20reconociendo\x20su\x20buena\x20gestión\x20administrativa\x20\x0a\x20\x20\x20\x20como\x20ejemplo\x20para\x20el\x20resto\x20de\x20la\x20organización.\x0a\x20\x20\x20\x20\x0a\x20\x20\x20\x20Este\x20dashboard\x20se\x20actualiza\x20automáticamente\x20cada\x205\x20minutos,\x20por\x20lo\x20que\x20siempre\x20muestra\x20la\x20información\x20más\x20reciente\x20\x0a\x20\x20\x20\x20disponible\x20en\x20el\x20sistema.\x0a\x20\x20','toggle','#795548','querySelector','onmouseout','replace','onclick','opacity','createElement','monthlyChart','5px','\x0a\x20\x20\x20\x20\x20\x20El\x20sistema\x20muestra\x20','selector-anios','Error\x20al\x20reproducir\x20la\x20explicación','ingreso_PAC.html','block','.alert','Error\x20al\x20inicializar\x20el\x20sistema','\x20de\x20ejecución.\x0a\x20\x20\x20\x20\x20\x20\x20\x20Ambos\x20departamentos\x20requieren\x20atención\x20inmediata\x20para\x20identificar\x20las\x20barreras\x20en\x20sus\x20procesos\x20de\x20compra.\x0a\x20\x20\x20\x20\x20\x20','remove','cancel','border','\x0a\x20\x20\x20\x20\x20\x20','4px','passwordError','center','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<style>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20@keyframes\x20shake\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x200%,\x20100%\x20{\x20transform:\x20translateX(0);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2010%,\x2030%,\x2050%,\x2070%,\x2090%\x20{\x20transform:\x20translateX(-5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2020%,\x2040%,\x2060%,\x2080%\x20{\x20transform:\x20translateX(5px);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20</style>\x0a\x20\x20\x20\x20','801sFTGUA','comprometido','Cargando\x20Chart.js...','Error\x20al\x20crear\x20gráfico\x20por\x20departamento:','getVoices','alert-success','156Rxajwn','Enter','join','9999','white','alignItems','DOMContentLoaded','\x20\x0a\x20\x20\x20\x20\x20\x20departamento','Canvas\x20para\x20gráfico\x20de\x20departamentos\x20no\x20encontrado','_blank','className','onstart','Error\x20en\x20la\x20síntesis\x20de\x20voz:','12px\x2020px','14px','pointer','undefined','includes','#4CAF50','\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20y\x20','backgroundColor','muni2025','error','departmentChart','5JUHtVL','Comprometido','contentWindow','porcentaje','3336990qeKokU','alert-warning','#2ecc71','\x0a\x20\x20\x20\x20\x20\x20Es\x20positivo\x20mencionar\x20que\x20no\x20se\x20detectan\x20alertas\x20críticas\x20en\x20el\x20sistema\x20en\x20este\x20momento.\x0a\x20\x20\x20\x20','Error\x20al\x20obtener\x20los\x20datos:','206WxFsJT','div','getFullYear','estado-bajo','head','link','\x20departamentos\x20presentan\x20una\x20brecha\x20significativa\x0a\x20\x20\x20\x20\x20\x20\x20\x20entre\x20el\x20presupuesto\x20comprometido\x20y\x20el\x20efectivamente\x20gastado.\x20Esto\x20podría\x20indicar\x20procesos\x20de\x20compra\x20en\x20curso\x0a\x20\x20\x20\x20\x20\x20\x20\x20que\x20deben\x20ser\x20monitoreados\x20para\x20asegurar\x20su\x20finalización\x20antes\x20del\x20cierre\x20del\x20período\x20fiscal.\x0a\x20\x20\x20\x20\x20\x20','<i\x20class=\x22fas\x20fa-volume-up\x22></i>\x20Explicar\x20Dashboard','</td>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td>$','estado-avanzado','insertBefore','onend','open','Chart.js\x20no\x20está\x20disponible.\x20Los\x20gráficos\x20no\x20se\x20mostrarán.','beforeend','title','rgb(75,\x20192,\x20192)','492wWuQvQ','informativa','focus','rgb(255,\x2099,\x20132)','fontSize','\x0a\x20\x20\x20\x20\x20\x20\x20\x20Entre\x20ellos,\x20destacan\x20','disabled','visibilitychange','anonymous','#dept-summary-body\x20tr','.stats-title','departments-count','gastado','dept-summary-body','\x0a\x20\x20\x20\x20','#e74c3c','porcentajeEjecucion','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<td>','Error\x20al\x20actualizar\x20tabla:','20px','\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20de\x20ejecución,\x20situación\x20que\x20debe\x20ser\x20revisada\x20con\x20prioridad.\x0a\x20\x20\x20\x20\x20\x20','pitch','\x0a\x20\x20\x20\x20\x20\x20\x20\x20Los\x20casos\x20más\x20críticos\x20son\x20'];_0x40f4=function(){return _0x50d370;};return _0x40f4();}function inicializarSistema(){const _0x4a8fe0=_0x218b,_0x4bb73a=_0x2463c3,_0x15bb7f=_0x140ae4;try{if(typeof Chart===_0x15bb7f(0x1ca)){console[_0x4bb73a(0x245)](_0x4bb73a(0x248));const _0x2ff08c=document[_0x15bb7f(0x227)](_0x15bb7f(0x25e));_0x2ff08c[_0x15bb7f(0x1ce)]=_0x15bb7f(0x21d),_0x2ff08c[_0x15bb7f(0x1fe)]=_0x4bb73a(0x247),_0x2ff08c[_0x15bb7f(0x19c)]=_0x15bb7f(0x1f2),_0x2ff08c[_0x15bb7f(0x1cd)]=_0x15bb7f(0x1c7),_0x2ff08c[_0x4a8fe0(0xe3)]=function(){const _0x18aa95=_0x15bb7f;console[_0x18aa95(0x26c)](_0x18aa95(0x23f)),setTimeout(cargarDatosEstadisticas,0x1f4);},_0x2ff08c[_0x15bb7f(0x241)]=function(){const _0x14bfe9=_0x4bb73a,_0x86d37a=_0x15bb7f;console[_0x14bfe9(0x29d)](_0x86d37a(0x1df)),cargarDatosEstadisticas();},document[_0x15bb7f(0x1d8)][_0x15bb7f(0x28d)](_0x2ff08c);}else cargarDatosEstadisticas();setInterval(cargarDatosEstadisticas,0x493e0);}catch(_0x25289b){console[_0x15bb7f(0x1f8)](_0x15bb7f(0x1f0),_0x25289b),mostrarErrorEnContadores(_0x15bb7f(0x26a));}}function agregarEstilos(){const _0xa43568=_0x2463c3,_0x2d90b4=_0x140ae4,_0x5dc233=document[_0x2d90b4(0x227)](_0x2d90b4(0x1f9));_0x5dc233[_0x2d90b4(0x27e)]=_0xa43568(0x1c6),document[_0x2d90b4(0x1d8)][_0xa43568(0x1f8)](_0x5dc233);}function _0x218b(_0x49aa67,_0x44e690){const _0x40f4b0=_0x40f4();return _0x218b=function(_0x218b5a,_0x221be6){_0x218b5a=_0x218b5a-0xab;let _0x415191=_0x40f4b0[_0x218b5a];return _0x415191;},_0x218b(_0x49aa67,_0x44e690);}document[_0x140ae4(0x1c8)](_0x2463c3(0x232),function(){const _0x185914=_0x140ae4;console[_0x185914(0x26c)](_0x185914(0x16a)),agregarEstilos(),inicializarSistema();});function explicarDashboardPorVoz(){const _0x5c06d6=_0x218b,_0x3b4f7e=_0x2463c3,_0x265025=_0x140ae4;if(!(_0x265025(0x1b2)in window)){mostrarToast(_0x265025(0x278),_0x265025(0x242));return;}window[_0x265025(0x1b2)][_0x5c06d6(0x11b)]();const _0x18702c=document[_0x265025(0x205)](_0x265025(0x264))?document[_0x265025(0x205)]('selector-anios')[_0x265025(0x18c)]:new Date()[_0x265025(0x1b3)]()[_0x265025(0x23b)](),_0x2037e3=document[_0x265025(0x205)]('presupuestos-count')[_0x265025(0x22f)],_0x3b7c01=document[_0x265025(0x205)](_0x265025(0x28e))[_0x265025(0x22f)],_0x3481de=document[_0x265025(0x205)](_0x265025(0x1c6))[_0x265025(0x22f)];let _0x353fb3=document[_0x265025(0x205)](_0x3b4f7e(0x288))[_0x265025(0x22f)];_0x353fb3=_0x353fb3[_0x265025(0x20a)](/dólares|dolares|usd|\$/gi,'')[_0x265025(0x217)]();const _0x5a2953=[],_0x41a811=document[_0x3b4f7e(0x212)](_0x265025(0x1fa));_0x41a811[_0x265025(0x1cb)](_0x44742d=>{const _0x33b6b5=_0x3b4f7e,_0x310d95=_0x265025,_0x5ccdaf=_0x44742d[_0x310d95(0x183)]('td');_0x5ccdaf[_0x310d95(0x27d)]>=0x6&&_0x5a2953[_0x310d95(0x196)]({'nombre':_0x5ccdaf[0x0][_0x310d95(0x22f)],'presupuesto':_0x5ccdaf[0x1][_0x33b6b5(0x298)],'comprometido':_0x5ccdaf[0x2][_0x310d95(0x22f)],'gastado':_0x5ccdaf[0x3][_0x310d95(0x22f)],'porcentaje':_0x5ccdaf[0x4][_0x310d95(0x22f)],'estado':_0x5ccdaf[0x5][_0x310d95(0x22f)]});}),_0x5a2953[_0x265025(0x22e)]((_0x1c730b,_0x382c9c)=>{const _0x3bd04a=_0x3b4f7e,_0x26d339=_0x265025,_0xa88fd1=parseFloat(_0x1c730b[_0x26d339(0x216)]),_0x3cfeed=parseFloat(_0x382c9c[_0x3bd04a(0x18b)]);return _0x3cfeed-_0xa88fd1;});const _0x54d170=document[_0x265025(0x183)](_0x3b4f7e(0x1a0)),_0x46136a=_0x54d170[_0x5c06d6(0x191)],_0x46384b=[];_0x54d170[_0x265025(0x1cb)](_0x4e234a=>{const _0x32ba3e=_0x5c06d6,_0x1cae90=_0x3b4f7e,_0x1e3e3f=_0x265025;if(_0x4e234a[_0x32ba3e(0x18c)][_0x1e3e3f(0x28a)](_0x1e3e3f(0x195)))_0x46384b[_0x1e3e3f(0x196)](_0x1e3e3f(0x281));else{if(_0x4e234a[_0x1e3e3f(0x19d)][_0x1e3e3f(0x28a)](_0x1e3e3f(0x1a8)))_0x46384b[_0x1cae90(0x1c9)](_0x1e3e3f(0x251));else{if(_0x4e234a[_0x1e3e3f(0x19d)][_0x1e3e3f(0x28a)](_0x1e3e3f(0x1e6)))_0x46384b[_0x1e3e3f(0x196)](_0x1cae90(0x17d));else _0x4e234a[_0x1e3e3f(0x19d)][_0x1cae90(0x28a)](_0x32ba3e(0x1a0))&&_0x46384b[_0x1e3e3f(0x196)](_0x1e3e3f(0x1d2));}}});let _0x1b568b=_0x265025(0x21f)+_0x18702c+_0x265025(0x192)+_0x2037e3+_0x3b4f7e(0x231)+_0x3b7c01+_0x3b4f7e(0x242)+_0x3481de+_0x265025(0x214)+_0x353fb3+_0x265025(0x276);const _0x1cd2e2=_0x5a2953[_0x265025(0x23e)](_0x3343ca=>parseFloat(_0x3343ca['porcentaje'])>0x50),_0x446149=_0x5a2953[_0x265025(0x23e)](_0x2742b6=>parseFloat(_0x2742b6[_0x265025(0x216)])<0x1e),_0x14b93a=_0x5a2953[_0x265025(0x23e)](_0x5339a3=>parseFloat(_0x5339a3[_0x265025(0x216)])>=0x1e&&parseFloat(_0x5339a3[_0x265025(0x216)])<=0x50),_0x3d9a71=_0x126bc2=>{const _0x1dba3c=_0x265025,_0x1d83f0=parseFloat(_0x126bc2[_0x1dba3c(0x20a)](/[^\d.]/g,''));return!isNaN(_0x1d83f0)?_0x1d83f0[_0x1dba3c(0x29c)](0x1)+'%':'0%';};if(_0x1cd2e2[_0x265025(0x27d)]>0x0){_0x1cd2e2[_0x265025(0x22e)]((_0x2c7d04,_0x2c02a0)=>parseFloat(_0x2c02a0[_0x265025(0x216)])-parseFloat(_0x2c7d04[_0x265025(0x216)])),_0x1b568b+=_0x265025(0x1c2)+_0x1cd2e2[_0x3b4f7e(0x26c)]+_0x265025(0x250)+(_0x1cd2e2[_0x265025(0x27d)]!==0x1?'s':'')+_0x265025(0x232)+(_0x1cd2e2[_0x265025(0x27d)]!==0x1?'n':'')+_0x5c06d6(0xec);if(_0x1cd2e2[_0x265025(0x27d)]===0x1)_0x1b568b+=_0x265025(0x1c3)+_0x1cd2e2[0x0][_0x3b4f7e(0x1dd)]+_0x265025(0x233)+_0x3d9a71(_0x1cd2e2[0x0][_0x3b4f7e(0x18b)])+_0x265025(0x202);else _0x1cd2e2[_0x265025(0x27d)]>0x1&&(_0x1b568b+=_0x3b4f7e(0x1bf)+_0x1cd2e2[0x0][_0x265025(0x167)]+_0x3b4f7e(0x19d)+_0x3d9a71(_0x1cd2e2[0x0][_0x265025(0x216)])+_0x3b4f7e(0x256)+_0x1cd2e2[0x1][_0x265025(0x167)]+_0x265025(0x238)+_0x3d9a71(_0x1cd2e2[0x1][_0x3b4f7e(0x18b)])+_0x265025(0x226));}if(_0x446149[_0x265025(0x27d)]>0x0){_0x446149[_0x265025(0x22e)]((_0x3befbe,_0x2d5863)=>parseFloat(_0x3befbe[_0x265025(0x216)])-parseFloat(_0x2d5863[_0x265025(0x216)])),_0x1b568b+=_0x3b4f7e(0x219)+(_0x1cd2e2[_0x265025(0x27d)]>0x0?_0x3b4f7e(0x25a):'')+_0x446149[_0x3b4f7e(0x26c)]+_0x265025(0x2a3)+(_0x446149[_0x265025(0x27d)]!==0x1?'s':'')+_0x265025(0x263)+(_0x446149[_0x265025(0x27d)]!==0x1?'n':'')+_0x265025(0x1a6);if(_0x446149[_0x3b4f7e(0x26c)]===0x1)_0x1b568b+=_0x265025(0x1b0)+_0x446149[0x0][_0x265025(0x167)]+_0x265025(0x289)+_0x3d9a71(_0x446149[0x0][_0x3b4f7e(0x18b)])+_0x265025(0x265);else _0x446149[_0x265025(0x27d)]>0x1&&(_0x1b568b+=_0x3b4f7e(0x1ed)+_0x446149[0x0][_0x3b4f7e(0x1dd)]+_0x265025(0x267)+_0x3d9a71(_0x446149[0x0][_0x3b4f7e(0x18b)])+_0x265025(0x24a)+_0x446149[0x1][_0x265025(0x167)]+_0x265025(0x238)+_0x3d9a71(_0x446149[0x1][_0x265025(0x216)])+_0x265025(0x24b));_0x1b568b+=_0x3b4f7e(0x17f);}_0x14b93a[_0x3b4f7e(0x26c)]>0x0&&(_0x1b568b+=_0x265025(0x236)+_0x14b93a[_0x265025(0x27d)]+_0x265025(0x210));if(_0x46136a>0x0&&!_0x46384b[_0x265025(0x222)](_0x265025(0x1d2)))_0x1b568b+=_0x265025(0x27b)+_0x46136a+_0x265025(0x16e)+_0x46384b[_0x3b4f7e(0x1a5)](',\x20')+_0x265025(0x257)+(_0x46384b[_0x3b4f7e(0x211)](_0x265025(0x281))?_0x265025(0x294):'')+_0x3b4f7e(0x219)+(_0x46384b[_0x265025(0x222)](_0x3b4f7e(0x283))?_0x265025(0x275):'')+_0x265025(0x1e3)+(_0x46384b[_0x3b4f7e(0x211)](_0x3b4f7e(0x17d))?_0x265025(0x24d):'')+_0x265025(0x1ae);else _0x46384b[_0x265025(0x222)](_0x265025(0x1d2))?_0x1b568b+=_0x265025(0x26f):_0x1b568b+=_0x265025(0x201);_0x1b568b+=_0x3b4f7e(0x206);if(_0x5a2953[_0x265025(0x27d)]>0x0){const _0x89195d=[..._0x5a2953][_0x3b4f7e(0x296)]((_0xecbca,_0x34fe55)=>{const _0x25e1cb=_0x3b4f7e,_0x5f9f5=_0x265025,_0x23706e=parseFloat(_0xecbca[_0x5f9f5(0x212)][_0x5f9f5(0x20a)](/[^\d]/g,'')),_0x2d168c=parseFloat(_0x34fe55[_0x25e1cb(0x28d)][_0x5f9f5(0x20a)](/[^\d]/g,''));return _0x2d168c-_0x23706e;}),_0x1ec693=_0x89195d[0x0],_0x20fbea=Math[_0x3b4f7e(0x218)](parseFloat(_0x1ec693[_0x265025(0x212)][_0x265025(0x20a)](/[^\d]/g,''))/parseFloat(_0x353fb3[_0x265025(0x20a)](/[^\d]/g,''))*0x64);_0x1b568b+=_0x3b4f7e(0x26a)+_0x1ec693[_0x265025(0x167)]+_0x265025(0x259)+_0x20fbea+_0x265025(0x194);const _0x534a87=_0x5a2953[_0x3b4f7e(0x23b)](_0x458eb7=>{const _0x515f2f=_0x3b4f7e,_0x387b42=_0x265025,_0xa9f1ee=parseFloat(_0x458eb7[_0x387b42(0x213)][_0x387b42(0x20a)](/[^\d]/g,'')),_0x540f25=parseFloat(_0x458eb7[_0x387b42(0x208)][_0x515f2f(0x1fe)](/[^\d]/g,''));return _0xa9f1ee>0x0&&_0x540f25/_0xa9f1ee<0.5;});_0x534a87[_0x265025(0x27d)]>0x0&&(_0x1b568b+=_0x3b4f7e(0x1a6)+_0x534a87[_0x265025(0x27d)]+_0x265025(0x243));}_0x1b568b+=_0x3b4f7e(0x196),_0x1b568b=_0x1b568b[_0x265025(0x20a)](/\n\s+/g,'\x20')[_0x265025(0x217)]();const _0x39d60a=new SpeechSynthesisUtterance(_0x1b568b);let _0x281d34=window[_0x265025(0x1b2)][_0x265025(0x20f)]();_0x281d34[_0x5c06d6(0x191)]===0x0?(window[_0x3b4f7e(0x226)][_0x265025(0x164)]=function(){const _0x19b316=_0x265025;_0x281d34=window[_0x19b316(0x1b2)][_0x19b316(0x20f)](),_0x3702a3();},window[_0x265025(0x1b2)][_0x265025(0x20f)]()):_0x3702a3();function _0x3702a3(){const _0x5eb9f0=_0x5c06d6,_0x11f06d=_0x3b4f7e,_0x461c01=_0x265025,_0x165983=_0x281d34[_0x11f06d(0x2a7)](_0x290204=>_0x290204[_0x11f06d(0x246)][_0x461c01(0x222)]('es')&&(_0x290204[_0x11f06d(0x198)][_0x461c01(0x235)]()[_0x11f06d(0x211)](_0x11f06d(0x200))||_0x290204[_0x461c01(0x266)][_0x461c01(0x235)]()[_0x461c01(0x222)](_0x461c01(0x23a))))||_0x281d34[_0x461c01(0x178)](_0x3a9342=>_0x3a9342[_0x461c01(0x19f)][_0x11f06d(0x211)]('es'));_0x165983&&(_0x39d60a[_0x461c01(0x287)]=_0x165983),(_0x39d60a[_0x461c01(0x26b)]=0.95,_0x39d60a[_0x461c01(0x22d)]=0x1,mostrarToast(_0x461c01(0x247),_0x11f06d(0x191)));const _0x5dfb07=document[_0x461c01(0x205)](_0x461c01(0x16f));_0x5dfb07&&_0x5dfb07[_0x461c01(0x26d)]();const _0x49c032=document[_0x461c01(0x227)](_0x461c01(0x1c9));_0x49c032['id']=_0x461c01(0x16f),_0x49c032[_0x461c01(0x254)]=_0x461c01(0x17b),_0x49c032[_0x461c01(0x27e)]=_0x461c01(0x239),_0x49c032[_0x461c01(0x223)]=function(){const _0x4f89bf=_0x11f06d,_0x1f31b4=_0x461c01;window[_0x1f31b4(0x1b2)][_0x4f89bf(0x172)](),this[_0x1f31b4(0x26d)]();const _0x34a474=document[_0x1f31b4(0x205)](_0x1f31b4(0x1ab));_0x34a474&&(_0x34a474[_0x4f89bf(0x27a)]=![]),mostrarToast(_0x1f31b4(0x262),_0x4f89bf(0x239));},document[_0x11f06d(0x1c2)](_0x461c01(0x1a3))?document[_0x461c01(0x29a)](_0x5eb9f0(0x197))[_0x461c01(0x28d)](_0x49c032):document[_0x461c01(0x285)][_0x461c01(0x28d)](_0x49c032),_0x39d60a[_0x461c01(0x220)]=()=>{const _0x5b677a=_0x461c01,_0x562813=document[_0x5b677a(0x205)](_0x5b677a(0x1ab));_0x562813&&(_0x562813[_0x5b677a(0x27a)]=!![]);},_0x39d60a[_0x461c01(0x219)]=()=>{const _0x315de9=_0x5eb9f0,_0x5eedf5=_0x11f06d,_0x2bb33f=_0x461c01,_0x2336e3=document[_0x315de9(0xc6)](_0x2bb33f(0x1ab));_0x2336e3&&(_0x2336e3[_0x2bb33f(0x27a)]=![]);const _0x584630=document[_0x2bb33f(0x205)](_0x5eedf5(0x27f));_0x584630&&_0x584630[_0x2bb33f(0x26d)](),mostrarToast(_0x2bb33f(0x171),_0x2bb33f(0x225));},_0x39d60a[_0x11f06d(0x1e9)]=_0x3133ad=>{const _0x4b62bf=_0x11f06d,_0x44a4f9=_0x461c01;console[_0x44a4f9(0x1f8)](_0x44a4f9(0x1b4),_0x3133ad);const _0x3c523f=document[_0x44a4f9(0x205)](_0x44a4f9(0x1ab));_0x3c523f&&(_0x3c523f[_0x44a4f9(0x27a)]=![]);const _0x124e36=document[_0x44a4f9(0x205)](_0x4b62bf(0x27f));_0x124e36&&_0x124e36[_0x44a4f9(0x26d)](),mostrarToast(_0x44a4f9(0x1b7),_0x44a4f9(0x242));};try{window[_0x11f06d(0x226)][_0x11f06d(0x25f)](_0x39d60a);}catch(_0x254eeb){console[_0x461c01(0x1f8)](_0x11f06d(0x225),_0x254eeb),mostrarToast(_0x11f06d(0x29a),_0x461c01(0x242));const _0x1c7631=document[_0x11f06d(0x258)](_0x461c01(0x1ab));_0x1c7631&&(_0x1c7631[_0x461c01(0x27a)]=![]);}}}function mostrarToast(_0x21c07a,_0x4310a0){const _0x304346=_0x218b,_0x3fa7eb=_0x2463c3,_0x56701c=_0x140ae4,_0xef402f=document['getElementById'](_0x56701c(0x179));if(_0xef402f)_0xef402f[_0x56701c(0x26d)]();const _0x27ab04=document[_0x56701c(0x227)](_0x56701c(0x1ba));_0x27ab04['id']=_0x56701c(0x179),_0x27ab04[_0x56701c(0x254)]=_0x56701c(0x179),_0x27ab04[_0x56701c(0x22f)]=_0x21c07a,_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x1d1)]=_0x4310a0||_0x56701c(0x21e),_0x27ab04[_0x3fa7eb(0x1a2)][_0x56701c(0x253)]=_0x56701c(0x24e),_0x27ab04[_0x56701c(0x1f9)][_0x3fa7eb(0x2a0)]=_0x56701c(0x288),_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x21b)]=_0x3fa7eb(0x199),_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x19e)]=_0x304346(0x135),_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x246)]=_0x56701c(0x165),_0x27ab04[_0x56701c(0x1f9)][_0x3fa7eb(0x217)]=_0x56701c(0x24f),_0x27ab04[_0x56701c(0x1f9)][_0x3fa7eb(0x27d)]=_0x3fa7eb(0x29c),_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x228)]=_0x56701c(0x176),_0x27ab04[_0x56701c(0x1f9)][_0x56701c(0x1e5)]=_0x56701c(0x190),document[_0x56701c(0x285)][_0x56701c(0x28d)](_0x27ab04),setTimeout(()=>{const _0x141c6d=_0x56701c;_0x27ab04['style'][_0x141c6d(0x29b)]='0',setTimeout(()=>_0x27ab04[_0x141c6d(0x26d)](),0x1f4);},0x1388);}function agregarBotonExplicacionPorVoz(){const _0x52e2d2=_0x218b,_0x5ba50c=_0x2463c3,_0xcafaa4=_0x140ae4,_0x362fbb=document[_0xcafaa4(0x205)](_0xcafaa4(0x1ab));_0x362fbb&&_0x362fbb[_0xcafaa4(0x26d)]();const _0x17a164=document[_0xcafaa4(0x227)](_0xcafaa4(0x1c9));_0x17a164['id']=_0xcafaa4(0x1ab),_0x17a164[_0x5ba50c(0x189)]=_0xcafaa4(0x279),_0x17a164[_0x5ba50c(0x27e)]=_0x5ba50c(0x21b),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x1d1)]=_0xcafaa4(0x169),_0x17a164[_0xcafaa4(0x1f9)][_0x5ba50c(0x217)]=_0xcafaa4(0x24f),_0x17a164[_0xcafaa4(0x1f9)][_0x5ba50c(0x1b8)]=_0xcafaa4(0x199),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x246)]=_0xcafaa4(0x165),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x19e)]=_0xcafaa4(0x1b8),_0x17a164[_0xcafaa4(0x1f9)][_0x5ba50c(0x1f9)]=_0xcafaa4(0x18d),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x21a)]=_0xcafaa4(0x1e0),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x1c4)]=_0xcafaa4(0x299),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x2a4)]=_0xcafaa4(0x284),_0x17a164[_0x52e2d2(0x19d)][_0xcafaa4(0x229)]=_0xcafaa4(0x1db),_0x17a164[_0x5ba50c(0x1a2)][_0xcafaa4(0x1ee)]=_0xcafaa4(0x272),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x16b)]=_0xcafaa4(0x272),_0x17a164[_0xcafaa4(0x1f9)][_0xcafaa4(0x1e7)]=_0xcafaa4(0x18d),_0x17a164[_0xcafaa4(0x290)]=function(){const _0x450043=_0xcafaa4;this[_0x450043(0x1f9)][_0x450043(0x1d1)]=_0x450043(0x221);},_0x17a164[_0xcafaa4(0x237)]=function(){const _0x8cf842=_0x5ba50c,_0x4ac6a0=_0xcafaa4;this[_0x4ac6a0(0x1f9)][_0x4ac6a0(0x1d1)]=_0x8cf842(0x191);},_0x17a164[_0xcafaa4(0x223)]=explicarDashboardPorVoz;const _0x3754c5=document[_0xcafaa4(0x29a)](_0xcafaa4(0x1a3));if(_0x3754c5){const _0x1d5fe8=document[_0xcafaa4(0x29a)](_0x5ba50c(0x227));if(_0x1d5fe8)_0x3754c5[_0xcafaa4(0x1bb)](_0x17a164,_0x1d5fe8[_0xcafaa4(0x298)]);else{const _0x301ca4=_0x3754c5[_0xcafaa4(0x29a)](_0xcafaa4(0x224));_0x301ca4?_0x3754c5[_0x5ba50c(0x290)](_0x17a164,_0x301ca4):_0x3754c5[_0xcafaa4(0x28d)](_0x17a164);}}else{const _0x258f0b=document[_0x5ba50c(0x1c2)](_0xcafaa4(0x286));_0x258f0b?_0x258f0b[_0xcafaa4(0x1cf)][_0xcafaa4(0x1bb)](_0x17a164,_0x258f0b):document[_0xcafaa4(0x285)][_0x5ba50c(0x1f8)](_0x17a164);}if(!document[_0xcafaa4(0x29a)](_0xcafaa4(0x1ea))){const _0x3b9829=document[_0x52e2d2(0x10f)](_0x52e2d2(0x14e));_0x3b9829[_0x5ba50c(0x1d8)]=_0xcafaa4(0x1bd),_0x3b9829[_0xcafaa4(0x17a)]=_0xcafaa4(0x1c5),document[_0xcafaa4(0x1d8)][_0xcafaa4(0x28d)](_0x3b9829);}}function _0x3e58(_0x5c1f1b,_0x3ae8ee){const _0x1a40d1=_0x3676();return _0x3e58=function(_0x4b9876,_0x1a4acf){_0x4b9876=_0x4b9876-0x164;let _0x1ae0bd=_0x1a40d1[_0x4b9876];return _0x1ae0bd;},_0x3e58(_0x5c1f1b,_0x3ae8ee);}function agregarEstilosVoz(){const _0x156db9=_0x2463c3,_0xa28560=_0x140ae4,_0xc1d40f=document[_0xa28560(0x205)](_0xa28560(0x17d));_0xc1d40f&&_0xc1d40f[_0x156db9(0x1b1)]();const _0x534cdd=document[_0xa28560(0x227)](_0x156db9(0x1a2));_0x534cdd['id']=_0xa28560(0x17d),_0x534cdd[_0x156db9(0x298)]=_0xa28560(0x27f),document[_0xa28560(0x1d8)][_0xa28560(0x28d)](_0x534cdd);}function verificarYReiniciarSistemaVoz(){const _0x3623f2=_0x2463c3,_0xa769ea=_0x140ae4;window[_0xa769ea(0x1b2)]&&window[_0x3623f2(0x226)][_0x3623f2(0x172)]();const _0x38f782=document[_0xa769ea(0x205)](_0xa769ea(0x16f));_0x38f782&&_0x38f782[_0xa769ea(0x26d)]();const _0x4807f=document[_0xa769ea(0x205)](_0xa769ea(0x1ab));_0x4807f?_0x4807f[_0xa769ea(0x27a)]=![]:agregarBotonExplicacionPorVoz();}document[_0x140ae4(0x1c8)](_0x140ae4(0x1f6),function(){const _0x4c0cdf=_0x140ae4;setTimeout(function(){const _0x34793e=_0x3e58;agregarEstilosVoz(),agregarBotonExplicacionPorVoz(),verificarYReiniciarSistemaVoz(),_0x34793e(0x1b2)in window&&window[_0x34793e(0x1b2)][_0x34793e(0x20f)](),document[_0x34793e(0x1c8)](_0x34793e(0x1a5),function(_0x489e94){const _0x4c4331=_0x218b,_0x4ad700=_0x34793e;_0x489e94[_0x4ad700(0x234)]===_0x4ad700(0x270)&&(window[_0x4ad700(0x1b2)]&&(window[_0x4ad700(0x1b2)][_0x4ad700(0x1dc)](),mostrarToast(_0x4ad700(0x262),_0x4c4331(0x169)),verificarYReiniciarSistemaVoz()));});},0x3e8),document[_0x4c0cdf(0x1c8)](_0x4c0cdf(0x17f),function(){const _0x102957=_0x4c0cdf;document[_0x102957(0x283)]===_0x102957(0x26e)&&verificarYReiniciarSistemaVoz();});});
+        </script>
+</body>
+</html>
