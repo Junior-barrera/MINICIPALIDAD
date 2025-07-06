@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Arica | mejor ciudad</title>
+    <link rel="stylesheet" href="styles.css">
+   <script src="comando_general.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    
+</head>
+
+<body>
+    <script src="auth.js"></script>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+     <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+<div class="loader">
+    <div class="loader-animation">
+        <div class="loader-circle"></div>
+        <img src="images.png" alt="Logo" class="loader-logo">
+    </div>
+</div>
+    <header>
+    
+        <div class="transparency-container">
+        </div>
+</div>
+
+</header>
+ 
+                <div class="top-header">
+                    <div class="logo">
+                        <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+                        <div class="logo-text">
+                            <h1>ARICA</h1>
+                            <span>MUNICIPALIDAD | mejor ciudad</span>
+                        </div>
+                    </div>
+                </div>
+    
+  
+
+   
+    <nav>
+        <ul class="main-menu">
+            <li><a href="index.html">INICIO</a></li>
+            <li><a href="dashboard-gps.html">GPS DIMAO</a></li>
+            <li><a href="dashboard-presupuesto.html">PRESUPUESTO ANUAL</a></li>
+            <li><a href="dashboard-abastecimiento.html">ABASTECIMIENTO</a></li>
+            <li><a href="dashboard-bodega.html">BODEGA</a></li>
+        </ul>
+    </nav>
+    
+
+    <section class="hero">
+        <img src="fondo.jpg" alt="JUNIOR BARRERA" class="hero-image">
+        <div class="hero-content">
+            <h2>DIMAO</h2>
+            <p>"Mejoremos Juntos"</p>
+        </div>
+    </section>
+   
+ 
+<section class="modules">
+    <h2 class="fade-in">Sistema Integral de Gestión DIMAO</h2>
+    <div class="module-grid">
+        <div class="module fade-in">
+            <div class="module-icon">📄</div>
+            
+            <h3>Sistema de Gestión de Presupuesto Anual de Compra</h3>
+            <p>Este formulario permite planificar, registrar y gestionar el Presupuesto Anual de Compra (PAC) de materiales y servicios necesarios para el funcionamiento de DIMAO. Facilita la proyección de necesidades, el control del gasto y la programación de adquisiciones, asegurando una correcta administración de los recursos financieros durante el año.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario')">
+                Acceder <span class="ml-2">→</span>
+                
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">🚗</div>
+            <h3>Sistema de Gestión de Mantenimiento de Vehículos y Maquinaria </h3>
+            <p>Este formulario está diseñado para registrar solicitudes de mantenimiento preventivo y correctivo de vehículos y maquinaria pertenecientes a la institución. Por favor, asegúrese de llenar todos los campos requeridos con información clara y precisa para facilitar una atención eficiente y oportuna por parte de la Oficina de Mantenimiento.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario2')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        
+        <div class="module fade-in">
+            <div class="module-icon">💡</div>
+            <h3>Sistema de Control y Mantenimiento de Iluminación Pública</h3>
+            <p>Este formulario está destinado a registrar, actualizar y gestionar información relacionada con las solicitudes, reportes, y gestiones internas de la Oficina de Iluminación Pública. Permite sistematizar datos sobre mantenimiento, instalación, stock de materiales, y atención de requerimientos ciudadanos, contribuyendo a una administración más eficiente y organizada de los recursos de iluminación urbana.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario3')">
+                Acceder <span class="ml-2">→</span>
+            </button>
+        </div>
+        <div class="module fade-in">
+<div class="module-icon">🌳</div>
+<h3>Sistema de Gestión de Áreas Verdes y Parques</h3>
+<p>Este formulario permite registrar, planificar y gestionar todas las actividades relacionadas con el mantenimiento de áreas verdes, parques públicos y espacios recreativos. Incluye el control de podas, siembras, riego, mantenimiento de mobiliario urbano, y la programación de intervenciones para garantizar espacios públicos seguros y bien mantenidos para la comunidad.</p>
+<button class="module-button" onclick="redirectToDashboard('formulario5')">
+ Acceder <span class="ml-2">→</span>
+</button>
+</div>
+<div class="module fade-in">
+<div class="module-icon">🗑️</div>
+<h3>Sistema de Gestión de Aseo y Limpieza Urbana</h3>
+<p>Este formulario permite registrar, programar y gestionar todas las actividades del departamento de aseo urbano. Incluye la planificación de rutas de recolección, mantenimiento de contenedores, limpieza de espacios públicos, gestión de residuos especiales, y el seguimiento de reportes ciudadanos relacionados con la limpieza y ornato de la ciudad.</p>
+<button class="module-button" onclick="redirectToDashboard('formulario6')">
+ Acceder <span class="ml-2">→</span>
+</button>
+</div>
+        <div class="module fade-in">
+            <div class="module-icon">📨</div>
+            
+            <h3>Sistema de Gestión de Solicitudes</h3>
+            <p>Plataforma para reportar y dar seguimiento a problemas relacionados con iluminación pública, áreas verdes y espacios públicos en la comunidad.</p>
+            <button class="module-button" onclick="redirectToDashboard('formulario4')">
+                Acceder <span class="ml-2">→</span> 
+            </button>
+        </div>
+
+    </div>
+</section>
+ <!--<section class="modules">
+    <h2 class="fade-in">Sistema de trabajos Terminados</h2>
+    <h4>Supervisión integral operativa, táctica y estratégica en tiempo real</h4>
+ <div class="module-grid">
+        <div class="module fade-in">
+            <div class="module-icon"></div>
+            
+            <h3>fotoooos prueba</h3>
+            
+            <button class="module-button" onclick="redirectToDashboard('fotoooos')">
+                Acceder <span class="ml-2">→</span>
+                
+            </button>
+        </div>
+     
+</section>-->
+  <!-- FORO DIMAO CONECTA - MOVIDO HACIA ABAJO -->
+   <section class="conecta">
+    <div class="container">
+        <div class="forum-header">
+            <h1 class="forum-title">🌐 DIMAO Conecta</h1>
+            <p class="forum-subtitle">Foro de Comunicación Interdepartamental</p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="messages-area" id="messagesArea">
+                <div class="welcome-message">
+                    <strong>¡Bienvenido al foro DIMAO Conecta!</strong><br>
+                    Este es un espacio para la comunicación entre todos los departamentos.
+                </div>
+            </div>
+            
+            <div class="input-area">
+                  <div class="message-type-selector">
+                    <div class="type-button active" onclick="setMessageType('general')">
+                        💬 General
+                    </div>
+                    <div class="type-button" onclick="setMessageType('direct')">
+                        📧 Directo
+                    </div>
+                </div>
+            
+                <div class="recipient-selector" id="recipientSelector">
+                    <select class="recipient-select" id="recipientSelect">
+                        <option value="">Seleccionar destinatario...</option>
+                    </select>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        id="messageInput" 
+                        class="message-input" 
+                        placeholder="Escribe tu mensaje aquí..."
+                        rows="1"></textarea>
+                           
+    <button id="emojiButton" class="emoji-button" title="Seleccionar emoji">
+👋
+    </button>
+                    <button id="sendButton" class="send-button">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+
+<div id="emojiPicker" class="emoji-picker">
+    <div class="emoji-header">Selecciona un emoji</div>
+    <div class="emoji-search">
+        <input type="text" id="emojiSearch" placeholder="Buscar emoji...">
+    </div>
+    <div class="emoji-categories">
+        <button class="category-btn active" data-category="smileys">😀</button>
+        <button class="category-btn" data-category="people">👋</button>
+        <button class="category-btn" data-category="nature">🐶</button>
+        <button class="category-btn" data-category="food">🍎</button>
+        <button class="category-btn" data-category="activities">⚽</button>
+        <button class="category-btn" data-category="travel">🚗</button>
+        <button class="category-btn" data-category="objects">⌚</button>
+        <button class="category-btn" data-category="symbols">❤️</button>
+    </div>
+    <div id="emojiGrid" class="emoji-grid">
+       
+    </div>
+</div>
+        
+        <div class="online-users">
+            <h3>
+                <span class="online-indicator"></span>
+                Usuarios Conectados
+            </h3>
+            <div class="user-list" id="userList">
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+    <section class="modules">
+        <h2 class="fade-in">DIMAO 360°</h2>
+        <h4>Supervisión integral operativa, táctica y estratégica en tiempo real</h4>
+        <div class="widgets-grid">
+            <div class="widget weather">
+                <div class="widget-icon">🌤️</div>
+                <h3 class="widget-title">Clima en Arica</h3>
+                <div class="widget-data" id="weather-temp">--°C</div>
+                <div class="widget-details">
+                    <div id="weather-desc">Cargando...</div>
+                    <div>💧 <span id="weather-humidity">--%</span> | 🌬️ <span id="weather-wind">-- km/h</span></div>
+                </div>
+                <div class="update-time" id="weather-update">Actualizado: --</div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="control-panel">
+                <div class="filter-section">
+                    <div class="filter-title">Filtrar por categoría:</div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterByCategory('all')">Todas</button>
+                        <button class="filter-btn" onclick="filterByCategory('iluminacion')">Iluminación</button>
+                        <button class="filter-btn" onclick="filterByCategory('aseo')">Aseo</button>
+                        <button class="filter-btn" onclick="filterByCategory('espacio_publico')">Espacio
+                            Público</button>
+                        <button class="filter-btn" onclick="filterByCategory('areas_verdes')">Áreas Verdes</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">Filtrar por período:</div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterByPeriod('hoy')">Hoy</button>
+                        <button class="filter-btn" onclick="filterByPeriod('semana')">Semana</button>
+                        <button class="filter-btn" onclick="filterByPeriod('mes')">Mes</button>
+                        <button class="filter-btn" onclick="filterByPeriod('2meses')">2 Meses</button>
+                        <button class="filter-btn" onclick="filterByPeriod('ano')">Año</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">Filtrar por estado:</div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn status-btn active" onclick="filterByStatus('all')">Todos</button>
+                        <button class="filter-btn status-btn pendiente"
+                            onclick="filterByStatus('pendiente')">Pendiente</button>
+                        <button class="filter-btn status-btn asignado"
+                            onclick="filterByStatus('asignado')">Asignado</button>
+                        <button class="filter-btn status-btn terminado"
+                            onclick="filterByStatus('terminado')">Terminado</button>
+                    </div>
+                </div>
+
+                <div class="controls-row">
+                    <button class="control-btn" onclick="centerMap()">📍 Centrar Mapa</button>
+                    <button class="control-btn" onclick="toggleSatellite()">🛰️ Vista Satélite</button>
+                    <button class="control-btn" onclick="toggleHeatmap()">🔥 Heatmap</button>
+                    <button class="control-btn" onclick="toggleClusters()">🗂️ Clusters</button>
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    
+<div class="module-grid">
+  
+      <div class="module fade-in">
+        <div class="module-icon">📊</div>
+        <h3>Centro de Mando DIMAO</h3>
+        <p>Panel estratégico que consolida los indicadores clave de gestión de todas las áreas de DIMAO: iluminación, vehículos, áreas verdes, aseo, reclamos ciudadanos y PAC. Facilita la toma de decisiones rápidas y efectivas mediante visualización de datos en tiempo real y proyecciones inteligentes.</p>
+        <button class="module-button" onclick="redirectToDashboard('centroMando')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+  
+      <div class="module fade-in">
+        <div class="module-icon">🚨</div>
+        <h3>Panel de Alertas Críticas</h3>
+        <p>Herramienta de monitoreo proactivo que detecta, clasifica y notifica situaciones urgentes en los servicios municipales. Desde fallas en iluminación hasta vehículos fuera de servicio, el sistema prioriza incidentes y ayuda a coordinar una respuesta rápida con las unidades responsables.</p>
+        <button class="module-button" onclick="redirectToDashboard('alertasCriticas')">
+          Acceder <span class="ml-2">→</span>
+        </button>
+      </div>
+    </div>
+
+</section>
+
+<section class="dashboard-modules">
+    <h2 class="animated-title">Visualización de Módulos</h2>
+    <p class="animated-subtitle">Accede a nuestros paneles de datos para conocer el funcionamiento de DIMAO</p>
+
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; margin-top: 40px;">
+
+        <h2>Asesoría Técnica</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff0000, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff, #ff00ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('GPS.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">GPS</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">GPS DIMAO</h3>
+                    <p>Este módulo permite el seguimiento en tiempo real de los vehículos recolectores, analizando rutas, tiempos de operación y eficiencia del servicio para optimizar la gestión.</p>
+                    <a href="dashboard-gps.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('presupuesto.webp')">
+                    <div class="image-overlay">
+                        <span class="card-badge">PAC & F1</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Cuentas de Presupuesto Anual</h3>
+                    <p>Este módulo permite el seguimiento y control del presupuesto anual, analizando ingresos, egresos y su distribución para una planificación eficiente de los recursos.</p>
+                    <a href="dashboard-presupuesto.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+
+           
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('abastecimiento.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Combustible</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Abastecimiento de Combustible</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-abastecimiento.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('blog-tinta-toner.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Toner & Tintas</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Inventario de Toner & Tintas </h3>
+                    <p>Este módulo permite visualizar y gestionar en tiempo real el stock de tóner y tintas disponibles. Ofrece un registro detallado y actualizado que facilita el control eficiente de insumos.</p>
+                    <a href="toner.html" class="view-dashboard">
+                        <span>Ver Inventario</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Oficina de Mantenimiento de Vehículos y Maquinaria</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #ff7300, #fffb00, #00ff00, #00aaff, #a200ff); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bodega.avif')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock de Bodega Mecánica</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock de Bodega Mecánica</h3>
+                    <p>Este módulo permite el control de inventario en la bodega mecánica, facilitando la gestión de repuestos, insumos y herramientas para un mantenimiento eficiente.</p>
+                    <a href="dashboard-bodega.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('vehiculo y maquinaria .jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Vehículos y Maquinaria</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Vehículos y Maquinaria</h3>
+                    <p>Este módulo proporciona información clave sobre el abastecimiento de combustible, incluyendo consumo, trámites realizados y tiempos de respuesta. Permite analizar tendencias y optimizar la gestión del suministro.</p>
+                    <a href="dashboard-vehiculosymaquinaria.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Iluminación Pública</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #00c3ff, #ffff1c, #ff3c00); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('CEMAFORO.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Iluminación Pública</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Iluminación Pública</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('bombillas-electricas-aisladas_23-2151045845')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Órdenes de Trabajo</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Órdenes de Trabajo de Iluminación</h3>
+                    <p>Este módulo proporciona información clave sobre las órdenes de trabajo de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, estado de ejecución y ubicación geográfica de las solicitudes. Permite visualizar las intervenciones mediante mapas de calor, identificar patrones de fallas, optimizar la planificación de trabajos y mejorar la eficiencia operativa.</p>
+                    <a href="dashboard-ordenes-trabajo-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('iluminacion-en-bodegas.1.2.jpg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Stock Bodega Iluminación</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Stock Bodega de Iluminación</h3>
+                    <p>El módulo "Stock bodega de iluminación" permite gestionar y visualizar en tiempo real la cantidad, tipo y estado de los productos de iluminación almacenados en la bodega. Incluye el control de entradas, salidas, stock disponible, y alertas de reposición para asegurar una adecuada disponibilidad de insumos como ampolletas, tubos, reflectores, cables, entre otros artículos relacionados.</p>
+                    <a href="dashboard-stock-iluminacion.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <h2 style="margin-top: 60px;">Reclamos</h2>
+        <div style="height: 5px; width: 100%; background: linear-gradient(270deg, #f00000, #f4d03f, #16a085); background-size: 600% 600%; animation: moveGradient 10s ease infinite; margin-bottom: 40px;"></div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card fade-in">
+                <div class="dashboard-card-image" style="background-image: url('reclamociudadano.jpeg')">
+                    <div class="image-overlay">
+                        <span class="card-badge">Reclamos Ciudadanos</span>
+                    </div>
+                </div>
+                <div class="dashboard-card-content">
+                    <h3 class="animated-heading">Reclamos Ciudadanos</h3>
+                    <p>Este módulo proporciona información clave sobre la gestión de solicitudes de iluminación pública, incluyendo mantenimiento de luminarias, tiempos de atención, resolución de trabajos y localización geográfica. Permite visualizar las incidencias en un mapa de calor, analizar tendencias de fallas, optimizar la asignación de recursos y mejorar la eficiencia en la atención ciudadana.</p>
+                    <a href="dashboard-reclamos.html" class="view-dashboard">
+                        <span>Ver Dashboard</span>
+                        <i class="dashboard-icon">→</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section class="modules">
+    <h2 class="fade-in">Biblioteca Digital DIMAO</h2>
+    <p class="section-subtitle">Todo el conocimiento institucional organizado y accesible en un solo lugar (EN CONSTRUCCION)</p>
+    
+    <div class="library-container">
+        <div class="library-card search-card">
+            <div class="search-box">
+                <input type="text" id="docSearch" placeholder="Buscar manuales, procedimientos...">
+                <button class="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-filters">
+                <select id="categoryFilter">
+                    <option value="">Todas las categorías</option>
+                    <option value="iluminacion">Iluminación Pública</option>
+                    <option value="vehiculos">Vehículos y Maquinaria</option>
+                    <option value="areas-verdes">Áreas Verdes</option>
+                    <option value="aseo">Aseo y Ornato</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="">Todos los tipos</option>
+                    <option value="manual">Manuales</option>
+                    <option value="procedimiento">Procedimientos</option>
+                    <option value="formato">Formatos</option>
+                    <option value="video">Videotutoriales</option>
+                </select>
+            </div>
+        </div>
+        <div class="library-card category-card" data-category="iluminacion" onclick="showCategory('iluminacion')">
+            <div class="category-icon">💡</div>
+            <h3>Iluminación Pública</h3>
+            <p>Manuales técnicos, diagramas eléctricos y protocolos de mantenimiento</p>
+            <span class="doc-count">48 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="vehiculos" onclick="showCategory('vehiculos')">
+            <div class="category-icon">🚛</div>
+            <h3>Vehículos y Maquinaria</h3>
+            <p>Fichas técnicas, checklist de revisión y manuales de taller</p>
+            <span class="doc-count">32 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="areas-verdes" onclick="showCategory('areas-verdes')">
+            <div class="category-icon">🌳</div>
+            <h3>Áreas Verdes</h3>
+            <p>Guías de poda, especies recomendadas y sistemas de riego</p>
+            <span class="doc-count">25 documentos</span>
+        </div>
+
+        <div class="library-card category-card" data-category="aseo" onclick="showCategory('aseo')">
+            <div class="category-icon">🧹</div>
+            <h3>Aseo y Ornato</h3>
+            <p>Protocolos de limpieza, rutas de recolección y manejo de residuos</p>
+            <span class="doc-count">41 documentos</span>
+        </div>
+        <div class="library-card recent-docs">
+            <h3>📌 Documentos Recientes</h3>
+            <ul class="documents-list">
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📄</span>
+                        <span class="doc-title">Protocolo de mantenimiento preventivo - Camiones recolectores</span>
+                        <span class="doc-date">Actualizado: 15/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">🎥</span>
+                        <span class="doc-title">Videotutorial: Reparación básica de luminarias LED</span>
+                        <span class="doc-date">Publicado: 10/06/2024</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="doc-icon">📝</span>
+                        <span class="doc-title">Formulario F-007: Solicitud de materiales en bodega</span>
+                        <span class="doc-date">Versión: 2.1 (2024)</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="view-all-btn">Ver todos los documentos →</button>
+        </div>
+    </div>
+</section>
+<div id="docModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+            <h2 id="modalTitle">Manual de Procedimientos</h2>
+            <div class="doc-meta">
+                <span class="doc-category">Iluminación Pública</span>
+                <span class="doc-version">Versión 3.2</span>
+                <span class="doc-date">Actualizado: 05/06/2024</span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <iframe id="docViewer" src="" frameborder="0"></iframe>
+        </div>
+        <div class="modal-footer">
+            <button class="download-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Descargar PDF
+            </button>
+            <div class="doc-actions">
+                <button class="action-btn" title="Imprimir">🖨️</button>
+                <button class="action-btn" title="Compartir">📤</button>
+                <button class="action-btn" title="Marcar como favorito">⭐</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Municipalidad de Arica</h3>
+            <p>Renato Rocca , Arica</p>
+            <p>Anexo: 6959</p>
+            <p>Email: roberto.mamani@municipalidadarica.cl</p>
+            <div class="social-icons">
+                <a href="#">📘</a>
+                <a href="#">📱</a>
+                <a href="#">🐦</a>
+                <a href="#">📸</a>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Colaboración Interdepartamental</h3>
+            <p style="line-height: 1.6;">
+                Este proyecto surge con el propósito de fortalecer la colaboración entre diversas áreas municipales, como <strong>iluminación pública</strong>, <strong>Of. Mantenimiento de Vehículos y Maquinaria</strong>, <strong>Aseo y Ornato</strong>, <strong>Asesoría Técnica</strong> y más, en un solo sistema integral. 
+                Buscando consolidar la información y los procesos en un solo sistema, permitiendo un <strong>mayor control operativo</strong>, <strong>gestión por áreas</strong> y una visión integral para la <strong>mejora continua de los servicios municipales</strong>.
+            </p>
+        </div>
+        <div class="footer-column licitaciones">
+            <h3>Licitaciones</h3>
+            <ul class="licitaciones-list">
+                <li><a href="licitacion_agil.html">Licitación Ágil</a></li>
+                <li><a href="licitacion_gran_compra.html">Gran Compra</a></li>
+                <li><a href="licitacion_trato_directo.html">Trato Directo</a></li>
+                <li><a href="licitacion_publica.html">Licitación Pública</a></li>
+                <li><a href="licitacion_convenio_marco.html">Convenio Marco</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+    </div>
+</footer>
+
+
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+
+<div class="accessibility-floating-btn" id="accessibilityBtn" title="Accesibilidad">
+    <span aria-hidden="true">♿</span>
+</div>
+
+<div class="accessibility-panel" id="accessibilityPanel">
+    <div class="accessibility-header">
+        <h3>Accesibilidad</h3>
+        <button class="close-panel" id="closePanel">&times;</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <button id="darkModeToggle">🌙 Modo oscuro</button>
+    </div>
+    
+    <div class="accessibility-option">
+        <label>Tamaño del texto:</label>
+        <div class="font-controls">
+            <button id="fontDecrease" title="Texto más pequeño">A-</button>
+            <button id="fontReset" title="Tamaño normal">A</button>
+            <button id="fontIncrease" title="Texto más grande">A+</button>
+        </div>
+    </div>
+</div>
+<script src="jajaja.js"></script>
+</body>
+</html>
