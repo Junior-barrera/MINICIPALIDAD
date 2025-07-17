@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión de Solicitudes | Municipalidad de Arica</title>
+<link rel="stylesheet" href="reclamo.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+    }
+
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #86868b;
+    }
+
+    /* Estilos específicos para reclamos */
+    .dashboard-container {
+      padding: 40px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #1d2939;
+      position: relative;
+    }
+
+    .dashboard-title:after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #0066cc, #1a8cff);
+      border-radius: 2px;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      background-color: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #0066cc;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #f5f9ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0066cc, #1a8cff);
+      z-index: 2;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px auto 15px;
+      color: #0066cc;
+      font-size: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.15);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0;
+      color: #1d2939;
+      padding: 0 20px;
+    }
+
+    .card-description {
+      text-align: center;
+      padding: 0 25px;
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      flex-grow: 1;
+    }
+
+    .card-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #0066cc, #1a8cff);
+      border: none;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin: 0 auto 25px;
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+    }
+
+    .card-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+      background: linear-gradient(135deg, #005cb8, #0080ff);
+    }
+
+    /* Estilos para el formulario de reclamos */
+    .form-container {
+      background-color: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-title {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #1d2939;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #0066cc;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231d1d1f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 16px 12px;
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #0066cc, #1a8cff);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #005cb8, #0080ff);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+    }
+
+    /* Estilos para la tabla de reclamos */
+    .reclamos-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .reclamos-table th,
+    .reclamos-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .reclamos-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .reclamos-table tr:hover {
+      background-color: #f5f9ff;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-primary {
+      background-color: #e6f2ff;
+      color: #0066cc;
+    }
+
+    .badge-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .badge-danger {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .badge-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn-view {
+      background-color: #e6f2ff;
+      color: #0066cc;
+    }
+
+    .action-btn-view:hover {
+      background-color: #d0e3ff;
+    }
+
+    .action-btn-edit {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .action-btn-edit:hover {
+      background-color: #ffecb3;
+    }
+
+    .action-btn-delete {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .action-btn-delete:hover {
+      background-color: #ffcdd2;
+    }
+
+    /* Estilos para filtros */
+    .filters-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .filter-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-filter {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filter:hover {
+      background-color: #0056b3;
+    }
+
+    /* Estilos para el modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .close {
+      font-size: 24px;
+      font-weight: bold;
+      color: #86868b;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .close:hover {
+      color: #1d1d1f;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* Estilos para la vista de detalle del reclamo */
+    .reclamo-detail {
+      margin-bottom: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .detail-label {
+      flex: 0 0 150px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .detail-value {
+      flex: 1;
+    }
+
+    .detail-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .detail-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .detail-image:hover {
+      transform: scale(1.05);
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 768px) {
+      .dashboard-title {
+        font-size: 24px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        flex-direction: column;
+      }
+
+      .detail-label {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header con logo -->
+  <div class="top-header">
+    <div class="logo">
+      <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+      <div class="logo-text">
+        <h1>ARICA</h1>
+        <span>MUNICIPALIDAD | Departamento de Solicitudes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <section class="dashboard-container">
+    <div class="dashboard-header">
+      <h2 class="dashboard-title">Sistema de Gestión de Solicitudes Ciudadanas</h2>
+      <button class="back-button" onclick="window.location.href='index.html'">
+        <span class="back-icon">←</span> Volver al Inicio
+      </button>
+    </div>
+
+    <!-- Tarjetas de acceso rápido -->
+    <div class="cards-container">
+      <!-- Tarjeta 1: Nuevo Reclamo -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-plus-circle"></i>
+        </div>
+        <h3 class="card-title">Nueva Solicitud</h3>
+        <p class="card-description">
+          Registre un nueva Solicitud ciudadana ingresando todos los datos requeridos.
+        </p>
+        <button class="card-button" onclick="window.location.href='ingreso_reclamos.html'">
+          Crear Solicitud <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta 2: Mis Reclamos -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-list-alt"></i>
+        </div>
+        <h3 class="card-title">Mis Solicitudes</h3>
+        <p class="card-description">
+          Visualice las solicitudes asignados a su departamento o unidad.
+        </p>
+        <button class="card-button" onclick="filtrarMisReclamos()">
+          Ver Mis Solicitudes <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta 3: Reportes -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <h3 class="card-title">Reportes y Estadísticas</h3>
+        <p class="card-description">
+          Genere reportes y consulte estadísticas sobre las solicitudes recibidos.
+        </p>
+        <button class="card-button" onclick="mostrarReportes()">
+          Ver Reportes <span class="arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario de nuevo reclamo (oculto inicialmente) -->
+    <div id="formReclamo" class="form-container" style="display: none;">
+      <h3 class="form-title">Nuevo Reclamo Ciudadano</h3>
+      <form id="reclamoForm">
+        <div class="form-group">
+          <label for="tipoReclamo" class="form-label">Tipo de Reclamo *</label>
+          <select id="tipoReclamo" class="form-select" required>
+            <option value="">Seleccione un tipo</option>
+            <option value="aseo">Aseo y Ornato</option>
+            <option value="alumbrado">Alumbrado Público</option>
+            <option value="transito">Tránsito y Vialidad</option>
+            <option value="obras">Obras Públicas</option>
+            <option value="arbolado">Arbolado Urbano</option>
+            <option value="ruidos">Ruidos Molestos</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion" class="form-label">Descripción del Reclamo *</label>
+          <textarea id="descripcion" class="form-control form-textarea" required
+            placeholder="Describa en detalle el reclamo..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="direccion" class="form-label">Dirección *</label>
+          <input type="text" id="direccion" class="form-control" required placeholder="Ej: Calle Principal #123">
+        </div>
+
+        <div class="form-group">
+          <label for="sector" class="form-label">Sector/Barrio *</label>
+          <select id="sector" class="form-select" required>
+            <option value="">Seleccione un sector</option>
+            <option value="centro">Centro</option>
+            <option value="norte">Norte</option>
+            <option value="sur">Sur</option>
+            <option value="este">Este</option>
+            <option value="oeste">Oeste</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="solicitante" class="form-label">Datos del Solicitante</label>
+          <input type="text" id="solicitante" class="form-control" placeholder="Nombre completo (opcional)">
+        </div>
+
+        <div class="form-group">
+          <label for="contacto" class="form-label">Contacto *</label>
+          <input type="text" id="contacto" class="form-control" required placeholder="Teléfono o email">
+        </div>
+
+        <div class="form-group">
+          <label for="prioridad" class="form-label">Prioridad *</label>
+          <select id="prioridad" class="form-select" required>
+            <option value="alta">Alta</option>
+            <option value="media" selected>Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="adjuntos" class="form-label">Adjuntar Fotos (opcional)</label>
+          <input type="file" id="adjuntos" class="form-control" multiple accept="image/*">
+        </div>
+
+        <div class="form-group" style="text-align: right;">
+          <button type="button" class="btn-submit" onclick="guardarReclamo()">
+            <i class="fas fa-save"></i> Guardar Reclamo
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Filtros para la tabla de reclamos -->
+    <div class="filters-container">
+      <h3>Filtrar Reclamos</h3>
+      <div class="filter-group">
+        <div class="filter-item">
+          <label for="filtroEstado" class="filter-label">Estado</label>
+          <select id="filtroEstado" class="filter-control">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="asignado">Asignado</option>
+            <option value="en_proceso">En Proceso</option>
+            <option value="resuelto">Resuelto</option>
+            <option value="cerrado">Cerrado</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="filtroTipo" class="filter-label">Tipo</label>
+          <select id="filtroTipo" class="filter-control">
+            <option value="">Todos</option>
+            <option value="aseo">Aseo y Ornato</option>
+            <option value="alumbrado">Alumbrado Público</option>
+            <option value="transito">Tránsito y Vialidad</option>
+            <option value="obras">Obras Públicas</option>
+            <option value="arbolado">Arbolado Urbano</option>
+            <option value="ruidos">Ruidos Molestos</option>
+            <option value="otros">Otros</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="filtroFechaDesde" class="filter-label">Fecha Desde</label>
+          <input type="date" id="filtroFechaDesde" class="filter-control">
+        </div>
+        <div class="filter-item">
+          <label for="filtroFechaHasta" class="filter-label">Fecha Hasta</label>
+          <input type="date" id="filtroFechaHasta" class="filter-control">
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <button class="btn-filter" onclick="filtrarReclamos()">
+          <i class="fas fa-filter"></i> Filtrar
+        </button>
+        <button class="btn-filter" onclick="limpiarFiltros()" style="background-color: #6c757d;">
+          <i class="fas fa-broom"></i> Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla de reclamos -->
+    <div style="overflow-x: auto;">
+      <table class="reclamos-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Dirección</th>
+            <th>Sector</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaReclamos">
+          <!-- Los reclamos se cargarán dinámicamente aquí -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <button class="action-btn action-btn-view" style="margin: 0 5px;" onclick="cambiarPagina(-1)">
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+      <span id="infoPagina" style="margin: 0 15px; line-height: 32px;">Página 1 de 1</span>
+      <button class="action-btn action-btn-view" style="margin: 0 5px;" onclick="cambiarPagina(1)">
+        Siguiente <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Modal para ver detalles del reclamo -->
+  <div id="modalDetalle" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Detalles del Reclamo #<span id="modalId"></span></h3>
+        <span class="close" onclick="cerrarModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="reclamo-detail">
+          <div class="detail-row">
+            <div class="detail-label">Fecha:</div>
+            <div class="detail-value" id="modalFecha"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Tipo:</div>
+            <div class="detail-value" id="modalTipo"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Descripción:</div>
+            <div class="detail-value" id="modalDescripcion"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Dirección:</div>
+            <div class="detail-value" id="modalDireccion"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Sector:</div>
+            <div class="detail-value" id="modalSector"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Solicitante:</div>
+            <div class="detail-value" id="modalSolicitante"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Contacto:</div>
+            <div class="detail-value" id="modalContacto"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Prioridad:</div>
+            <div class="detail-value" id="modalPrioridad"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Estado:</div>
+            <div class="detail-value" id="modalEstado"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Asignado a:</div>
+            <div class="detail-value" id="modalAsignado"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Observaciones:</div>
+            <div class="detail-value" id="modalObservaciones"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Fotos Adjuntas:</div>
+            <div class="detail-value">
+              <div class="detail-images" id="modalFotos">
+                <!-- Las fotos se cargarán aquí -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="action-btn action-btn-delete" onclick="cerrarReclamo()">
+          <i class="fas fa-check-circle"></i> Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Footer -->
+        <footer>
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Municipalidad de Arica</h3>
+                    <p>Renato Rocca, Arica</p>
+                    <p>Anexo: 6959</p>
+                    <p>Email: roberto.mamani@municipalidadarica.cl</p>
+                    <div class="social-icons">
+                        <a href="#">📘</a>
+                        <a href="#">📱</a>
+                        <a href="#">🐦</a>
+                        <a href="#">📸</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Sistema de Reclamos</h3>
+                    <p style="line-height: 1.6;">
+                        Sistema integral para la gestión de reclamos municipales que permite una
+                        <strong>comunicación directa</strong> entre ciudadanos y departamentos municipales,
+                        facilitando el <strong>seguimiento</strong> y <strong>resolución eficiente</strong>
+                        de problemas urbanos para mejorar la calidad de vida de los ariqueños.
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h3>Departamentos</h3>
+                    <ul>
+                        <li><strong>Aseo:</strong> Limpieza y residuos</li>
+                        <li><strong>Iluminación:</strong> Alumbrado público</li>
+                        <li><strong>Áreas Verdes:</strong> Parques y jardines</li>
+                        <li><strong>Espacios públicos:</strong> Mantenimiento</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+                <p>Desarrollado por Junior Barrera</p>
+            </div>
+        </footer>
+
+  <script>
+    // Variables globales
+    let reclamos = [];
+    let paginaActual = 1;
+    const reclamosPorPagina = 10;
+    let reclamoSeleccionado = null;
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwie8fU9eKYFvDkIKOOk7Sahe2FKV3mE3NmYjbGyZNvpeitn2k4ONh0LVP2Zjsh2XU/exec";
+
+    // Función para inicializar la página
+    function inicializarPagina() {
+        cargarReclamosDesdeAPI();
+        
+        // Configurar eventos
+        document.getElementById('filtroEstado').addEventListener('change', filtrarReclamos);
+        document.getElementById('filtroTipo').addEventListener('change', filtrarReclamos);
+        document.getElementById('filtroFechaDesde').addEventListener('change', filtrarReclamos);
+        document.getElementById('filtroFechaHasta').addEventListener('change', filtrarReclamos);
+    }
+
+    // Función para cargar reclamos desde la API
+    function cargarReclamosDesdeAPI() {
+        fetch(WEB_APP_URL + "?h=R")
+            .then(response => response.json())
+            .then(data => {
+                const dato_rc = data.dato_rc || [];
+                // Convertir datos de la API al formato esperado por el sistema
+                reclamos = dato_rc.slice(1).map((fila, index) => {
+                    return {
+                        id: index + 1001, // Generamos un ID único
+                        fecha: formatearFecha(fila[8]),
+                        tipo: formatearDepartamento(fila[2]),
+                        descripcion: fila[5] || 'Sin descripción',
+                        direccion: fila[10] || 'Sin dirección',
+                        sector: 'No especificado', // La API no tiene este campo
+                        solicitante: fila[9] || 'Anónimo',
+                        contacto: fila[11] || 'No especificado',
+                        prioridad: fila[7] ? fila[7].toLowerCase() : 'media',
+                        estado: fila[1] ? fila[1].toLowerCase().replace(' ', '_') : 'pendiente',
+                        asignado: fila[13] || '',
+                        observaciones: fila[4] || '',
+                        fotos: []
+                    };
+                });
+                mostrarReclamos();
+            })
+            .catch(error => {
+                console.error('Error al cargar reclamos desde API:', error);
+                alert('Error al cargar reclamos. Por favor intente nuevamente.');
+            });
+    }
+
+    // Funciones auxiliares de formato
+    function formatearDepartamento(dept) {
+        const nombres = {
+            'aseo': 'Aseo y Ornato',
+            'iluminacion': 'Alumbrado Público',
+            'areas-verdes': 'Arbolado Urbano',
+            'mantenimiento': 'Obras Públicas'
+        };
+        return nombres[dept?.toLowerCase()] || dept || 'Otros';
+    }
+
+    function formatearFecha(fechaISO) {
+        if (!fechaISO) return 'No disponible';
+        try {
+            const fecha = new Date(fechaISO);
+            return fecha.toLocaleDateString('es-CL');
+        } catch (e) {
+            return fechaISO;
+        }
+    }
+
+    // Función para mostrar reclamos en la tabla
+    function mostrarReclamos(reclamosFiltrados = reclamos) {
+        const tabla = document.getElementById('tablaReclamos');
+        tabla.innerHTML = '';
+        
+        // Calcular índices para la paginación
+        const inicio = (paginaActual - 1) * reclamosPorPagina;
+        const fin = inicio + reclamosPorPagina;
+        const reclamosPagina = reclamosFiltrados.slice(inicio, fin);
+        
+        // Actualizar información de paginación
+        const totalPaginas = Math.ceil(reclamosFiltrados.length / reclamosPorPagina);
+        document.getElementById('infoPagina').textContent = `Página ${paginaActual} de ${totalPaginas}`;
+        
+        // Deshabilitar botones de paginación si es necesario
+        document.querySelectorAll('.action-btn-view').forEach(btn => {
+            btn.disabled = false;
+        });
+        
+        if (paginaActual <= 1) {
+            document.querySelectorAll('.action-btn-view')[0].disabled = true;
+        }
+        
+        if (paginaActual >= totalPaginas) {
+            document.querySelectorAll('.action-btn-view')[1].disabled = true;
+        }
+        
+        // Llenar la tabla con los reclamos
+        reclamosPagina.forEach(reclamo => {
+            const fila = document.createElement('tr');
+            
+            // Determinar clase de estado y texto
+            let claseEstado = '';
+            let textoEstado = '';
+            
+            switch(reclamo.estado) {
+                case 'pendiente':
+                    claseEstado = 'badge-primary';
+                    textoEstado = 'Pendiente';
+                    break;
+                case 'asignado':
+                    claseEstado = 'badge-warning';
+                    textoEstado = 'Asignado';
+                    break;
+                case 'en_proceso':
+                case 'en proceso':
+                    claseEstado = 'badge-warning';
+                    textoEstado = 'En Proceso';
+                    break;
+                case 'resuelto':
+                case 'terminado':
+                    claseEstado = 'badge-success';
+                    textoEstado = 'Resuelto';
+                    break;
+                case 'cerrado':
+                    claseEstado = 'badge-success';
+                    textoEstado = 'Cerrado';
+                    break;
+                default:
+                    claseEstado = 'badge-primary';
+                    textoEstado = reclamo.estado;
+            }
+            
+            // Determinar clase de prioridad
+            let clasePrioridad = '';
+            switch(reclamo.prioridad) {
+                case 'alta':
+                    clasePrioridad = 'badge-danger';
+                    break;
+                case 'media':
+                    clasePrioridad = 'badge-warning';
+                    break;
+                case 'baja':
+                    clasePrioridad = 'badge-primary';
+                    break;
+                default:
+                    clasePrioridad = 'badge-warning';
+            }
+            
+            fila.innerHTML = `
+                <td>${reclamo.id}</td>
+                <td>${reclamo.fecha}</td>
+                <td>${reclamo.tipo}</td>
+                <td>${reclamo.descripcion.substring(0, 50)}${reclamo.descripcion.length > 50 ? '...' : ''}</td>
+                <td>${reclamo.direccion}</td>
+                <td>${reclamo.sector}</td>
+                <td><span class="badge ${claseEstado}">${textoEstado}</span></td>
+                <td><span class="badge ${clasePrioridad}">${reclamo.prioridad.toUpperCase()}</span></td>
+                <td>
+                    <button class="action-btn action-btn-view" onclick="verDetalleReclamo(${reclamo.id})">
+                        <i class="fas fa-eye"></i> Ver
+                    </button>
+                </td>
+            `;
+            
+            tabla.appendChild(fila);
+        });
+    }
+
+    // Función para filtrar reclamos
+    function filtrarReclamos() {
+        const estado = document.getElementById('filtroEstado').value;
+        const tipo = document.getElementById('filtroTipo').value;
+        const fechaDesde = document.getElementById('filtroFechaDesde').value;
+        const fechaHasta = document.getElementById('filtroFechaHasta').value;
+        
+        let reclamosFiltrados = reclamos;
+        
+        // Aplicar filtros
+        if (estado) {
+            reclamosFiltrados = reclamosFiltrados.filter(r => {
+                const estadoReclamo = r.estado.toLowerCase().replace(' ', '_');
+                return estadoReclamo === estado;
+            });
+        }
+        
+        if (tipo) {
+            reclamosFiltrados = reclamosFiltrados.filter(r => 
+                r.tipo.toLowerCase().includes(tipo.toLowerCase())
+            );
+        }
+        
+        if (fechaDesde) {
+            reclamosFiltrados = reclamosFiltrados.filter(r => {
+                try {
+                    const fechaReclamo = new Date(r.fecha);
+                    return fechaReclamo >= new Date(fechaDesde);
+                } catch (e) {
+                    return true;
+                }
+            });
+        }
+        
+        if (fechaHasta) {
+            reclamosFiltrados = reclamosFiltrados.filter(r => {
+                try {
+                    const fechaReclamo = new Date(r.fecha);
+                    return fechaReclamo <= new Date(fechaHasta);
+                } catch (e) {
+                    return true;
+                }
+            });
+        }
+        
+        // Resetear a la primera página
+        paginaActual = 1;
+        
+        // Mostrar reclamos filtrados
+        mostrarReclamos(reclamosFiltrados);
+    }
+
+    // Función para limpiar filtros
+    function limpiarFiltros() {
+        document.getElementById('filtroEstado').value = '';
+        document.getElementById('filtroTipo').value = '';
+        document.getElementById('filtroFechaDesde').value = '';
+        document.getElementById('filtroFechaHasta').value = '';
+        
+        paginaActual = 1;
+        mostrarReclamos();
+    }
+
+    // Función para cambiar de página
+    function cambiarPagina(direccion) {
+        const totalPaginas = Math.ceil(reclamos.length / reclamosPorPagina);
+        
+        if (direccion === -1 && paginaActual > 1) {
+            paginaActual--;
+        } else if (direccion === 1 && paginaActual < totalPaginas) {
+            paginaActual++;
+        }
+        
+        mostrarReclamos();
+    }
+
+    // Función para ver detalles de un reclamo
+    function verDetalleReclamo(id) {
+        reclamoSeleccionado = reclamos.find(r => r.id === id);
+        
+        if (!reclamoSeleccionado) return;
+        
+        // Llenar el modal con los datos del reclamo
+        document.getElementById('modalId').textContent = reclamoSeleccionado.id;
+        document.getElementById('modalFecha').textContent = reclamoSeleccionado.fecha;
+        document.getElementById('modalTipo').textContent = reclamoSeleccionado.tipo;
+        document.getElementById('modalDescripcion').textContent = reclamoSeleccionado.descripcion;
+        document.getElementById('modalDireccion').textContent = reclamoSeleccionado.direccion;
+        document.getElementById('modalSector').textContent = reclamoSeleccionado.sector;
+        document.getElementById('modalSolicitante').textContent = reclamoSeleccionado.solicitante || 'No especificado';
+        document.getElementById('modalContacto').textContent = reclamoSeleccionado.contacto;
+        
+        // Mostrar prioridad con formato
+        const prioridad = reclamoSeleccionado.prioridad;
+        document.getElementById('modalPrioridad').innerHTML = `
+            <span class="badge ${prioridad === 'alta' ? 'badge-danger' : prioridad === 'media' ? 'badge-warning' : 'badge-primary'}">
+                ${prioridad.toUpperCase()}
+            </span>
+        `;
+        
+        // Mostrar estado con formato
+        let estadoTexto = '';
+        let estadoClase = '';
+        
+        switch(reclamoSeleccionado.estado) {
+            case 'pendiente':
+                estadoTexto = 'Pendiente';
+                estadoClase = 'badge-primary';
+                break;
+            case 'asignado':
+                estadoTexto = 'Asignado';
+                estadoClase = 'badge-warning';
+                break;
+            case 'en_proceso':
+            case 'en proceso':
+                estadoTexto = 'En Proceso';
+                estadoClase = 'badge-warning';
+                break;
+            case 'resuelto':
+            case 'terminado':
+                estadoTexto = 'Resuelto';
+                estadoClase = 'badge-success';
+                break;
+            case 'cerrado':
+                estadoTexto = 'Cerrado';
+                estadoClase = 'badge-success';
+                break;
+            default:
+                estadoTexto = reclamoSeleccionado.estado;
+                estadoClase = 'badge-primary';
+        }
+        
+        document.getElementById('modalEstado').innerHTML = `
+            <span class="badge ${estadoClase}">${estadoTexto}</span>
+        `;
+        
+        document.getElementById('modalAsignado').textContent = reclamoSeleccionado.asignado || 'No asignado';
+        document.getElementById('modalObservaciones').textContent = reclamoSeleccionado.observaciones || 'Sin observaciones';
+        
+        // Mostrar fotos si existen
+        const contenedorFotos = document.getElementById('modalFotos');
+        contenedorFotos.innerHTML = '';
+        
+        if (reclamoSeleccionado.fotos && reclamoSeleccionado.fotos.length > 0) {
+            reclamoSeleccionado.fotos.forEach(foto => {
+                const img = document.createElement('img');
+                img.src = `img/reclamos/${foto}`;
+                img.alt = `Foto reclamo ${reclamoSeleccionado.id}`;
+                img.className = 'detail-image';
+                img.onclick = () => window.open(img.src, '_blank');
+                contenedorFotos.appendChild(img);
+            });
+        } else {
+            contenedorFotos.innerHTML = '<p>No hay fotos adjuntas</p>';
+        }
+        
+        // Mostrar el modal
+        document.getElementById('modalDetalle').style.display = 'block';
+    }
+
+    // Función para cerrar el modal
+    function cerrarModal() {
+        document.getElementById('modalDetalle').style.display = 'none';
+        reclamoSeleccionado = null;
+    }
+
+    // Función para guardar un nuevo reclamo
+    function guardarReclamo() {
+        // Validar formulario
+        const tipoReclamo = document.getElementById('tipoReclamo').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const direccion = document.getElementById('direccion').value;
+        const sector = document.getElementById('sector').value;
+        const contacto = document.getElementById('contacto').value;
+        
+        if (!tipoReclamo || !descripcion || !direccion || !sector || !contacto) {
+            alert('Por favor complete todos los campos obligatorios (*)');
+            return;
+        }
+        
+        // Mapear tipo de reclamo a departamento API
+        const mapeoTipos = {
+            'aseo': 'aseo',
+            'alumbrado': 'iluminacion',
+            'transito': 'mantenimiento',
+            'obras': 'mantenimiento',
+            'arbolado': 'areas-verdes',
+            'ruidos': 'mantenimiento',
+            'otros': 'mantenimiento'
+        };
+        
+        const departamentoAPI = mapeoTipos[tipoReclamo] || 'mantenimiento';
+        
+        // Crear objeto para enviar a la API
+        const nuevoReclamo = [
+            `REC-${Date.now()}`, // trackingNumber
+            'pendiente', // estado
+            departamentoAPI, // departamento
+            '', // subdepartamento
+            '', // trabajo (observaciones)
+            descripcion, // descripción
+            'web', // procedencia (web)
+            document.getElementById('prioridad').value, // prioridad
+            new Date().toISOString(), // fecha
+            document.getElementById('solicitante').value || 'Anónimo', // nombre
+            direccion, // dirección
+            contacto, // teléfono
+            '', // fecha resolución
+            ''  // trabajador asignado
+        ];
+
+        // Enviar a la API
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                pagina: 'RECLAMOS',
+                fila: 0, // 0 para nuevo registro
+                datos: nuevoReclamo,
+                tipo: 1 // 1 para insertar
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.estado === "OK") {
+                alert('Reclamo registrado exitosamente');
+                document.getElementById('reclamoForm').reset();
+                // Recargar los reclamos desde la API
+                cargarReclamosDesdeAPI();
+            } else {
+                throw new Error(data.mensaje || 'Error al guardar el reclamo');
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar reclamo:', error);
+            alert('Error al enviar el reclamo: ' + error.message);
+        });
+    }
+
+    // Función para filtrar solo los reclamos del usuario actual
+    function filtrarMisReclamos() {
+        // En un sistema real, esto filtraría por el usuario/departamento actual
+        // Aquí filtramos solo los pendientes y asignados como ejemplo
+        const misReclamos = reclamos.filter(r => 
+            r.estado === 'pendiente' || r.estado === 'asignado' || r.estado === 'en_proceso'
+        );
+        mostrarReclamos(misReclamos);
+    }
+
+    // Función para mostrar reportes (simulada)
+    function mostrarReportes() {
+        alert('Esta función mostraría reportes y estadísticas basados en los datos de la API.');
+    }
+
+    // Función para cerrar un reclamo
+    function cerrarReclamo() {
+        if (!reclamoSeleccionado) return;
+        
+        if (confirm('¿Está seguro que desea marcar este reclamo como cerrado?')) {
+            // En un sistema real, aquí se enviaría una actualización a la API
+            reclamoSeleccionado.estado = 'cerrado';
+            reclamoSeleccionado.observaciones += '\nCerrado el ' + new Date().toLocaleDateString('es-CL');
+            
+            // Actualizar tabla y cerrar modal
+            mostrarReclamos();
+            cerrarModal();
+            
+            alert('Reclamo marcado como cerrado (en un sistema real, esto se enviaría a la API)');
+        }
+    }
+
+    // Inicializar la página cuando se cargue el DOM
+    document.addEventListener('DOMContentLoaded', inicializarPagina);
+</script>
+</body>
+</html>
+       

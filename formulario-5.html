@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión de Áreas Verdes | Municipalidad de Arica</title>
+<link rel="stylesheet" href="reclamo.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+    }
+
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #86868b;
+    }
+
+    /* Estilos específicos para áreas verdes */
+    .dashboard-container {
+      padding: 40px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #1d2939;
+      position: relative;
+    }
+
+    .dashboard-title:after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      border-radius: 2px;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      background-color: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #2e7d32;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #f1f8e9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.15);
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      z-index: 2;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px auto 15px;
+      color: #2e7d32;
+      font-size: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 5px 15px rgba(46, 125, 50, 0.15);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0;
+      color: #1d2939;
+      padding: 0 20px;
+    }
+
+    .card-description {
+      text-align: center;
+      padding: 0 25px;
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      flex-grow: 1;
+    }
+
+    .card-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #2e7d32, #4caf50);
+      border: none;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin: 0 auto 25px;
+      box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+    }
+
+    .card-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+      background: linear-gradient(135deg, #1b5e20, #388e3c);
+    }
+
+    /* Estilos para el formulario de actividades */
+    .form-container {
+      background-color: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-title {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #1d2939;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #2e7d32;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231d1d1f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 16px 12px;
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #2e7d32, #4caf50);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #1b5e20, #388e3c);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+    }
+
+    /* Estilos para la tabla de actividades */
+    .actividades-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .actividades-table th,
+    .actividades-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .actividades-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .actividades-table tr:hover {
+      background-color: #f1f8e9;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-primary {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .badge-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .badge-danger {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .badge-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .badge-info {
+      background-color: #e1f5fe;
+      color: #0288d1;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn-view {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .action-btn-view:hover {
+      background-color: #c8e6c9;
+    }
+
+    .action-btn-edit {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .action-btn-edit:hover {
+      background-color: #ffecb3;
+    }
+
+    .action-btn-delete {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .action-btn-delete:hover {
+      background-color: #ffcdd2;
+    }
+
+    /* Estilos para filtros */
+    .filters-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .filter-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-filter {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filter:hover {
+      background-color: #1b5e20;
+    }
+
+    /* Estilos para el modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .close {
+      font-size: 24px;
+      font-weight: bold;
+      color: #86868b;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .close:hover {
+      color: #1d1d1f;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* Estilos para la vista de detalle de actividad */
+    .actividad-detail {
+      margin-bottom: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .detail-label {
+      flex: 0 0 150px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .detail-value {
+      flex: 1;
+    }
+
+    .detail-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .detail-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .detail-image:hover {
+      transform: scale(1.05);
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 768px) {
+      .dashboard-title {
+        font-size: 24px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        flex-direction: column;
+      }
+
+      .detail-label {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header con logo -->
+  <div class="top-header">
+    <div class="logo">
+      <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+      <div class="logo-text">
+        <h1>ARICA</h1>
+        <span>MUNICIPALIDAD | Departamento de Áreas Verdes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <section class="dashboard-container">
+    <div class="dashboard-header">
+      <h2 class="dashboard-title">Sistema de Gestión de Áreas Verdes y Parques</h2>
+      <button class="back-button" onclick="window.location.href='index.html'">
+        <span class="back-icon">←</span> Volver al Inicio
+      </button>
+    </div>
+
+    <!-- Tarjetas de acceso rápido -->
+    <div class="cards-container">
+      <!-- Tarjeta 1: Nueva Actividad -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-tree"></i>
+        </div>
+        <h3 class="card-title">Nueva Actividad</h3>
+        <p class="card-description">
+          Registre una nueva actividad de mantenimiento, plantación o intervención en áreas verdes y parques.
+        </p>
+        <button class="card-button" onclick="mostrarFormularioActividad()">
+          Crear Actividad <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta 2: Mis Actividades -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h3 class="card-title">Mis Actividades</h3>
+        <p class="card-description">
+          Visualice las actividades asignadas a su equipo o sector de trabajo.
+        </p>
+        <button class="card-button" onclick="filtrarMisActividades()">
+          Ver Mis Actividades <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta 3: Reportes -->
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <h3 class="card-title">Reportes y Estadísticas</h3>
+        <p class="card-description">
+          Genere reportes y consulte estadísticas sobre el mantenimiento de áreas verdes.
+        </p>
+        <button class="card-button" onclick="mostrarReportes()">
+          Ver Reportes <span class="arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulario de nueva actividad (oculto inicialmente) -->
+    <div id="formActividad" class="form-container" style="display: none;">
+      <h3 class="form-title">Nueva Actividad en Áreas Verdes</h3>
+      <form id="actividadForm">
+        <div class="form-group">
+          <label for="tipoActividad" class="form-label">Tipo de Actividad *</label>
+          <select id="tipoActividad" class="form-select" required>
+            <option value="">Seleccione un tipo</option>
+            <option value="poda">Poda de árboles</option>
+            <option value="siembra">Siembra de plantas</option>
+            <option value="riego">Riego programado</option>
+            <option value="limpieza">Limpieza de áreas</option>
+            <option value="mantenimiento">Mantenimiento de mobiliario</option>
+            <option value="reparacion">Reparación de infraestructura</option>
+            <option value="otros">Otras actividades</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion" class="form-label">Descripción *</label>
+          <textarea id="descripcion" class="form-control form-textarea" required
+            placeholder="Describa en detalle la actividad a realizar..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="ubicacion" class="form-label">Ubicación *</label>
+          <select id="ubicacion" class="form-select" required>
+            <option value="">Seleccione un área verde</option>
+            <option value="plaza_armas">Plaza de Armas</option>
+            <option value="parque_benjamin">Parque Benjamín Vicuña Mackenna</option>
+            <option value="plaza_colon">Plaza Colón</option>
+            <option value="jardin_botanico">Jardín Botánico</option>
+            <option value="plazuela_martin">Plazuela Martín Ruiz de Gamboa</option>
+            <option value="otro">Otra ubicación</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="otraUbicacionGroup" style="display: none;">
+          <label for="otraUbicacion" class="form-label">Especifique ubicación *</label>
+          <input type="text" id="otraUbicacion" class="form-control" placeholder="Ej: Calle Principal entre 1 y 2">
+        </div>
+
+        <div class="form-group">
+          <label for="fechaProgramada" class="form-label">Fecha Programada *</label>
+          <input type="date" id="fechaProgramada" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="equipo" class="form-label">Equipo Asignado *</label>
+          <select id="equipo" class="form-select" required>
+            <option value="">Seleccione un equipo</option>
+            <option value="jardinero">Jardineros</option>
+            <option value="poda">Equipo de poda</option>
+            <option value="mantenimiento">Mantenimiento</option>
+            <option value="riego">Equipo de riego</option>
+            <option value="contratista">Contratista externo</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="responsable" class="form-label">Responsable *</label>
+          <input type="text" id="responsable" class="form-control" required placeholder="Nombre del responsable">
+        </div>
+
+        <div class="form-group">
+          <label for="prioridad" class="form-label">Prioridad *</label>
+          <select id="prioridad" class="form-select" required>
+            <option value="alta">Alta</option>
+            <option value="media" selected>Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="materiales" class="form-label">Materiales Necesarios</label>
+          <textarea id="materiales" class="form-control form-textarea"
+            placeholder="Liste los materiales necesarios para esta actividad..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="adjuntos" class="form-label">Adjuntar Fotos (opcional)</label>
+          <input type="file" id="adjuntos" class="form-control" multiple accept="image/*">
+        </div>
+
+        <div class="form-group" style="text-align: right;">
+          <button type="button" class="btn-submit" onclick="guardarActividad()">
+            <i class="fas fa-save"></i> Guardar Actividad
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Filtros para la tabla de actividades -->
+    <div class="filters-container">
+      <h3>Filtrar Actividades</h3>
+      <div class="filter-group">
+        <div class="filter-item">
+          <label for="filtroEstado" class="filter-label">Estado</label>
+          <select id="filtroEstado" class="filter-control">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="programada">Programada</option>
+            <option value="en_proceso">En Proceso</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="filtroTipo" class="filter-label">Tipo</label>
+          <select id="filtroTipo" class="filter-control">
+            <option value="">Todos</option>
+            <option value="poda">Poda de árboles</option>
+            <option value="siembra">Siembra de plantas</option>
+            <option value="riego">Riego programado</option>
+            <option value="limpieza">Limpieza de áreas</option>
+            <option value="mantenimiento">Mantenimiento de mobiliario</option>
+            <option value="reparacion">Reparación de infraestructura</option>
+            <option value="otros">Otras actividades</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="filtroUbicacion" class="filter-label">Ubicación</label>
+          <select id="filtroUbicacion" class="filter-control">
+            <option value="">Todas</option>
+            <option value="plaza_armas">Plaza de Armas</option>
+            <option value="parque_benjamin">Parque Benjamín Vicuña Mackenna</option>
+            <option value="plaza_colon">Plaza Colón</option>
+            <option value="jardin_botanico">Jardín Botánico</option>
+            <option value="plazuela_martin">Plazuela Martín Ruiz de Gamboa</option>
+            <option value="otro">Otras ubicaciones</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="filtroFechaDesde" class="filter-label">Fecha Desde</label>
+          <input type="date" id="filtroFechaDesde" class="filter-control">
+        </div>
+        <div class="filter-item">
+          <label for="filtroFechaHasta" class="filter-label">Fecha Hasta</label>
+          <input type="date" id="filtroFechaHasta" class="filter-control">
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <button class="btn-filter" onclick="filtrarActividades()">
+          <i class="fas fa-filter"></i> Filtrar
+        </button>
+        <button class="btn-filter" onclick="limpiarFiltros()" style="background-color: #6c757d;">
+          <i class="fas fa-broom"></i> Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla de actividades -->
+    <div style="overflow-x: auto;">
+      <table class="actividades-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha Prog.</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Ubicación</th>
+            <th>Equipo</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaActividades">
+          <!-- Las actividades se cargarán dinámicamente aquí -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <button class="action-btn action-btn-view" style="margin: 0 5px;" onclick="cambiarPagina(-1)">
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+      <span id="infoPagina" style="margin: 0 15px; line-height: 32px;">Página 1 de 1</span>
+      <button class="action-btn action-btn-view" style="margin: 0 5px;" onclick="cambiarPagina(1)">
+        Siguiente <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Modal para ver detalles de actividad -->
+  <div id="modalDetalle" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Detalles de Actividad #<span id="modalId"></span></h3>
+        <span class="close" onclick="cerrarModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="actividad-detail">
+          <div class="detail-row">
+            <div class="detail-label">Tipo:</div>
+            <div class="detail-value" id="modalTipo"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Descripción:</div>
+            <div class="detail-value" id="modalDescripcion"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Ubicación:</div>
+            <div class="detail-value" id="modalUbicacion"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Fecha Programada:</div>
+            <div class="detail-value" id="modalFechaProgramada"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Fecha Ejecución:</div>
+            <div class="detail-value" id="modalFechaEjecucion"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Equipo:</div>
+            <div class="detail-value" id="modalEquipo"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Responsable:</div>
+            <div class="detail-value" id="modalResponsable"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Prioridad:</div>
+            <div class="detail-value" id="modalPrioridad"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Estado:</div>
+            <div class="detail-value" id="modalEstado"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Materiales:</div>
+            <div class="detail-value" id="modalMateriales"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Observaciones:</div>
+            <div class="detail-value" id="modalObservaciones"></div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Fotos Adjuntas:</div>
+            <div class="detail-value">
+              <div class="detail-images" id="modalFotos">
+                <!-- Las fotos se cargarán aquí -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="action-btn action-btn-edit" onclick="marcarEnProceso()" id="btnEnProceso">
+          <i class="fas fa-play-circle"></i> En Proceso
+        </button>
+        <button class="action-btn action-btn-view" onclick="marcarCompletada()" id="btnCompletada">
+          <i class="fas fa-check-circle"></i> Completar
+        </button>
+        <button class="action-btn action-btn-delete" onclick="cancelarActividad()" id="btnCancelar">
+          <i class="fas fa-times-circle"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h3>Municipalidad de Arica</h3>
+        <p>Renato Rocca, Arica</p>
+        <p>Anexo: 6959</p>
+        <p>Email: areas.verdes@municipalidadarica.cl</p>
+        <div class="social-icons">
+          <a href="#">📘</a>
+          <a href="#">📱</a>
+          <a href="#">🐦</a>
+          <a href="#">📸</a>
+        </div>
+      </div>
+      <div class="footer-column">
+        <h3>Sistema de Áreas Verdes</h3>
+        <p style="line-height: 1.6;">
+          Sistema integral para la gestión y mantenimiento de áreas verdes, parques y espacios públicos
+          que permite una <strong>planificación eficiente</strong> de las actividades de jardinería,
+          poda, riego y mantenimiento para mantener nuestros espacios verdes en óptimas condiciones.
+        </p>
+      </div>
+      <div class="footer-column">
+        <h3>Áreas Principales</h3>
+        <ul>
+          <li><strong>Plaza de Armas:</strong> Mantenimiento integral</li>
+          <li><strong>Parque Benjamín:</strong> Poda y riego</li>
+          <li><strong>Jardín Botánico:</strong> Especies nativas</li>
+          <li><strong>Plazuelas:</strong> Mantenimiento general</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+      <p>Desarrollado por Departamento de Áreas Verdes</p>
+    </div>
+  </footer>
+
+  <script>
+    // Variables globales
+    let actividades = [];
+    let paginaActual = 1;
+    const actividadesPorPagina = 10;
+    let actividadSeleccionada = null;
+
+    // Datos de ejemplo (en un sistema real, estos vendrían de una API)
+    const datosEjemplo = [
+      {
+        id: 2001,
+        tipo: "Poda de árboles",
+        descripcion: "Poda de formación en árboles de la plaza principal",
+        ubicacion: "Plaza de Armas",
+                fechaProgramada: "2025-06-15",
+        fechaEjecucion: "",
+        equipo: "Equipo de poda",
+        responsable: "Juan Pérez",
+        prioridad: "alta",
+        estado: "programada",
+        materiales: "Tijeras de podar, escalera, bolsas para residuos",
+        observaciones: "",
+        fotos: []
+      },
+      {
+        id: 2002,
+        tipo: "Riego programado",
+        descripcion: "Riego de jardineras centrales",
+        ubicacion: "Plaza Colón",
+        fechaProgramada: "2025-06-14",
+        fechaEjecucion: "2025-06-14",
+        equipo: "Equipo de riego",
+        responsable: "María González",
+        prioridad: "media",
+        estado: "completada",
+        materiales: "Mangueras, aspersores",
+        observaciones: "Se completó en 2 horas",
+        fotos: ["jardineria1.jpg", "jardineria2.jpg"]
+      },
+      {
+        id: 2003,
+        tipo: "Limpieza de áreas",
+        descripcion: "Recolección de hojas y residuos en parque",
+        ubicacion: "Parque Benjamín Vicuña Mackenna",
+        fechaProgramada: "2025-06-16",
+        fechaEjecucion: "",
+        equipo: "Jardineros",
+        responsable: "Carlos Rojas",
+        prioridad: "baja",
+        estado: "pendiente",
+        materiales: "Rastrillos, bolsas de basura, guantes",
+        observaciones: "",
+        fotos: []
+      }
+    ];
+
+    // Inicializar la aplicación cuando el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      actividades = datosEjemplo;
+      cargarActividades();
+      
+      // Event listener para el campo de ubicación
+      document.getElementById('ubicacion').addEventListener('change', function() {
+        const otraUbicacionGroup = document.getElementById('otraUbicacionGroup');
+        otraUbicacionGroup.style.display = this.value === 'otro' ? 'block' : 'none';
+        if (this.value !== 'otro') {
+          document.getElementById('otraUbicacion').value = '';
+        }
+      });
+    });
+
+    // Mostrar/ocultar el formulario de actividad
+    function mostrarFormularioActividad() {
+      const form = document.getElementById('formActividad');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      
+      if (form.style.display === 'block') {
+        form.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Guardar una nueva actividad
+    function guardarActividad() {
+      const tipoActividad = document.getElementById('tipoActividad').value;
+      const descripcion = document.getElementById('descripcion').value;
+      const ubicacionSelect = document.getElementById('ubicacion');
+      let ubicacion = ubicacionSelect.value === 'otro' 
+        ? document.getElementById('otraUbicacion').value 
+        : ubicacionSelect.options[ubicacionSelect.selectedIndex].text;
+      const fechaProgramada = document.getElementById('fechaProgramada').value;
+      const equipo = document.getElementById('equipo').value;
+      const responsable = document.getElementById('responsable').value;
+      const prioridad = document.getElementById('prioridad').value;
+      const materiales = document.getElementById('materiales').value;
+      
+      // Validar campos obligatorios
+      if (!tipoActividad || !descripcion || !ubicacion || !fechaProgramada || !equipo || !responsable) {
+        alert('Por favor complete todos los campos obligatorios (*)');
+        return;
+      }
+      
+      // Crear nueva actividad
+      const nuevaActividad = {
+        id: generarNuevoId(),
+        tipo: document.getElementById('tipoActividad').options[document.getElementById('tipoActividad').selectedIndex].text,
+        descripcion: descripcion,
+        ubicacion: ubicacion,
+        fechaProgramada: fechaProgramada,
+        fechaEjecucion: "",
+        equipo: document.getElementById('equipo').options[document.getElementById('equipo').selectedIndex].text,
+        responsable: responsable,
+        prioridad: prioridad,
+        estado: "programada",
+        materiales: materiales,
+        observaciones: "",
+        fotos: []
+      };
+      
+      // Agregar a la lista
+      actividades.unshift(nuevaActividad);
+      
+      // Limpiar formulario
+      document.getElementById('actividadForm').reset();
+      document.getElementById('otraUbicacionGroup').style.display = 'none';
+      
+      // Ocultar formulario
+      document.getElementById('formActividad').style.display = 'none';
+      
+      // Recargar tabla
+      cargarActividades();
+      
+      // Mostrar mensaje de éxito
+      alert('Actividad registrada correctamente con ID: ' + nuevaActividad.id);
+    }
+
+    // Generar un nuevo ID para actividades
+    function generarNuevoId() {
+      const maxId = actividades.reduce((max, actividad) => Math.max(max, actividad.id), 0);
+      return maxId + 1;
+    }
+
+    // Cargar actividades en la tabla
+    function cargarActividades(filtradas = actividades) {
+      const tabla = document.getElementById('tablaActividades');
+      tabla.innerHTML = '';
+      
+      const inicio = (paginaActual - 1) * actividadesPorPagina;
+      const fin = inicio + actividadesPorPagina;
+      const actividadesPagina = filtradas.slice(inicio, fin);
+      
+      if (actividadesPagina.length === 0) {
+        tabla.innerHTML = '<tr><td colspan="9" style="text-align: center;">No se encontraron actividades</td></tr>';
+        actualizarInfoPagina(filtradas.length);
+        return;
+      }
+      
+      actividadesPagina.forEach(actividad => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${actividad.id}</td>
+          <td>${formatearFecha(actividad.fechaProgramada)}</td>
+          <td>${actividad.tipo}</td>
+          <td>${actividad.descripcion.substring(0, 50)}${actividad.descripcion.length > 50 ? '...' : ''}</td>
+          <td>${actividad.ubicacion.substring(0, 20)}${actividad.ubicacion.length > 20 ? '...' : ''}</td>
+          <td>${actividad.equipo}</td>
+          <td><span class="badge ${obtenerClaseEstado(actividad.estado)}">${formatearEstado(actividad.estado)}</span></td>
+          <td><span class="badge ${obtenerClasePrioridad(actividad.prioridad)}">${formatearPrioridad(actividad.prioridad)}</span></td>
+          <td>
+            <button class="action-btn action-btn-view" onclick="verDetalleActividad(${actividad.id})">
+              <i class="fas fa-eye"></i> Ver
+            </button>
+            ${actividad.estado === 'programada' || actividad.estado === 'pendiente' ? `
+            <button class="action-btn action-btn-edit" onclick="editarActividad(${actividad.id})">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            ` : ''}
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+      
+      actualizarInfoPagina(filtradas.length);
+    }
+
+    // Formatear fecha para mostrar
+    function formatearFecha(fechaStr) {
+      if (!fechaStr) return '';
+      const fecha = new Date(fechaStr);
+      return fecha.toLocaleDateString('es-CL');
+    }
+
+    // Formatear estado para mostrar
+    function formatearEstado(estado) {
+      const estados = {
+        'pendiente': 'Pendiente',
+        'programada': 'Programada',
+        'en_proceso': 'En Proceso',
+        'completada': 'Completada',
+        'cancelada': 'Cancelada'
+      };
+      return estados[estado] || estado;
+    }
+
+    // Formatear prioridad para mostrar
+    function formatearPrioridad(prioridad) {
+      const prioridades = {
+        'alta': 'Alta',
+        'media': 'Media',
+        'baja': 'Baja'
+      };
+      return prioridades[prioridad] || prioridad;
+    }
+
+    // Obtener clase CSS para el estado
+    function obtenerClaseEstado(estado) {
+      const clases = {
+        'pendiente': 'badge-warning',
+        'programada': 'badge-info',
+        'en_proceso': 'badge-primary',
+        'completada': 'badge-success',
+        'cancelada': 'badge-danger'
+      };
+      return clases[estado] || 'badge-primary';
+    }
+
+    // Obtener clase CSS para la prioridad
+    function obtenerClasePrioridad(prioridad) {
+      const clases = {
+        'alta': 'badge-danger',
+        'media': 'badge-warning',
+        'baja': 'badge-success'
+      };
+      return clases[prioridad] || 'badge-primary';
+    }
+
+    // Actualizar información de paginación
+    function actualizarInfoPagina(totalActividades) {
+      const totalPaginas = Math.ceil(totalActividades / actividadesPorPagina);
+      document.getElementById('infoPagina').textContent = `Página ${paginaActual} de ${totalPaginas}`;
+    }
+
+    // Cambiar de página
+    function cambiarPagina(direccion) {
+      const totalPaginas = Math.ceil(actividades.length / actividadesPorPagina);
+      const nuevaPagina = paginaActual + direccion;
+      
+      if (nuevaPagina > 0 && nuevaPagina <= totalPaginas) {
+        paginaActual = nuevaPagina;
+        cargarActividades();
+      }
+    }
+
+    // Filtrar actividades
+    function filtrarActividades() {
+      const estado = document.getElementById('filtroEstado').value;
+      const tipo = document.getElementById('filtroTipo').value;
+      const ubicacion = document.getElementById('filtroUbicacion').value;
+      const fechaDesde = document.getElementById('filtroFechaDesde').value;
+      const fechaHasta = document.getElementById('filtroFechaHasta').value;
+      
+      let filtradas = actividades.filter(actividad => {
+        // Filtro por estado
+        if (estado && actividad.estado !== estado) return false;
+        
+        // Filtro por tipo (comparar el valor, no el texto mostrado)
+        if (tipo) {
+          const tipoActividad = actividad.tipo.toLowerCase();
+          if (!tipoActividad.includes(tipo)) return false;
+        }
+        
+        // Filtro por ubicación
+        if (ubicacion) {
+          if (ubicacion === 'otro') {
+            const ubicacionesConocidas = [
+              'plaza de armas',
+              'parque benjamín vicuña mackenna',
+              'plaza colón',
+              'jardín botánico',
+              'plazuela martín ruiz de gamboa'
+            ];
+            if (ubicacionesConocidas.includes(actividad.ubicacion.toLowerCase())) {
+              return false;
+            }
+          } else {
+            const ubicacionActividad = actividad.ubicacion.toLowerCase();
+            if (!ubicacionActividad.includes(ubicacion.split('_').join(' '))) {
+              return false;
+            }
+          }
+        }
+        
+        // Filtro por fecha
+        if (fechaDesde && actividad.fechaProgramada < fechaDesde) return false;
+        if (fechaHasta && actividad.fechaProgramada > fechaHasta) return false;
+        
+        return true;
+      });
+      
+      paginaActual = 1;
+      cargarActividades(filtradas);
+    }
+
+    // Limpiar filtros
+    function limpiarFiltros() {
+      document.getElementById('filtroEstado').value = '';
+      document.getElementById('filtroTipo').value = '';
+      document.getElementById('filtroUbicacion').value = '';
+      document.getElementById('filtroFechaDesde').value = '';
+      document.getElementById('filtroFechaHasta').value = '';
+      
+      paginaActual = 1;
+      cargarActividades();
+    }
+
+    // Filtrar solo mis actividades (ejemplo: filtrar por responsable)
+    function filtrarMisActividades() {
+      // En un sistema real, esto filtraría por el usuario actual
+      // Aquí usamos un nombre de ejemplo
+      const misActividades = actividades.filter(a => a.responsable === "Juan Pérez");
+      paginaActual = 1;
+      cargarActividades(misActividades);
+    }
+
+    // Ver detalles de una actividad
+    function verDetalleActividad(id) {
+      actividadSeleccionada = actividades.find(a => a.id === id);
+      if (!actividadSeleccionada) return;
+      
+      // Llenar el modal con los datos
+      document.getElementById('modalId').textContent = actividadSeleccionada.id;
+      document.getElementById('modalTipo').textContent = actividadSeleccionada.tipo;
+      document.getElementById('modalDescripcion').textContent = actividadSeleccionada.descripcion;
+      document.getElementById('modalUbicacion').textContent = actividadSeleccionada.ubicacion;
+      document.getElementById('modalFechaProgramada').textContent = formatearFecha(actividadSeleccionada.fechaProgramada);
+      document.getElementById('modalFechaEjecucion').textContent = actividadSeleccionada.fechaEjecucion ? formatearFecha(actividadSeleccionada.fechaEjecucion) : 'No ejecutada';
+      document.getElementById('modalEquipo').textContent = actividadSeleccionada.equipo;
+      document.getElementById('modalResponsable').textContent = actividadSeleccionada.responsable;
+      document.getElementById('modalPrioridad').textContent = formatearPrioridad(actividadSeleccionada.prioridad);
+      document.getElementById('modalEstado').innerHTML = `<span class="badge ${obtenerClaseEstado(actividadSeleccionada.estado)}">${formatearEstado(actividadSeleccionada.estado)}</span>`;
+      document.getElementById('modalMateriales').textContent = actividadSeleccionada.materiales || 'No especificado';
+      document.getElementById('modalObservaciones').textContent = actividadSeleccionada.observaciones || 'No hay observaciones';
+      
+      // Cargar fotos (simulado)
+      const fotosContainer = document.getElementById('modalFotos');
+      fotosContainer.innerHTML = '';
+      if (actividadSeleccionada.fotos && actividadSeleccionada.fotos.length > 0) {
+        actividadSeleccionada.fotos.forEach(foto => {
+          const img = document.createElement('img');
+          img.src = `img/actividades/${foto}`;
+          img.alt = `Actividad ${actividadSeleccionada.id}`;
+          img.className = 'detail-image';
+          fotosContainer.appendChild(img);
+        });
+      } else {
+        fotosContainer.innerHTML = '<p>No hay fotos adjuntas</p>';
+      }
+      
+      // Mostrar/ocultar botones según estado
+      document.getElementById('btnEnProceso').style.display = 
+        (actividadSeleccionada.estado === 'programada' || actividadSeleccionada.estado === 'pendiente') ? 'block' : 'none';
+      document.getElementById('btnCompletada').style.display = 
+        actividadSeleccionada.estado === 'en_proceso' ? 'block' : 'none';
+      document.getElementById('btnCancelar').style.display = 
+        (actividadSeleccionada.estado === 'programada' || actividadSeleccionada.estado === 'pendiente' || actividadSeleccionada.estado === 'en_proceso') ? 'block' : 'none';
+      
+      // Mostrar modal
+      document.getElementById('modalDetalle').style.display = 'block';
+    }
+
+    // Cerrar modal
+    function cerrarModal() {
+      document.getElementById('modalDetalle').style.display = 'none';
+      actividadSeleccionada = null;
+    }
+
+    // Marcar actividad como en proceso
+    function marcarEnProceso() {
+      if (!actividadSeleccionada) return;
+      
+      actividadSeleccionada.estado = 'en_proceso';
+      actividadSeleccionada.observaciones = actividadSeleccionada.observaciones || 
+        `Iniciada el ${new Date().toLocaleDateString('es-CL')}`;
+      
+      // Actualizar tabla y cerrar modal
+      cargarActividades();
+      cerrarModal();
+      alert(`Actividad #${actividadSeleccionada.id} marcada como "En Proceso"`);
+    }
+
+    // Marcar actividad como completada
+    function marcarCompletada() {
+      if (!actividadSeleccionada) return;
+      
+      const observaciones = prompt('Ingrese observaciones de finalización:');
+      if (observaciones === null) return;
+      
+      actividadSeleccionada.estado = 'completada';
+      actividadSeleccionada.fechaEjecucion = new Date().toISOString().split('T')[0];
+      actividadSeleccionada.observaciones = observaciones;
+      
+      // Actualizar tabla y cerrar modal
+      cargarActividades();
+      cerrarModal();
+      alert(`Actividad #${actividadSeleccionada.id} marcada como "Completada"`);
+    }
+
+    // Cancelar actividad
+    function cancelarActividad() {
+      if (!actividadSeleccionada) return;
+      
+      const motivo = prompt('Ingrese el motivo de cancelación:');
+      if (motivo === null) return;
+      
+      actividadSeleccionada.estado = 'cancelada';
+      actividadSeleccionada.observaciones = `Cancelada: ${motivo}`;
+      
+      // Actualizar tabla y cerrar modal
+      cargarActividades();
+      cerrarModal();
+      alert(`Actividad #${actividadSeleccionada.id} ha sido cancelada`);
+    }
+
+    // Editar actividad (simplificado)
+    function editarActividad(id) {
+      alert(`Editar actividad #${id} - Esta funcionalidad estaría completa en una versión real`);
+      // En una implementación real, esto abriría un formulario de edición
+      // con los datos precargados de la actividad
+    }
+
+    // Mostrar reportes (simplificado)
+    function mostrarReportes() {
+      alert('Módulo de reportes - Esta funcionalidad estaría completa en una versión real');
+      // En una implementación real, esto mostraría gráficos y estadísticas
+      // usando Chart.js o similar
+    }
+
+    // Cerrar modal si se hace clic fuera del contenido
+    window.onclick = function(event) {
+      const modal = document.getElementById('modalDetalle');
+      if (event.target === modal) {
+        cerrarModal();
+      }
+    };
+  </script>
+</body>
+</html>

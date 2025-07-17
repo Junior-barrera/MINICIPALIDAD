@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="reclamo.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Agregar Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <style>
     .container {
@@ -525,6 +527,154 @@
             flex-direction: column;
         }
     }
+    /* Estilos mejorados para el modal del mapa */
+.map-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto; /* Permite scroll si el contenido es muy largo */
+}
+
+.map-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 900px;
+    height: auto; /* Cambiado a auto para que se ajuste al contenido */
+    max-height: 90vh; /* Máximo 90% del viewport height */
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+.close-map {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+#mapa-reclamos {
+    height: 500px; /* Altura fija para el mapa */
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+    flex-shrink: 0; /* Evita que el mapa se reduzca */
+}
+
+.map-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Permite que los controles se ajusten en pantallas pequeñas */
+}
+
+.map-controls input {
+    padding: 8px;
+    flex-grow: 1;
+    min-width: 200px; /* Ancho mínimo para los inputs */
+}
+
+.map-controls button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap; /* Evita que el texto del botón se divida */
+}
+
+.map-controls button:hover {
+    background-color: #45a049;
+}
+
+.map-results {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    word-break: break-word; /* Evita que el texto se salga del contenedor */
+}
+
+.map-modal-footer {
+    margin-top: 15px;
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .map-modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    #mapa-reclamos {
+        height: 400px; /* Altura menor en móviles */
+    }
+    
+    .map-controls input {
+        min-width: 100%; /* Los inputs ocupan todo el ancho */
+    }
+    
+    .map-controls button {
+        width: 100%;
+    }
+}
+    
+    .btn-open-map {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .btn-open-map:hover {
+        background: #2980b9;
+    }
+    
+    /* Resto de tus estilos existentes... */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 </style>
 
 <body>
@@ -545,7 +695,7 @@
     <section class="dashboard-container">
         <div class="dashboard-header">
             <h2 class="dashboard-title">Sistema de Reclamos DIMAO</h2>
-            <button class="back-button" onclick="window.location.href='formulario-4tml'">
+            <button class="back-button" onclick="window.location.href='formulario-4.html'">
                 <span class="back-icon">←</span> Volver al Inicio
             </button>
         </div>
@@ -709,20 +859,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="direccion">Dirección del Problema *</label>
-                        <input type="text" id="direccion" class="form-control" required
-                            placeholder="Ej: Calle 21 de Mayo con Maipú">
-                    </div>
+    <label for="direccion">Dirección del Problema *</label>
+    <div style="display: flex; align-items: center;">
+        <input type="text" id="direccion" class="form-control" required
+            placeholder="Ej: Calle 21 de Mayo con Maipú">
+        <button type="button" class="btn-open-map" onclick="openMapModal()">
+            <span>📍</span> Buscar en Mapa
+        </button>
+    </div>
+    <input type="hidden" id="latitud">
+    <input type="hidden" id="longitud">
+</div>
 
-                    <div class="form-group">
-                        <label for="prioridad">Prioridad</label>
-                        <select id="prioridad" class="form-control select">
-                            <option value="baja">Baja</option>
-                            <option value="media" selected>Media</option>
-                            <option value="alta">Alta</option>
-                            <option value="urgente">Urgente</option>
-                        </select>
-                    </div>
 
                     <div class="form-group">
                         <label for="descripcion">Descripción del Problema *</label>
@@ -776,219 +924,30 @@
                 </div>
             </div>
 
-            <!-- FORMULARIO DE ASIGNACION DEL TRABAJO -->
-
-            <div id="formularioAsignacionModal">
-                <div class="formularioAsignacion">
-                    <h3>Asignacion del trabajo</h3>
-                    <br>
-                    <label>Trabajador asignado:</label><br>
-                    <input type="text" class="form-control" id="trabajador" name="trabajador"
-                        placeholder="Ingresa el nombre del trabajador" oninput="showSuggestionsTrabajador()">
-                    <div class="color_suggestions" id="suggestionsTrabajador"></div><br>
-                    <label>Detalle:</label><br>
-                    <textarea id="detalle"></textarea><br>
-                    <!--
-                    <label>Edad:</label><br>
-                    <input type="number" id="edad"><br>
-                    <label>Correo:</label><br>
-                    <input type="email" id="correo"><br>
-                    <label>País:</label><br>
-                    <input type="text" id="pais"><br>
-                    -->
-                    <p></p>
-                    <div class="filter-tabs">
-                        <div class="filter-tab active" onclick="enviarFormulario()">ASIGNAR</div>
-                        <div class="filter-tab" onclick="cerrarFormulario()">SALIR</div>
-                    </div>
-                </div>
-            </div>
-
-
+</div>
+ <!-- Modal del Mapa -->
+<div id="mapModal" class="map-modal">
+    <div class="map-modal-content">
+        <button class="close-map" onclick="closeMapModal()">×</button>
+        <h3>Buscar ubicación en el mapa</h3>
+        
+        <div class="map-controls">
+            <input type="text" id="calle1-modal" placeholder="Primera calle (Ej: Diego Portales)">
+            <input type="text" id="calle2-modal" placeholder="Segunda calle (Opcional)">
+            <button onclick="buscarInterseccionModal()">Buscar Calles</button>
+            <div style="margin-top: 15px; text-align: right;">
+            <button onclick="seleccionarUbicacion()" style="background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                Seleccionar esta ubicación
+            </button>
         </div>
-    </section>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>🏛️ Visualizador de Reclamos DIMAO</h1>
-            <p>Sistema de Gestión Integral - Municipalidad de Arica</p>
         </div>
-
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Filters Panel -->
-            <div class="filters-panel">
-                <h3>🔍 Filtros Avanzados</h3>
-
-                <div class="filter-group">
-                    <label>Buscar en todos los campos:</label>
-                    <input type="text" id="searchBox" class="search-box"
-                        placeholder="Buscar reclamo, nombre, dirección...">
-                </div>
-
-                <div class="filter-group">
-                    <label>Departamento:</label>
-                    <select id="filterDepartamento" class="filter-select">
-                        <option value="">Todos los departamentos</option>
-                        <option value="aseo">🧹 Aseo</option>
-                        <option value="iluminacion">💡 Iluminación</option>
-                        <option value="areas-verdes">🌳 Áreas Verdes</option>
-                        <option value="mantenimiento">🔧 Espacios Públicos</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Estado:</label>
-                    <select id="filterEstado" class="filter-select">
-                        <option value="">Todos los estados</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="asignado">Asignado</option>
-                        <option value="resuelto">Resuelto</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Prioridad:</label>
-                    <select id="filterPrioridad" class="filter-select">
-                        <option value="">Todas las prioridades</option>
-                        <option value="baja">Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                        <option value="urgente">Urgente</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Ordenar por:</label>
-                    <select id="sortBy" class="filter-select">
-                        <option value="fecha-desc">Fecha (Más reciente)</option>
-                        <option value="fecha-asc">Fecha (Más antiguo)</option>
-                        <option value="prioridad">Prioridad</option>
-                        <option value="departamento">Departamento</option>
-                        <option value="estado">Estado</option>
-                    </select>
-                </div>
-
-                <button class="clear-filters" onclick="clearAllFilters()">
-                    🗑️ Limpiar Filtros
-                </button>
-            </div>
-            <!-- Nueva sección para generar PDF -->
-            <div class="pdf-section">
-                <h3>📄 Generar Reportes PDF</h3>
-                <p>Seleccione los reclamos que desea incluir en el reporte PDF</p>
-
-                <div class="filter-grid">
-                    <!-- Filtro por Estado -->
-                    <div class="filter-group">
-                        <label>Estado de Reclamos</label>
-                        <button class="select-all-btn" onclick="selectAllEstados()">Seleccionar Todos</button>
-                        <div class="checkbox-group" id="estadoCheckboxes">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="estado-pendiente" value="pendiente"
-                                    onchange="updateSelection()">
-                                <label for="estado-pendiente">Pendientes</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="estado-asignado" value="asignado"
-                                    onchange="updateSelection()">
-                                <label for="estado-asignado">Asignados</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="estado-resuelto" value="resuelto"
-                                    onchange="updateSelection()">
-                                <label for="estado-resuelto">Resueltos</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filtro por Departamento -->
-                    <div class="filter-group">
-                        <label>Departamentos</label>
-                        <button class="select-all-btn" onclick="selectAllDepartamentos()">Seleccionar Todos</button>
-                        <div class="checkbox-group" id="departamentoCheckboxes">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dept-aseo" value="aseo" onchange="updateSelection()">
-                                <label for="dept-aseo">Aseo</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dept-iluminacion" value="iluminacion"
-                                    onchange="updateSelection()">
-                                <label for="dept-iluminacion">Iluminación</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dept-areas-verdes" value="areas-verdes"
-                                    onchange="updateSelection()">
-                                <label for="dept-areas-verdes">Áreas Verdes</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dept-mantenimiento" value="mantenimiento"
-                                    onchange="updateSelection()">
-                                <label for="dept-mantenimiento">Mantenimiento</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filtro por Prioridad -->
-                    <div class="filter-group">
-                        <label>Prioridad</label>
-                        <button class="select-all-btn" onclick="selectAllPrioridades()">Seleccionar Todos</button>
-                        <div class="checkbox-group" id="prioridadCheckboxes">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="prio-baja" value="baja" onchange="updateSelection()">
-                                <label for="prio-baja">Baja</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="prio-media" value="media" onchange="updateSelection()">
-                                <label for="prio-media">Media</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="prio-alta" value="alta" onchange="updateSelection()">
-                                <label for="prio-alta">Alta</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="prio-urgente" value="urgente" onchange="updateSelection()">
-                                <label for="prio-urgente">Urgente</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="selected-count" id="selectedCount">
-                    Reclamos seleccionados: 0
-                </div>
-
-                <div class="pdf-actions">
-                    <button class="pdf-btn" id="generatePDFBtn" onclick="generatePDF()" disabled>
-                        📄 Generar PDF
-                    </button>
-                    <button class="clear-btn" onclick="clearAllSelections()">
-                        Limpiar Selección
-                    </button>
-                </div>
-            </div>
-
-            <!-- FORMULARIO DE ASIGNACION DEL TRABAJO -->
-            <div id="formularioAsignacionModal">
-                <div class="formularioAsignacion">
-                    <h3>Asignacion del trabajo</h3>
-                    <br>
-                    <label>Trabajador asignado:</label><br>
-                    <input type="text" class="form-control" id="trabajador" name="trabajador"
-                        placeholder="Ingresa el nombre del trabajador" oninput="showSuggestionsTrabajador()">
-                    <div class="color_suggestions" id="suggestionsTrabajador"></div><br>
-                    <label>Detalle:</label><br>
-                    <textarea id="detalle"></textarea><br>
-                    <p></p>
-                    <div class="filter-tabs">
-                        <div class="filter-tab active" onclick="enviarFormulario()">ASIGNAR</div>
-                        <div class="filter-tab" onclick="cerrarFormulario()">SALIR</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </section>
-
+        
+        <p id="resultado-modal" class="map-results"></p>
+        <p id="coordenadas-modal" class="map-results">Haz click en el mapa para obtener coordenadas</p>
+        
+        <div id="mapa-reclamos"></div>
+    </div>
+</div>
         <!-- Footer -->
         <footer>
             <div class="footer-container">
@@ -1032,1230 +991,674 @@
         <!-- Assistant button -->
         <div class="assistant-button" onclick="openAssistance()">💬</div>
 
-
-        <script>
-
-            var departamento = "";
-            var datosAsignados = "";
-            var setOpera = new Array();
-            var inform = new Array();
-            var dato_rc = new Array();
-
-            var reclamosPendientes = new Array();
-            var reclamosAsignados = new Array();
-            var reclamosResueltos = new Array();
-
-
-            const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwie8fU9eKYFvDkIKOOk7Sahe2FKV3mE3NmYjbGyZNvpeitn2k4ONh0LVP2Zjsh2XU/exec";     // Implementacion
-            // const WEB_APP_URL = dir_rec;
-
-            if (localStorage.getItem('reclamos_procedencias')) {
-                baul = localStorage.getItem('reclamos_procedencias');
-                document.getElementById("procedencia").value = baul;  // Cargar el valor de procedencia
-            }
-
-            // Cargar los datos desde la Base de Datos
-            aanum = 0;
-            var recl_total = 0;
-            var recl_pendi = 0;
-            var recl_asign = 0;
-            var recl_listo = 0;
-
-            var operaIlum = new Array();
-            var operaMant = new Array();
-            var operaAseo = new Array();
-            var operaVerd = new Array();
-
-            var tipOpera = new Array();
-
-            fetch(WEB_APP_URL + "?h=R")           // Lee las hojas RECLAMOS
-                .then(response => response.json())
-                .then(data => {
-                    // Asigna los datos recibidos a las variables bidimensionales
-                    dato_rc = data.dato_rc;      // Datos de la hoja "RECLAMOS"
-
-                    if (dato_rc.length > 0) {
-                        jj = 0;
-                        for (ii = 0; ii < dato_rc.length; ii++) {
-                            if (dato_rc[ii][0] == "") { break; }
-                            if (dato_rc[ii][1] != "") {
-                                if (ii > 0) {
-                                    if (dato_rc[ii][2].toLowerCase() == "iluminacion") {
-                                        operaIlum.push(dato_rc[ii][13].trim());
-                                    } else if (dato_rc[ii][2].toLowerCase() == "mantenimiento") {
-                                        operaMant.push(dato_rc[ii][13].trim());
-                                    } else if (dato_rc[ii][2].toLowerCase() == "aseo") {
-                                        operaAseo.push(dato_rc[ii][13].trim());
-                                    } else if (dato_rc[ii][2].toLowerCase() == "areas verdes") {
-                                        operaVerd.push(dato_rc[ii][13].trim());
-                                    }
-                                }
-                                if (dato_rc[ii][1].toUpperCase() == "PENDIENTE") { recl_pendi++; }
-                                if (dato_rc[ii][1].toUpperCase() == "ASIGNADO") { recl_asign++; }
-                                if (dato_rc[ii][1].toUpperCase() == "RESUELTO") { recl_listo++; }
-                            }
-                        }
-                    }
-                    recl_total = recl_asign + recl_pendi + recl_listo;
-                    document.getElementById("totalReclamos").textContent = recl_total;
-                    document.getElementById("reclamosPendientes").textContent = recl_pendi;
-                    document.getElementById("reclamosAsignados").textContent = recl_asign;
-                    document.getElementById("reclamosResueltos").textContent = recl_listo;
-                    // Eliminar duplicados y ordenar
-                    operaAseo = [...new Set(operaAseo)].sort();
-                    operaIlum = [...new Set(operaIlum)].sort();
-                    operaMant = [...new Set(operaMant)].sort();
-                    operaVerd = [...new Set(operaVerd)].sort();
-                })
-                .catch(error => {
-                    console.error('Error al obtener los datos:', error);
-                });
-
-
-            // Función para manejar el cambio de sub-sub-categoría
-            function checkTrabajo(id_dept, nn) {
-
-                var subtrabajo = new Array();
-
-                var subtrab_aseo = new Array();
-                var subtrab_ilum = new Array();
-                var subtrab_mant = new Array();
-                var subtrab_verd = new Array();
-
-                subtrab_aseo[0] = ["Aseo de Calles", "Aseo en los parques", "Aseo en las playas", "Limpieza del humedal", ""];
-                subtrab_aseo[1] = ["Extraccion de residuos domiciliarios", "Extraccion de residuos industriales", "Eliminacion de microbasurles", "", ""];
-
-                subtrab_ilum[0] = ["Sector apagado", "Luminarias quemadas", "Instalacion de nueva luminaria", "Eventos", "Reparación de TDA"];
-                subtrab_ilum[1] = ["Instalación nuevo P/T/M", "Instalación de poste de concreto", "Instalación de brazo", "Retiro de poste derribado", "Instalación gancho y luminaria"];
-                subtrab_ilum[2] = ["Regular reloj control", "Cambio de reloj control", "Retiro de cables cortados", "Reposición de cables por robo", "Reparación de plaza y/o multicancha"];
-                subtrab_ilum[3] = ["Semaforo apagado", "Revisión de semaforo", "Poner semaforos en verde", "", ""];
-
-                baul = (id_dept).toString().toLowerCase();
-                subtrabajo.length = 0; // Limpiar el array antes de agregar nuevos elementos
-                if (baul == "aseo") { subtrabajo = subtrab_aseo[nn]; }
-                if (baul == "ilum") { subtrabajo = subtrab_ilum[nn]; }
-                if (baul == "mant") { subtrabajo = subtrab_mant[nn]; }
-                // if (baul == "verd") { subtrabajo = subtrab_verd; }
-                baul = "";
-                if (subtrabajo.length > 0) {
-                    baul = "<label><strong>Seleccione el tipo de trabajo:</strong></label>";
-                    for (tt = 0; tt < subtrabajo.length; tt++) {
-                        if (subtrabajo[tt] == "") { break; }
-                        baul += "<div class='trabajo-option'>" +
-                            "<input type='radio' name='trabajo' value=" + subtrabajo[tt].replace(/ /g, '-') + ">" +
-                            "<label for='aseo-calles'>" + subtrabajo[tt] + "</label>" +
-                            "</div>";
-                    }
-                    baul += "";
-                    document.getElementById("trabajodept-options").innerHTML = baul;
-                }
-            }
-
-
-            // Sistema de gestión de reclamos
-            class SistemaReclamos {
-                constructor() {
-                    this.reclamos = JSON.parse(localStorage.getItem('reclamos') || '[]');
-                    this.contadorId = parseInt(localStorage.getItem('contadorId') || '1');
-                    this.departamentoSeleccionado = null;
-                    this.filtroActivo = 'todos';
-                    this.filtroResueltosActivo = 'todos';
-                    this.passwordCorrecta = 'dimaoreclamos2025';
-
-                    this.inicializar();
-                    this.actualizarEstadisticas();
-                    this.mostrarReclamos();
-                    this.mostrarReclamosResueltos();
-                }
-
-                inicializar() {
-                    // Event listeners para departamentos
-                    document.querySelectorAll('.department-card').forEach(card => {
-                        card.addEventListener('click', (e) => this.seleccionarDepartamento(e));
-                    });
-
-                    // Event listener para formulario
-                    document.getElementById('reclamoForm').addEventListener('submit', (e) => this.enviarReclamo(e));
-                    // document.getElementById('reclamoForm').addEventListener('submit', function (e) { enviarReclamo(e); });
-
-                    // Event listeners para filtros de reclamos pendientes
-                    document.querySelectorAll('.filter-tab[data-section="pendientes"]').forEach(tab => {
-                        tab.addEventListener('click', (e) => this.cambiarFiltro(e));
-                    });
-
-                    // Event listeners para filtros de reclamos resueltos
-                    document.querySelectorAll('.filter-tab[data-section="resueltos"]').forEach(tab => {
-                        tab.addEventListener('click', (e) => this.cambiarFiltroResueltos(e));
-                    });
-                }
-
-                seleccionarDepartamento(e) {
-                    // Remover selección anterior
-                    document.querySelectorAll('.department-card').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-
-                    // Ocultar todas las opciones de subdepartamento
-                    document.querySelectorAll('.subdepartment-options').forEach(option => {
-                        option.classList.remove('show');
-                    });
-
-                    // Ocultar todas las opciones de trabajos
-                    document.querySelectorAll('.subdepartment-options').forEach(option => {
-                        option.classList.remove('show');
-                    });
-
-                    // document.getElementById("subdepartment-options").innerHTML = "";    // Limpiar tipo subdepartamento
-                    // document.getElementById("trabajodept-options").innerHTML = "";      // Limpiar tipo trabajo
-
-                    // Seleccionar nuevo departamento
-                    const card = e.currentTarget;
-                    card.classList.add('selected');
-                    this.departamentoSeleccionado = card.dataset.dept;
-                    departamento = (this.departamentoSeleccionado).toString().toUpperCase();
-                    this.mostrarReclamos();
-                    this.mostrarReclamosResueltos();
-                    this.actualizarEstadisticas();
-
-
-                    // Mostrar subdepartamento si es aseo
-                    if (this.departamentoSeleccionado === 'aseo') {
-                        document.getElementById('aseo-options').classList.add('show');
-                        this.actualizarEstadisticas();
-                        this.mostrarReclamos();
-                        this.mostrarReclamosResueltos();
-                        tipOpera = operaAseo;  // Asignar el array de operaciones de aseo
-                    }
-
-                    // Mostrar subdepartamento si es iluminacion
-                    if (this.departamentoSeleccionado === 'iluminacion') {
-                        document.getElementById('ilum-options').classList.add('show');
-                        this.actualizarEstadisticas();
-                        this.mostrarReclamos();
-                        this.mostrarReclamosResueltos();
-                        tipOpera = operaIlum;  // Asignar el array de operaciones de iluminacion
-                    }
-
-                    // Mostrar subdepartamento si es mantenimiento
-                    if (this.departamentoSeleccionado === 'mantenimiento') {
-                        // document.getElementById('manten-options').classList.add('show');
-                        tipOpera = operaMant;  // Asignar el array de operaciones de mantenimiento
-                    }
-
-                    // Mostrar subdepartamento si es areas verdes
-                    if (this.departamentoSeleccionado === 'areas-verdes') {
-                        // document.getElementById('verde-options').classList.add('show');
-                        tipOpera = operaVerd;  // Asignar el array de operaciones de mantenimiento
-                    }
-
-                    // Limpiar selección de subdepartamento
-                    document.querySelectorAll('input[name="subdepartamento"]').forEach(radio => {
-                        radio.checked = false;
-                    });
-                }
-
-                enviarReclamo(e) {
-
-                    // Prevenir el envío del formulario por defecto
-                    e.preventDefault();
-
-                    if (!this.departamentoSeleccionado) {
-                        alert('Por favor seleccione un departamento');
-                        return;
-                    }
-
-                    const formData = new FormData(e.target);
-                    console.log('Datos del formulario:\n', formData);
-
-                    // Obtener subdepartamento si es aseo
-                    let subdepartamento = null;
-                    if (this.departamentoSeleccionado === 'aseo') {
-                        subdepartamento = formData.get('subdepartamento');
-                        if (!subdepartamento) {
-                            alert('Por favor seleccione el área específica de aseo');
-                            return;
-                        }
-                    }
-
-                    const reclamo = {
-                        id: this.contadorId++,
-                        trackingNumber: `REC-${Date.now()}`,
-                        departamento: this.departamentoSeleccionado,
-                        subdepartamento: formData.get('subdepartamento'),
-                        trabajo: formData.get('trabajo').replace(/-/g, ' ') || (document.getElementById('trabajo').value).replace(/-/g, ''),
-                        nombre: formData.get('nombre') || document.getElementById('nombre').value,
-                        telefono: formData.get('telefono') || document.getElementById('telefono').value,
-                        direccion: formData.get('direccion') || document.getElementById('direccion').value,
-                        prioridad: formData.get('prioridad') || document.getElementById('prioridad').value,
-                        descripcion: formData.get('descripcion') || document.getElementById('descripcion').value,
-                        fecha: new Date().toISOString(),
-                        estado: 'pendiente',
-                        solucionado: false,
-                        fechaResolucion: null
-                    };
-
-                    if (reclamo) {
-
-                        inform.length = 0;
-                        baul = reclamo.departamento;
-                        inform[0] = "";
-                        inform[1] = reclamo.estado.toString().toUpperCase();
-                        inform[2] = reclamo.departamento.toString().toUpperCase();
-                        inform[3] = reclamo.subdepartamento.toString().toUpperCase();
-                        inform[4] = reclamo.trabajo.toString().toUpperCase();
-                        inform[5] = reclamo.descripcion.toString().toUpperCase();
-                        inform[6] = (document.getElementById("procedencia").value).toString().toUpperCase();
-                        inform[7] = reclamo.prioridad.toString().toUpperCase();
-                        inform[8] = reclamo.fecha;
-                        inform[9] = reclamo.nombre.toString().toUpperCase();
-                        inform[10] = reclamo.direccion.toString().toUpperCase();
-                        inform[11] = reclamo.telefono.toString().toUpperCase();
-
-                        console.log('Datos de la variable reclamo:\n', reclamo);
-
-
-                        this.reclamos.push(reclamo);          // Agregar el nuevo reclamo al array de reclamos
-                        this.guardarDatos();
-
-                    }
-
-
-
-                    // Mostrar mensaje de éxito
-                    document.getElementById('trackingNumber').textContent = reclamo.trackingNumber;
-                    document.getElementById('successMessage').style.display = 'block';
-
-                    // Limpiar formulario
-                    document.getElementById('reclamoForm').reset();
-                    document.querySelectorAll('.department-card').forEach(card => {
-                        card.classList.remove('selected');
-                    });
-                    document.querySelectorAll('.subdepartment-options').forEach(option => {
-                        option.classList.remove('show');
-                    });
-                    this.departamentoSeleccionado = null;
-
-                    // Ocultar mensaje después de 5 segundos
-                    setTimeout(() => {
-                        document.getElementById('successMessage').style.display = 'none';
-                    }, 5000);
-
-                    if (inform.length > 0) {
-                        enviarDatos("RECLAMOS", 0, inform, 1);
-                        dato_rc.push(inform);    // Agregar el nuevo reclamo a la lista de datos
-                        // Actualizar vista
-                        this.actualizarEstadisticas();
-                        this.mostrarReclamos();
-                        this.mostrarReclamosResueltos();
-                        // inform.length = 0;
-                    }
-
-                    // Scroll al top
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-
-
-                // Función mejorada para marcar reclamo como solucionado
-                marcarSolucionado(reclamoId, solucionado) {
-                    var reclamo = this.reclamos.find(r => r.id === reclamoId);
-                    if (reclamo) {
-                        // Si ya está solucionado y se quiere desmarcar, pedir contraseña
-                        if (reclamo.solucionado && !solucionado) {
-                            const password = prompt('Ingrese la contraseña para desmarcar este reclamo como solucionado:');
-                            if (password !== this.passwordCorrecta) {
-                                alert('Contraseña incorrecta. No se puede modificar el estado del reclamo.');
-                                // Revertir el checkbox
-                                document.querySelector(`input[onchange*="marcarSolucionado(${reclamoId}"]`).checked = true;
-                                return;
-                            }
-                        }
-
-                        reclamo.solucionado = solucionado;
-
-                        if (solucionado) {
-                            reclamo.estado = 'resuelto';
-                            reclamo.fechaResolucion = new Date().toISOString();
-                        } else {
-                            reclamo.estado = 'pendiente';
-                            reclamo.fechaResolucion = null;
-                        }
-
-                        this.guardarDatos();
-                        this.actualizarEstadisticas();
-                        this.mostrarReclamos();
-                        this.mostrarReclamosResueltos();
-                    }
-                }
-
-                cambiarFiltro(e) {
-                    // Remover filtro activo anterior en la sección de pendientes
-                    document.querySelectorAll('.filter-tab[data-section="pendientes"]').forEach(tab => {
-                        tab.classList.remove('active');
-                    });
-
-                    // Activar nuevo filtro
-                    e.target.classList.add('active');
-                    this.filtroActivo = e.target.dataset.filter;
-
-                    // Mostrar reclamos filtrados
-                    this.mostrarReclamos();
-                }
-
-                cambiarFiltroResueltos(e) {
-                    // Remover filtro activo anterior en la sección de resueltos
-                    document.querySelectorAll('.filter-tab[data-section="resueltos"]').forEach(tab => {
-                        tab.classList.remove('active');
-                    });
-
-                    // Activar nuevo filtro
-                    e.target.classList.add('active');
-                    this.filtroResueltosActivo = e.target.dataset.filter;
-
-                    // Mostrar reclamos resueltos filtrados
-                    this.mostrarReclamosResueltos();
-                }
-
-                // Función para mostrar solo reclamos NO solucionados
-                mostrarReclamos() {
-
-                    document.getElementById("trabajodept-options").innerHTML = "";      // Limpiar tipo trabajo
-
-                    const container = document.getElementById('reportsList');
-
-                    if (dato_rc && dato_rc.length > 0) {
-                        this.reclamos.length = 0;     // Objeto contenedor
-
-                        for (let i = 1; i < dato_rc.length; i++) {
-
-                            var baul1 = false;
-                            var baul2 = departamento.toUpperCase();
-
-                            if (dato_rc[i][0] == "" && dato_rc[i][1] == "") { break; }
-                            if (dato_rc[i][2].toUpperCase() == baul2) {
-                                if ((dato_rc[i][1]).toUpperCase() == "TERMINADO") { baul1 = true; }
-                                this.reclamos[i - 1] = {
-                                    id: Number(i - 1),
-                                    trackingNumber: dato_rc[i][0],
-                                    departamento: dato_rc[i][2],
-                                    subdepartamento: dato_rc[i][3],
-                                    trabajo: dato_rc[i][4],
-                                    descripcion: dato_rc[i][5],
-                                    direccion: dato_rc[i][10],
-                                    estado: dato_rc[i][1],
-                                    // fecha: new Date(dato_rc[i][8]).toISOString(),
-                                    fecha: dato_rc[i][8],
-                                    fechaResolucion: dato_rc[i][12],
-                                    nombre: dato_rc[i][9],
-                                    prioridad: dato_rc[i][7],
-                                    procedencia: dato_rc[i][6],
-                                    solucionado: baul1,
-                                    telefono: dato_rc[i][11]
-                                };
-                            }
-                        }
-                    }
-
-                    // Filtrar solo reclamos NO solucionados
-                    reclamosPendientes = this.reclamos.filter(reclamo => !reclamo.solucionado);
-
-                    // Aplicar filtro adicional por departamento
-                    if (this.filtroActivo !== 'todos') {
-                        reclamosPendientes = reclamosPendientes.filter(reclamo =>
-                            reclamo.departamento === this.filtroActivo
-                        );
-                    }
-
-                    if (reclamosPendientes.length === 0) {
-                        container.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #86868b;">
-                    <p>No hay reclamos pendientes${this.filtroActivo !== 'todos' ? ' para este departamento' : ' en este momento'}.</p>
-                    <p>Los reclamos aparecerán aquí una vez que sean enviados.</p>
-                </div>
-            `;
-                        return;
-                    }
-
-                    var numerar = 0;
-
-                    if (localStorage.getItem('reclamos_procedencias')) {
-                        baul = localStorage.getItem('reclamos_procedencias');
-                        document.getElementById("procedencia").value = baul;  // Cargar el valor de procedencia
-                    }
-
-                    // Mostrar reclamos ordenados por fecha (más recientes primero)
-                    reclamosPendientes.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-                    container.innerHTML = reclamosPendientes.map(reclamo => {
-
-                        if (numerar == 0) {
-                            baul = reclamo.departamento;
-                            inform[0] = "0";
-                            inform[1] = reclamo.estado.toString().toUpperCase();
-                            inform[2] = reclamo.departamento.toString().toUpperCase();
-                            inform[3] = reclamo.subdepartamento.toString().toUpperCase();
-                            inform[4] = reclamo.trabajo.toString().toUpperCase();
-                            inform[5] = reclamo.descripcion.toString().toUpperCase();
-                            inform[6] = (document.getElementById("procedencia").value).toString().toUpperCase();
-                            inform[7] = reclamo.prioridad.toString().toUpperCase();
-                            // inform[8] = formatearFecha2(reclamo.fecha);
-                            inform[8] = reclamo.fecha;
-                            inform[9] = reclamo.nombre.toString().toUpperCase();
-                            inform[10] = reclamo.direccion.toString().toUpperCase();
-                            inform[11] = reclamo.telefono.toString().toUpperCase();
-                        }
-                        numerar++;
-
-                        return `
-            <div class="report-item">
-                <div class="report-header">
-                    <div class="report-id">#${reclamo.id} - ${reclamo.trackingNumber}</div>
-                    <div class="report-status status-${reclamo.estado}">${this.obtenerTextoEstado(reclamo.estado)}</div>
-                    <div class="checkbox-container">
-                        <label class="checkbox-label">
-                            <input type="checkbox" 
-                                   class="solucion-checkbox" 
-                                   onchange="sistemaGlobal.marcarSolucionado(${reclamo.id}, this.checked)">
-                            <span class="checkmark"></span>
-                            Marcar como Solucionado
-                        </label>
-                    </div>
-                </div>
-                <div class="report-info">
-                    <strong>Departamento:</strong> ${this.obtenerNombreDepartamento(reclamo.departamento)}
-                    ${reclamo.subdepartamento ? ` - ${this.obtenerNombreSubdepartamento(reclamo.subdepartamento)}` : ''}
-                </div>
-                <div class="report-info">
-                    <strong>Trabajo:</strong> ${this.obtenerNombretrabajo(reclamo.trabajo)}
-                </div>
-                <div class="report-info">
-                    <strong>Dirección:</strong> ${reclamo.direccion}
-                </div>
-                <div class="report-info">
-                    <strong>Prioridad:</strong> ${reclamo.prioridad.charAt(0).toUpperCase() + reclamo.prioridad.slice(1)}
-                </div>
-                <div class="report-info">
-                    <strong>Fecha del Reclamo:</strong> ${this.formatearFecha(reclamo.fecha)}
-                </div>
-                <a></a> ${datosAsignados}   
-                <div class="report-description">
-                    <strong>Descripción:</strong> ${reclamo.descripcion}
-                </div>
-                <br>
-                <!--
-                <div class="filter-tabs">
-                    <div class="filter-tab active" onclick="abrirFormulario()">Asignar trabajo</div>
-                </div>
-                -->
-            </div>
-        `}).join('');
-
-                    if (baul == "iluminacion") { tipOpera = operaIlum; }
-                    if (baul == "aseo") { tipOpera = operaAseo; }
-                    if (baul == "mantenimiento") { tipOpera = operaMant; }
-                    if (baul == "areas-verdes") { tipOpera = operaVerd; }
-                    baul = 0;
-
-                    // enviarDatos("RECLAMOS", 0, inform, 1);
-
-                }
-
-                // Nueva función para mostrar reclamos resueltos
-                mostrarReclamosResueltos() {
-                    const container = document.getElementById('reclamosResueltosList');
-
-                    if (!container) {
-                        console.warn('Contenedor de reclamos resueltos no encontrado');
-                        return;
-                    }
-
-                    // Filtrar solo reclamos solucionados
-                    let reclamosResueltos = this.reclamos.filter(reclamo => reclamo.solucionado);
-
-                    // Aplicar filtro adicional por departamento
-                    if (this.filtroResueltosActivo !== 'todos') {
-                        reclamosResueltos = reclamosResueltos.filter(reclamo =>
-                            reclamo.departamento === this.filtroResueltosActivo
-                        );
-                    }
-
-                    if (reclamosResueltos.length === 0) {
-                        container.innerHTML = `
-                <div style="text-align: center; padding: 40px; color: #86868b;">
-                    <p>No hay reclamos resueltos${this.filtroResueltosActivo !== 'todos' ? ' para este departamento' : ' aún'}.</p>
-                    <p>Los reclamos solucionados aparecerán aquí.</p>
-                </div>
-            `;
-                        return;
-                    }
-
-                    // Mostrar reclamos resueltos ordenados por fecha de resolución (más recientes primero)
-                    reclamosResueltos.sort((a, b) => new Date(b.fechaResolucion) - new Date(a.fechaResolucion));
-
-                    container.innerHTML = reclamosResueltos.map(reclamo => `
-            <div class="report-item solucionado">
-                <div class="report-header">
-                    <div class="report-id">#${reclamo.id} - ${reclamo.trackingNumber}</div>
-                    <div class="report-status status-resuelto">Resuelto</div>
-                    <div class="checkbox-container">
-                        <label class="checkbox-label">
-                            <input type="checkbox" 
-                                   class="solucion-checkbox" 
-                                   checked
-                                   onchange="sistemaGlobal.marcarSolucionado(${reclamo.id}, this.checked)">
-                            <span class="checkmark"></span>
-                            Solucionado ✓
-                        </label>
-                    </div>
-                </div>
-                <div class="report-info">
-                    <strong>Departamento:</strong> ${this.obtenerNombreDepartamento(reclamo.departamento)}
-                    ${reclamo.subdepartamento ? ` - ${this.obtenerNombreSubdepartamento(reclamo.subdepartamento)}` : ''}
-                </div>
-                <div class="report-info">
-                    <strong>Dirección:</strong> ${reclamo.direccion}
-                </div>
-                <div class="report-info">
-                    <strong>Prioridad:</strong> ${reclamo.prioridad.charAt(0).toUpperCase() + reclamo.prioridad.slice(1)}
-                </div>
-                <div class="report-info">
-                    <strong>Fecha del Reclamo:</strong> ${this.formatearFecha(reclamo.fecha)}
-                </div>
-                <div class="report-info">
-                    <strong>Fecha de Resolución:</strong> ${this.formatearFecha(reclamo.fechaResolucion)}
-                </div>
-                <a></a> ${datosAsignados}
-                <div class="report-description">
-                    <strong>Descripción:</strong> ${reclamo.descripcion}
-                </div>
-                <div class="solucion-marca">✅ RECLAMO SOLUCIONADO</div>
-            </div>
-        `).join('');
-                }
-
-                obtenerTextoEstado(estado) {
-                    const estados = {
-                        'pendiente': 'Pendiente',
-                        'proceso': 'En Proceso',
-                        'resuelto': 'Resuelto'
-                    };
-                    return estados[estado] || 'Pendiente';
-                }
-
-                obtenerNombreDepartamento(dept) {
-                    const departamentos = {
-                        'aseo': 'Aseo',
-                        'iluminacion': 'Iluminación',
-                        'areas-verdes': 'Áreas Verdes',
-                        'mantenimiento': 'Mantenimiento'
-                    };
-                    return departamentos[dept] || dept;
-                }
-
-                obtenerNombreSubdepartamento(subdept) {
-                    const subdepartamentos = {
-                        'aseo-calles': 'Aseo de Calles',
-                        'extraccion-residuos': 'Extracción de Residuos (Basura)'
-                    };
-                    return subdepartamentos[subdept] || subdept;
-                }
-
-                obtenerNombretrabajo(trabajodept) {
-                    return trabajodept.replace(/-/g, " ");
-                }
-
-                formatearFecha(fechaISO) {
-                    if (!fechaISO) return 'No disponible';
-                    const fecha = new Date(fechaISO);
-                    return fecha.toLocaleDateString('es-CL', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                }
-
-                actualizarEstadisticas() {
-
-                    var pendiente = 0;
-                    var enProceso = 0;
-                    var resueltos = 0;
-                    var total = 0;
-                    var baul = "";
-                    if (dato_rc.length > 0) {
-                        for (var tt = 0; tt < dato_rc.length; tt++) {
-                            if (dato_rc[tt][0] == "" && dato_rc[tt][1] == "") { break; }
-                            if (dato_rc[tt][2] != "") {
-                                baul = dato_rc[tt][2].toUpperCase();
-                                if (baul == departamento) {
-                                    total++;
-                                    if (dato_rc[tt][1].toUpperCase() == "PENDIENTE") {
-                                        pendiente++;
-                                    } else if (dato_rc[tt][1].toUpperCase() == "ASIGNADO") {
-                                        enProceso++;
-                                    } else if (dato_rc[tt][1].toUpperCase() == "RESUELTO") {
-                                        resueltos++;
-                                    }
-                                }
-                            }
-                        }
-                        // const total = this.reclamos.length;
-                        // const pendientes = this.reclamos.filter(r => !r.solucionado && r.estado === 'pendiente').length;
-                        // const enProceso = this.reclamos.filter(r => !r.solucionado && r.estado === 'proceso').length;
-                        // const resueltos = this.reclamos.filter(r => r.solucionado).length;
-
-                        // Actualizar contadores con animación
-                        this.animarContador('totalReclamos', total);
-                        this.animarContador('reclamosPendientes', pendiente);
-                        this.animarContador('reclamosAsignados', enProceso);
-                        this.animarContador('reclamosResueltos', resueltos);
-                    }
-                }
-
-                animarContador(elementId, valorFinal) {
-                    const elemento = document.getElementById(elementId);
-                    if (!elemento) return;
-
-                    const valorInicial = parseInt(elemento.textContent) || 0;
-                    const duracion = 1000;
-                    const pasos = 60;
-                    const incremento = (valorFinal - valorInicial) / pasos;
-                    let valorActual = valorInicial;
-                    let contador = 0;
-
-                    const intervalo = setInterval(() => {
-                        contador++;
-                        valorActual = valorInicial + (incremento * contador);
-
-                        if (contador >= pasos) {
-                            elemento.textContent = valorFinal;
-                            clearInterval(intervalo);
-                        } else {
-                            elemento.textContent = Math.round(valorActual);
-                        }
-                    }, duracion / pasos);
-                }
-
-                guardarDatos() {
-                    try {
-                        console.log('Datos guardados:', this.reclamos);
-                        console.log('Total de reclamos:', this.reclamos.length);
-                        console.log('Reclamos solucionados:', this.reclamos.filter(r => r.solucionado).length);
-                    } catch (error) {
-                        console.error('Error al guardar datos:', error);
-                    }
-                }
-            }
-
-            // Función para abrir asistencia
-            function openAssistance() {
-                alert('¡Hola! Soy el asistente virtual de la Municipalidad de Arica.\n\n' +
-                    '¿En qué puedo ayudarte?\n\n' +
-                    '• Información sobre cómo llenar el formulario\n' +
-                    '• Seguimiento de tu reclamo\n' +
-                    '• Contacto con departamentos específicos\n' +
-                    '• Horarios de atención\n\n' +
-                    'Escríbenos a: roberto.mamani@municipalidadarica.cl');
-            }
-
-            // Hacer disponible globalmente
-            let sistemaGlobal;
-            document.addEventListener('DOMContentLoaded', () => {
-                sistemaGlobal = new SistemaReclamos();
-                window.sistemaReclamos = sistemaGlobal;
+<script>
+    // URL de la API
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwie8fU9eKYFvDkIKOOk7Sahe2FKV3mE3NmYjbGyZNvpeitn2k4ONh0LVP2Zjsh2XU/exec";
+    
+    // Variables globales
+    let dato_rc = []; // Almacena los datos de la API
+    let departamentoSeleccionado = null;
+
+    // Inicializar la aplicación
+    document.addEventListener('DOMContentLoaded', () => {
+        // Cargar datos iniciales desde la API
+        cargarDatosIniciales();
+        
+        // Configurar event listeners
+        configurarEventListeners();
+    });
+
+    // Cargar datos iniciales desde la API
+    function cargarDatosIniciales() {
+        fetch(WEB_APP_URL + "?h=R")
+            .then(response => response.json())
+            .then(data => {
+                dato_rc = data.dato_rc || [];
+                mostrarReclamos();
+                actualizarEstadisticas(); // Llamar a la función para actualizar estadísticas
+            })
+            .catch(error => {
+                console.error('Error al cargar datos:', error);
+                document.getElementById('reportsList').innerHTML = 
+                    '<p>Error al cargar los reclamos. Por favor intente nuevamente.</p>';
             });
+    }
 
-            // Función para simular cambios de estado (para demo)
-            function simularCambiosEstado() {
-                const sistema = window.sistemaReclamos;
-                if (sistema && sistema.reclamos.length > 0) {
-                    const reclamosPendientes = sistema.reclamos.filter(r => !r.solucionado);
-                    if (reclamosPendientes.length > 0) {
-                        const reclamo = reclamosPendientes[Math.floor(Math.random() * reclamosPendientes.length)];
-                        const estados = ['pendiente', 'proceso'];
-                        const estadoActual = estados.indexOf(reclamo.estado);
-                        if (estadoActual < estados.length - 1) {
-                            reclamo.estado = estados[estadoActual + 1];
-                            sistema.guardarDatos();
-                            sistema.actualizarEstadisticas();
-                            sistema.mostrarReclamos();
-                        }
-                    }
-                }
+    // Función para actualizar las estadísticas
+    function actualizarEstadisticas() {
+        if (!dato_rc || dato_rc.length === 0) {
+            return;
+        }
+
+        // Filtrar solo filas con datos (omitir encabezados si existen)
+        const reclamos = dato_rc.filter((fila, index) => index > 0 && fila[0] && fila[1]);
+        
+        // Contadores
+        let total = reclamos.length;
+        let pendientes = 0;
+        let asignados = 0;
+        let resueltos = 0;
+
+        reclamos.forEach(reclamo => {
+            const estado = reclamo[1].toLowerCase();
+            
+            if (estado === 'pendiente') {
+                pendientes++;
+            } else if (estado === 'asignado') {
+                asignados++;
+            } else if (estado === 'resuelto' || estado === 'terminado') {
+                resueltos++;
             }
-            // ************************************************************************************
-            // ************************************************************************************
-            // ************************************************************************************
+        });
 
+        // Actualizar los contadores en la interfaz
+        document.getElementById('totalReclamos').textContent = total;
+        document.getElementById('reclamosPendientes').textContent = pendientes;
+        document.getElementById('reclamosAsignados').textContent = asignados;
+        document.getElementById('reclamosResueltos').textContent = resueltos;
+    }
 
-            function abrirFormulario() {
-                document.getElementById("formularioAsignacionModal").style.display = "block";
-            }
-
-            function cerrarFormulario() {
-                document.getElementById("formularioAsignacionModal").style.display = "none";
-            }
-
-            function enviarFormulario() {
-                const container = document.getElementById('reportsList');
-                datos = container.innerHTML;
-                fechasig = new Date();
-                trabajad = document.getElementById("trabajador").value;
-                baul = '<div class="report-info">' +
-                    '<strong>Fecha de asignación:</strong> ' + formatearFecha2(fechasig) +
-                    '</div>' +
-                    '<div class="report-info">' +
-                    '<strong>Trabajador asignado:</strong> ' + trabajad +
-                    '</div>';
-                datosAsignados = baul;
-                datos = datos.replace("<a></a>", baul);
-                container.innerHTML = datos;
-                cerrarFormulario();
-            }
-
-
-            function showSuggestionsTrabajador() {
-
-                const input = document.getElementById("trabajador").value.toLowerCase();
-                const suggestionsDiv = document.getElementById("suggestionsTrabajador");
-                suggestionsDiv.innerHTML = '';      // Limpiar las sugerencias anteriores
-
-                if (input && input.length > 1) {
-                    const filteredJobs = tipOpera.filter(opera => opera.toLowerCase().includes(input));
-                    filteredJobs.forEach(opera => {
-                        const suggestionItem = document.createElement("div");
-                        suggestionItem.textContent = opera;
-                        suggestionItem.onclick = () => selectOpera(opera);
-                        suggestionsDiv.appendChild(suggestionItem);
-                    });
-                }
-            }
-
-            function selectOpera(opera) {
-                document.getElementById("trabajador").value = opera;
-                document.getElementById("suggestionsTrabajador").innerHTML = '';   // Limpiar las sugerencias una vez seleccionado
-            }
-
-            function formatearFecha2(fechaISO) {
-                if (!fechaISO) { return 'No disponible'; }
-                const fecha = new Date(fechaISO);
-                return fecha.toLocaleDateString('es-CL', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+    // Configurar event listeners
+    function configurarEventListeners() {
+        // Selección de departamento
+        document.querySelectorAll('.department-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Remover selección anterior
+                document.querySelectorAll('.department-card').forEach(c => {
+                    c.classList.remove('selected');
                 });
-            }
+                
+                // Seleccionar nuevo departamento
+                e.currentTarget.classList.add('selected');
+                departamentoSeleccionado = e.currentTarget.dataset.dept;
+                
+                // Mostrar/ocultar subdepartamentos
+                document.querySelectorAll('.subdepartment-options').forEach(option => {
+                    option.classList.remove('show');
+                });
+                
+                if (departamentoSeleccionado === 'aseo') {
+                    document.getElementById('aseo-options').classList.add('show');
+                } else if (departamentoSeleccionado === 'iluminacion') {
+                    document.getElementById('ilum-options').classList.add('show');
+                }
+                
+                // Limpiar selección de subdepartamento
+                document.querySelectorAll('input[name="subdepartamento"]').forEach(radio => {
+                    radio.checked = false;
+                });
+            });
+        });
 
-            function guardar_Procedencia() {
-                const procedencia = document.getElementById("procedencia").value;
-                localStorage.setItem('reclamos_procedencias', procedencia);
-            }
+        // Envío de formulario
+        document.getElementById('reclamoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            enviarReclamo();
+        });
+    }
 
+    // Enviar nuevo reclamo
+    function enviarReclamo() {
+        if (!departamentoSeleccionado) {
+            alert('Por favor seleccione un departamento');
+            return;
+        }
 
-            // ************************************************************************************
-            // *************************************************************************************
+        const formData = new FormData(document.getElementById('reclamoForm'));
+        const subdepartamento = formData.get('subdepartamento');
+        
+        if ((departamentoSeleccionado === 'aseo' || departamentoSeleccionado === 'iluminacion') && !subdepartamento) {
+            alert('Por favor seleccione una categoría específica');
+            return;
+        }
 
-            function enviarDatos(pagina, fila, datos, tipo) {
-                fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pagina, fila, datos, tipo })
+        const reclamo = {
+            id: Date.now(), // ID único basado en timestamp
+            trackingNumber: `REC-${Date.now()}`,
+            departamento: departamentoSeleccionado,
+            subdepartamento: subdepartamento || '',
+            nombre: formData.get('nombre'),
+            telefono: formData.get('telefono') || '',
+            direccion: formData.get('direccion'),
+            descripcion: formData.get('descripcion'),
+            procedencia: formData.get('procedencia'),
+            fecha: new Date().toISOString(),
+            estado: 'pendiente'
+        };
+
+        // Enviar a la API
+        enviarDatosAPI(reclamo)
+            .then(() => {
+                // Mostrar mensaje de éxito
+                document.getElementById('trackingNumber').textContent = reclamo.trackingNumber;
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Limpiar formulario
+                document.getElementById('reclamoForm').reset();
+                document.querySelectorAll('.department-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.querySelectorAll('.subdepartment-options').forEach(option => {
+                    option.classList.remove('show');
+                });
+                departamentoSeleccionado = null;
+                
+                // Ocultar mensaje después de 5 segundos
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 5000);
+                
+                // Recargar los datos para mostrar el nuevo reclamo
+                cargarDatosIniciales();
+            })
+            .catch(error => {
+                console.error('Error al enviar reclamo:', error);
+                alert('Error al enviar el reclamo. Por favor intente nuevamente.');
+            });
+    }
+
+    // Función para enviar datos a la API
+    function enviarDatosAPI(reclamo) {
+        return new Promise((resolve, reject) => {
+            // Preparar los datos en el formato que espera la API
+            const datos = [
+                reclamo.trackingNumber,
+                reclamo.estado,
+                reclamo.departamento,
+                reclamo.subdepartamento,
+                '', // Trabajo (vacío en este ejemplo)
+                reclamo.descripcion,
+                reclamo.procedencia,
+                'media', // Prioridad por defecto
+                reclamo.fecha,
+                reclamo.nombre,
+                reclamo.direccion,
+                reclamo.telefono,
+                '', // Fecha resolución (vacío)
+                ''  // Trabajador asignado (vacío)
+            ];
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    pagina: 'RECLAMOS',
+                    fila: 0, // 0 para nuevo registro
+                    datos: datos,
+                    tipo: 1 // 1 para insertar
                 })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.estado === "OK") {
-                            var idGenerado = result.id;
-                            console.log("ID Generado: ", idGenerado);
-
-                            if (dato_rc.length > 0) {
-                                dato_rc[dato_rc.length - 1][0] = idGenerado;
-                            }
-
-                            alert('Datos enviados exitosamente');
-                        } else {
-                            alert("Error en el servidor: " + result.mensaje);
-                        }
-                    })
-                    .catch(error => {
-                        alert('Error al enviar los datos');
-                        console.error('Error:', error);
-                    })
-                    .finally(() => {
-                        console.log('Proceso terminado');
-                    });
-            }
-
-            // Variables globales para el filtrado de PDF
-            let selectedFilters = {
-                estados: [],
-                departamentos: [],
-                prioridades: []
-            };
-
-            // Función para seleccionar todos los estados
-            function selectAllEstados() {
-                const checkboxes = document.querySelectorAll('#estadoCheckboxes input[type="checkbox"]');
-                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = !allChecked;
-                });
-
-                updateSelection();
-            }
-
-            // Función para seleccionar todos los departamentos
-            function selectAllDepartamentos() {
-                const checkboxes = document.querySelectorAll('#departamentoCheckboxes input[type="checkbox"]');
-                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = !allChecked;
-                });
-
-                updateSelection();
-            }
-
-            // Función para seleccionar todas las prioridades
-            function selectAllPrioridades() {
-                const checkboxes = document.querySelectorAll('#prioridadCheckboxes input[type="checkbox"]');
-                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = !allChecked;
-                });
-
-                updateSelection();
-            }
-
-            // Función para actualizar la selección y conteo
-            function updateSelection() {
-                // Obtener estados seleccionados
-                selectedFilters.estados = Array.from(document.querySelectorAll('#estadoCheckboxes input:checked'))
-                    .map(cb => cb.value);
-
-                // Obtener departamentos seleccionados
-                selectedFilters.departamentos = Array.from(document.querySelectorAll('#departamentoCheckboxes input:checked'))
-                    .map(cb => cb.value);
-
-                // Obtener prioridades seleccionadas
-                selectedFilters.prioridades = Array.from(document.querySelectorAll('#prioridadCheckboxes input:checked'))
-                    .map(cb => cb.value);
-
-                // Contar reclamos que coinciden con los filtros
-                const reclamosFiltrados = filtrarReclamos();
-                const count = reclamosFiltrados.length;
-
-                // Actualizar contador
-                document.getElementById('selectedCount').textContent = `Reclamos seleccionados: ${count}`;
-
-                // Habilitar/deshabilitar botón de generar PDF
-                const generateBtn = document.getElementById('generatePDFBtn');
-                generateBtn.disabled = count === 0;
-                generateBtn.textContent = count === 0 ? '📄 Seleccione reclamos' : `📄 Generar PDF (${count} reclamos)`;
-            }
-
-            // Función para filtrar reclamos según los criterios seleccionados
-            function filtrarReclamos() {
-                if (!window.sistemaReclamos || !window.sistemaReclamos.reclamos) {
-                    return [];
-                }
-
-                return window.sistemaReclamos.reclamos.filter(reclamo => {
-                    // Filtro por estado
-                    let estadoCoincide = selectedFilters.estados.length === 0;
-                    if (selectedFilters.estados.includes('pendiente') && !reclamo.solucionado && reclamo.estado === 'pendiente') {
-                        estadoCoincide = true;
-                    }
-                    if (selectedFilters.estados.includes('asignado') && !reclamo.solucionado && reclamo.estado === 'proceso') {
-                        estadoCoincide = true;
-                    }
-                    if (selectedFilters.estados.includes('resuelto') && reclamo.solucionado) {
-                        estadoCoincide = true;
-                    }
-
-                    // Filtro por departamento
-                    const departamentoCoincide = selectedFilters.departamentos.length === 0 ||
-                        selectedFilters.departamentos.includes(reclamo.departamento);
-
-                    // Filtro por prioridad
-                    const prioridadCoincide = selectedFilters.prioridades.length === 0 ||
-                        selectedFilters.prioridades.includes(reclamo.prioridad);
-
-                    return estadoCoincide && departamentoCoincide && prioridadCoincide;
-                });
-            }
-
-            // Función para limpiar todas las selecciones
-            function clearAllSelections() {
-                document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(cb => {
-                    cb.checked = false;
-                });
-                updateSelection();
-            }
-
-            // Función principal para generar PDF
-            function generatePDF() {
-                const reclamosFiltrados = filtrarReclamos();
-
-                if (reclamosFiltrados.length === 0) {
-                    alert('No hay reclamos seleccionados para generar el PDF.');
-                    return;
-                }
-
-                // CORRECCIÓN: Verificar jsPDF con diferentes formas de acceso
-                let jsPDF;
-
-                // Intentar diferentes formas de acceder a jsPDF
-                if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
-                    jsPDF = window.jspdf.jsPDF; // Forma más común con CDN
-                } else if (typeof window.jsPDF !== 'undefined') {
-                    jsPDF = window.jsPDF; // Forma alternativa
-                } else if (typeof jspdf !== 'undefined' && jspdf.jsPDF) {
-                    jsPDF = jspdf.jsPDF; // Otra forma alternativa
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.estado === "OK") {
+                    resolve(data);
                 } else {
-                    console.error('jsPDF no encontrado. Objeto window:', window.jspdf || window.jsPDF);
-                    alert('Error: La librería jsPDF no está disponible. Verifique que esté correctamente cargada.');
+                    reject(new Error(data.mensaje || 'Error desconocido al enviar datos'));
+                }
+            })
+            .catch(error => reject(error));
+        });
+    }
+
+    // Mostrar reclamos en la lista
+    function mostrarReclamos() {
+        const container = document.getElementById('reportsList');
+        const resueltosContainer = document.getElementById('reclamosResueltosList');
+        
+        if (!dato_rc || dato_rc.length === 0) {
+            container.innerHTML = '<p>No hay reclamos registrados aún.</p>';
+            resueltosContainer.innerHTML = '<p>No hay reclamos resueltos aún.</p>';
+            return;
+        }
+
+        // Filtrar solo filas con datos (omitir encabezados si existen)
+        const reclamos = dato_rc.filter((fila, index) => index > 0 && fila[0] && fila[1]);
+        
+        if (reclamos.length === 0) {
+            container.innerHTML = '<p>No hay reclamos registrados aún.</p>';
+            resueltosContainer.innerHTML = '<p>No hay reclamos resueltos aún.</p>';
+            return;
+        }
+
+        // Ordenar por fecha (más recientes primero)
+        reclamos.sort((a, b) => new Date(b[8]) - new Date(a[8]));
+
+        // Separar reclamos pendientes/asignados de los resueltos
+        const reclamosActivos = reclamos.filter(reclamo => 
+            reclamo[1].toLowerCase() === 'pendiente' || reclamo[1].toLowerCase() === 'asignado'
+        );
+        
+        const reclamosResueltos = reclamos.filter(reclamo => 
+            reclamo[1].toLowerCase() === 'resuelto' || reclamo[1].toLowerCase() === 'terminado'
+        );
+
+        // Mostrar reclamos activos
+        if (reclamosActivos.length > 0) {
+            container.innerHTML = reclamosActivos.map((reclamo, index) => {
+                return `
+                    <div class="report-item">
+                        <div class="report-header">
+                            <div class="report-id">#${index + 1} - ${reclamo[0]}</div>
+                            <div class="report-status status-${reclamo[1].toLowerCase()}">
+                                ${reclamo[1].charAt(0).toUpperCase() + reclamo[1].slice(1).toLowerCase()}
+                            </div>
+                        </div>
+                        <div class="report-info">
+                            <strong>Departamento:</strong> ${formatearDepartamento(reclamo[2])}
+                            ${reclamo[3] ? ` - ${formatearSubdepartamento(reclamo[3])}` : ''}
+                        </div>
+                        <div class="report-info">
+                            <strong>Dirección:</strong> ${reclamo[10]}
+                        </div>
+                        <div class="report-info">
+                            <strong>Fecha:</strong> ${formatearFecha(reclamo[8])}
+                        </div>
+                        <div class="report-info">
+                            <strong>Procedencia:</strong> ${formatearProcedencia(reclamo[6])}
+                        </div>
+                        <div class="report-description">
+                            <strong>Descripción:</strong> ${reclamo[5]}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = '<p>No hay reclamos pendientes o asignados.</p>';
+        }
+
+        // Mostrar reclamos resueltos
+        if (reclamosResueltos.length > 0) {
+            resueltosContainer.innerHTML = reclamosResueltos.map((reclamo, index) => {
+                return `
+                    <div class="report-item">
+                        <div class="report-header">
+                            <div class="report-id">#${index + 1} - ${reclamo[0]}</div>
+                            <div class="report-status status-resuelto">
+                                Resuelto
+                            </div>
+                        </div>
+                        <div class="report-info">
+                            <strong>Departamento:</strong> ${formatearDepartamento(reclamo[2])}
+                            ${reclamo[3] ? ` - ${formatearSubdepartamento(reclamo[3])}` : ''}
+                        </div>
+                        <div class="report-info">
+                            <strong>Dirección:</strong> ${reclamo[10]}
+                        </div>
+                        <div class="report-info">
+                            <strong>Fecha:</strong> ${formatearFecha(reclamo[8])}
+                        </div>
+                        <div class="report-info">
+                            <strong>Fecha Resolución:</strong> ${reclamo[12] ? formatearFecha(reclamo[12]) : 'No disponible'}
+                        </div>
+                        <div class="report-info">
+                            <strong>Procedencia:</strong> ${formatearProcedencia(reclamo[6])}
+                        </div>
+                        <div class="report-description">
+                            <strong>Descripción:</strong> ${reclamo[5]}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            resueltosContainer.innerHTML = '<p>No hay reclamos resueltos aún.</p>';
+        }
+    }
+
+    // Funciones auxiliares de formato
+    function formatearDepartamento(dept) {
+        const nombres = {
+            'aseo': 'Aseo',
+            'iluminacion': 'Iluminación',
+            'areas-verdes': 'Áreas Verdes',
+            'mantenimiento': 'Mantenimiento'
+        };
+        return nombres[dept?.toLowerCase()] || dept;
+    }
+
+    function formatearSubdepartamento(subdept) {
+        const nombres = {
+            'aseo-calles': 'Aseo de Calles',
+            'extraccion-residuos': 'Extracción de Residuos',
+            'luminarias': 'Luminarias',
+            'postes': 'Postes'
+        };
+        return nombres[subdept?.toLowerCase()] || subdept;
+    }
+
+    function formatearProcedencia(proc) {
+        const nombres = {
+            'presencial': 'Presencial',
+            'telefonica': 'Telefónica',
+            'correo': 'Correo electrónico',
+            'web': 'Página web',
+            'whatsapp': 'WhatsApp'
+        };
+        return nombres[proc?.toLowerCase()] || proc;
+    }
+
+    function formatearFecha(fechaISO) {
+        if (!fechaISO) return 'No disponible';
+        try {
+            const fecha = new Date(fechaISO);
+            return fecha.toLocaleDateString('es-CL', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return fechaISO; // Si hay error, devolver el valor original
+        }
+    }
+
+    // Función para abrir asistencia
+    function openAssistance() {
+        alert('¡Hola! Soy el asistente virtual de la Municipalidad de Arica.\n\n' +
+            '¿En qué puedo ayudarte?\n\n' +
+            '• Información sobre cómo llenar el formulario\n' +
+            '• Seguimiento de tu reclamo\n' +
+            '• Contacto con departamentos específicos\n' +
+            '• Horarios de atención\n\n' +
+            'Escríbenos a: roberto.mamani@municipalidadarica.cl');
+    }
+</script>
+       <!-- Agregar esto al final del body, antes del cierre </body> -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Variables para el mapa
+    let mapaReclamos;
+    let marcadorModal;
+    let marcadorInterseccionModal;
+    let capaCalle1Modal;
+    let capaCalle2Modal;
+    let clickMarkerModal;
+    let selectedCoords = null;
+    let selectedAddress = null;
+
+    // Inicializar el mapa
+    function initMap() {
+    // Coordenadas del centro de Arica
+    const center = [-18.4784, -70.3126];
+    
+    // Límites geográficos de Arica y alrededores
+    const southWest = L.latLng(-18.55, -70.40); // Esquina suroeste
+    const northEast = L.latLng(-18.40, -70.25); // Esquina noreste
+    const bounds = L.latLngBounds(southWest, northEast);
+
+    // Crear el mapa con límites
+    mapaReclamos = L.map('mapa-reclamos', {
+        center: center,
+        zoom: 13,
+        maxBounds: bounds, // Establecer límites
+        maxBoundsViscosity: 1.0, // Fuerza de los límites (1.0 = no permite salir)
+        minZoom: 12, // Zoom mínimo permitido
+        maxZoom: 18  // Zoom máximo permitido
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(mapaReclamos);
+
+    // Evento para cuando el mapa intenta salir de los límites
+    mapaReclamos.on('drag', function() {
+        mapaReclamos.panInsideBounds(bounds, { animate: false });
+    });
+
+    // Resto de tu código...
+    mapaReclamos.on('click', function (e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        selectedCoords = { lat, lng };
+
+        if (clickMarkerModal) mapaReclamos.removeLayer(clickMarkerModal);
+
+        clickMarkerModal = L.marker([lat, lng]).addTo(mapaReclamos)
+            .bindPopup(`Coordenadas:<br>Latitud: ${lat.toFixed(6)}<br>Longitud: ${lng.toFixed(6)}`)
+            .openPopup();
+
+        document.getElementById("coordenadas-modal").innerText = 
+            `Coordenadas: Latitud ${lat.toFixed(6)}, Longitud ${lng.toFixed(6)}`;
+        
+        reverseGeocodeModal(lat, lng);
+    });
+
+    
+}
+
+    // Abrir modal del mapa
+    function openMapModal() {
+        document.getElementById('mapModal').style.display = 'block';
+        // Asegurarse de que el mapa se redibuje correctamente
+        setTimeout(() => {
+            mapaReclamos.invalidateSize();
+        }, 100);
+    }
+
+    // Cerrar modal del mapa
+    function closeMapModal() {
+        document.getElementById('mapModal').style.display = 'none';
+    }
+
+    // Seleccionar ubicación del mapa
+    function seleccionarUbicacion() {
+        if (selectedCoords && selectedAddress) {
+            document.getElementById('direccion').value = selectedAddress;
+            document.getElementById('latitud').value = selectedCoords.lat;
+            document.getElementById('longitud').value = selectedCoords.lng;
+            closeMapModal();
+        } else {
+            alert('Por favor, seleccione una ubicación en el mapa haciendo clic en él.');
+        }
+    }
+
+    // Buscar intersección en el modal
+    async function buscarInterseccionModal() {
+        const calle1 = document.getElementById("calle1-modal").value.trim();
+        const calle2 = document.getElementById("calle2-modal").value.trim();
+
+        if (!calle1 && !calle2) {
+            document.getElementById("resultado-modal").innerText = "Por favor ingresa al menos una calle.";
+            return;
+        }
+
+        if (marcadorModal) mapaReclamos.removeLayer(marcadorModal);
+        if (marcadorInterseccionModal) mapaReclamos.removeLayer(marcadorInterseccionModal);
+        if (capaCalle1Modal) mapaReclamos.removeLayer(capaCalle1Modal);
+        if (capaCalle2Modal) mapaReclamos.removeLayer(capaCalle2Modal);
+
+        document.getElementById("resultado-modal").innerText = "Buscando calles...";
+
+        try {
+            // SOLO UNA CALLE
+            if (calle1 && !calle2) {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(calle1 + ", Arica, Chile")}`;
+
+                const respuesta = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'MapaArica/1.0 (contacto@ejemplo.com)'
+                    }
+                });
+
+                const data = await respuesta.json();
+
+                if (data.length > 0) {
+                    const { lat, lon, display_name } = data[0];
+
+                    marcadorModal = L.marker([lat, lon]).addTo(mapaReclamos)
+                        .bindPopup(`<b>${display_name}</b><br>Lat: ${parseFloat(lat).toFixed(6)}<br>Lon: ${parseFloat(lon).toFixed(6)}`)
+                        .openPopup();
+
+                    mapaReclamos.setView([lat, lon], 17);
+                    document.getElementById("resultado-modal").innerText = `Ubicación aproximada: ${display_name}`;
+                    document.getElementById("coordenadas-modal").innerText = `Coordenadas: Latitud ${parseFloat(lat).toFixed(6)}, Longitud ${parseFloat(lon).toFixed(6)}`;
+                    
+                    // Guardar la ubicación seleccionada
+                    selectedCoords = { lat: parseFloat(lat), lng: parseFloat(lon) };
+                    selectedAddress = display_name;
+                } else {
+                    document.getElementById("resultado-modal").innerText = "No se encontró la calle.";
+                }
+
+            } else {
+                // DOS CALLES
+                const busquedas = [];
+                if (calle1) busquedas.push(buscarCalleModal(calle1));
+                if (calle2) busquedas.push(buscarCalleModal(calle2));
+
+                const resultados = await Promise.all(busquedas);
+
+                if (calle1 && resultados[0]) {
+                    capaCalle1Modal = L.geoJSON(resultados[0], {
+                        style: { color: "blue", weight: 5 }
+                    }).addTo(mapaReclamos).bindPopup(`<b>${calle1}</b>`);
+                } else if (calle1) {
+                    const punto = await buscarPuntoModal(calle1);
+                    if (punto) marcadorModal = L.marker(punto).addTo(mapaReclamos).bindPopup(`<b>${calle1}</b>`).openPopup();
+                }
+
+                if (calle2 && resultados[1]) {
+                    capaCalle2Modal = L.geoJSON(resultados[1], {
+                        style: { color: "red", weight: 5 }
+                    }).addTo(mapaReclamos).bindPopup(`<b>${calle2}</b>`);
+                } else if (calle2) {
+                    const punto = await buscarPuntoModal(calle2);
+                    if (punto) marcadorModal = L.marker(punto).addTo(mapaReclamos).bindPopup(`<b>${calle2}</b>`).openPopup();
+                }
+
+                if ((calle1 && !resultados[0]) || (calle2 && !resultados[1])) {
+                    document.getElementById("resultado-modal").innerText = "No se encontraron todas las calles solicitadas.";
                     return;
                 }
 
-                try {
-                    const doc = new jsPDF();
-
-                    // Configuración inicial
-                    const pageWidth = doc.internal.pageSize.width;
-                    const pageHeight = doc.internal.pageSize.height;
-                    const margin = 20;
-                    const lineHeight = 7;
-                    let yPosition = margin;
-
-                    // Función para agregar nueva página si es necesario
-                    function checkNewPage(requiredHeight = 20) {
-                        if (yPosition + requiredHeight > pageHeight - margin) {
-                            doc.addPage();
-                            yPosition = margin;
-                            addHeader();
-                        }
+                if (capaCalle1Modal && capaCalle2Modal) {
+                    const interseccion = encontrarInterseccionAproximadaModal(resultados[0], resultados[1]);
+                    if (interseccion) {
+                        const [lat, lon] = interseccion;
+                        marcadorInterseccionModal = L.marker([lat, lon], {
+                            icon: L.divIcon({ className: 'interseccion-marker', html: '✖', iconSize: [20, 20] })
+                        }).addTo(mapaReclamos)
+                            .bindPopup(`<b>Intersección aproximada</b><br>${calle1} y ${calle2}<br>Lat: ${lat.toFixed(6)}<br>Lon: ${lon.toFixed(6)}`)
+                            .openPopup();
+                        mapaReclamos.setView([lat, lon], 16);
+                        document.getElementById("resultado-modal").innerText = `Intersección aproximada entre ${calle1} y ${calle2}`;
+                        document.getElementById("coordenadas-modal").innerText = `Coordenadas: Latitud ${lat.toFixed(6)}, Longitud ${lon.toFixed(6)}`;
+                        
+                        // Guardar la ubicación seleccionada
+                        selectedCoords = { lat, lng: lon };
+                        selectedAddress = `${calle1} y ${calle2}, Arica, Chile`;
+                    } else {
+                        const bounds = L.featureGroup([capaCalle1Modal, capaCalle2Modal]).getBounds();
+                        mapaReclamos.fitBounds(bounds);
+                        document.getElementById("resultado-modal").innerText = `No se pudo determinar la intersección exacta.`;
                     }
-
-                    // Función para agregar encabezado
-                    function addHeader() {
-                        doc.setFontSize(16);
-                        doc.setFont('helvetica', 'bold');
-                        doc.text('MUNICIPALIDAD DE ARICA', pageWidth / 2, yPosition, { align: 'center' });
-                        yPosition += 10;
-
-                        doc.setFontSize(14);
-                        doc.text('Sistema de Reclamos DIMAO - Reporte', pageWidth / 2, yPosition, { align: 'center' });
-                        yPosition += 10;
-
-                        doc.setFontSize(10);
-                        doc.setFont('helvetica', 'normal');
-                        doc.text(`Fecha de generación: ${new Date().toLocaleDateString('es-CL')}`, pageWidth / 2, yPosition, { align: 'center' });
-                        yPosition += 15;
-                    }
-
-                    // Agregar encabezado inicial
-                    addHeader();
-
-                    // Resumen de filtros aplicados
-                    doc.setFontSize(12);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text('FILTROS APLICADOS:', margin, yPosition);
-                    yPosition += lineHeight;
-
-                    doc.setFontSize(10);
-                    doc.setFont('helvetica', 'normal');
-
-                    if (selectedFilters.estados.length > 0) {
-                        doc.text(`Estados: ${selectedFilters.estados.join(', ')}`, margin, yPosition);
-                        yPosition += lineHeight;
-                    }
-
-                    if (selectedFilters.departamentos.length > 0) {
-                        const deptNames = selectedFilters.departamentos.map(dept => {
-                            const nombres = {
-                                'aseo': 'Aseo',
-                                'iluminacion': 'Iluminación',
-                                'areas-verdes': 'Áreas Verdes',
-                                'mantenimiento': 'Mantenimiento'
-                            };
-                            return nombres[dept] || dept;
-                        });
-                        doc.text(`Departamentos: ${deptNames.join(', ')}`, margin, yPosition);
-                        yPosition += lineHeight;
-                    }
-
-                    if (selectedFilters.prioridades.length > 0) {
-                        doc.text(`Prioridades: ${selectedFilters.prioridades.join(', ')}`, margin, yPosition);
-                        yPosition += lineHeight;
-                    }
-
-                    yPosition += 10;
-
-                    // Estadísticas
-                    doc.setFontSize(12);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text('RESUMEN ESTADÍSTICO:', margin, yPosition);
-                    yPosition += lineHeight + 3;
-
-                    doc.setFontSize(10);
-                    doc.setFont('helvetica', 'normal');
-                    doc.text(`Total de reclamos en el reporte: ${reclamosFiltrados.length}`, margin, yPosition);
-                    yPosition += lineHeight;
-
-                    const pendientes = reclamosFiltrados.filter(r => !r.solucionado && r.estado === 'pendiente').length;
-                    const asignados = reclamosFiltrados.filter(r => !r.solucionado && r.estado === 'proceso').length;
-                    const resueltos = reclamosFiltrados.filter(r => r.solucionado).length;
-
-                    doc.text(`• Pendientes: ${pendientes}`, margin + 5, yPosition);
-                    yPosition += lineHeight;
-                    doc.text(`• Asignados: ${asignados}`, margin + 5, yPosition);
-                    yPosition += lineHeight;
-                    doc.text(`• Resueltos: ${resueltos}`, margin + 5, yPosition);
-                    yPosition += 15;
-
-                    // Línea separadora
-                    doc.line(margin, yPosition, pageWidth - margin, yPosition);
-                    yPosition += 10;
-
-                    // Reclamos detallados
-                    doc.setFontSize(12);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text('DETALLE DE RECLAMOS:', margin, yPosition);
-                    yPosition += 10;
-
-                    // Ordenar reclamos por fecha (más recientes primero)
-                    reclamosFiltrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-                    reclamosFiltrados.forEach((reclamo, index) => {
-                        checkNewPage(50); // Verificar si necesita nueva página
-
-                        // Número de reclamo y estado
-                        doc.setFontSize(11);
-                        doc.setFont('helvetica', 'bold');
-                        doc.text(`${index + 1}. Reclamo #${reclamo.id} - ${reclamo.trackingNumber}`, margin, yPosition);
-                        yPosition += lineHeight;
-
-                        // Estado con color
-                        doc.setFontSize(9);
-                        const estado = reclamo.solucionado ? 'RESUELTO' :
-                            reclamo.estado === 'proceso' ? 'ASIGNADO' : 'PENDIENTE';
-                        doc.text(`Estado: ${estado}`, margin + 5, yPosition);
-                        yPosition += lineHeight;
-
-                        // Información del reclamo
-                        doc.setFont('helvetica', 'normal');
-                        const info = [
-                            `Departamento: ${obtenerNombreDepartamento(reclamo.departamento)}`,
-                            `Dirección: ${reclamo.direccion}`,
-                            `Prioridad: ${reclamo.prioridad.charAt(0).toUpperCase() + reclamo.prioridad.slice(1)}`,
-                            `Usuario: ${reclamo.nombre}`,
-                            `Teléfono: ${reclamo.telefono || 'No proporcionado'}`,
-                            `Fecha: ${formatearFechaParaPDF(reclamo.fecha)}`
-                        ];
-
-                        if (reclamo.solucionado && reclamo.fechaResolucion) {
-                            info.push(`Fecha de resolución: ${formatearFechaParaPDF(reclamo.fechaResolucion)}`);
-                        }
-
-                        info.forEach(line => {
-                            checkNewPage(lineHeight);
-                            doc.text(line, margin + 5, yPosition);
-                            yPosition += lineHeight;
-                        });
-
-                        // Descripción
-                        checkNewPage(lineHeight * 3);
-                        doc.text('Descripción:', margin + 5, yPosition);
-                        yPosition += lineHeight;
-
-                        // Dividir descripción en líneas para ajustar al ancho
-                        const descripcionLines = doc.splitTextToSize(reclamo.descripcion, pageWidth - margin - 30);
-                        descripcionLines.forEach(line => {
-                            checkNewPage(lineHeight);
-                            doc.text(line, margin + 10, yPosition);
-                            yPosition += lineHeight;
-                        });
-
-                        yPosition += 5;
-
-                        // Línea separadora entre reclamos
-                        if (index < reclamosFiltrados.length - 1) {
-                            doc.line(margin, yPosition, pageWidth - margin, yPosition);
-                            yPosition += 8;
-                        }
-                    });
-
-                    // Pie de página en la última página
-                    yPosition += 10;
-                    checkNewPage(20);
-                    doc.setFontSize(8);
-                    doc.setFont('helvetica', 'italic');
-                    doc.text('Documento generado automáticamente por el Sistema de Reclamos DIMAO',
-                        pageWidth / 2, yPosition, { align: 'center' });
-                    doc.text('Municipalidad de Arica - Roberto Mamani - roberto.mamani@municipalidadarica.cl',
-                        pageWidth / 2, yPosition + 5, { align: 'center' });
-
-                    // Generar nombre del archivo
-                    const fecha = new Date().toISOString().split('T')[0];
-                    const fileName = `Reclamos_DIMAO_${fecha}_${reclamosFiltrados.length}reclamos.pdf`;
-
-                    // Guardar el PDF
-                    doc.save(fileName);
-
-                    // Mostrar mensaje de éxito
-                    alert(`PDF generado exitosamente!\n\nArchivo: ${fileName}\nReclamos incluidos: ${reclamosFiltrados.length}`);
-
-                } catch (error) {
-                    console.error('Error al generar PDF:', error);
-                    alert('Error al generar el PDF. Por favor, inténtelo nuevamente.');
                 }
             }
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("resultado-modal").innerText = "Error al buscar las calles.";
+        }
+    }
 
-            // Funciones auxiliares
-            function obtenerNombreDepartamento(dept) {
-                const departamentos = {
-                    'aseo': 'Aseo',
-                    'iluminacion': 'Iluminación',
-                    'areas-verdes': 'Áreas Verdes',
-                    'mantenimiento': 'Mantenimiento'
-                };
-                return departamentos[dept] || dept;
+    async function buscarCalleModal(nombreCalle) {
+        const query = `
+            [out:json][timeout:25];
+            area["name"="Arica"][admin_level=8];
+            (
+                way(area)["highway"]["name"="${nombreCalle}"];
+            );
+            out geom;
+        `;
+
+        const respuesta = await fetch("https://overpass-api.de/api/interpreter", {
+            method: "POST",
+            body: query,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent": "MapaArica/1.0 (contacto@ejemplo.com)"
             }
+        });
 
-            function formatearFechaParaPDF(fechaISO) {
-                if (!fechaISO) return 'No disponible';
-                const fecha = new Date(fechaISO);
-                return fecha.toLocaleDateString('es-CL', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+        const data = await respuesta.json();
+        if (!data.elements || data.elements.length === 0) return null;
+
+        const features = data.elements.map(way => ({
+            type: "Feature",
+            properties: { name: nombreCalle },
+            geometry: {
+                type: "LineString",
+                coordinates: way.geometry.map(coord => [coord.lon, coord.lat])
             }
+        }));
 
-            // Inicializar los event listeners cuando el DOM esté listo
-            document.addEventListener('DOMContentLoaded', function () {
-                // Event listeners para checkboxes
-                document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', updateSelection);
-                });
+        return { type: "FeatureCollection", features };
+    }
 
-                // Inicializar conteo
-                updateSelection();
-            });
+    async function buscarPuntoModal(nombreCalle) {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(nombreCalle + ", Arica, Chile")}`;
+        const respuesta = await fetch(url);
+        const data = await respuesta.json();
+        if (data.length > 0) {
+            return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+        }
+        return null;
+    }
 
-            // Hacer las funciones disponibles globalmente
-            window.selectAllEstados = selectAllEstados;
-            window.selectAllDepartamentos = selectAllDepartamentos;
-            window.selectAllPrioridades = selectAllPrioridades;
-            window.updateSelection = updateSelection;
-            window.clearAllSelections = clearAllSelections;
-            window.generatePDF = generatePDF; </script>
+    function obtenerCoordenadasModal(featureCollection) {
+        const coords = [];
+        for (const feature of featureCollection.features) {
+            if (feature.geometry.type === "LineString") {
+                coords.push(...feature.geometry.coordinates);
+            }
+        }
+        return coords;
+    }
+
+    function encontrarInterseccionAproximadaModal(feature1, feature2) {
+        const coords1 = obtenerCoordenadasModal(feature1);
+        const coords2 = obtenerCoordenadasModal(feature2);
+
+        let distanciaMinima = Infinity;
+        let puntoInterseccion = null;
+
+        for (const [lon1, lat1] of coords1) {
+            for (const [lon2, lat2] of coords2) {
+                const distancia = Math.sqrt(Math.pow(lon1 - lon2, 2) + Math.pow(lat1 - lat2, 2));
+                if (distancia < distanciaMinima) {
+                    distanciaMinima = distancia;
+                    puntoInterseccion = [(lat1 + lat2) / 2, (lon1 + lon2) / 2];
+                }
+            }
+        }
+
+        if (distanciaMinima < 0.0005) {
+            return puntoInterseccion;
+        }
+        return null;
+    }
+
+    async function reverseGeocodeModal(lat, lng) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+        try {
+            const respuesta = await fetch(url);
+            const data = await respuesta.json();
+            if (data.display_name) {
+                document.getElementById("resultado-modal").innerText = `Ubicación aproximada: ${data.display_name}`;
+                if (clickMarkerModal) {
+                    clickMarkerModal.setPopupContent(`<b>${data.display_name}</b><br>Lat: ${lat.toFixed(6)}<br>Lon: ${lng.toFixed(6)}`);
+                }
+                selectedAddress = data.display_name;
+            }
+        } catch (error) {
+            console.error("Error en reverse geocoding:", error);
+        }
+    }
+
+    // Inicializar el mapa cuando se cargue la página
+    document.addEventListener('DOMContentLoaded', initMap);
+</script>
 </body>
 
 </html>
