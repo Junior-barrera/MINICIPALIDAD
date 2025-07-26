@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Reclamos | Municipalidad de Arica</title>
+  <link rel="stylesheet" href="reclamo.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Agregar Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<style>
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #3498db, #000000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    /* Esto mejora la compatibilidad adicional */
+  }
+
+  .header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+
+  .filters-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    height: fit-content;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+  }
+
+  .filters-panel h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-group {
+    margin-bottom: 25px;
+  }
+
+  .filter-group label {
+    display: block;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  .filter-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.3s ease;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .search-box {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 12px;
+    font-size: 14px;
+    background: white;
+    transition: all 0.3s ease;
+  }
+
+  .search-box:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .clear-filters {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+  }
+
+  .clear-filters:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+  }
+
+  .main-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, #ecedf0 0%);
+    color: rgb(11, 0, 0);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .stat-label {
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+
+  .reclamos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .reclamo-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 5px solid;
+  }
+
+  .reclamo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .reclamo-card.aseo {
+    border-left-color: #3498db;
+  }
+
+  .reclamo-card.iluminacion {
+    border-left-color: #f39c12;
+  }
+
+  .reclamo-card.areas-verdes {
+    border-left-color: #1ba856;
+  }
+
+  .reclamo-card.mantenimiento {
+    border-left-color: #e74c3c;
+  }
+
+  .reclamo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .reclamo-id {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1.1rem;
+  }
+
+  .estado-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .estado-pendiente {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .estado-asignado {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .estado-resuelto {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .prioridad-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 10px;
+  }
+
+  .prioridad-baja {
+    background: #e8f5e8;
+    color: #2e7d32;
+  }
+
+  .prioridad-media {
+    background: #fff8e1;
+    color: #f57f17;
+  }
+
+  .prioridad-alta {
+    background: #ffebee;
+    color: #c62828;
+  }
+
+  .prioridad-urgente {
+    background: #f3e5f5;
+    color: #7b1fa2;
+  }
+
+  .departamento-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .departamento-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+  }
+
+  .reclamo-details {
+    margin-bottom: 15px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .detail-label {
+    font-weight: 600;
+    color: #7f8c8d;
+  }
+
+  .detail-value {
+    color: #2c3e50;
+  }
+
+  /*
+  .descripcion {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-style: italic;
+    color: #495057;
+    border-left: 3px solid #dee2e6;
+  }
+  */
+
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+  }
+
+  .no-results-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  .export-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+  }
+
+  .export-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .export-pdf {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+  }
+
+  .export-excel {
+    background: linear-gradient(45deg, #27ae60, #219a52);
+    color: white;
+  }
+
+  .export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 1024px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
+
+    .reclamos-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Estilos para la nueva sección de PDF */
+  .pdf-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 24px;
+  }
+
+  .pdf-section h3 {
+    color: #1e40af;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-group label {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #1e40af;
+  }
+
+  .checkbox-item label {
+    font-weight: normal;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .selected-count {
+    background: #dbeafe;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 16px 0;
+    color: #1e40af;
+    font-weight: 600;
+  }
+
+  .pdf-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pdf-btn {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .pdf-btn:hover {
+    background: linear-gradient(135deg, #b91c1c, #991b1b);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+
+  .pdf-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .clear-btn {
+    background: #6b7280;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .clear-btn:hover {
+    background: #4b5563;
+  }
+
+  .select-all-btn {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+
+  .select-all-btn:hover {
+    background: #047857;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .filter-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pdf-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Estilos mejorados para el modal del mapa */
+  .map-modal {
+       display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden; /* Evita el desplazamiento */
+    /* Permite scroll si el contenido es muy largo */
+  }
+
+  .map-modal-content {
+       background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    max-height: 90vh;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: auto; /* Permite scroll interno */
+}
+
+  .close-map {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  #mapa-reclamos {
+    height: 500px;
+    /* Altura fija para el mapa */
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    /* Evita que el mapa se reduzca */
+  }
+
+  .map-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    /* Permite que los controles se ajusten en pantallas pequeñas */
+  }
+
+  .map-controls input {
+    padding: 8px;
+    flex-grow: 1;
+    min-width: 200px;
+    /* Ancho mínimo para los inputs */
+  }
+
+  .map-controls button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    /* Evita que el texto del botón se divida */
+  }
+
+  .map-controls button:hover {
+    background-color: #45a049;
+  }
+
+  .map-results {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    word-break: break-word;
+    /* Evita que el texto se salga del contenedor */
+  }
+
+  .map-modal-footer {
+    margin-top: 15px;
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+  }
+
+  /* Ajustes para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .map-modal-content {
+      width: 95%;
+      padding: 15px;
+    }
+
+    #mapa-reclamos {
+      height: 400px;
+      /* Altura menor en móviles */
+    }
+
+    .map-controls input {
+      min-width: 100%;
+      /* Los inputs ocupan todo el ancho */
+    }
+
+    .map-controls button {
+      width: 100%;
+    }
+  }
+
+  .btn-open-map {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .btn-open-map:hover {
+    background: #2980b9;
+  }
+
+  /* Resto de tus estilos existentes... */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .banner-direcciones {
+    background-color: #82c9ef;
+    /* color de fondo */
+    color: #000;
+    /* color del texto */
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: normal;
+    /* font-weight: bold; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    /* se muestra encima de todo */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  #stats-Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+    min-width: 400px;
+    min-height: 420px;
+    max-width: 50vw;
+    max-height: 50vh;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #buscar-Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+    min-width: 400px;
+    min-height: 420px;
+    max-width: 50vw;
+    max-height: 50vh;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    padding: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .input-buscar-Modal {
+    width: 150px;
+    /* ← ancho fijo */
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+  }
+</style>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="top-header">
+      <div class="logo">
+        <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+        <div class="logo-text">
+          <h1>ARICA</h1>
+          <span>MUNICIPALIDAD | mejor ciudad</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <input type="text" hidden id="procedencia" name="procedencia" value="" />
+  <input type="text" hidden id="user_name" name="user_name" value="" />
+
+  <!-- Modal de las estadisticas flotantes -->
+  <div id="stats-Modal" class="stats-modal" hidden>
+    <button class="close-map" onclick="closeStatModal()">×</button>
+    <div class="reports-list" id="reportsEstadisticas">
+      <div style="text-align: center; padding: 40px; color: #86868b;">
+        <p>No hay reclamos registrados aún.</p>
+        <p>Los reclamos aparecerán aquí una vez que sean enviados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de la busqueda de reclamo por ID -->
+  <div id="buscar-Modal" class="buscar-modal" hidden>
+    <H2>Buscar Reclamo por ID</H2>
+    <br>
+    <input type="text" class="input-buscar-Modal" id="inputBuscarID" name="inputBuscarID"
+      placeholder="Ingresar el ID" />
+    <button class="btn-open-map" onclick="openBusquedaModal()">Buscar ID</button>
+    <button class="close-map" onclick="closeStatModal()">×</button>
+    <br>&nbsp;<br>
+    <div class="reports-list" id="reportsBusqueda">
+      <div style="text-align: center; padding: 40px; color: #86868b;">
+        <p>No hay reclamos registrados aún.</p>
+        <p>Los reclamos aparecerán aquí una vez que sean enviados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <section class="dashboard-container">
+    <div class="dashboard-header">
+      <h2 id="titulo_1" class="dashboard-title">Sistema de Reclamos DIMAO</h2>
+      <button class="back-button" onclick="window.location.href='formulario-4.html'">
+        <span class="back-icon">←</span> Volver al Inicio
+      </button>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-section">
+      <div class="stat-card" onclick="openStatsModal(0)">
+        <div class="stat-number" id="totalReclamos">0</div>
+        <div class="stat-label">Total Reclamos</div>
+      </div>
+      <div class="stat-card" onclick="openStatsModal(1)">
+        <div class="stat-number" id="reclamosPendientes">0</div>
+        <div class="stat-label">Pendientes</div>
+      </div>
+      <div class="stat-card" onclick="openStatsModal(2)">
+        <div class="stat-number" id="reclamosAsignados">0</div>
+        <div class="stat-label">Asignados</div>
+      </div>
+      <div class="stat-card" onclick="openStatsModal(3)">
+        <div class="stat-number" id="reclamosResueltos">0</div>
+        <div class="stat-label">Resueltos</div>
+      </div>
+    </div>
+
+    <!-- Main content grid -->
+    <div class="main-content">
+      <!-- Form section -->
+      <div class="form-section">
+        <div class="form-header">
+          <h3>Nuevo Reclamo
+            <a class="icon" onclick="openBuscarModal()"> 🔍</a>
+          </h3>
+          <p>Complete el formulario para reportar su reclamo</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          ¡Reclamo enviado exitosamente!<br>Su número de seguimiento es: <span id="trackingNumber"></span>
+        </div>
+
+        <form id="reclamoForm">
+          <div class="form-group">
+            <label>Departamento</label>
+            <div class="department-cards">
+              <div class="department-card" data-dept="aseo">
+                <div class="icon">🧹</div>
+                <div class="name">Aseo</div>
+              </div>
+              <div class="department-card" data-dept="iluminacion">
+                <div class="icon">💡</div>
+                <div class="name">Iluminación</div>
+              </div>
+              <div class="department-card" data-dept="areas-verdes">
+                <div class="icon">🌳</div>
+                <div class="name">Áreas Verdes</div>
+              </div>
+              <div class="department-card" data-dept="mantenimiento">
+                <div class="icon">🔧</div>
+                <div class="name">Espacios públicos</div>
+              </div>
+            </div>
+
+            <!--  Sub-Categoria  -->
+
+            <!-- Subdepartment options for Aseo -->
+            <div class="subdepartment-options" id="aseo-options">
+              <label><strong>Seleccione la categoría:</strong></label>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="aseo-calles" onclick="checkTrabajo('aseo', 0)">
+                <label for="aseo-calles">Aseo de Calles</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="extraccion-residuos" onclick="checkTrabajo('aseo', 1)">
+                <label for="extraccion-residuos">Extracción de Residuos (Basura)</label>
+              </div>
+            </div>
+
+            <!-- Subdepartment options for iluminacion -->
+            <div class="subdepartment-options" id="ilum-options">
+              <label><strong>Seleccione la categoría:</strong></label>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="Luminarias" onclick="checkTrabajo('ilum', 0)">
+                <label for="aseo-calles">Luminarias</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="Postes" onclick="checkTrabajo('ilum', 1)">
+                <label for="extraccion-residuos">Postes</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="Mantenimiento" onclick="checkTrabajo('ilum', 2)">
+                <label for="extraccion-residuos">Mantenimiento y reposición</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="Semaforos" onclick="checkTrabajo('ilum', 3)">
+                <label for="extraccion-residuos">Semaforos</label>
+              </div>
+            </div>
+
+            <!-- Subdepartment options for Mantenimiento -->
+            <div class="subdepartment-options" id="manten-options">
+              <label><strong>Seleccione la categoría:</strong></label>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="aseo-calles" onclick="checkTrabajo('mant', 0)">
+                <label for="aseo-calles">Aseo de Calles</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="extraccion-residuos" onclick="checkTrabajo('mant', 1)">
+                <label for="extraccion-residuos">Extracción de Residuos (Basura)</label>
+              </div>
+            </div>
+
+            <!-- Subdepartment options for Areas Verdes -->
+            <div class="subdepartment-options" id="verdes-options">
+              <label><strong>Seleccione la categoría:</strong></label>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="aseo-calles" onclick="checkTrabajo('verd', 0)">
+                <label for="aseo-calles">Aseo de Calles</label>
+              </div>
+              <div class="subdepartment-option">
+                <input type="radio" name="categoria" value="extraccion-residuos" onclick="checkTrabajo('verd', 1)">
+                <label for="extraccion-residuos">Extracción de Residuos (Basura)</label>
+              </div>
+            </div>
+
+          </div>
+
+          <!--  Sub-Sub-Categoria  -->
+          <div class="form-group">
+            <div id="trabajodept-options"></div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="medio_llegada">Medio llegada del reclamo</label>
+            <select id="medio_llegada" name="medio_llegada" required onclick="check_medio_llegada()">
+              <option value="">Seleccione medio de llegada</option>
+              <option value="presencial">🏢 Presencial</option>
+              <option value="telefonica">📞 Telefónica</option>
+              <option value="correo">📧 Correo electrónico</option>
+              <option value="web">🌐 Página web</option>
+              <option value="whatsapp">📱 WhatsApp</option>
+              <option value="otro">🔍 Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nombre">Nombre Completo *</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="direccion">Dirección del Problema *</label>
+            <div style="display: flex; align-items: center;">
+              <input type="text" id="direccion_real" name="direccion_real" class="form-control" hidden
+                placeholder="Direccion real" readonly>
+              <input type="text" id="direccion" name="direccion" class="form-control"
+                placeholder="Ej: Calle 21 de Mayo con Maipú" onclick="saltar_al_mapa()" readonly>
+              <button type="button" class="btn-open-map" onclick="openMapModal()">
+                <span>📍</span> Buscar en Mapa
+              </button>
+            </div>
+            <input type="hidden" id="latitud" name="latitud" value="">
+            <input type="hidden" id="longitud" name="longitud" value="">
+          </div>
+
+
+          <div class="form-group">
+            <label for="descripcion2">Descripción del Problema *</label>
+            <textarea id="descripcion1" name="descripcion1" class="form-control textarea"
+              placeholder="Describa detalladamente el problema que desea reportar..."></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Enviar Reclamo</button>
+        </form>
+      </div>
+
+      <!-- Reports section -->
+      <div class="reports-section">
+        <div class="reports-header">
+          <h3>Reclamos Registrados</h3>
+
+        </div>
+
+        <div class="reports-list" id="reportsList">
+          <div style="text-align: center; padding: 40px; color: #86868b;">
+            <p>No hay reclamos registrados aún.</p>
+            <p>Los reclamos aparecerán aquí una vez que sean enviados.</p>
+          </div>
+        </div>
+
+        <div class="reports-header">
+          <p>
+            <hr>
+          </p>
+        </div>
+
+        <div class="reports-header">
+          <h3>Reclamos Resueltos</h3>
+          <div hidden>
+            <div class="filter-tabs">
+              <div class="filter-tab active" data-filter="todos" data-section="resueltos">Todos</div>
+              <div class="filter-tab" data-filter="aseo" data-section="resueltos">Aseo</div>
+              <div class="filter-tab" data-filter="iluminacion" data-section="resueltos">Iluminación</div>
+              <div class="filter-tab" data-filter="areas-verdes" data-section="resueltos">Áreas Verdes
+              </div>
+              <div class="filter-tab" data-filter="mantenimiento" data-section="resueltos">Mantenimiento
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reports-list" id="reclamosResueltosList">
+          <div style="text-align: center; padding: 40px; color: #86868b;">
+            <p>No hay reclamos resueltos aún.</p>
+            <p>Los reclamos solucionados aparecerán aquí.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- Modal del Mapa -->
+    <div id="mapModal" class="map-modal">
+      <div class="map-modal-content">
+        <button class="close-map" onclick="closeMapModal()">×</button>
+        <h3>Buscar ubicación en el mapa</h3>
+        <br>
+        <div class="map-controls">
+          <input type="text" id="direcc-modal" placeholder="Ingrese dirección (Ej: Tucapel 2344)">
+        </div>
+        <div class="map-controls">
+          <input type="text" id="calle1-modal" placeholder="Primera calle (Ej: Diego Portales)">
+          <input type="text" id="calle2-modal" placeholder="Segunda calle (Ej: Alejandro Azola)">
+          <button onclick="buscarInterseccionModal()">Buscar Dirección</button>
+          <div style="margin-top: 15px; text-align: right;">
+            <button onclick="seleccionarUbicacion()"
+              style="background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              Seleccionar esta ubicación
+            </button>
+          </div>
+        </div>
+
+        <div class="banner-direcciones" id="banner-direcciones" hidden></div>
+
+        <p id="resultado-modal" class="map-results">Haz click en el mapa para obtener coordenadas</p>
+        <p id="coordenadas-modal" class="map-results" style="display: none;">Haz click en el mapa para obtener
+          coordenadas</p>
+
+        <div id="mapa-reclamos"></div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <div class="footer-column">
+          <h3>Municipalidad de Arica</h3>
+          <p>Renato Rocca, Arica</p>
+          <p>Anexo: 6959</p>
+          <p>Email: roberto.mamani@municipalidadarica.cl</p>
+          <div class="social-icons">
+            <a href="#">📘</a>
+            <a href="#">📱</a>
+            <a href="#">🐦</a>
+            <a href="#">📸</a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Sistema de Reclamos</h3>
+          <p style="line-height: 1.6;">
+            Sistema integral para la gestión de reclamos municipales que permite una
+            <strong>comunicación directa</strong> entre ciudadanos y departamentos municipales,
+            facilitando el <strong>seguimiento</strong> y <strong>resolución eficiente</strong>
+            de problemas urbanos para mejorar la calidad de vida de los ariqueños.
+          </p>
+        </div>
+        <div class="footer-column">
+          <h3>Departamentos</h3>
+          <ul>
+            <li><strong>Aseo:</strong> Limpieza y residuos</li>
+            <li><strong>Iluminación:</strong> Alumbrado público</li>
+            <li><strong>Áreas Verdes:</strong> Parques y jardines</li>
+            <li><strong>Espacios públicos:</strong> Mantenimiento</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+      </div>
+    </footer>
+
+    <!-- Assistant button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+
+  </section>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="rec.js"></script>
+  
+</body>
+
+</html>
