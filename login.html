@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipalidad de Arica | Login</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #004080;
+            --accent-color: #ffcc00;
+            --light-gray: #f5f5f5;
+            --text-color: #333;
+            --error-color: #d32f2f;
+            --wall-color: #f0f2f5;
+            --particle-color: #0066cc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--wall-color);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Canvas para partículas */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease;
+            position: relative;
+            z-index: 1;
+            border: 1px solid #ddd;
+        }
+        
+        .login-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        .login-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .login-header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .login-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777;
+            font-size: 16px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
+        
+        .eye-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        .login-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .login-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div class="login-container">
+        <div class="login-header">
+            <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+            <h1>DIMAO</h1>
+            <p>Sistema de Gestión Integral</p>
+        </div>
+        <div class="login-form">
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+               
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                        <svg class="eye-icon" id="eye-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                        <svg class="eye-icon" id="eye-hide" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button class="login-button" onclick="attemptLogin()">Iniciar Sesión</button>
+            <div class="error-message" id="error-message">Usuario o contraseña incorrectos</div>
+            <div class="forgot-password">
+                <a href="https://wa.me/569414178?text=Hola%2C%20olvidé%20mi%20contraseña%20del%20sistema%20DIMAO%20y%20necesito%20ayuda" target="_blank">
+                    ¿Olvidaste tu contraseña?
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+      function _0x14eb(){const _0x2bb35b=['victor.castillo123','748817WPsQUx','shake','28FpxynA','264579jgRSkm','length','formulario-4','out','3155970UXTmka','.login-container','Victor\x20Andres\x20Castillo\x20Chavez','role','#0066cc','usuario123','style','dashboard-presupuesto','dashboard-stock-iluminacion','pac','pJSDom','1192HQikUk','querySelector','7582490HlxUJv','formulario-3','3EloRbe','admin','departamento','roberto.mamani989','99aUPlDM','2726570tzZsXJ','eye-hide','DOMContentLoaded','currentUser','verde','keypress','none','Hugo\x20Araya\x20Delgado','Junior\x20Alejandro\x20Barrera','junior132','Of.\x20Asesoria\x20Técnica','block','password','Roberto\x20Mamani\x20Osorio','display','pJS','eye-show','Gerardo\x20Maita\x20Gutierrez','formulario-2','Usuario\x20de\x20Reclamos','966244RtmulW','addEventListener','href','dashboard-reclamos','1521764rbDDWH','type','text','Of.Mantenimiento\x20de\x20Vehículos\x20y\x20Maquinaria\x20','todos','jose\x20guzman','location','dashboard-iluminacion','index.html','particles-js','director123','canvas','Areas\x20Verdes','line_linked','dashboard-gps','330248qalgCD','color','key','reclamos','shift','classList','1121738KSyxaC','12pYcAJr','#d32f2f','2907845LxODsX','junior','setItem','#000000','hugo.araya123','particles','1566EYVVbT','3RpzdRE','circle','usuario','iluminacion\x20publoca','dashboard-vehiculosymaquinaria','dashboard-abastecimiento','mecanica','getElementById','dashboard-bodega','7359925qdpAKE','formulario-1','username','Director\x20DIMAO','error-message','grab','José\x20Guzmán\x20Guzmán'];_0x14eb=function(){return _0x2bb35b;};return _0x14eb();}const _0x187955=_0x1e20;(function(_0x4f15e6,_0x532bf6){const _0x5b1ed7=_0x1e20,_0x31e3e5=_0x4f15e6();while(!![]){try{const _0xac2277=-parseInt(_0x5b1ed7(0x1be))/0x1+parseInt(_0x5b1ed7(0x1a3))/0x2+-parseInt(_0x5b1ed7(0x1ad))/0x3*(-parseInt(_0x5b1ed7(0x1f1))/0x4)+-parseInt(_0x5b1ed7(0x1a6))/0x5+-parseInt(_0x5b1ed7(0x1a4))/0x6*(-parseInt(_0x5b1ed7(0x1c1))/0x7)+-parseInt(_0x5b1ed7(0x1d0))/0x8*(-parseInt(_0x5b1ed7(0x1ac))/0x9)+parseInt(_0x5b1ed7(0x1d2))/0xa;if(_0xac2277===_0x532bf6)break;else _0x31e3e5['push'](_0x31e3e5['shift']());}catch(_0x5141b0){_0x31e3e5['push'](_0x31e3e5['shift']());}}}(_0x14eb,0x72ea5));const _0x4a8728=_0x31b6;function _0x3011(){const _0x4ee281=_0x1e20,_0x39cb7f=[_0x4ee281(0x1f9),'2677592ViDINJ','Usuario\x20de\x20Formularios',_0x4ee281(0x1b2),'particlesRefresh','stringify',_0x4ee281(0x1ed),'find',_0x4ee281(0x1ae),'jose.guzman132','#4CAF50',_0x4ee281(0x1c5),'fullName',_0x4ee281(0x1c0),'style',_0x4ee281(0x1af),'3394764jYondj',_0x4ee281(0x1d3),'gerado.maita',_0x4ee281(0x19e),_0x4ee281(0x1b1),_0x4ee281(0x1b8),_0x4ee281(0x1fe),_0x4ee281(0x1b9),_0x4ee281(0x1e3),_0x4ee281(0x1b7),_0x4ee281(0x1ca),_0x4ee281(0x1e8),_0x4ee281(0x1d4),'director',_0x4ee281(0x19d),_0x4ee281(0x1d6),_0x4ee281(0x1b6),_0x4ee281(0x1a9),_0x4ee281(0x1d8),'hugo\x20araya','add','length',_0x4ee281(0x1e6),_0x4ee281(0x1a5),_0x4ee281(0x1dd),_0x4ee281(0x1b5),_0x4ee281(0x1c4),_0x4ee281(0x1a7),_0x4ee281(0x1eb),_0x4ee281(0x1e5),_0x4ee281(0x1c8),_0x4ee281(0x1ec),_0x4ee281(0x1bf),_0x4ee281(0x19f),_0x4ee281(0x1d1),_0x4ee281(0x1e1),'Enter','permissions','reclamos',_0x4ee281(0x1d7),_0x4ee281(0x1d9),_0x4ee281(0x1f5),'ilum',_0x4ee281(0x1f6),'remove',_0x4ee281(0x1cf),_0x4ee281(0x1c6),_0x4ee281(0x1fc),'push',_0x4ee281(0x1fa),_0x4ee281(0x1dc),_0x4ee281(0x1ab),_0x4ee281(0x1bd),_0x4ee281(0x1da),'addEventListener',_0x4ee281(0x1db),_0x4ee281(0x1a2),_0x4ee281(0x1b4),_0x4ee281(0x1aa),_0x4ee281(0x1d5),_0x4ee281(0x1e4),_0x4ee281(0x1cc),'roberto\x20mamani',_0x4ee281(0x1f2),_0x4ee281(0x1b3),'none',_0x4ee281(0x1ea),_0x4ee281(0x1e7),_0x4ee281(0x1c9),_0x4ee281(0x1f4),'victor\x20castillo',_0x4ee281(0x1ba),_0x4ee281(0x1f8),_0x4ee281(0x1bb),'value',_0x4ee281(0x1c7),_0x4ee281(0x1fd),_0x4ee281(0x1c3),_0x4ee281(0x1e2),'pac',_0x4ee281(0x1ff),_0x4ee281(0x1b0),'user','dashboard-ordenes-trabajo-iluminacion'];return _0x3011=function(){return _0x39cb7f;},_0x3011();}(function(_0x41199b,_0x5d78be){const _0xced231=_0x1e20,_0x541da0=_0x31b6,_0xba6395=_0x41199b();while(!![]){try{const _0x93e13c=-parseInt(_0x541da0(0x16e))/0x1+-parseInt(_0x541da0(0x173))/0x2+-parseInt(_0x541da0(0x184))/0x3*(parseInt(_0x541da0(0x186))/0x4)+-parseInt(_0x541da0(0x188))/0x5+parseInt(_0x541da0(0x178))/0x6+parseInt(_0x541da0(0x175))/0x7*(parseInt(_0x541da0(0x169))/0x8)+parseInt(_0x541da0(0x18a))/0x9*(parseInt(_0x541da0(0x1a0))/0xa);if(_0x93e13c===_0x5d78be)break;else _0xba6395['push'](_0xba6395[_0xced231(0x1a1)]());}catch(_0x356bd9){_0xba6395['push'](_0xba6395[_0xced231(0x1a1)]());}}}(_0x3011,0xc48b1),document[_0x4a8728(0x1ae)](_0x4a8728(0x1af),function(){const _0x5eaa80=_0x1e20,_0x115f65=_0x4a8728;particlesJS(_0x115f65(0x1a9),{'particles':{'number':{'value':0x3c,'density':{'enable':!![],'value_area':0x320}},'color':{'value':_0x115f65(0x158)},'shape':{'type':_0x115f65(0x170),'stroke':{'width':0x0,'color':_0x115f65(0x189)},'polygon':{'nb_sides':0x5}},'opacity':{'value':0.5,'random':![],'anim':{'enable':![],'speed':0x1,'opacity_min':0.1,'sync':![]}},'size':{'value':0x3,'random':!![],'anim':{'enable':![],'speed':0x28,'size_min':0.1,'sync':![]}},'line_linked':{'enable':!![],'distance':0x96,'color':_0x5eaa80(0x1c9),'opacity':0.4,'width':0x1},'move':{'enable':!![],'speed':0x2,'direction':_0x5eaa80(0x1df),'random':![],'straight':![],'out_mode':_0x115f65(0x192),'bounce':![],'attract':{'enable':![],'rotateX':0x258,'rotateY':0x4b0}}},'interactivity':{'detect_on':_0x115f65(0x1a7),'events':{'onhover':{'enable':!![],'mode':_0x115f65(0x15d)},'onclick':{'enable':!![],'mode':_0x115f65(0x1a8)},'resize':!![]},'modes':{'grab':{'distance':0x8c,'line_linked':{'opacity':0x1}},'bubble':{'distance':0x190,'size':0x28,'duration':0x2,'opacity':0x8,'speed':0x3},'repulse':{'distance':0xc8,'duration':0.4},'push':{'particles_nb':0x4},'remove':{'particles_nb':0x2}}},'retina_detect':!![]});}));const users=[{'username':_0x4a8728(0x193),'password':_0x4a8728(0x162),'role':_0x4a8728(0x1b3),'fullName':_0x4a8728(0x19b),'permissions':[_0x4a8728(0x164),_0x4a8728(0x1b5),_0x4a8728(0x16b),_0x4a8728(0x191),_0x4a8728(0x181),_0x4a8728(0x194)],'departamento':_0x4a8728(0x1a1)},{'username':_0x4a8728(0x185),'password':_0x187955(0x1fb),'role':_0x4a8728(0x185),'fullName':_0x4a8728(0x17f),'permissions':[_0x4a8728(0x164),_0x4a8728(0x1b5),_0x187955(0x1b2),'dashboard-bodega','formulario-1',_0x4a8728(0x194)],'departamento':_0x187955(0x1f5)},{'username':_0x4a8728(0x15a),'password':_0x4a8728(0x1ac),'role':_0x4a8728(0x180),'fullName':_0x4a8728(0x15f),'permissions':[_0x4a8728(0x16b),_0x4a8728(0x163)],'departamento':_0x4a8728(0x1a1)},{'username':_0x4a8728(0x18b),'password':_0x4a8728(0x1b2),'role':_0x4a8728(0x159),'fullName':_0x187955(0x1e0),'permissions':[_0x187955(0x1eb),_0x4a8728(0x17c),_0x4a8728(0x163)],'departamento':_0x4a8728(0x1b8)},{'username':_0x4a8728(0x177),'password':_0x4a8728(0x182),'role':_0x4a8728(0x166),'fullName':_0x4a8728(0x16a),'permissions':[_0x187955(0x1ce)],'departamento':_0x4a8728(0x1b8)},{'username':_0x4a8728(0x19e),'password':_0x187955(0x1a0),'role':_0x4a8728(0x19e),'fullName':_0x4a8728(0x197),'permissions':[_0x4a8728(0x161),_0x187955(0x1f0)],'departamento':_0x187955(0x1a0)},{'username':_0x4a8728(0x1a3),'password':_0x4a8728(0x171),'role':_0x4a8728(0x165),'fullName':_0x187955(0x1bc),'permissions':[_0x4a8728(0x161),_0x187955(0x1f0),_0x4a8728(0x179),_0x4a8728(0x15c),_0x4a8728(0x167),_0x187955(0x1cd),_0x4a8728(0x181)],'departamento':_0x4a8728(0x1a2)},{'username':'gerardo\x20maita','password':_0x4a8728(0x17a),'role':_0x4a8728(0x160),'fullName':_0x4a8728(0x1ba),'permissions':[_0x4a8728(0x161)],'departamento':_0x4a8728(0x190)},{'username':_0x4a8728(0x1b6),'password':_0x4a8728(0x19f),'role':_0x4a8728(0x1b3),'fullName':_0x4a8728(0x18e),'permissions':[_0x187955(0x1ff),_0x4a8728(0x1b5),_0x4a8728(0x16b),_0x4a8728(0x191),_0x4a8728(0x181),_0x4a8728(0x194)],'departamento':_0x187955(0x1b3)}];function attemptLogin(){const _0x5829be=_0x187955,_0x19aec8=_0x4a8728,_0x4d7540=document[_0x19aec8(0x1b1)](_0x19aec8(0x17d))[_0x19aec8(0x15e)],_0x8847f=document[_0x19aec8(0x1b1)](_0x19aec8(0x195))[_0x19aec8(0x15e)],_0x76f614=document[_0x19aec8(0x1b1)](_0x19aec8(0x15b)),_0x419f96=document[_0x19aec8(0x19a)](_0x19aec8(0x1a6)),_0x1c355d=users[_0x19aec8(0x16f)](_0x43bdfb=>_0x43bdfb[_0x19aec8(0x17d)]===_0x4d7540&&_0x43bdfb[_0x5829be(0x1e5)]===_0x8847f);if(_0x1c355d){localStorage[_0x5829be(0x1a8)](_0x19aec8(0x1aa),JSON[_0x19aec8(0x16d)]({'username':_0x1c355d[_0x19aec8(0x17d)],'role':_0x1c355d[_0x19aec8(0x196)],'fullName':_0x1c355d[_0x19aec8(0x174)],'permissions':_0x1c355d[_0x19aec8(0x19d)]||[],'departamento':_0x1c355d[_0x19aec8(0x187)]}));if(window[_0x5829be(0x1cf)]&&window['pJSDom'][_0x5829be(0x1c2)]>0x0){const _0x1a9273=window[_0x19aec8(0x1a5)][0x0][_0x19aec8(0x183)];_0x1a9273[_0x5829be(0x1ab)][_0x19aec8(0x17b)][_0x19aec8(0x15e)]=_0x19aec8(0x172),_0x1a9273[_0x19aec8(0x1ab)][_0x19aec8(0x17e)][_0x5829be(0x19e)]=_0x19aec8(0x172),_0x1a9273['fn'][_0x19aec8(0x16c)]();}setTimeout(()=>{const _0x295b29=_0x5829be,_0x400151=_0x19aec8;window[_0x295b29(0x1f7)][_0x295b29(0x1ef)]=_0x400151(0x168);},0x320);}else{_0x76f614[_0x5829be(0x1cb)][_0x5829be(0x1e7)]=_0x19aec8(0x1b4),_0x419f96[_0x19aec8(0x1b0)][_0x19aec8(0x18c)](_0x19aec8(0x198));if(window[_0x5829be(0x1cf)]&&window[_0x5829be(0x1cf)][_0x19aec8(0x18d)]>0x0){const _0x80bc5e=window['pJSDom'][0x0][_0x19aec8(0x183)];_0x80bc5e[_0x19aec8(0x1ab)][_0x19aec8(0x17b)][_0x19aec8(0x15e)]=_0x19aec8(0x18f),_0x80bc5e[_0x19aec8(0x1ab)][_0x5829be(0x1fe)][_0x19aec8(0x17b)]=_0x5829be(0x1a5),_0x80bc5e['fn'][_0x19aec8(0x16c)]();}setTimeout(()=>{const _0x5e8122=_0x5829be,_0x1a780e=_0x19aec8;_0x76f614[_0x1a780e(0x176)][_0x1a780e(0x1bb)]=_0x1a780e(0x1b9),_0x419f96[_0x1a780e(0x1b0)][_0x1a780e(0x1a4)](_0x1a780e(0x198));if(window[_0x1a780e(0x1a5)]&&window[_0x1a780e(0x1a5)][_0x1a780e(0x18d)]>0x0){const _0xa52225=window[_0x1a780e(0x1a5)][0x0][_0x1a780e(0x183)];_0xa52225[_0x1a780e(0x1ab)][_0x5e8122(0x19e)][_0x1a780e(0x15e)]=_0x1a780e(0x158),_0xa52225[_0x1a780e(0x1ab)][_0x1a780e(0x17e)][_0x1a780e(0x17b)]=_0x1a780e(0x158),_0xa52225['fn'][_0x1a780e(0x16c)]();}},0xbb8);}}document['getElementById'](_0x187955(0x1b8))[_0x4a8728(0x1ae)](_0x187955(0x1de),function(_0x4fe25c){const _0x531744=_0x4a8728;_0x4fe25c[_0x531744(0x199)]===_0x531744(0x19c)&&attemptLogin();}),document[_0x187955(0x1b4)](_0x4a8728(0x195))[_0x187955(0x1ee)](_0x187955(0x1de),function(_0x435551){const _0x423773=_0x4a8728;_0x435551[_0x423773(0x199)]===_0x423773(0x19c)&&attemptLogin();});function _0x1e20(_0x2ca17a,_0x34a991){const _0x14eb76=_0x14eb();return _0x1e20=function(_0x1e2054,_0x2d53a4){_0x1e2054=_0x1e2054-0x19d;let _0x4c4af4=_0x14eb76[_0x1e2054];return _0x4c4af4;},_0x1e20(_0x2ca17a,_0x34a991);}function _0x31b6(_0x5dca26,_0xc5411a){const _0x20cd0c=_0x3011();return _0x31b6=function(_0x3f1a65,_0x5367c6){_0x3f1a65=_0x3f1a65-0x158;let _0x16a97=_0x20cd0c[_0x3f1a65];return _0x16a97;},_0x31b6(_0x5dca26,_0xc5411a);}function togglePasswordVisibility(){const _0x29ebae=_0x187955,_0xee2c30=_0x4a8728,_0x59a144=document[_0xee2c30(0x1b1)](_0xee2c30(0x195)),_0x305252=document[_0xee2c30(0x1b1)](_0x29ebae(0x1e9)),_0x4256c0=document[_0x29ebae(0x1b4)](_0xee2c30(0x1ad));_0x59a144[_0xee2c30(0x1b7)]===_0xee2c30(0x195)?(_0x59a144[_0xee2c30(0x1b7)]=_0x29ebae(0x1f3),_0x305252[_0x29ebae(0x1cb)]['display']=_0xee2c30(0x1b9),_0x4256c0[_0xee2c30(0x176)][_0xee2c30(0x1bb)]=_0x29ebae(0x1e4)):(_0x59a144[_0xee2c30(0x1b7)]=_0xee2c30(0x195),_0x305252[_0xee2c30(0x176)][_0xee2c30(0x1bb)]=_0x29ebae(0x1e4),_0x4256c0[_0xee2c30(0x176)][_0xee2c30(0x1bb)]=_0xee2c30(0x1b9));}
+    </script>
+</body>
+</html>
