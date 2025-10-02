@@ -1,0 +1,3154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestión de Solicitudes | Municipalidad de Arica</title>
+  <link rel="stylesheet" href="reclamo.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+    }
+
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #86868b;
+    }
+
+    /* Estilos específicos para reclamos */
+    .dashboard-container {
+      padding: 40px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #1d2939;
+      position: relative;
+    }
+
+    .dashboard-title:after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #0066cc, #1a8cff);
+      border-radius: 2px;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      background-color: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #0066cc;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #f5f9ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #0066cc, #1a8cff);
+      z-index: 2;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #f0f7ff, #e6f2ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px auto 15px;
+      color: #0066cc;
+      font-size: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.15);
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0;
+      color: #1d2939;
+      padding: 0 20px;
+    }
+
+    .card-description {
+      text-align: center;
+      padding: 0 25px;
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      flex-grow: 1;
+    }
+
+    .card-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #0066cc, #1a8cff);
+      border: none;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin: 0 auto 25px;
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+    }
+
+    .card-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+      background: linear-gradient(135deg, #005cb8, #0080ff);
+    }
+
+    /* Estilos para el formulario de reclamos */
+    .form-container {
+      background-color: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .form-title {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #1d2939;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #0066cc;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%231d1d1f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 16px 12px;
+    }
+
+    .form-textarea {
+      /* min-height: 120px; */
+      resize: vertical;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #0066cc, #1a8cff);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #005cb8, #0080ff);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+    }
+
+    /* Estilos para la tabla de reclamos */
+    .reclamos-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .reclamos-table th,
+    .reclamos-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .reclamos-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .reclamos-table tr:hover {
+      background-color: #f5f9ff;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-primary {
+      background-color: #e6f2ff;
+      color: #0066cc;
+    }
+
+    .badge-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .badge-danger {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .badge-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn-view {
+      background-color: #e6f2ff;
+      color: #0066cc;
+    }
+
+    .action-btn-view:hover {
+      background-color: #d0e3ff;
+    }
+
+    .action-btn-edit {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .action-btn-edit:hover {
+      background-color: #ffecb3;
+    }
+
+    .action-btn-delete {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .action-btn-delete:hover {
+      background-color: #ffcdd2;
+    }
+
+    /* Estilos para filtros */
+    .filters-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-item {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .filter-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-filter {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-filter:hover {
+      background-color: #0056b3;
+    }
+
+    /* Estilos para el modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1d2939;
+    }
+
+    .close {
+      font-size: 24px;
+      font-weight: bold;
+      color: #86868b;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .close:hover {
+      color: #1d1d1f;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* Estilos para la vista de detalle del reclamo */
+    .reclamo-detail {
+      margin-bottom: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .detail-label {
+      flex: 0 0 150px;
+      font-weight: 500;
+      color: #1d2939;
+    }
+
+    .detail-value {
+      flex: 1;
+    }
+
+    .detail-images {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .detail-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .detail-image:hover {
+      transform: scale(1.05);
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 768px) {
+      .dashboard-title {
+        font-size: 24px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        flex-direction: column;
+      }
+
+      .detail-label {
+        margin-bottom: 5px;
+      }
+    }
+
+    /* Estilos generales */
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-color: #ecf0f1;
+      --dark-color: #34495e;
+      --text-color: #333;
+      --text-light: #7f8c8d;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    header {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+    }
+
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #86868b;
+    }
+
+
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    /* Botones */
+    .btn {
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #219955;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .btn-asignar {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      background-color: #a2d1a7;
+    }
+
+    .btn-cerrarPP {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      background-color: var(--secondary-color);
+    }
+
+
+    /* Mapa */
+    #map-container {
+      height: 500px;
+      margin-bottom: 2rem;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      border: 1px solid #ddd;
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    .map-controls {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Navegación de semana */
+    .week-navigation {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--box-shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .week-info {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: var(--border-radius);
+      background-color: var(--light-color);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav-btn:hover {
+      background-color: #d5dbdb;
+    }
+
+    /* Indicadores de estado */
+    .status-indicators {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    /* Diagrama de Gantt */
+    .gantt-container {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .gantt-chart {
+      width: 100%;
+    }
+
+    /* Encabezado de la tabla Gantt */
+    .gantt-header {
+      display: grid;
+      grid-template-columns: 150px repeat(7, 1fr);
+      /* columna fija + 7 columnas iguales */
+      background: var(--primary-color);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .gantt-header>div {
+      padding: 12px 8px;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .gantt-header>div:last-child {
+      border-right: none;
+    }
+
+    /* Cuerpo del Gantt */
+    #ganttBody {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cada fila del Gantt (una cuadrilla) */
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 150px repeat(7, 1fr);
+      /* misma estructura que el encabezado */
+      border-bottom: 1px solid #eee;
+    }
+
+    .gantt-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Celda de recursos (nombre de cuadrilla y descripción) */
+    .resource-cell {
+      padding: 12px 15px;
+      border-right: 1px solid #eee;
+      background: #f9f9f9;
+      overflow: hidden;
+    }
+
+    .resource-name {
+      font-weight: 600;
+      margin-bottom: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .resource-type {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Celdas de días */
+    .day-cell {
+      padding: 5px;
+      border-right: 1px solid #eee;
+      min-height: 60px;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-cell:last-child {
+      border-right: none;
+    }
+
+    .day-cell:hover {
+      background-color: #f5f7fa;
+    }
+
+    .assignment {
+      padding: 8px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary-color);
+      background-color: #eaf2f8;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .assignment:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .assignment-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 0.85rem;
+    }
+
+    .ot-number {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .priority-badge {
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .assignment.priority-high {
+      border-left-color: #e74c3c;
+      background-color: #fdedec;
+    }
+
+    .priority-high .priority-badge {
+      background-color: #e74c3c;
+    }
+
+    .assignment.priority-medium {
+      border-left-color: #f39c12;
+      background-color: #fef5e7;
+    }
+
+    .priority-medium .priority-badge {
+      background-color: #f39c12;
+    }
+
+    .assignment.priority-low {
+      border-left-color: #27ae60;
+      background-color: #e8f8f0;
+    }
+
+    .priority-low .priority-badge {
+      background-color: #27ae60;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .close:hover {
+      color: var(--accent-color);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      /* width: 100%; */
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .form-group textarea {
+      /* min-height: 100px; */
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    /* Opciones de exportación */
+    .export-options {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      z-index: 1000;
+      min-width: 180px;
+    }
+
+    .export-options button {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .export-options button:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* Loading */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      z-index: 2000;
+    }
+
+    /* Marcador de hoy */
+    .today-marker {
+      color: #27ae60;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    /* Marcadores del mapa */
+    .assignment-marker {
+      background: var(--secondary-color);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+    }
+
+    .assignment-marker:hover {
+      transform: scale(1.2);
+    }
+
+    .assignment-marker.high {
+      background: var(--accent-color);
+    }
+
+    .assignment-marker.medium {
+      background: var(--warning-color);
+    }
+
+    .assignment-marker.low {
+      background: var(--success-color);
+    }
+
+    .trabajo {
+      font-size: 0.7rem;
+      /* font-weight: bold; */
+      white-space: normal;
+      /* Permite salto de línea */
+      word-wrap: break-word;
+      /* Corta palabras largas si es necesario */
+      overflow-wrap: break-word;
+      /* Compatibilidad moderna */
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .gantt-header {
+        grid-template-columns: 200px repeat(7, 1fr);
+      }
+
+      .gantt-row {
+        grid-template-columns: 200px repeat(7, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .gantt-header {
+        grid-template-columns: 150px repeat(7, 1fr);
+        font-size: 0.9rem;
+      }
+
+      .gantt-row {
+        grid-template-columns: 150px repeat(7, 1fr);
+      }
+
+      .resource-cell {
+        padding: 8px 10px;
+      }
+
+      .resource-name {
+        font-size: 0.9rem;
+      }
+
+      .resource-type {
+        font-size: 0.8rem;
+      }
+
+      .assignment {
+        padding: 6px;
+        font-size: 0.85rem;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .gantt-header {
+        grid-template-columns: 120px repeat(7, 1fr);
+      }
+
+      .gantt-row {
+        grid-template-columns: 120px repeat(7, 1fr);
+      }
+
+      .week-navigation {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .nav-btn {
+        flex-grow: 1;
+        justify-content: center;
+      }
+
+      .status-indicators {
+        gap: 10px;
+      }
+
+      .assistant-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+
+    .fila {
+      display: flex;
+      /* Activa Flexbox en la fila */
+      width: 100%;
+      /* La fila ocupa todo el ancho disponible */
+      margin-bottom: 10px;
+      /* Espacio entre filas (opcional) */
+      box-sizing: border-box;
+    }
+
+    .columna {
+      flex: 1;
+      /* Todas las columnas ocupan el mismo ancho */
+      padding: 5px;
+      /* Margen interno */
+      box-sizing: border-box;
+      /* Incluye padding en el ancho total */
+      border: 0px solid #ccc;
+      /* Opcional: borde para ver cada celda */
+    }
+
+    .color_suggestions {
+      color: #8e44ad;
+      font-size: 14px;
+      margin-top: 5px;
+
+      max-height: 100px;
+      /* Limita la altura visible */
+      overflow-y: auto;
+      /* Muestra el scroll si el contenido sobrepasa */
+      padding-right: 5px;
+      /* Opcional: espacio para no tapar texto con el scroll */
+    }
+
+    /* Fondo oscuro que cubre toda la pantalla */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      /* Oculto por defecto */
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    /* Círculo girando */
+    .spinner {
+      border: 8px solid #f3f3f3;
+      /* gris claro */
+      border-top: 8px solid #3498db;
+      /* azul */
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: girar 1s linear infinite;
+    }
+
+    @keyframes girar {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header con logo -->
+  <div class="top-header">
+    <div class="logo">
+      <img src="logo_MUNI.png" alt="Logo Municipalidad de Arica">
+      <div class="logo-text">
+        <h1>ARICA</h1>
+        <span>MUNICIPALIDAD | Departamento de Solicitudes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <section class="dashboard-container">
+    <div class="dashboard-header">
+      <h2 class="dashboard-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="vertical-align: middle; margin-right: 8px;">
+          <path
+            d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
+            stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 2V6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M8 2V6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M3 10H21" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Planificador de Trabajos
+      </h2>
+      <button class="back-button" onclick="window.location.href='index.html'">
+        <span class="back-icon">←</span> Volver al Inicio
+      </button>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="openModal()">
+        ➕ Nueva Asignación
+      </button>
+      <div style="position: relative;">
+        <button class="btn btn-success" onclick="toggleExportOptions()">
+          📄 Exportar
+        </button>
+        <div class="export-options" id="exportOptions"
+          style="display: none; position: absolute; background: white; padding: 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
+          <button onclick="exportToPDF()">📄 Exportar a PDF</button>
+          <button onclick="printView()">🖨️ Imprimir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor del Mapa -->
+    <div id="map-container">
+      <div id="map"></div>
+      <div class="map-controls">
+        <button onclick="centerMapOnReclamos()" class="btn btn-small">Centrar en reclamos</button>
+      </div>
+    </div>
+
+    <div class="week-navigation">
+      <div class="week-info" id="weekInfo">
+        Semana del 27 Mayo - 2 Junio, 2025
+      </div>
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="previousWeek()">⬅️ Anterior</button>
+        <button class="nav-btn" onclick="todayWeek()">📍 Hoy</button>
+        <button class="nav-btn" onclick="nextWeek()">➡️ Siguiente</button>
+      </div>
+    </div>
+
+    <div class="status-indicators">
+      <div class="status-item">
+        <div class="status-color" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+        <span>Pendiente</span>
+      </div>
+      <div class="status-item">
+        <div class="status-color" style="background: linear-gradient(135deg, #f39c12, #e67e22);"></div>
+        <span>Asignado</span>
+      </div>
+      <div class="status-item">
+        <div class="status-color" style="background: linear-gradient(135deg, #27ae60, #229954);"></div>
+        <span>Terminado</span>
+      </div>
+      <!--
+      <div class="status-item">
+        <div class="status-color" style="background: linear-gradient(135deg, #3498db, #2980b9);"></div>
+        <span>Normal</span>
+      </div>
+      -->
+    </div>
+
+    <div class="gantt-container">
+      <div class="gantt-chart" id="ganttChart">
+        <div class="gantt-header">
+          <div>MOVIL</div>
+          <div id="day0">Martes<br>27 May</div>
+          <div id="day1">Miércoles<br>28 May</div>
+          <div id="day2">Jueves<br>29 May</div>
+          <div id="day3">Viernes<br>30 May</div>
+          <div id="day4">Sábado<br>31 May</div>
+          <div id="day5">Domingo<br>1 Jun</div>
+          <div id="day6">Lunes<br>2 Jun</div>
+        </div>
+        <div id="ganttBody">
+          <!-- Las filas se generarán dinámicamente en JavaScript basadas en VEHICULO_OT -->
+        </div>
+      </div>
+    </div>
+
+    <div class="loading" id="loading" style="display: none;">
+      Generando PDF... Por favor espere...
+    </div>
+
+    <!-- ***************************************************************** -->
+
+    <!-- Modal para nueva asignación -->
+    <div id="assignmentModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h2 id="modalTitle">Nueva Asignación de OT</h2>
+        </div>
+        <div class="modal-body">
+          <form id="assignmentForm">
+
+            <div class="form-group">
+
+              <div class="fila">
+                <div class="columna">
+                  <label for="otNumber">Número de OT:</label>
+                  <input type="text" id="otNumber" name="otNumber" placeholder="OT-2025-XXX" readonly required>
+                </div>
+              </div>
+              <div class="fila">
+                <div class="columna">
+                  <label for="estado_select">Estado:
+                  </label>
+                  <select id="estado_select" name="estado_select" style="width: 100%" onclick="cambio_label()" required>
+                  </select>
+                </div>
+                <div class="columna">
+                  <label id="label_dia" for="day">Día programado:</label>
+                  <input type="date" id="fecha_program" name="fecha_program" required />
+                </div>
+              </div>
+
+              <br>
+
+              <div class="fila">
+                <div class="columna">
+                  <label for="movil">Movil:
+                  </label>
+                  <select id="movil" name="movil" style="width: 100%" required>
+                  </select>
+                </div>
+                <div class="columna">
+                  <label for="encargMovil">Conductor del movil:
+                  </label>
+                  <input type="text" id="encargMovil" name="encargMovil" style="width: 100%"
+                    oninput="showSuggestions(0)" required>
+                </div>
+              </div>
+
+              <div class="fila">
+                <div class="columna">
+                </div>
+                <div class="columna">
+                  <div class="color_suggestions" id="suggestionsEncargMovil" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="fila">
+                <div class="columna">
+                  <label for="encargCuadrilla">Encargado de Cuadrilla:
+                  </label>
+                  <input type="text" id="encargCuadrilla" name="encargCuadrilla" style="width: 100%"
+                    oninput="showSuggestions(1)" required>
+                </div>
+                <div class="columna">
+                  <label for="cuadrilla">Cuadrilla de apoyo:
+                  </label>
+                  <input type="text" id="cuadrilla" name="cuadrilla" style="width: 100%" oninput="showSuggestions(2)">
+                </div>
+              </div>
+
+              <div class="fila">
+                <div class="columna">
+                  <div class="color_suggestions" id="suggestionsEncargCuadrilla" style="width: 100%"></div>
+                </div>
+                <div class="columna">
+                  <div class="color_suggestions" id="suggestionsCuadrilla" style="width: 100%"></div>
+                </div>
+              </div>
+
+              <div class="fila">
+                <div class="columna">
+                  <label for="cuadrilla_list">Cuadrilla de apoyo:
+                  </label>
+                  <div id="cuadrilla_list" name="cuadrilla_list"></div>
+                </div>
+              </div>
+
+              <br>
+
+              <br>
+
+              <div class="fila">
+                <div class="columna">
+                  <label for="observacion2">Observaciones o Notas:</label>
+                  <textarea id="observacion2" name="observacion2" rows="1"
+                    style="width: 100%; text-transform: uppercase;"
+                    placeholder="Ingrese información adicional ..."></textarea>
+                </div>
+              </div>
+
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+              <input type="submit" id="submit_modal" class="btn btn-primary" value="Guardar Asignación"></input>
+              &nbsp; &nbsp; &nbsp;
+              <button type="button" class="btn" onclick="closeModal()"
+                style="background: #95a5a6; color: white;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ***************************************************************** -->
+
+    <!-- Modal para nueva asignación -->
+    <div id="imprimirModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" onclick="closeImprimir()">&times;</span>
+          <h2 id="imprimirTitle">Nueva Asignación de OT</h2>
+        </div>
+        <div class="modal-body">
+          <form id="imprimirForm">
+
+            <div class="form-group">
+
+              <div class="fila">
+                <div class="columna">
+                  <label>Fecha:</label>
+                  <input type="date" id="fecha_ot">
+                </div>
+                <div class="columna">
+                  <label>Movil:</label>
+                  <select id="fecha_movil"></select>
+                </div>
+              </div>
+
+              <p>
+              <div id="contenido_ot"></div>
+              <p>
+
+            </div>
+            <center>
+              <input type="button" class="btn-asignar" value=" &nbsp; GUARDAR O/T &nbsp; " onclick="grabar_ot()">
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <input type="button" class="btn-cerrarPP" value=" &nbsp; CERRAR &nbsp; " onclick="closeImprimir()">
+            </center>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ***************************************************************** -->
+
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <div class="footer-column">
+          <h3>Municipalidad de Arica</h3>
+          <p>Renato Rocca, Arica</p>
+          <p>Anexo: 6959</p>
+          <p>Email: roberto.mamani@municipalidadarica.cl</p>
+          <div class="social-icons">
+            <a href="#">📘</a>
+            <a href="#">📱</a>
+            <a href="#">🐦</a>
+            <a href="#">📸</a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Sistema de Reclamos</h3>
+          <p style="line-height: 1.6;">
+            Sistema integral para la gestión de reclamos municipales que permite una
+            <strong>comunicación directa</strong> entre ciudadanos y departamentos municipales,
+            facilitando el <strong>seguimiento</strong> y <strong>resolución eficiente</strong>
+            de problemas urbanos para mejorar la calidad de vida de los ariqueños.
+          </p>
+        </div>
+        <div class="footer-column">
+          <h3>Departamentos</h3>
+          <ul>
+            <li><strong>Aseo:</strong> Limpieza y residuos</li>
+            <li><strong>Iluminación:</strong> Alumbrado público</li>
+            <li><strong>Áreas Verdes:</strong> Parques y jardines</li>
+            <li><strong>Espacios públicos:</strong> Mantenimiento</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Municipalidad de Arica. Todos los derechos reservados.</p>
+        <p>Desarrollado por Junior Barrera</p>
+      </div>
+    </footer>
+
+
+    <!-- ****************** POPUP DE CARGA DE LOS DATOS DEL PERSONAL *********************** -->
+    <div id="overlay">
+      <div class="spinner"></div>
+    </div>
+
+
+    <!-- Assistant button -->
+    <div class="assistant-button" onclick="openAssistance()">💬</div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+    <script>
+
+
+      // URL de la API
+      const WEB_RECLAMOS = "https://script.google.com/macros/s/AKfycbyakPbJBYe-KhYa3XQQTPR_2F2xTatpixUQGK4SgdkxPmk7bLcJrg_ij0sgwl9HaU4/exec";
+      const WEB_PERSONAL = "https://script.google.com/macros/s/AKfycbw3Hl3-sdO6H38atODN_HLiX8lqUXVLgJVPnsGuNHR-OCKD7dAx8qn6O92UdL82fg/exec";
+
+
+      const dat_movil = ["M-21", "M-30", "M-38", "M-41", "M-60"];
+
+      const this_oficin = "ILUMINACION Y SEMAFOROS";        // El persona de este departamento
+
+
+      // ********************************************************************
+
+
+      // Variables para el mapa
+      let map;
+      let reclamosLayer;
+      let cuadrillasLayer;
+      let selectedReclamo = null;
+      let selectedCuadrilla = null;
+      let clickMarker;
+
+      var impri = "";
+      var fecha_imprimir = "";
+      var numeroSemana = 0;
+      var hoySemana = 0;
+
+      var celda = ""; // Celda de la cuadrilla seleccionada
+
+      var fechaIniISO = "";    // Fecha "2025-07-25"
+      var fechaFinISO = "";
+
+      var fechaIni = "";      // Fecha en formato fecha
+      var fechaFin = "";
+      var fechaHoy = "";
+
+      var dato_nc = [];      // Informacion de reclamos cargada desde la API (BIDIMENSIONAL)
+      var dato_js = [];      // Informacion de reclamos cargada desde la API (ELEMENTO JSON)
+      var solicit = [];      // Datos de la solicitud seleccionada (ELEMENTO JSON)
+
+      var pers_nc = [];      // Informacion del personal cargada desde la API (BIDIMENSIONAL)
+      var pers_js = [];      // Informacion del personal cargada desde la API (ELEMENTO JSON)
+
+      var asignados = [];
+      var terminados = [];
+      var fusionados = [];
+
+      var nomb_dt = [];      // Listado de todos los NOMBRES junto con apellidos del personal del departamento
+      var rutn_dt = [];      // Listado de todos los RUT junto con apellidos del personal del departamento
+
+      var list_nom = ["", "", ""];     // Nombre de los encargados (Movil, jefe cuadrilla y ayudantes de cuadrilla)
+      var list_rut = ["", "", ""];     // RUT de los encargados (Movil, jefe cuadrilla y ayudantes de cuadrilla)
+
+      var enviado = 0;
+
+      var enviado_0 = new Array();
+      var enviado_1 = new Array();
+
+      const std_selec = ["PENDIENTE", "ASIGNADO", "TERMINADO"];
+
+
+      // **************************************************************************
+
+
+      select = document.getElementById("movil");
+      select.innerHTML = "";
+      var option = document.createElement("option");
+      option.value = "";  // valor que se envía
+      option.textContent = "-- Seleccione un movil --"; // lo que se muestra
+      select.appendChild(option);
+      dat_movil.forEach((movil) => {
+        var option = document.createElement("option");
+        option.value = movil;  // valor que se envía
+        option.textContent = movil; // lo que se muestra
+        select.appendChild(option);
+      });
+      select.value = "";
+
+      select = document.getElementById("estado_select");
+      select.innerHTML = "";
+      var option = document.createElement("option");
+      option.value = "";  // valor que se envía
+      option.textContent = "-- Seleccione el Estado --"; // lo que se muestra
+      select.appendChild(option);
+      std_selec.forEach((estado) => {
+        var option = document.createElement("option");
+        option.value = estado;  // valor que se envía
+        option.textContent = estado; // lo que se muestra
+        select.appendChild(option);
+      });
+      select.value = "";
+
+
+      // Cargar reclamos desde la API
+      loadPersonal();
+
+
+      // ########################################################################
+      // ########################################################################
+
+
+      // Cargar datos iniciales desde la API - PERSONAL
+      function loadPersonal() {
+        mostrarCargando();
+        fetch(WEB_PERSONAL + "?h=DIMAO")
+          .then(response => response.json())
+          .then(data => {
+            pers_dt = [];     // Datos como matriz Bidimensional
+            pers_js = [];     // Datos como objeto JSON
+            pers_dt = data.pers_dt || [];
+            pers_js = convertir_Formato_MySQL(pers_dt);
+            rellenar_datos();
+            loadReclamos();
+          })
+          .catch(error => {
+            console.error('Error al cargar datos:', error);
+          });
+      }
+
+
+      // Cargar datos iniciales desde la API - RECLAMOS
+      function loadReclamos() {
+        fetch(WEB_RECLAMOS + "?h=X")
+          .then(response => response.json())
+          .then(data => {
+            dato_nc = [];     // Datos como matriz Bidimensional
+            dato_js = [];     // Datos como objeto JSON
+            dato_nc = data.dato_rc || [];
+            dato_js = convertir_Formato_MySQL(dato_nc);
+            ocultarCargando();
+            reclamosLayer.clearLayers();
+            mostrar_puntos_mapa();     // Mostrar los puntos en el mapa
+            numerar_semana();          // Calcular la semana actual
+            // cargar_registros_semana();
+          })
+          .catch(error => {
+            console.error('Error al cargar datos:', error);
+          });
+      }
+
+
+      function rellenar_datos() {
+        // Crear el array con los nombres + apellidos en mayúsculas
+        nomb_dt = pers_js                  // toma todos los datos del personal
+          .filter(fila => fila.OFICINA === this_oficin)
+          .map(fila => (fila.NOMBRES + " " + fila.AP_PATERNO + " " + fila.AP_MATERNO).toString().toUpperCase());
+        nomb_dt = [...new Set(nomb_dt)];   // Eliminar duplicados usando Set
+        nomb_dt.sort();                    // Ordenar alfabéticamente
+
+        // Crear el array con los RUT
+        rutn_dt = pers_js                  // toma todos los datos del personal
+          .filter(fila => fila.OFICINA === this_oficin)
+          .map(fila =>
+            fila.RUT
+              .toString()
+              .toUpperCase()
+              .replace(/\./g, "")   // quitar todos los puntos
+              .replace(/^0/, "")    // quitar el primer 0 si existe
+          );
+        rutn_dt = [...new Set(rutn_dt)];   // Eliminar duplicados usando Set
+        rutn_dt.sort();                    // Ordenar alfabéticamente
+        baul = "";
+      }
+
+
+      // ***************************************************************
+      // ***************************************************************
+
+      // Funciones para obtener información de recursos basados en VEHICULO_OT
+      function getResourceDisplayName(resource) {
+        /*
+        const map = {
+          'cuadrilla-a': 'Cuadrilla A',
+          'cuadrilla-b': 'Cuadrilla B',
+          'grua-001': 'Cuadrilla C',
+          'camioneta-002': 'Cuadrilla D'
+        };
+        */
+        const map = {};
+        return map[resource] || resource.toUpperCase();
+      }
+
+
+      function getResourceType(resource) {
+        /*
+        const map = {
+          'cuadrilla-a': 'Trabajos MT/BT',
+          'cuadrilla-b': 'Reparaciones',
+          'grua-001': 'Grúa',
+          'camioneta-002': 'Camioneta'
+        };
+        */
+        const map = {};
+        return map[resource] || resource.toUpperCase();
+      }
+
+
+      function revisar_semana(numeroSemana) {
+        var diainisemana = "";
+        var diafinsemana = "";
+        const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        const meses = ['Enero', 'Febr', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+          'Agost', 'Sept', 'Octub', 'Noviem', 'Diciem'];
+
+        const hoy = new Date();
+        const añoActual = hoy.getFullYear();
+
+        // Calcular el lunes de la primera semana ISO del año (la que contiene el primer jueves del año)
+        const cuartoDeEnero = new Date(añoActual, 0, 4); // 4 de enero
+        const diaDeLaSemana = cuartoDeEnero.getDay(); // 0=domingo, ..., 6=sábado
+        const delta = (diaDeLaSemana + 6) % 7; // días a restar para llegar al lunes anterior o el mismo
+        const primerLunesISO = new Date(cuartoDeEnero);
+        primerLunesISO.setDate(cuartoDeEnero.getDate() - delta);
+
+        // Calcular el lunes de la semana número 'numeroSemana'
+        inicioSemana = new Date(primerLunesISO);
+        inicioSemana.setDate(primerLunesISO.getDate() + (numeroSemana - 1) * 7);
+
+        // Guardar fechas de inicio y fin en formato ISO
+        fechaIniISO = inicioSemana.toISOString().split('T')[0];
+
+        const finSemana = new Date(inicioSemana);
+        finSemana.setDate(inicioSemana.getDate() + 6);
+        fechaFinISO = finSemana.toISOString().split('T')[0];
+
+        console.log("Fecha inicio:", fechaIniISO);
+        console.log("Fecha fin:", fechaFinISO);
+
+
+        // Mostrar los días de lunes a domingo
+        for (let ii = 0; ii < 7; ii++) {
+          const diatexto = document.getElementById("day" + ii);
+          const dia = new Date(inicioSemana);
+          dia.setDate(inicioSemana.getDate() + ii);
+          calen_dia = modificar_fecha_1(dia);
+          const diaNombre = diasSemana[ii]; // Ya ordenados desde lunes a domingo
+          const fechaDia = `${dia.getDate()} ${meses[dia.getMonth()]}`;
+          if (ii === 0) { diainisemana = `${fechaDia}`; }
+          if (ii === 6) { diafinsemana = `${fechaDia}`; }
+
+          // Verifica si es Sabado o Domingo
+          impri = " onclick = imprimir_modal('" + calen_dia + "') ";
+          if (ii === 5 || ii === 6) {
+            diatexto.innerHTML = "<span style='color: red;'" + impri + ">" + diaNombre + "<br>" + fechaDia + "</span>";
+          } else {
+            // Verifica si este día es "hoy"
+            const esHoy = hoy.toDateString() === dia.toDateString();
+            const estilo = esHoy ? "style='color: #0066cc; font-weight: bold;'" : "";
+            const contenido = "<a " + estilo + impri + ">" + diaNombre + "<br>" + fechaDia + "</a>";
+            diatexto.innerHTML = contenido;
+          }
+        }
+        document.getElementById('weekInfo').textContent = "Semana del " + diainisemana + " - " + diafinsemana + ", " + añoActual;
+        cargar_registros_semana();
+      }
+
+
+      function modificar_fecha_1(baul) {
+        const fecha = new Date(baul);
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0"); // meses empiezan en 0
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}`;
+      }
+
+
+      function imprimir_modal(baul) {
+
+        fecha_imprimir = baul;
+        const filtradox = dato_js.filter(registro =>
+          (registro.FECHA_PROGRAMADA === fecha_imprimir && registro.ESTADO === "ASIGNADO") ||
+          (registro.FECHA_TERMINO === fecha_imprimir && registro.ESTADO === "TERMINADO")
+        );
+        if (filtradox.length > 0) {
+
+          let vehiculos = filtradox.map(registro => registro.VEHICULO_OT);
+          let vehiculosUnicos = [...new Set(vehiculos)].sort();
+          let select = document.getElementById("fecha_movil");
+          select.innerHTML = "";
+
+          if (vehiculosUnicos.length > 0) {
+            if (vehiculosUnicos.length > 1) {
+              let optionDefault = document.createElement("option");
+              optionDefault.textContent = "-- Seleccione MOVIL --";
+              optionDefault.value = "";
+              select.appendChild(optionDefault);
+            }
+
+            baul = "";
+            vehiculosUnicos.forEach(vehiculo => {
+              let option = document.createElement("option");
+              option.value = vehiculo;
+              option.textContent = vehiculo;
+              select.appendChild(option);
+              baul = vehiculo;
+            });
+            if (vehiculosUnicos.length == 1) { select.value = baul; }
+          }
+
+          const modal = document.getElementById('imprimirModal');
+          const form = document.getElementById('imprimirForm');
+          const title = document.getElementById('imprimirTitle');
+          modal.style.display = 'block';
+          title.textContent = "Imprimir O/T";
+          document.getElementById("fecha_ot").value = fecha_imprimir;
+          requestAnimationFrame(() => {
+            modal.querySelector(".modal-content").scrollTop = 0;
+          });
+        }
+      }
+
+      function closeImprimir() {
+        const modal = document.getElementById('imprimirModal');
+        modal.querySelector(".modal-content").scrollTop = 0;
+        modal.style.display = 'none';
+        editingAssignment = null;
+      }
+
+      function grabar_ot() {
+        const elemento = document.getElementById("contenido_ot");
+        const opciones = {
+          margin: 10,
+          filename: 'OT - ' + fecha_imprimir + '.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opciones).from(elemento).save();
+      }
+
+
+      // ***************************************************************
+      // ***************************************************************
+
+
+      function mostrar_puntos_mapa() {
+
+        dato_js.forEach((reclamo, index) => {
+          if (index > 0 && reclamo.LATITUD && reclamo.LONGITUD) {   // Índices para latitud y longitud
+            const lat = parseFloat(reclamo.LATITUD.replace(",", "."));
+            const lng = parseFloat(reclamo.LONGITUD.replace(",", "."));
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+
+              baul = 0;
+              if (reclamo.ESTADO === "PENDIENTE") {
+                // Pendiente
+                const iconoRojo = L.icon({
+                  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41]
+                });
+
+                const marker = L.marker([lat, lng], {
+                  icon: iconoRojo
+                }).addTo(reclamosLayer);
+                marker.bindPopup(`
+                                <strong>OT: ${reclamo.ID_RECLAMO}</strong><br>
+                                <strong>Departamento:</strong> ${reclamo.DEPARTAMENTO}<br>
+                                <strong>Dirección:</strong> ${reclamo.DIRECCION_SOLICITANTE}<br>
+                                <strong>Prioridad:</strong> ${reclamo.TRABAJO}<br>
+                                <button onclick="openModal('${reclamo.ID_RECLAMO}')" 
+                                        class="btn btn-asignar" 
+                                        style="margin-top: 5px;">
+                                    Seleccionar para asignar
+                                </button> &nbsp; &nbsp; 
+                                <button onclick="map.closePopup()" 
+                                        class="btn btn-cerrarPP"
+                                        style="background: #ccc; color: #000;">
+                                        Cerrar
+                                </button>
+                            `);
+              }
+
+              if (reclamo.ESTADO === "ASIGNADO") {
+                // Asignado
+                const iconoAmarillo = L.icon({
+                  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png',
+                  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41]
+                });
+
+                const marker = L.marker([lat, lng], {
+                  icon: iconoAmarillo
+                }).addTo(reclamosLayer);
+                marker.bindPopup(`
+                                <strong>OT: ${reclamo.ID_RECLAMO}</strong><br>
+                                <strong>Departamento:</strong> ${reclamo.DEPARTAMENTO}<br>
+                                <strong>Dirección:</strong> ${reclamo.DIRECCION_SOLICITANTE}<br>
+                                <strong>Prioridad:</strong> ${reclamo.TRABAJO}<br>
+                                <button onclick="openModal('${reclamo.ID_RECLAMO}')" 
+                                        class="btn btn-asignar" 
+                                        style="margin-top: 5px;">
+                                    Seleccionar para asignar
+                                </button> &nbsp; &nbsp; 
+                                <button onclick="map.closePopup()" 
+                                        class="btn btn-cerrarPP"
+                                        style="background: #ccc; color: #000;">
+                                        Cerrar
+                                </button>
+                            `);
+              }
+
+            }
+          }
+        });
+      }
+
+
+      // Inicializar el mapa
+      function initMap() {
+        // Coordenadas del centro de Arica
+        const center = [-18.4784, -70.3126];
+
+        // Límites geográficos de Arica y alrededores
+        const southWest = L.latLng(-18.55, -70.40); // Esquina suroeste
+        const northEast = L.latLng(-18.40, -70.25); // Esquina noreste
+        const bounds = L.latLngBounds(southWest, northEast);
+
+        // Crear el mapa con límites
+        map = L.map('map', {
+          center: center,
+          zoom: 13,
+          maxBounds: bounds,
+          maxBoundsViscosity: 1.0,
+          minZoom: 12,
+          maxZoom: 18
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Evento para cuando el mapa intenta salir de los límites
+        map.on('drag', function () {
+          map.panInsideBounds(bounds, { animate: false });
+        });
+
+        // Capa para reclamos
+        reclamosLayer = L.layerGroup().addTo(map);
+
+        // Capa para cuadrillas
+        cuadrillasLayer = L.layerGroup().addTo(map);
+      }
+
+
+      function numerar_semana() {
+        // Crear banner de los dias de la semana
+        const fechaUTC = new Date(Date.UTC(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate()
+        ));
+        // Ajustar al jueves de la semana actual (ISO dice que la semana que contiene el jueves es la semana actual)
+        const diaSemana = fechaUTC.getUTCDay() || 7; // domingo (0) => 7
+        fechaUTC.setUTCDate(fechaUTC.getUTCDate() + 4 - diaSemana);
+        // Calcular la primera semana del año
+        const inicioAnio = new Date(Date.UTC(fechaUTC.getUTCFullYear(), 0, 1));
+        const diferenciaDias = Math.floor((fechaUTC - inicioAnio) / (1000 * 60 * 60 * 24));
+        // Calcular número de semana
+        numeroSemana = Math.floor(diferenciaDias / 7) + 1;
+        hoysemana = numeroSemana;
+        revisar_semana(numeroSemana);  // Revisar la semana actual
+      }
+
+      function selectReclamo(otNumber, lat, lng) {
+        selectedReclamo = { otNumber, lat, lng };
+        document.getElementById('otNumber').value = otNumber;
+
+        // Centrar mapa en el reclamo seleccionado
+        map.setView([lat, lng], 16);
+
+        alert(`Reclamo ${otNumber} seleccionado. Ahora seleccione una patrulla en el mapa.`);
+      }
+
+      function selectCuadrilla(cuadrillaId) {
+        selectedCuadrilla = cuadrillaId;
+
+        if (selectedReclamo) {
+          if (confirm(`¿Asignar reclamo ${selectedReclamo.otNumber} a la patrulla ${cuadrillaId}?`)) {
+            // Aquí puedes implementar la lógica para guardar la asignación
+            saveAssignmentToAPI(selectedReclamo.otNumber, cuadrillaId);
+          }
+        } else {
+          alert('Por favor seleccione primero un reclamo del mapa.');
+        }
+      }
+
+      function centerMapOnReclamos() {
+        if (reclamosLayer.getLayers().length > 0) {
+          const group = new L.featureGroup(reclamosLayer.getLayers());
+          map.fitBounds(group.getBounds());
+        }
+      }
+
+      function saveAssignmentToAPI(otNumber, cuadrillaId) {
+        // Implementar llamada a tu API para guardar la asignación
+        console.log(`Asignando ${otNumber} a ${cuadrillaId}`);
+        // Aquí deberías hacer el fetch a tu API
+
+        alert(`OT ${otNumber} asignada a la patrulla ${cuadrillaId} correctamente.`);
+
+        // Limpiar selección
+        selectedReclamo = null;
+        selectedCuadrilla = null;
+      }
+
+      // Función para generar clave de fecha
+      function getDateKey(date) {
+        dd = (date instanceof Date) ? date : new Date(date);
+        if (isNaN(dd.getTime())) { return; }
+        baul = date.toISOString().split('T');    // Separa en dos partes por la letra T
+        if (baul.length == 2) {
+          return baul[0];        // "2025-07-25"
+        } else {
+          const yyyy = date.getFullYear();
+          const mm = String(date.getMonth() + 1).padStart(2, '0'); // meses comienzan en 0
+          const dd = String(date.getDate()).padStart(2, '0');
+          baul = `${yyyy}-${mm}-${dd}`;
+          return baul;
+        }
+      }
+
+      // Función para obtener fecha específica de la semana
+      function getWeekDate(dayIndex) {
+        const date = new Date(fechaIni + dayIndex);
+        date.setDate(date.getDate() + dayIndex);
+        baul = "";
+        return date;
+      }
+
+      // Limpiar todas las celdas del gantt
+      function clearGanttCells() {
+        const dayCells = document.querySelectorAll('.day-cell');
+        dayCells.forEach(cell => {
+          // Remover todas las asignaciones pero mantener los atributos data
+          const assignmentElements = cell.querySelectorAll('.assignment');
+          assignmentElements.forEach(assignment => assignment.remove());
+        });
+      }
+
+
+      // *********************************************************************
+      // *********************************************************************
+
+
+      // Crear elemento de asignación en el DOM
+      function createAssignmentElement(dayCell, assignmentData) {
+        if (assignmentData.estado === "TERMINADO") {
+          // return; // No mostrar asignaciones terminadas
+        }
+        const assignment = document.createElement('div');
+        baul = "";
+        if (assignmentData.estado == "PENDIENTE") { baul = "high"; }
+        if (assignmentData.estado == "ASIGNADO") { baul = "medium"; }
+        if (assignmentData.estado == "TERMINADO") { baul = "low"; }
+        assignment.className = `assignment priority-${baul}`;
+        assignment.onclick = () => editAssignment(assignment, assignmentData);
+
+        const priorityText = {
+          'ASIGNADO': 'Asig',
+          'PENDIENTE': 'Pend',
+          'TERMINADO': 'Term',
+          'normal': 'NOR'
+        };
+
+        assignment.innerHTML = `` +
+          `<div class="assignment-info">` +
+          `<span class="ot-number">${assignmentData.otNumber}</span>` +
+          `<span class="priority-badge">${priorityText[assignmentData.estado]}</span>` +
+          `</div>` +
+          `<div class="trabajo">${assignmentData.trabajo}</div>` +
+          // `<div>${assignmentData.description}</div>` +
+          ``;
+
+        // Agregar menú contextual para eliminar
+        assignment.addEventListener('contextmenu', function (e) {
+          e.preventDefault();
+          if (confirm('¿Desea eliminar esta asignación?')) {
+            deleteAssignment(assignment, assignmentData);
+          }
+        });
+
+        dayCell.appendChild(assignment);
+      }
+
+      // Guardar asignación en el sistema
+      function saveAssignment(resource, dayIndex, assignmentData) {
+        const date = getWeekDate(dayIndex);
+        const dateKey = getDateKey(date);
+
+        if (!assignments[dateKey]) {
+          assignments[dateKey] = {};
+        }
+
+        if (!assignments[dateKey][resource]) {
+          assignments[dateKey][resource] = [];
+        }
+
+        assignments[dateKey][resource].push(assignmentData);
+      }
+
+      // Eliminar asignación del sistema
+      function deleteAssignment(assignmentElement, assignmentData) {
+        const dayCell = assignmentElement.closest('.day-cell');
+        const resource = dayCell.getAttribute('data-resource');
+        const dayIndex = parseInt(dayCell.getAttribute('data-day'));
+        const date = getWeekDate(dayIndex);
+        const dateKey = getDateKey(date);
+
+        if (assignments[dateKey] && assignments[dateKey][resource]) {
+          const index = assignments[dateKey][resource].findIndex(a =>
+            a.otNumber === assignmentData.otNumber &&
+            a.trabajo === assignmentData.trabajo &&
+            a.description === assignmentData.description
+          );
+
+          if (index !== -1) {
+            assignments[dateKey][resource].splice(index, 1);
+
+            // Limpiar si no hay más asignaciones
+            if (assignments[dateKey][resource].length === 0) {
+              delete assignments[dateKey][resource];
+            }
+
+            if (Object.keys(assignments[dateKey]).length === 0) {
+              delete assignments[dateKey];
+            }
+          }
+        }
+
+        assignmentElement.remove();
+      }
+
+      // Actualizar asignación existente
+      function updateAssignment(oldAssignmentData, newAssignmentData, dayCell) {
+        const resource = dayCell.getAttribute('data-resource');
+        const dayIndex = parseInt(dayCell.getAttribute('data-day'));
+        const date = getWeekDate(dayIndex);
+        const dateKey = getDateKey(date);
+
+        if (assignments[dateKey] && assignments[dateKey][resource]) {
+          const index = assignments[dateKey][resource].findIndex(a =>
+            a.otNumber === oldAssignmentData.otNumber &&
+            a.trabajo === oldAssignmentData.trabajo &&
+            a.description === oldAssignmentData.description
+          );
+
+          if (index !== -1) {
+            assignments[dateKey][resource][index] = newAssignmentData;
+          }
+        }
+      }
+
+      let editingAssignment = null;
+      let assignments = {}; // Almacén global de asignaciones (puedes persistir en API)
+
+
+      // *********************************************************************
+      // *********************************************************************
+
+
+      function openModal(valor_id) {
+
+        cambio_label();         // Cambia el label del botón de asignación
+        map.closePopup();       // Cierra el POPUP del punto marcado en el mapa
+        solicit = {};
+        document.getElementById('movil').value = "";
+        dato_js.forEach((reclamo, index) => {
+          baul = "";
+          if (reclamo.ID_RECLAMO.toString() == valor_id.toString()) { solicit = reclamo; }
+        });
+
+        baul = "";
+        const modal = document.getElementById('assignmentModal');
+        const form = document.getElementById('assignmentForm');
+        const title = document.getElementById('modalTitle');
+
+        requestAnimationFrame(() => {
+          modal.querySelector(".modal-content").scrollTop = 0;
+        });
+
+        if (solicit.ESTADO === "TERMINADO") {
+          document.getElementById('submit_modal').style.display = 'none';
+          title.textContent = 'OT ya Terminada';
+          // Selecciona todos los inputs y textareas dentro del modal
+          const campos = modal.querySelectorAll("input, textarea");
+          campos.forEach(campo => {
+            campo.readOnly = true;   // Los input solo readonly
+          });
+          modal.querySelectorAll("select").forEach(sel => {
+            sel.disabled = true;
+          });
+        } else {
+          document.getElementById('submit_modal').style.display = 'inline';
+          title.textContent = 'Asignación de OT';
+          // Selecciona todos los inputs y textareas dentro del modal
+          const campos = modal.querySelectorAll("input, textarea");
+          campos.forEach(campo => {
+            campo.readOnly = false;   // Los input solo readonly
+          });
+          const otInput = document.getElementById("otNumber");
+          if (otInput) otInput.readOnly = true;
+          modal.querySelectorAll("select").forEach(sel => {
+            sel.disabled = false;
+          });
+        }
+
+
+        // Obtener la fecha de hoy
+        var baul_fecha = "";
+        if (solicit.FECHA_PROGRAMADA != "") {
+          baul2 = solicit.FECHA_PROGRAMADA;
+          var baul3 = new Array();
+          baul3 = baul2.split("/");
+          if (baul3.length == 3) {
+            baul_fecha = baul3[2] + "-" + baul3[1] + "-" + baul3[0];
+          } else {
+            baul_fecha = baul2;
+          }
+        } else {
+          const hoy = new Date();       // Fecha de hoy
+          const yyyy = hoy.getFullYear();
+          const mm = String(hoy.getMonth() + 1).padStart(2, '0'); // meses comienzan en 0
+          const dd = String(hoy.getDate()).padStart(2, '0');
+          baul_fecha = `${yyyy}-${mm}-${dd}`;
+        }
+
+        if (solicit) {
+          // editingAssignment = { element: assignment, data: assignmentData };
+
+          list_nom = [];
+          list_rut = [];
+          if (solicit.CONDUCTOR_OT != '') {
+            list_nom[0] = solicit.CONDUCTOR_OT.toString().toUpperCase().trim();
+            list_rut[0] = solicit.CONDUCTOR_RUT.replace(/\./g, "").replace(/^0+/, "");
+          }
+
+          if (solicit.JEFE_CUADRILLA != '') {
+            list_nom[1] = solicit.JEFE_CUADRILLA.toString().toUpperCase().trim();
+            list_rut[1] = solicit.JEFE_CUADRILLA_RUT.replace(/\./g, "").replace(/^0+/, "");
+          }
+
+          baul_cuadrilla = "";
+          if (solicit.PERSONAL_CUADRILLA != '') {
+            var personal_cuadrilla = new Array();
+            personal_cuadrilla = (solicit.PERSONAL_CUADRILLA).split("/");
+            for (tt = 0; tt < personal_cuadrilla.length; tt++) {
+              list_nom[tt + 2] = personal_cuadrilla[tt].toString().toUpperCase().trim();
+              pp = 1;
+              ss = "🗑️";
+              if (solicit.ESTADO == "TERMINADO") { pp = 0; ss = " - "; }
+              var aa = "<span href='#' onclick='borrar_cuadrilla(" + pp + "," + (tt + 2) + ")'> &nbsp; " + ss + " </span> &nbsp; " + list_nom[tt + 2];
+              if (tt == 0) { baul_cuadrilla = aa; }
+              if (tt > 0) { baul_cuadrilla = baul_cuadrilla + "<br>" + aa; }
+              let encontrado = pers_js.find(fila =>
+                (fila.NOMBRES + " " + fila.AP_PATERNO + " " + fila.AP_MATERNO).toString().toUpperCase() === list_nom[tt + 2]);
+              list_rut[tt + 2] = encontrado.RUT.replace(/\./g, "").replace(/^0+/, "");
+            }
+          }
+
+          document.getElementById('otNumber').value = solicit.ID_RECLAMO;
+          document.getElementById('fecha_program').value = baul_fecha;
+          document.getElementById('movil').value = solicit.VEHICULO_OT || '';
+          document.getElementById('encargMovil').value = solicit.CONDUCTOR_OT || '';
+          document.getElementById('encargCuadrilla').value = solicit.JEFE_CUADRILLA || '';
+          document.getElementById('cuadrilla_list').innerHTML = baul_cuadrilla || '';
+          document.getElementById('estado_select').value = solicit.ESTADO || '';
+          document.getElementById('observacion2').value = solicit.OBSERVACION_OT || '';
+
+        } else {
+          title.textContent = 'Nueva Asignación de OT';
+          // editingAssignment = null;
+          form.reset();
+        }
+        modal.style.display = 'block';
+      }
+
+
+      function closeModal() {
+        const modal = document.getElementById('assignmentModal');
+        modal.querySelector(".modal-content").scrollTop = 0;
+        modal.style.display = 'none';
+        editingAssignment = null;
+      }
+
+      function editAssignment(assignment, assignmentData) {
+        openModal(assignmentData.otNumber);
+      }
+
+
+      // #####################################################################################
+      // ########################  E N V I A R   F O R M U L A R I O  ########################
+      // #####################################################################################
+
+
+      // Manejar el formulario
+      document.getElementById('assignmentForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        numSolicit = formData.get('otNumber');
+
+        enviado_1 = [];
+        const ahora = new Date();
+
+        // Fecha de hoy
+        const dia = String(ahora.getDate()).padStart(2, '0');
+        const mes = String(ahora.getMonth() + 1).padStart(2, '0');      // meses comienzan en 0
+        const anio = ahora.getFullYear();
+        const fecha2 = `${dia}/${mes}/${anio}`;
+        const fecha = normalizarFecha(fecha2);
+
+        // Hora de ahora
+        const horas = String(ahora.getHours()).padStart(2, '0');
+        const minutos = String(ahora.getMinutes()).padStart(2, '0');
+        const segundos = String(ahora.getSeconds()).padStart(2, '0');
+        const hora = `${horas}:${minutos}:${segundos}`;
+
+        baul_nomb = "";
+        for (tt = 2; tt < list_nom.length; tt++) {
+          baul1 = " / ";
+          if (tt == 2) { baul1 = ""; }
+          baul_nomb = baul_nomb + baul1 + list_nom[tt];
+        }
+
+
+        solic_js = [];
+        result_0 = [];
+        solic_js = dato_js.find(fila => fila.ID_RECLAMO === numSolicit);
+        result_0 = { ...solic_js };
+
+
+        baul_x1 = normalizarFecha(formData.get('fecha_program')) || '';
+        encarga = "MANUEL MARIN";
+        baul_f1 = fecha || '';
+        baul_h1 = hora || '';
+        baul_f2 = baul_x1;
+        baul_f3 = "";
+        respons = "";
+
+        estado = formData.get('estado_select') || '';
+        if (estado == "ASIGNADO") {
+          encarga = "MANUEL MARIN";
+          baul_f1 = fecha || '';
+          baul_h1 = hora || '';
+          baul_f2 = baul_x1;
+          baul_f3 = "";
+          respons = "";
+        }
+
+        if (estado == "TERMINADO") {
+          encarga = solic_js.ENCARGADO_ASIGNAR || '';
+          baul_f1 = solic_js.FECHA_ASIGNO || '';
+          baul_h1 = solic_js.HORA_ASIGNO || '';
+          baul_f2 = solic_js.FECHA_PROGRAMADA || '';
+          baul_f3 = baul_x1;
+          respons = "MANUEL MARIN";
+        }
+
+        solict_2 = {
+          ENCARGADO_ASIGNAR: encarga || '',
+          FECHA_ASIGNO: baul_f1 || '',
+          HORA_ASIGNO: baul_h1 || '',
+          FECHA_PROGRAMADA: baul_f2 || '',
+          CONDUCTOR_OT: formData.get('encargMovil') || '',
+          CONDUCTOR_RUT: list_rut[0] || '',
+          VEHICULO_OT: formData.get('movil') || '',
+          JEFE_CUADRILLA: formData.get('encargCuadrilla') || '',
+          JEFE_CUADRILLA_RUT: list_rut[1] || '',
+          PERSONAL_CUADRILLA: baul_nomb || '',
+          ESTADO: formData.get('estado_select') || '',
+          FECHA_TERMINO: baul_f3 || '',
+          RESPONSABLE_TERMINO: respons || '',
+          OBSERVACION_OT: formData.get('observacion2').toString().toUpperCase() || ''
+        }
+
+
+        baul = "";
+        resul_js = [];
+        resul_js = { ...solic_js, ...solict_2 };
+
+        const index = dato_js.findIndex(item => item.ID_RECLAMO === numSolicit);
+        if (index !== -1) {
+          dato_js[index] = Object.assign({}, dato_js[index], solict_2);      // mantiene lo viejo y sobrescribe lo nuevo
+          baul = dato_js[index];
+        }
+
+        resul_nc = [];
+        const titulos_js = dato_nc[0]; // fila de cabeceras
+        resul_nc = titulos_js.map(key => baul[key] ?? null);    // null si no existe la clave
+
+        baul = "";
+
+        var datos = [...resul_nc];
+        var enviado_1 = [...datos];
+
+        var enviado_n = [...enviado_1];
+
+        if (enviado_0.length < 1) {
+          enviado_0 = [];
+          const obj = Array.isArray(result_0) ? result_0[0] : result_0;
+          baul = titulos_js.map(key => obj[key] ?? null);    // null si no existe la clave
+          enviado_0 = baul.map(item => String(item).toUpperCase());
+        }
+
+        enviado_n[21] = enviado_0[21];
+        enviado_n[22] = enviado_0[22];
+
+        baul_0 = JSON.stringify(enviado_0);
+        baul_n = JSON.stringify(enviado_n);
+
+        if (baul_0 != baul_n) {
+
+          let filaEncontrada = dato_nc.findIndex(fila => fila[0] === resul_nc[0]);
+          dato_nc[filaEncontrada] = resul_nc;
+
+          var pagina = "MODIFICADO";
+          var fila = filaEncontrada + 0;
+          var tipo = 1;
+
+          fetch(WEB_RECLAMOS, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pagina, fila, datos, tipo })
+          })
+            .then(() => {
+              enviado = 1;
+              enviado_0 = [...datos];
+              enviado_1 = [];
+              alert("Trabajo ingresado exitosamente - OK!");
+              setTimeout(() => {
+                enviado = 0;
+              }, 1000);
+              // limpiarFormulario();
+            })
+            .catch(error => {
+              if (enviado == 0) {
+                alert('Error al enviar los datos');
+              }
+            })
+            .finally(() => {
+            });
+
+          mostrar_puntos_mapa();     // Mostrar los puntos en el mapa
+          revisar_semana(numeroSemana);
+
+          closeModal();
+
+        } else {
+
+          alert("Estos datos ya fueron guardados");
+
+        }
+      });
+
+
+      // *********************************************************************
+
+
+      function updateAssignmentElement(assignment, assignmentData) {
+        baul = "";
+        if (assignmentData.estado == "PENDIENTE") { baul = "high"; }
+        if (assignmentData.estado == "ASIGNADO") { baul = "medium"; }
+        if (assignmentData.estado == "TERMINADO") { baul = "low"; }
+        assignment.className = `assignment${assignmentData.priority !== 'normal' ? ' priority-' + assignmentData.priority : ''}`;
+
+        const priorityText = {
+          'ASIGNADO': 'Asig',
+          'PENDIENTE': 'Pend',
+          'TERMINADO': 'Term',
+          'normal': 'Normal'
+        };
+
+        assignment.innerHTML = `` +
+          `<div class="assignment-info">` +
+          `<span class="ot-number">${assignmentData.otNumber}</span>` +
+          `<span class="priority-badge">${priorityText[assignmentData.estado]}</span>` +
+          `</div>` +
+          `<div class="trabajo">${assignmentData.trabajo}</div>` +
+          // <div>${assignmentData.description}</div>
+          ``;
+
+        assignment.onclick = () => editAssignment(assignment, assignmentData);
+
+        // Reagregar menú contextual
+        assignment.addEventListener('contextmenu', function (e) {
+          e.preventDefault();
+          if (confirm('¿Desea eliminar esta asignación?')) {
+            deleteAssignment(assignment, assignmentData);
+          }
+        });
+      }
+
+      function updateWeekDisplay() {
+        const weekStart = new Date(currentWeek);
+        const weekEnd = new Date(currentWeek);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+
+        const options = { day: 'numeric', month: 'short' };
+        const startStr = weekStart.toLocaleDateString('es-ES', options);
+        const endStr = weekEnd.toLocaleDateString('es-ES', options);
+        const year = weekStart.getFullYear();
+
+        document.getElementById('weekInfo').textContent = `Semana del ${startStr} - ${endStr}, ${year}`;
+
+        // Actualizar cabeceras de días
+        const days = ['Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Lunes'];
+        const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(currentWeek);
+          date.setDate(date.getDate() + i);
+          const dayElement = document.getElementById(`day${i}`);
+          if (dayElement) {
+            dayElement.innerHTML = `${days[i]}<br>${date.getDate()} ${months[date.getMonth()]}`;
+          }
+        }
+
+        // Cargar asignaciones para la nueva semana
+        mostrar_registros_semana();
+      }
+
+      function previousWeek() {
+        if (numeroSemana > 1) { numeroSemana--; }
+        revisar_semana(numeroSemana);
+      }
+
+      function nextWeek() {
+        numeroSemana++;
+        revisar_semana(numeroSemana);
+      }
+
+      function todayWeek() {
+        numeroSemana = hoysemana;  // Resetear al número de semana actual
+        revisar_semana(numeroSemana);
+      }
+
+
+      // ****************************************************************************
+      // ****************************************************************************
+
+
+      function toggleExportOptions() {
+        const exportOptions = document.getElementById('exportOptions');
+        if (exportOptions) {
+          exportOptions.style.display = exportOptions.style.display === 'block' ? 'none' : 'block';
+        }
+      }
+
+      function exportToPDF() {
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'block';
+
+        const { jsPDF } = window.jspdf;
+
+        // Primero capturamos el mapa
+        html2canvas(document.getElementById('map-container'), {
+          scale: 1,
+          useCORS: true,
+          logging: false
+        }).then(mapCanvas => {
+          // Luego capturamos la información de la OT
+          const otNumber = document.getElementById('otNumber').value;
+          const trabajo = document.getElementById('trabajo').value;
+          const description = document.getElementById('description').value;
+          const priority = document.getElementById('priority').value;
+
+          const pdf = new jsPDF('p', 'mm', 'a4');
+
+          // Título
+          pdf.setFontSize(18);
+          pdf.setTextColor(40, 40, 40);
+          pdf.text('Orden de Trabajo - Iluminación', 105, 15, null, null, 'center');
+
+          // Datos de la OT
+          pdf.setFontSize(12);
+          pdf.text(`Número de OT: ${otNumber}`, 20, 30);
+          pdf.text(`Prioridad: ${priority}`, 20, 40);
+          pdf.text(`Descripción: ${description}`, 20, 50);
+
+          // Imagen del mapa
+          const imgData = mapCanvas.toDataURL('image/png');
+          const imgWidth = 170;
+          const imgHeight = (mapCanvas.height * imgWidth) / mapCanvas.width;
+          pdf.addImage(imgData, 'PNG', 20, 60, imgWidth, imgHeight);
+
+          // Fecha y firma
+          pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 260);
+          pdf.text('Firma del Responsable: _________________________', 20, 280);
+
+          // Guardar el PDF
+          pdf.save(`OT_${otNumber}.pdf`);
+
+          if (loading) loading.style.display = 'none';
+        }).catch(error => {
+          console.error('Error al generar PDF:', error);
+          if (loading) loading.style.display = 'none';
+          alert('Error al generar el PDF. Por favor intente nuevamente.');
+        });
+      }
+
+      function printView() {
+        window.print();
+      }
+
+
+      // ****************************************************************************
+
+      function markToday() {
+        const today = new Date();
+        const todayKey = getDateKey(today);
+
+        // Quitar marcador de "hoy" de días anteriores
+        document.querySelectorAll('.today-marker').forEach(marker => marker.remove());
+
+        // Verificar si el día actual está en la semana mostrada
+        const weekStart = new Date(currentWeek);
+        const weekEnd = new Date(currentWeek);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+
+        if (today >= weekStart && today <= weekEnd) {
+          // Calcular el índice del día (0-6)
+          const diffDays = Math.floor((today - weekStart) / (1000 * 60 * 60 * 24));
+
+          // Resaltar la columna del día actual
+          const dayHeader = document.getElementById(`day${diffDays}`);
+          if (dayHeader) {
+            const marker = document.createElement('div');
+            marker.className = 'today-marker';
+            marker.textContent = '';
+            // marker.textContent = '📍 Hoy';
+            marker.style.textAlign = 'center';
+            marker.style.fontSize = '12px';
+            marker.style.marginTop = '5px';
+            dayHeader.appendChild(marker);
+          }
+        }
+      }
+
+      function openAssistance() {
+        alert('Asistencia: Para ayuda con el sistema, contacte al departamento de TI de la Municipalidad.');
+      }
+
+      // Inicializar la aplicación cuando el DOM esté listo
+      document.addEventListener('DOMContentLoaded', function () {
+        initMap();
+        updateWeekDisplay();
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function (event) {
+          const modal = document.getElementById('assignmentModal');
+          if (event.target === modal) {
+            closeModal();
+          }
+
+          // Cerrar menú de exportación al hacer clic fuera
+          const exportOptions = document.getElementById('exportOptions');
+          if (exportOptions && event.target !== document.querySelector('.btn-success')) {
+            exportOptions.style.display = 'none';
+          }
+        };
+
+        // Cargar datos iniciales de ejemplo
+        cargar_registros_semana();
+      });
+
+
+      // ---------------------------------------------------------------------------
+      // ---------------------------------------------------------------------------
+
+
+      function cargar_registros_semana() {
+
+        mostrar_terminados = 1;         // Mostrar terminados 0 = NO, 1 = SI
+        fechaIni = new Date(fechaIniISO);
+        fechaFin = new Date(fechaFinISO);
+
+        asignados = [];
+        terminados = [];
+        fusionados = [];
+
+        // Crea la variable de datos ASIGNADOS dentro de la fecha indicada
+        asignados = dato_js.filter(item => {
+          const fecha = new Date(item.FECHA_PROGRAMADA);
+          return (
+            item.ESTADO === "ASIGNADO" &&
+            fecha >= fechaIni &&
+            fecha <= fechaFin
+          );
+        });
+
+        // Crea la variable de datos TERMINADOS dentro de la fecha indicada
+        if (mostrar_terminados == 1) {
+          terminados = dato_js.filter(item => {
+            const fecha = new Date(item.FECHA_TERMINO);
+            return (
+              item.ESTADO === "TERMINADO" &&
+              fecha >= fechaIni &&
+              fecha <= fechaFin
+            );
+          });
+        }
+
+        // Generar filas del Gantt dinámicamente basadas en unique VEHICULO_OT
+        fusionados = [...asignados, ...terminados];
+        var uniqueResources = [...new Set(
+          fusionados.map(item => item.VEHICULO_OT).filter(Boolean)
+        )].sort();
+        // Fallback si no hay datos
+        if (uniqueResources.length === 0) {
+          // uniqueResources = ['cuadrilla-a', 'cuadrilla-b'];
+          uniqueResources = ["N/A"];
+        }
+
+        const ganttBody = document.getElementById('ganttBody');
+        ganttBody.innerHTML = '';
+
+        uniqueResources.forEach(resource => {
+          const displayName = resource;
+          const resourceType = "";
+          // const displayName = getResourceDisplayName(resource);
+          // const resourceType = getResourceType(resource);
+
+          const row = document.createElement('div');
+          row.className = 'gantt-row';
+
+          let cellsHtml = `
+            <div class="resource-cell">
+              <div class="resource-name">🚗 ${displayName}</div>
+              <div class="resource-type">${resourceType}</div>
+            </div>
+          `;
+
+          for (let i = 0; i < 7; i++) {
+            cellsHtml += `<div class="day-cell" data-resource="${resource}" data-day="${i}"></div>`;
+          }
+
+          row.innerHTML = cellsHtml;
+          ganttBody.appendChild(row);
+        });
+
+        mostrar_registros_semana();
+      }
+
+      // ---------------------------------------------------------------------------
+      // ---------------------------------------------------------------------------
+
+
+      // Cargar asignaciones para la semana actual
+      function mostrar_registros_semana() {
+        clearGanttCells();
+
+        for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+          const date = getWeekDate(dayIndex);
+          const dateKey = getDateKey(date);
+
+          fusionados = [...asignados, ...terminados];
+
+          if (fusionados.length > 0) {
+
+            fusionados.forEach(fusionado => {
+              bien = 0;
+              if ((fusionado.ESTADO === "TERMINADO") && (fusionado.FECHA_TERMINO === dateKey)) { bien = 1; }
+              if ((fusionado.ESTADO === "ASIGNADO") && (fusionado.FECHA_PROGRAMADA === dateKey)) { bien = 1; }
+              if (bien == 1) {
+                const resourceId = fusionado.VEHICULO_OT;
+                celda = resourceId[resourceId.length - 1] + (dayIndex).toString();
+                const dayCell = document.querySelector(`[data-resource="${resourceId}"][data-day="${dayIndex}"]`);
+
+                if (dayCell) {
+                  baul = (fusionado.PRIORIDAD_OT).toUpperCase();   // Asegúrate de que 'baul' tenga un valor válido
+                  if (baul == "ALTA") { baul = "high"; }
+                  if (baul == "MEDIA") { baul = "medium"; }
+                  if (baul == "BAJA") { baul = "low"; }
+                  if (baul == "NORMAL") { baul = "normal"; }      // Default a 'normal' si no existe
+
+                  const assignmentData = {
+                    otNumber: fusionado.ID_RECLAMO || '',            // Usa 'OT' si está disponible
+                    priority: baul || 'NORMAL', // Default a 'normal' si no existe
+                    trabajo: fusionado.TRABAJO || '',
+                    description: fusionado.DESCRIPCION || '',
+                    estado: fusionado.ESTADO || ''
+                  };
+                  createAssignmentElement(dayCell, assignmentData);
+                }
+              }
+            });
+          }
+        }
+
+        currentWeek = new Date(fechaIni);
+        // currentWeek.setDate(today.getDate() + daysToTuesday);
+        markToday();
+      }
+
+
+      // ****************************************************
+
+      // Cerrar el formulario
+      function cerrar_Formulario() {
+        window.location.href = "index.html";
+      }
+
+      // ****************************************************
+
+      // Mostrar overlay y ocultar después de 10s
+      function mostrarCargando() {
+        document.getElementById("overlay").style.display = "flex";
+        setTimeout(ocultarCargando, 10000); // 10 segundos
+      }
+
+      // Ocultar overlay
+      function ocultarCargando() {
+        document.getElementById("overlay").style.display = "none";
+      }
+
+
+      // ---------------------------------------------------------------------------
+      // ---------------------------------------------------------------------------
+
+      function convertir_Formato_MySQL(baul) {
+        if (!Array.isArray(baul) || baul.length < 2) {
+          return []; // Retorna vacío si no hay datos suficientes
+        }
+        baul_js = [];
+        const titulos = baul[0];              // Primera fila = nombres de columnas
+        for (let ii = 1; ii < baul.length; ii++) {
+          const fila = baul[ii];
+          const objeto = {};
+          for (let jj = 0; jj < titulos.length; jj++) {
+            objeto[titulos[jj]] = fila[jj];   // Usa el título como clave
+          }
+          baul_js.push(objeto);
+        }
+        return baul_js;
+      }
+
+      let currentWeek = new Date(); // Variable para la semana actual
+
+      function closePopup() {
+        marker.closePopup();
+      }
+
+      function normalizarFecha(fecha) {
+        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;     // Verifica si coincide con dd/mm/yyyy
+        const match = fecha.match(regex);
+        if (match) {
+          const [, dd, mm, yyyy] = match;
+          return `${yyyy}-${mm}-${dd}`;
+        }
+        return fecha;  // Si no coincide se dejam igual
+      }
+
+
+      // *******************************************************************
+
+
+      function limpiar_input(nn) {
+        var input_id = new Array();
+        input_id = ["encargMovil", "encargCuadrilla", "cuadrilla", "cuadrilla_list"];
+        nn = parseInt(nn);
+        document.getElementById(input_id[2]).value = "";
+        document.getElementById(input_id[3]).value = "";
+      }
+
+
+      // *******************************************************************
+      // *******************************************************************
+
+
+      function showSuggestions(nn) {
+
+        nn = parseInt(nn);
+        var input0 = document.getElementById("encargMovil");
+        var input1 = document.getElementById("encargCuadrilla");
+        var input2 = document.getElementById("cuadrilla");
+        var suggestionsDiv0 = document.getElementById("suggestionsEncargMovil");
+        var suggestionsDiv1 = document.getElementById("suggestionsEncargCuadrilla");
+        var suggestionsDiv2 = document.getElementById("suggestionsCuadrilla");
+
+        input = input0;
+        suggestionsDiv = suggestionsDiv0;
+        if (nn == 1) { input = input1; suggestionsDiv = suggestionsDiv1; }
+        if (nn == 2) { input = input2; suggestionsDiv = suggestionsDiv2; }
+
+        input = input.value.toString().toUpperCase();
+        suggestionsDiv0.innerHTML = '';  // Limpiar sugerencias anteriores
+        suggestionsDiv1.innerHTML = '';  // Limpiar sugerencias anteriores
+        suggestionsDiv2.innerHTML = '';  // Limpiar sugerencias anteriores
+
+        if (input) {
+          const filteredPersonal = nomb_dt.filter(nombr => (nombr).toString().includes(input));
+          filteredPersonal.forEach(nomb => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = (nomb).toString();
+            suggestionItem.onclick = () => selectDato(nn, nomb.toString());
+            suggestionsDiv.appendChild(suggestionItem);
+          });
+        }
+      }
+
+
+      function selectDato(nn, dato) {
+
+        dato = dato.toString().toUpperCase();
+        var input0 = document.getElementById("encargMovil");
+        var input1 = document.getElementById("encargCuadrilla");
+        var input2 = document.getElementById("cuadrilla");
+        var suggestionsDiv0 = document.getElementById("suggestionsEncargMovil");
+        var suggestionsDiv1 = document.getElementById("suggestionsEncargCuadrilla");
+        var suggestionsDiv2 = document.getElementById("suggestionsCuadrilla");
+
+        baul = "";
+        input = input0;
+        if (nn == 1) { input = input1; }
+        if (nn == 2) { input = input2; }
+
+        input.value = dato;
+        suggestionsDiv0.innerHTML = "";
+        suggestionsDiv1.innerHTML = "";
+        suggestionsDiv2.innerHTML = "";
+
+        mm = nn;
+        if (nn == 2) {
+          mm = list_nom.length;
+          if (list_nom[mm - 1] == "") { mm = mm - 1; }
+        }
+
+        list_nom[mm] = dato;
+        pers_js.findIndex((fila) => {
+          var combinado = (fila.NOMBRES + " " + fila.AP_PATERNO + " " + fila.AP_MATERNO).toUpperCase();
+          var nomb_dept = (fila.OFICINA).toUpperCase();
+          if ((combinado == dato.toUpperCase()) && (nomb_dept == this_oficin)) {
+            list_rut[mm] = fila.RUT;
+          }
+        });
+
+        if (nn == 2) {
+          baul = "";
+          for (tt = 2; tt < (mm + 1); tt++) {
+            var aa = "<span href='#' onclick='borrar_cuadrilla(" + tt + ")'> &nbsp; 🗑️ </span> &nbsp; " + list_nom[tt];
+            if (tt == 2) { baul = aa; }
+            if (tt > 2) { baul = baul + "<br>" + aa; }
+          }
+          if ((mm + 1) > 2) {
+            document.getElementById("cuadrilla_list").innerHTML = baul;
+            document.getElementById("cuadrilla").value = "";
+          }
+        }
+      }
+
+      function borrar_cuadrilla(pp, nn) {
+        pp = parseInt(pp);
+        if (pp == 1) {
+          nn = parseInt(nn);
+          for (let i = nn; i < list_nom.length - 1; i++) {
+            list_nom[i] = list_nom[i + 1];
+            list_rut[i] = list_rut[i + 1];
+          }
+          // Elimina el último registro
+          list_nom.pop();
+          list_rut.pop();
+
+          mm = list_nom.length;
+          baul = "";
+          for (tt = 2; tt < mm; tt++) {
+            var aa = "<span href='#' onclick='borrar_cuadrilla(1," + tt + ")'> &nbsp; 🗑️ </span> &nbsp; " + list_nom[tt];
+            if (tt == 2) { baul = aa; }
+            if (tt > 2) { baul = baul + "<br>" + aa; }
+          }
+          if ((mm + 1) > 2) {
+            document.getElementById("cuadrilla_list").innerHTML = baul;
+            document.getElementById("cuadrilla").value = "";
+          }
+        }
+      }
+
+
+      // ************************************************************************
+      // ************************************************************************
+
+      function cambio_label() {
+        var input = document.getElementById("estado_select");
+        var label = document.getElementById("label_dia");
+        if (input.value.trim() === "TERMINADO") {
+          label.textContent = "FECHA DE TERMINO:";
+        } else {
+          label.textContent = "DÍA PROGRAMADO: ";
+        }
+      }
+
+
+    </script>
+</body>
+
+</html>
