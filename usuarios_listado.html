@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lectura de BD</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 180vh;
+      margin: 20px auto;
+      background: #fff;
+      padding: 25px 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0066aa;
+      margin-bottom: 20px;
+    }
+
+    form {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input[type=text],
+    select {
+      width: 90%;
+      padding: 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .radios {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .radios label {
+      font-size: 15px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    input[type="button"] {
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: center;
+      transition: background 0.3s;
+    }
+
+    #cuadro {
+      margin-top: 10px;
+      white-space: pre-wrap;
+      background: #eef6fb;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #cce0ee;
+      font-size: 14px;
+      max-height: 450px;
+      overflow: auto;
+    }
+
+    /* Estilos de tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    table th {
+      background: #b3e0ff;
+      color: #003d66;
+      padding: 10px;
+      text-align: left;
+      border-bottom: 2px solid #99ccee;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    table th,
+    table td {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    table tr:nth-child(even) {
+      background: #f2faff;
+    }
+
+    table tr:nth-child(odd) {
+      background: #ffffff;
+    }
+
+    tr.selected {
+      background-color: #c8f7c5 !important;
+    }
+
+    /* Overlay de carga */
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: girar 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes girar {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Banner de ayuda */
+    #filtroBanner {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #filtroContenido {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      /* 🔹 límite de altura */
+      overflow-y: auto;
+      /* 🔹 scroll vertical si se excede */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      color: #333;
+    }
+
+    #filtroContenido h3 {
+      margin-top: 0;
+      color: #007acc;
+      text-align: center;
+    }
+
+    #filtroContenido h4 {
+      margin: 15px 0 8px;
+      color: #444;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 3px;
+      font-size: 15px;
+    }
+
+    #filtroContenido ul {
+      margin: 10px 0 15px;
+      padding-left: 20px;
+    }
+
+    #filtroContenido li {
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    #filtroContenido button {
+      display: block;
+      margin: 15px auto 0;
+      padding: 8px 16px;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #filtroContenido button:hover {
+      background: #005fa3;
+    }
+
+
+    /* Banner de mensajes */
+    #messageBanner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: #34495e;
+      font-size: 16px;
+      display: none;
+      z-index: 10001;
+      text-align: center;
+      max-width: 500px;
+    }
+
+    #messageBanner button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #btnAccept {
+      background-color: #28a745;
+      color: white;
+      margin-right: 10px;
+    }
+
+    #btnCancel {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .linea {
+      display: flex;
+      gap: 15px;
+      /* espacio entre los elementos */
+      justify-content: center;
+      /* opcional, centra horizontalmente */
+      align-items: center;
+      /* alinea verticalmente */
+    }
+
+    .boton-leer {
+      background-color: #ca963c;
+      /* verde base */
+      color: white;
+      /* texto blanco */
+      border: none;
+      padding: 10px 20px;
+      /* espacio interno */
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      /* bordes redondeados */
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .boton-leer:hover {
+      background-color: #dea128;
+      /* verde más oscuro al pasar el mouse */
+      transform: scale(1.05);
+      /* leve efecto de agrandado */
+    }
+
+    .boton-leer:active {
+      background-color: #a1831d;
+      /* aún más oscuro al hacer click */
+      transform: scale(0.98);
+      /* leve “hundimiento” */
+    }
+
+    .boton-limpiar {
+      background-color: #4c4ede;
+      /* verde base */
+      color: white;
+      /* texto blanco */
+      border: none;
+      padding: 10px 20px;
+      /* espacio interno */
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      /* bordes redondeados */
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .boton-limpiar:hover {
+      background-color: #5562d7;
+      /* verde más oscuro al pasar el mouse */
+      transform: scale(1.05);
+      /* leve efecto de agrandado */
+    }
+
+    .boton-limpiar:active {
+      background-color: #4959cd;
+      /* aún más oscuro al hacer click */
+      transform: scale(0.98);
+      /* leve “hundimiento” */
+    }
+
+    .boton-excel {
+      background-color: #28a745;
+      /* verde base */
+      color: white;
+      /* texto blanco */
+      border: none;
+      padding: 10px 20px;
+      /* espacio interno */
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 6px;
+      /* bordes redondeados */
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .boton-excel:hover {
+      background-color: #218838;
+      /* verde más oscuro al pasar el mouse */
+      transform: scale(1.05);
+      /* leve efecto de agrandado */
+    }
+
+    .boton-excel:active {
+      background-color: #1e7e34;
+      /* aún más oscuro al hacer click */
+      transform: scale(0.98);
+      /* leve “hundimiento” */
+    }
+
+    .fila {
+      display: flex;
+      /* Activa Flexbox en la fila */
+      width: 100%;
+      /* La fila ocupa todo el ancho disponible */
+      margin-bottom: 10px;
+      /* Espacio entre filas (opcional) */
+      box-sizing: border-box;
+    }
+
+    .columna {
+      flex: 1;
+      /* Todas las columnas ocupan el mismo ancho */
+      padding: 5px;
+      /* Margen interno */
+      box-sizing: border-box;
+      /* Incluye padding en el ancho total */
+      border: 0px solid #ccc;
+      /* Opcional: borde para ver cada celda */
+    }
+
+    /* Estilo general del select */
+    select {
+      appearance: none;
+      /* quita la flecha por defecto */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      background: #ffffff;
+      border: 1px solid #cfd9e3;
+      border-radius: 8px;
+      padding: 10px 40px 10px 15px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: "Segoe UI", Arial, sans-serif;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hover y focus */
+    select:hover {
+      border-color: #007acc;
+      box-shadow: 0 3px 8px rgba(0, 122, 204, 0.15);
+    }
+
+    select:focus {
+      border-color: #007acc;
+      box-shadow: 0 3px 8px rgba(0, 122, 204, 0.25);
+    }
+
+    /* Flecha personalizada */
+    select::after {
+      content: "▼";
+      font-size: 12px;
+      color: #007acc;
+      position: absolute;
+      right: 15px;
+      pointer-events: none;
+    }
+
+    /* Contenedor para que la flecha aparezca bien */
+    .select-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 350px;
+      /* puedes ajustarlo */
+    }
+
+    .select-container select {
+      width: 100%;
+    }
+
+    /* Opciones */
+    select option {
+      padding: 10px;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+    }
+
+    select option:hover {
+      background: #e6f2ff;
+    }
+
+    a7 {
+      position: absolute;
+      left: 400px;
+    }
+
+    .textoin {
+      padding: 8px 10px;
+      font-size: 14px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .color_suggestions {
+      color: purple;
+    }
+
+    #suggestionsPersonal {
+      position: absolute;
+      background: white;
+      border: 0px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 5px;
+      margin-top: 2px;
+      font-size: 12px;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      /* justo debajo del input */
+      left: 400px;
+      /* desplazar 400px hacia la derecha */
+      width: 200px;
+      /* ancho fijo, o lo ajustas a lo que necesites */
+      max-height: 150px;
+      /* límite de alto para que no crezca infinito */
+      overflow-y: auto;
+      /* scroll interno en las sugerencias */
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      /* que quede por encima del resto */
+      display: none;
+      /* solo se muestra cuando hay resultados */
+    }
+
+    #suggestionsPersonal div {
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    #suggestionsPersonal div:hover {
+      background: #e0e0e0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 id="titulo_0">Registros del Personal</h1>
+    <br>
+    <form>
+      <div class="fila">
+        <div class="columna">
+          <input class="textoin" id="nombre" type="text" value="" placeholder="BUSCAR POR NOMBRE"
+            style="background-color: #cee1d8; color: #011e3b; padding: 5px;" oninput="showSuggestions()">
+        </div>
+        <div class="columna">
+          <div class="color_suggestions" id="suggestionsPersonal"></div>
+        </div>
+        <div class="columna">
+          <label></label>
+        </div>
+        <div class="columna">
+          <label></label>
+        </div>
+      </div>
+
+      Filtrar por:
+      <div class="fila">
+        <div class="columna">
+          <select id="select_depto" name="select_depto" onchange="rellenar_select(1)"></select>
+        </div>
+        <div class="columna">
+          <select id="select_ofice" name="select_ofice" onchange="rellenar_select(2)"></select>
+        </div>
+        <div class="columna">
+          <select id="select_contr" name="select_contr" onchange="mostrar_resultados()"></select>
+        </div>
+        <div class="columna">
+          <select id="select_estad" name="select_estad" onchange="mostrar_resultados()"></select>
+        </div>
+      </div>
+
+      <center>
+        <input type="button" class="boton-leer" value="LEER DATOS" onclick="mostrar_resultados()" />
+        &nbsp; &nbsp; &nbsp; &nbsp;
+        <input type="button" class="boton-limpiar" value="LIMPIAR TODO" onclick="limpiar_datos()" />
+        &nbsp; &nbsp; &nbsp; &nbsp;
+        <input type="button" id="btnExcel" class="boton-excel" value="EXPORTAR A EXCEL" onclick="exportarAExcel()"
+          style="display:none" />
+      </center>
+
+    </form>
+    <div id="cuadro"></div>
+  </div>
+
+  <!-- Overlay de carga -->
+  <div id="overlay">
+    <div class="spinner"></div>
+    <div id="overlayMessage" style="color:white; font-size:18px; text-align:center;">Cargando...</div>
+  </div>
+
+  <!-- Banner de mensajes -->
+  <div id="messageBanner">
+    <div id="bannerText"></div>
+    <div id="bannerButtons" style="margin-top:10px;">
+      <button id="btnAccept">Aceptar</button>
+      <button id="btnCancel">Cancelar</button>
+    </div>
+  </div>
+
+  <script>
+
+    const WEB_API_URL = "https://www.applisoft.site/dimao/js_comun/api/api_BDleer_X.php";
+
+    const WEB_PERSONAL = "https://script.google.com/macros/s/AKfycbxdLixlQmHFxO5Fd00294WSvsULZXzko17_Tt7JS950gooMecKPjadRmw3Eq38RNfzb/exec";
+
+
+    let rutn_dt = [];
+    let nomb_dt = [];
+
+    let pers_dt = [];      // Datos como matriz Bidimensional
+    let pers_js = [];      // Datos como objeto JSON
+
+    let departa = "";
+
+    limpiar_suggestions();
+
+
+    // leer_API_MySQL();      // Lee los datos del personal desde MySQL
+    load_API_Drive();         // Lee los datos del personal desde Drive
+
+
+    // ************** Funciones de UI **************
+
+    function ayuda_filtro() {
+      document.getElementById("filtroBanner").style.display = "flex";
+    }
+
+    function cerrarFiltro() {
+      document.getElementById("filtroBanner").style.display = "none";
+    }
+
+    function mostrarOverlay(msg) {
+      document.getElementById("overlay").style.display = "flex";
+      document.getElementById("overlayMessage").innerText = msg;
+    }
+
+    function ocultarOverlay() { document.getElementById("overlay").style.display = "none"; }
+
+    function mostrarBanner(msg) {
+      document.getElementById("bannerText").innerText = msg;
+      document.getElementById("messageBanner").style.display = "block";
+    }
+
+    function ocultarBanner() { document.getElementById("messageBanner").style.display = "none"; }
+    document.getElementById("btnAccept").onclick = ocultarBanner;
+    document.getElementById("btnCancel").onclick = ocultarBanner;
+
+
+    // ************** Función principal de lectura **************
+
+
+    // Cargar datos iniciales desde la API de GOOGLE DRIVE
+    function load_API_Drive() {
+      pers_dt = [];     // Datos como matriz Bidimensional
+      pers_js = [];     // Datos como objeto JSON
+      departa = "DEPARTAMENTO DE OPERACIONES E ILUMINACION";
+      departa = "todos";
+      departa = departa.toString().toUpperCase().trim();
+      baul = departa;
+      if (baul != "TODOS") { baul = (baul.charAt(0).toUpperCase() + baul.slice(1).toLowerCase()).replace("Departamento", "Dpto."); }
+      document.getElementById("titulo_0").innerHTML = "Registros del Personal &nbsp;(" + baul + ")";
+      cuadro = document.getElementById("cuadro");
+      cuadro.innerHTML = "";
+      mostrarOverlay("Leyendo datos desde el servidor...");
+      fetch(WEB_PERSONAL + "?h=DIMAO")
+        .then(response => response.json())
+        .then(data => {
+          var baul_dt = [];
+          baul_dt = data.pers_dt || [];
+          if (baul_dt.length > 4) {
+            if (departa != "TODOS") {
+              pers_dt.push(baul_dt[0]);
+              for (ii = 1; ii < baul_dt.length; ii++) {
+                if (baul_dt[ii][1].toString().toUpperCase().trim() === departa) {
+                  pers_dt.push(baul_dt[ii]);
+                }
+              }
+            } else {
+              pers_dt.push(...baul_dt);
+            }
+            pers_js = convertir_Formato_MySQL(pers_dt);
+            titulos_dt = Object.keys(pers_js[0]);
+            ocultarOverlay();
+            agrupar_nombres();
+            iniciar_select();
+          } else {
+            ocultarOverlay();
+            cuadro = document.getElementById("cuadro");
+            cuadro.innerHTML = "No se encontraron datos del personal";
+          }
+        })
+        .catch(error => {
+          if (pers_js == []) {
+            mostrarBanner("Error en la comunicación con el servidor: " + error);
+            console.log(pers_js);
+            console.log("Error en la comunicación con el servidor: ", error);
+            document.getElementById("bannerButtons").style.display = "none";
+          } else {
+            ocultarOverlay();
+            agrupar_nombres();
+            iniciar_select();
+            cuadro = document.getElementById("cuadro");
+            cuadro.innerHTML = "";
+          }
+        });
+    }
+
+
+    // Cargar datos iniciales desde la API de MySQL
+    async function load_API_MySQL() {
+
+      vista = "tabla";
+      filtro = "";
+      if (filtro == "") { filtro = "all"; }
+
+      mostrarOverlay("Leyendo datos desde el servidor...");
+
+      try {
+        var datos = { codigo: 1597, tabla: "dimao_personal", filtro: filtro };
+        const resp = await fetch(WEB_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        });
+        const json = await resp.json();
+        pers_js = json;
+        ocultarOverlay();
+        agrupar_nombres();
+        iniciar_select();
+        cuadro = document.getElementById("cuadro");
+        cuadro.innerHTML = "";
+
+        if (json.status === "ok" && json.filas.length === 0) {
+          cuadro.innerHTML = "<p><em>No se encontraron registros.</em></p>";
+          document.getElementById("btnExcel").style.display = "none";
+          return;
+        }
+      } catch (err) {
+        mostrarBanner("Error en la comunicación con el servidor: " + err);
+        console.log(pers_js);
+        console.log("Error en la comunicación con el servidor: ", err);
+        document.getElementById("bannerButtons").style.display = "none";
+      }
+    }
+
+
+    function agrupar_nombres() {
+
+      pers_js.sort((a, b) => {
+        // Comparar DEPARTAMENTO
+        let depA = (a.DEPARTAMENTO || "").toUpperCase();
+        let depB = (b.DEPARTAMENTO || "").toUpperCase();
+
+        if (depA < depB) return -1;
+        if (depA > depB) return 1;
+
+        // Si DEPARTAMENTO es igual, comparar OFICINA
+        let ofiA = (a.OFICINA || "").toUpperCase();
+        let ofiB = (b.OFICINA || "").toUpperCase();
+
+        if (ofiA < ofiB) return -1;
+        if (ofiA > ofiB) return 1;
+
+        return 0; // iguales
+      });
+
+      rutn_dt = pers_js
+        .map(obj => obj.RUT ? obj.RUT.replace(/\./g, "").replace(/^0+/, "") : "")
+        .filter(Boolean); // quita vacíos
+      rutn_dt = [...new Set(rutn_dt)]; // quita duplicados
+      rutn_dt.sort();
+      nomb_dt = pers_js
+        .map(obj => obj.NOMBRES.trim() + " " + obj.AP_PATERNO.trim() + " " + obj.AP_MATERNO.trim())
+        .filter(Boolean); // quita null o ""
+      nomb_dt = [...new Set(nomb_dt)];
+      nomb_dt.sort();
+    }
+
+
+    // ************** Carga de los Selects inciales **************
+
+    function iniciar_select() {
+      var selec_it = ["DEPARTAMENTO", "OFICINA", "MOD_CONTR", "ESTADO"];
+      var selec_op = ["select_depto", "select_ofice", "select_contr", "select_estad"];
+
+      for (tt = 0; tt < selec_op.length; tt++) { document.getElementById(selec_op[tt]).innerHTML = ""; }
+
+      for (nn = 0; nn < selec_op.length; nn++) {
+
+        let items = pers_js.map(item => item[selec_it[nn]]).filter(Boolean);
+        items = [...new Set(items)];
+        items.sort((a, b) => a.localeCompare(b));
+
+        const select = document.getElementById(selec_op[nn]);
+        select.innerHTML = "";
+
+        // Opción inicial
+        opc99 = 0;
+        if (nn != 3) {
+          if (departa == "todos") { opc99 = 1; }
+          if (departa != "todos" && nn != 0) { opc99 = 1; }
+          if (opc99 == 1) {
+            let optDefault = document.createElement("option");
+            optDefault.value = "";
+            optDefault.textContent = "-- Seleccionar " + selec_it[nn].replace("_", " ") + " --";
+            select.appendChild(optDefault);
+          }
+        }
+
+        // Rellenar con items
+        items.forEach(it => {
+          let opt = document.createElement("option");
+          opt.value = it;
+          opt.textContent = it;
+          select.appendChild(opt);
+        });
+        if (nn == 3) { select.value = "ACTIVO"; }
+      }
+      mostrar_resultados();
+    }
+
+
+    function rellenar_select(nn) {
+      var selec_it = ["DEPARTAMENTO", "OFICINA", "MOD_CONTR", "ESTADO"];
+      var selec_op = ["select_depto", "select_ofice", "select_contr", "select_estad"];
+
+      // 🔹 Filtrar registros según selecciones previas
+      let filas_filtradas = [...pers_js];
+
+      if (nn > 0) {
+        // Filtrar por DEPARTAMENTO
+        const deptoSel = document.getElementById("select_depto").value;
+        if (deptoSel) {
+          filas_filtradas = filas_filtradas.filter(f => f.DEPARTAMENTO === deptoSel);
+        }
+      }
+
+      if (nn > 1) {
+        // Filtrar también por OFICINA
+        const oficeSel = document.getElementById("select_ofice").value;
+        if (oficeSel) {
+          filas_filtradas = filas_filtradas.filter(f => f.OFICINA === oficeSel);
+        }
+      }
+
+      // 🔹 Obtener solo los valores únicos de la columna actual
+      let items = filas_filtradas.map(item => item[selec_it[nn]]).filter(Boolean);
+      items = [...new Set(items)];
+      items.sort((a, b) => a.localeCompare(b));
+
+      // 🔹 Llenar el select actual
+      const select = document.getElementById(selec_op[nn]);
+      select.innerHTML = "";
+
+      // Opción inicial
+      let optDefault = document.createElement("option");
+      optDefault.value = "";
+      optDefault.textContent = "-- Seleccionar " + selec_it[nn].replace("_", " ") + " --";
+      select.appendChild(optDefault);
+
+      // Opciones
+      items.forEach(it => {
+        let opt = document.createElement("option");
+        opt.value = it;
+        opt.textContent = it;
+        select.appendChild(opt);
+      });
+
+      mostrar_resultados();
+    }
+
+
+    // *************************************************************************
+    // ********* Mostrar resultados ********************************************
+    // *************************************************************************
+
+
+    function mostrar_resultados() {
+
+      let json = [...pers_js]; // clonar array original
+      cuadro = document.getElementById("cuadro");
+      cuadro.innerHTML = "";
+
+      rut_personal = "";
+      nombre_completo = document.getElementById("nombre").value.toString().trim().toUpperCase();
+      if (nombre_completo !== "") {
+        const registro = pers_js.find(f => {
+          const nombreRegistro = [f.NOMBRES, f.AP_PATERNO, f.AP_MATERNO]
+            .filter(Boolean)
+            .join(" ")
+            .toUpperCase()
+            .trim();
+          return nombreRegistro === nombre_completo; // ✅ comparar con el input
+        });
+
+        if (registro) {
+          rut_personal = registro.RUT;
+        }
+      }
+
+      // Filtros activos
+      let filtroDepto = document.getElementById("select_depto").value;
+      let filtroOfice = document.getElementById("select_ofice").value;
+      let filtroContr = document.getElementById("select_contr").value;
+      let filtroEstad = document.getElementById("select_estad").value;
+
+      // Aplicar filtros sobre las filas
+      let filasFiltradas = json.filter(f => {
+        if (rut_personal !== "") {
+          if (f["RUT"] !== rut_personal) return false;
+        } else {
+          if (filtroDepto && f["DEPARTAMENTO"] !== filtroDepto) return false;
+          if (filtroOfice && f["OFICINA"] !== filtroOfice) return false;
+          if (filtroContr && f["MOD_CONTR"] !== filtroContr) return false;
+          if (filtroEstad && f["ESTADO"] !== filtroEstad) return false;
+        }
+        return true;
+      });
+
+
+      baul = "";
+      document.getElementById("btnExcel").style.display = "none";
+
+      if (filasFiltradas.length === 0) {
+        cuadro.innerHTML = "<p>No se encontraron resultados</p>";
+        return;
+      }
+
+      let tabla = "<table border='1' bordercolor='#cccccc' cellpadding='5' cellspacing='0'><thead><tr>";
+      const cols = Object.keys(filasFiltradas[0]);
+      cols.forEach((col, ii) => {
+        let style = "";
+        if (ii === 0) { style = " style='width: 60px;'"; }
+        if (ii === 3) { style = " style='width: 100px;'"; }
+        if (ii === 4 || ii === 9) { style = " style='width: 80px;'"; }
+        if (ii === 12 || ii === 15) { style = " style='width: 60px;'"; }
+        if (ii === 18 || ii === 19) { style = " style='width: 80px;'"; }
+        if (ii === 17) { style = " style='width: 200px;'"; }
+        if (style == "") { style = " style='width: 150px;'"; }
+        tabla += "<th" + style + ">" + col + "</th>";
+      });
+      tabla += "</tr></thead><tbody>";
+
+      filasFiltradas.forEach((f, jj) => {
+        tabla += "<tr>";
+        cols.forEach((col, ii) => {
+          baul = f[col] ?? "";
+          if (ii == 0) baul = "<span style='cursor:pointer;' onclick='editar_personal(\"" + f.RUT + "\")'> " + (jj + 1) + " ✏️</span>";
+          tabla += "<td>" + baul + "</td>";
+        });
+        tabla += "</tr>";
+      });
+
+      tabla += "</tbody></table>";
+      cuadro = document.getElementById("cuadro");
+      cuadro.innerHTML = tabla;
+      document.getElementById("btnExcel").style.display = "inline-block";
+      limpiar_suggestions();
+
+      // 🔹 Resaltar fila seleccionada
+      document.querySelectorAll("#cuadro table tbody tr").forEach(tr => {
+        tr.addEventListener("click", function () {
+          document.querySelectorAll("#cuadro table tbody tr").forEach(row => row.classList.remove("selected"));
+          this.classList.add("selected");
+        });
+      });
+      baul = 0;
+    }
+
+
+    function limpiar_datos() {
+      var selec_op = ["select_depto", "select_ofice", "select_contr"];
+      for (tt = 0; tt < selec_op.length; tt++) { document.getElementById(selec_op[tt]).value = ""; }
+      document.getElementById("select_estad").value = "ACTIVO";
+      document.getElementById("nombre").value = "";
+      cuadro = document.getElementById("cuadro").innerHTML = "";
+      iniciar_select();
+      document.getElementById("btnExcel").style.display = "none";
+      limpiar_suggestions();
+    }
+
+    function editar_personal(baul) {
+      if (baul != "") {
+        bauls = baul
+          .replace(/^0/, "")      // elimina el primer caracter si es 0
+          .replace(/[.\s]/g, "")  // elimina todos los puntos y espacios
+          .toUpperCase();
+        bauls = "?user=" + bauls;
+      } else { bauls = ""; }
+      location.href = "usuarios_ingreso.html" + bauls;
+    }
+
+
+    // ************** Función de exportación a Excel **************
+
+    // Exportar tabla a Excel
+    async function exportarAExcel() {
+      const tabla = document.querySelector("#cuadro table");
+      if (!tabla) return;
+
+      let wb = new ExcelJS.Workbook();
+      let ws = wb.addWorksheet("Personal");
+
+      // Agregar encabezados
+      let headerRow = [];
+      tabla.querySelectorAll("thead th").forEach(th => headerRow.push(th.innerText));
+      ws.addRow(headerRow);
+
+      // Estilos encabezados
+      ws.getRow(1).eachCell(cell => {
+        cell.font = { bold: true, color: { argb: "003366" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "B3E0FF" } };
+        cell.border = { bottom: { style: "thin", color: { argb: "99CCEE" } } };
+      });
+
+      // Agregar filas
+      tabla.querySelectorAll("tbody tr").forEach(tr => {
+        let row = [];
+        tr.querySelectorAll("td").forEach(td => row.push(td.innerText));
+        ws.addRow(row);
+      });
+
+      // Bordes y alternancia de colores
+      ws.eachRow((row, idx) => {
+        row.eachCell(cell => {
+          cell.border = {
+            top: { style: "thin", color: { argb: "DDDDDD" } },
+            left: { style: "thin", color: { argb: "DDDDDD" } },
+            right: { style: "thin", color: { argb: "DDDDDD" } },
+            bottom: { style: "thin", color: { argb: "DDDDDD" } }
+          };
+          if (idx > 1) {
+            cell.fill = {
+              type: "pattern",
+              pattern: "solid",
+              fgColor: { argb: idx % 2 === 0 ? "F2FAFF" : "FFFFFF" }
+            };
+          }
+        });
+      });
+
+      // Autoajustar columnas
+      ws.columns.forEach(col => {
+        let maxLength = 0;
+        col.eachCell({ includeEmpty: true }, c => {
+          maxLength = Math.max(maxLength, (c.value ? c.value.toString().length : 0));
+        });
+        col.width = maxLength < 12 ? 12 : maxLength + 2;
+      });
+
+      // Generar archivo
+      const buffer = await wb.xlsx.writeBuffer();
+      saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Registro de personal.xlsx");
+    }
+
+    // **********************************************************************
+
+
+    function showSuggestions() {
+      var input = document.getElementById("nombre").value.toUpperCase();
+      var suggestionsDiv = document.getElementById("suggestionsPersonal");
+      limpiar_suggestions();
+
+      if (input !== "") {
+        const filteredPersonal = nomb_dt.filter(nomb => nomb.toUpperCase().includes(input));
+        filteredPersonal.forEach(nomb => {
+          const suggestionItem = document.createElement("div");
+          suggestionItem.textContent = nomb;
+          suggestionItem.onclick = () => selectDato1(nomb);
+          suggestionsDiv.appendChild(suggestionItem);
+          const rect = document.getElementById("nombre").getBoundingClientRect();
+          suggestionsDiv.style.top = rect.top + "px";      // alineado en la parte superior
+          suggestionsDiv.style.left = (parseInt(rect.right) + 50).toLocaleString() + "px";   // pegado al borde derecho del input
+          suggestionsDiv.style.width = "500px";            // ancho fijo
+          suggestionsDiv.style.height = "200px";           // alto fijo
+        });
+      } else {
+        limpiar_suggestions();
+      }
+    }
+
+    function selectDato1(dato9) {
+      document.getElementById("nombre").value = dato9;
+      limpiar_suggestions();
+      mostrar_resultados();
+    }
+
+
+    // ***************************************************************
+
+
+    function convertir_Formato_MySQL(baul) {
+      if (!Array.isArray(baul) || baul.length < 2) {
+        return []; // Retorna vacío si no hay datos suficientes
+      }
+      baul_js = [];
+      const titulos = baul[0];              // Primera fila = nombres de columnas
+      for (let ii = 1; ii < baul.length; ii++) {
+        const fila = baul[ii];
+        const objeto = {};
+        for (let jj = 0; jj < titulos.length; jj++) {
+          objeto[titulos[jj]] = fila[jj];   // Usa el título como clave
+        }
+        baul_js.push(objeto);
+      }
+      return baul_js;
+    }
+
+
+    function limpiar_suggestions() {
+      suggestionsDiv = document.getElementById("suggestionsPersonal");
+      const rect = document.getElementById("nombre").getBoundingClientRect();
+      suggestionsDiv.style.top = rect.top + "px";    // alineado en la parte superior
+      suggestionsDiv.style.left = (parseInt(rect.left) - 10).toLocaleString() + "px";   // pegado al borde izquierdo
+      suggestionsDiv.style.width = "0px";            // ancho fijo
+      suggestionsDiv.style.height = "0px";           // alto fijo
+      suggestionsDiv.innerHTML = "";
+    }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de datos de Personal</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #dee6f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .form-container {
+      width: 95%;
+      /* Ocupa el 95% del ancho disponible */
+      max-width: 95%;
+      /* Nunca será mayor a 1000px */
+      height: 87vh;
+      /* 90% de la altura de la ventana */
+      overflow: auto;
+      /* Scroll si es necesario */
+      margin: 0 auto;
+      /* Centrado horizontal */
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Aplica color azul al texto dentro de inputs y selects */
+    .form-container input,
+    .form-container textarea,
+    .form-container select {
+      color: #3366cc;
+      text-transform: uppercase;
+    }
+
+    /* Opcional: también el texto de los placeholders */
+    .form-container input::placeholder,
+    .form-container textarea::placeholder {
+      color: #3366cc;
+      /* azul más suave para el placeholder */
+      text-transform: uppercase;
+    }
+
+    /* Opcional: el texto dentro de las opciones del select */
+    .form-container select option {
+      color: blue;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #34495e;
+    }
+
+    .form-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px 30px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    hr {
+      margin: 25px 0;
+      border: 1px solid #ddd;
+    }
+
+    .form-buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Botones base */
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Botón verde */
+    .btn-green {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-green:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Botón rojo */
+    .btn-red {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-red:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Popup */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .popup-content h3 {
+      margin-bottom: 15px;
+    }
+
+    .popup-content input,
+    .popup-content select {
+      width: 90%;
+      margin-bottom: 15px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .popup-buttons button {
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    hr {
+      margin: 25px 0;
+      border: 1px solid #3119ce;
+    }
+
+    .color_suggestions {
+      color: purple;
+    }
+
+    #suggestionsPersonal {
+      position: absolute;
+      background: white;
+      border: 0px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 5px;
+      margin-top: 2px;
+      font-size: 12px;
+    }
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      /* justo debajo del input */
+      left: 400px;
+      /* desplazar 400px hacia la derecha */
+      width: 200px;
+      /* ancho fijo, o lo ajustas a lo que necesites */
+      max-height: 150px;
+      /* límite de alto para que no crezca infinito */
+      overflow-y: auto;
+      /* scroll interno en las sugerencias */
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      /* que quede por encima del resto */
+      display: none;
+      /* solo se muestra cuando hay resultados */
+    }
+
+    #suggestionsPersonal div {
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    #suggestionsPersonal div:hover {
+      background: #e0e0e0;
+    }
+
+    /* Fondo oscuro que cubre toda la pantalla */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      /* Oculto por defecto */
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    /* Círculo girando */
+    .spinner {
+      border: 8px solid #f3f3f3;
+      /* gris claro */
+      border-top: 8px solid #3498db;
+      /* azul */
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: girar 1s linear infinite;
+    }
+
+    @keyframes girar {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h2 id="titulo_0">Formulario de datos del Personal</h2>
+    <form id="usuarioForm">
+      <div class="form-section">
+        <h3>Información Personal</h3>
+        <label></label>
+        <label></label>
+        <label></label>
+        <label><label id="label1">Buscar por nombre o RUT</label>
+          <input type="text" id="buscar" style="background-color: rgb(222, 245, 237);"
+            placeholder="Ingrese nombre o rut" oninput="showSuggestions()"></label>
+        <div class="color_suggestions" id="suggestionsPersonal"></div>
+        <label></label>
+        <label></label>
+        <label></label>
+        <label>RUT <input type="text" id="rut"></label>
+        <label>Nombres <input type="text" id="nombres"></label>
+        <label>Apellido Paterno <input type="text" id="ap_paterno"></label>
+        <label>Apellido Materno <input type="text" id="ap_materno"></label>
+        <label>Fecha Nacimiento <input type="date" id="fech_nacim"></label>
+        <label>Dirección <input type="text" id="domicilio"></label>
+        <label>Telefono (9 + 8 números sin guión)<input type="text" id="telefono"></label>
+        <label>Anexo <input type="text" id="anexo"></label>
+        <label>Correo <input type="text" id="correo"></label>
+        <label>Título <input type="text" id="titulo_academico"></label>
+      </div>
+
+      <p></p>
+
+      <div class="form-section">
+        <h3>Información Laboral</h3>
+        <label></label>
+        <label></label>
+        <label></label>
+        <label>Departamento
+          <select id="departamento" data-label="Departamento"></select>
+        </label>
+        <label>Oficina
+          <select id="oficina" data-label="Oficina"></select>
+        </label>
+        <label>Taller
+          <select id="taller" data-label="Taller"></select>
+        </label>
+        <label>Tipo de Trabajo <select id="tipo_trabajo" data-label="Tipo de Trabajo"></select></label>
+        <label>Contrato
+          <select id="mod_contr" data-label="modo contrato"></select>
+        </label>
+        <label>Escalafón
+          <select id="escalafon" data-label="Escalafón"></select>
+        </label>
+        <label>Grado <input type="text" id="grado"></label>
+        <label>Funcion <input type="text" id="funcion"></label>
+        <label>Turno
+          <select id="turno" data-label="Turno"></select>
+        </label>
+        <label>Horario del turno
+          <select id="horario_turno" data-label="Horario turno"></select>
+        </label>
+        <label>Estado
+          <select id="estado" data-label="Estado">
+            <option value="ACTIVO" selected>Activo</option>
+            <option value="DE BAJA">De baja</option>
+          </select>
+        </label>
+        <label>Comentario <textarea id="comentario"></textarea></label>
+      </div>
+
+
+      <div class="form-buttons">
+        <button type="button" class="btn-green" onclick="guardar_usuario()">Grabar Usuario</button>
+        <button type="button" class="btn-red" onclick="salir()">Salir</button>
+      </div>
+    </form>
+  </div>
+
+
+  <!-- Popup -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h3 id="popup-title"></h3>
+      <input type="text" id="popup-input" placeholder="Escribe el nuevo valor">
+      <div class="popup-buttons">
+        <button type="button" class="btn-green" onclick="agregarNuevoValor()">Agregar</button>
+        <button type="button" class="btn-red" onclick="cerrarPopup()">Salir</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ****************** POPUP DE CARGA DE LOS DATOS DEL PERSONAL *********************** -->
+  <div id="overlay">
+    <div class="spinner"></div>
+  </div>
+
+
+
+  <script>
+
+    // URL de la API
+    // const WEB_URL_INGRESO = "https://script.google.com/macros/s/AKfycbxF2LzAJYyPf5LVdT_bdHkcvV54limUdmRc6fdYCW4K86CItrZ-yW3i_qdweWdnTNM/exec";
+
+    const WEB_API_LEER = "https://www.applisoft.site/dimao/js_comun/api/api_BDleer_X.php";
+    const WEB_API_EDIT = "https://www.applisoft.site/dimao/js_comun/api/api_BDeditar.php";
+
+
+    const WEB_PERSONAL = "https://script.google.com/macros/s/AKfycbxdLixlQmHFxO5Fd00294WSvsULZXzko17_Tt7JS950gooMecKPjadRmw3Eq38RNfzb/exec";
+
+
+    // Variables globales
+    let user_rut = "";      // Rut del personal seleccionado
+    let user_id = 0;        // ID (de la tabla) del personal seleccionado
+
+    let pers_js = {}        // Datos recibidos desde el SQL (JSON)
+    let resp_dt = [];       // Datos del usuario a enviar al SQL (matriz)
+    let resp_js = {};       // Datos del usuario a enviar al SQL (JSON)
+    let use0_js = {};       // Datos del usuario enviados la ultima vez (JSON)
+
+    let selectActivo = null;
+
+    let pers_list = [];     // Lista de nombres para sugerencias
+    let campos = [];        // Campos de la tabla (Titulos)
+
+    var titulos_dt = [];    // Titulos de las columnas (matriz)
+
+    var departa = "";
+
+    // var titulos_dt = ["ID", "DEPARTAMENTO", "OFICINA", "TALLER", "ESTADO", "RUT", "NOMBRES", "AP_PATERNO", "AP_MATERNO", "FECH_NACIM", "MOD_CONTR", "ESCALAFON", "GRADO", "TIPO_TRABAJO", "FUNCION", "TURNO", "HORARIO_TURNO", "DOMICILIO", "TELEFONO", "ANEXO", "CORREO", "TITULO_ACADEMICO", "COMENTARIO"];
+
+    limpiar_suggestions();
+
+    mostrarCargando();      // Mostrar overlay de carga
+    // load_API_MySQL();    // Cargar datos desde MySQL
+    load_API_Drive();       // Carga datos desde Drive
+
+
+    // ***********************************************************************
+
+
+    async function load_API_MySQL() {
+      const datos = { codigo: 1597, tabla: "dimao_personal", filtro: "all" };
+      mostrarCargando();
+      try {
+        const resp = await fetch(WEB_API_LEER, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos)
+        });
+        const json = await resp.json();
+        pers_js = json.filas || [];
+        campos = Object.keys(pers_js[0]);
+        crear_lista();
+        ocultarCargando();
+        inicializar_select();
+      } catch (err) {
+        ocultarCargando();
+        // console.error('Error al cargar datos:', err);
+        alert("Error al cargar datos: " + err);
+      }
+    }
+
+
+    // Cargar datos iniciales desde la API - PERSONAL
+    function load_API_Drive() {
+      departa = "DEPARTAMENTO DE OPERACIONES E ILUMINACION";
+      departa = "todos";
+      departa = departa.toString().toUpperCase().trim();
+      baul = departa;
+      if (baul != "TODOS") { baul = (baul.charAt(0).toUpperCase() + baul.slice(1).toLowerCase()).replace("Departamento", "Dpto."); }
+      document.getElementById("titulo_0").innerHTML = "Formulario de datos el Personal &nbsp;(" + baul + ")";
+      mostrarCargando();
+      fetch(WEB_PERSONAL + "?h=DIMAO")
+        .then(response => response.json())
+        .then(data => {
+          pers_dt = [];     // Datos como matriz Bidimensional
+          pers_js = [];     // Datos como objeto JSON
+          baul_dt = data.pers_dt || [];
+          if (baul_dt.length > 4) {
+            if (departa != "TODOS") {
+              pers_dt.push(baul_dt[0]);
+              for (ii = 1; ii < baul_dt.length; ii++) {
+                if (baul_dt[ii][1].toString().toUpperCase().trim() === departa) {
+                  pers_dt.push(baul_dt[ii]);
+                }
+              }
+            } else {
+              pers_dt.push(...baul_dt);
+            }
+            pers_js = convertir_Formato_MySQL(pers_dt);
+            titulos_dt = Object.keys(pers_js[0]);
+            crear_lista();
+            ocultarCargando();
+            inicializar_select();
+            revisar_GET();
+          } else {
+            ocultarCargando();
+            alert("No se encontraron datos del personal");
+          }
+        })
+        .catch(error => {
+          console.error('Error al cargar datos:', error);
+        });
+    }
+
+
+    function crear_lista() {
+      for (let i = 0; i < pers_js.length; i++) {
+        let persona = pers_js[i];
+
+        // Generar nombre completo en mayúsculas y con trim
+        let nombreCompleto = (
+          (persona.NOMBRES || "") + " " +
+          (persona.AP_PATERNO || "") + " " +
+          (persona.AP_MATERNO || "")
+        ).toUpperCase().trim();
+
+        // Procesar RUT: string -> mayúsculas -> trim -> sin puntos
+        let rutLimpio = String(persona.RUT || "")
+          .toUpperCase()
+          .trim()
+          .replace(/\./g, "");    // elimina todos los puntos
+
+        // Si empieza con "0", eliminar el primer caracter
+        if (rutLimpio.startsWith("0")) {
+          rutLimpio = rutLimpio.substring(1);
+        }
+
+        // Verificar si ya existe en pers_list
+        let existe = pers_list.some(
+          (fila) => fila[0] === nombreCompleto && fila[1] === rutLimpio
+        );
+
+        // Si no existe, lo agregamos
+        if (!existe) {
+          pers_list.push([nombreCompleto, rutLimpio]);
+        }
+      }
+      baul = "";
+    }
+
+
+    function revisar_GET() {
+      const url_get = new URL(window.location.href);
+      if (url_get.searchParams.has("user")) {
+        user_rut = url_get.searchParams.get("user");
+        user_rut = user_rut.toString().toUpperCase().replace(/\./g, "");  // Elimina todos los puntos
+        var registro = pers_js.find(item => (item.RUT).toString().toUpperCase().replace(/\./g, "") === user_rut);
+        if (registro) {
+          const nomb_pers = (registro.NOMBRES + " " + registro.AP_PATERNO + " " + registro.AP_MATERNO).trim();
+          selectDato(nomb_pers, user_rut);
+        }
+      }
+    }
+
+
+
+
+    // *****************************************************
+
+
+    // Función para llenar selects
+    function llenarSelect(nombr, id, campo, filtroCampo = null, filtroValor = null) {
+      const select = document.getElementById(id);
+      let opciones = new Set();
+
+      pers_js.forEach(d => {
+        if ((!filtroCampo || d[filtroCampo] === filtroValor) && d[campo] !== "") {
+          opciones.add(String(d[campo]).toUpperCase());
+        }
+      });
+
+      let lista = Array.from(opciones).sort();
+      select.innerHTML = "";
+
+      // Agregar primera opción tipo placeholder
+      if (departa == "TODOS") {
+        let primera = document.createElement("option");
+        primera.value = "";                                    // <<-- aquí el value vacío
+        primera.textContent = "-- INGRESE " + nombr.toUpperCase() + " --";
+        primera.disabled = true;                               // no seleccionable
+        primera.selected = true;                               // aparece solo de inicio
+        select.appendChild(primera);
+      }
+
+      // Agregar lista de opciones
+      lista.forEach(val => {
+        let option = document.createElement("option");
+        option.value = val;
+        option.textContent = val;
+        select.appendChild(option);
+      });
+
+      if (departa == "TODOS") {
+        // Agregar opción final
+        let extra = document.createElement("option");
+        baul = "** AGREGAR NUEVO **";
+        extra.value = baul;
+        extra.textContent = baul;
+        select.appendChild(extra);
+      }
+
+      select.addEventListener("change", manejarCambioSelect);
+      if (id == "departamento" && departa != "TODOS") { llenarOficina(); }
+    }
+
+
+    // Función para llenar selects OFICINA (con filtro por DEPARTAMENTO)
+    function llenarOficina() {
+      const depSelect = document.getElementById("departamento");
+      const oficSelect = document.getElementById("oficina");
+
+      oficSelect.innerHTML = ""; // limpiar siempre primero
+
+      const depValue = depSelect.value;
+
+      if (!depValue) {
+        // Si no hay departamento seleccionado
+        let opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "-- SELECCIONE PRIMERO UN DEPARTAMENTO --";
+        opt.disabled = true;
+        opt.selected = true;
+        oficSelect.appendChild(opt);
+        return;
+      }
+
+      // Buscar oficinas que pertenezcan a este departamento
+      let opciones = new Set();
+      pers_js.forEach(p => {
+        if (String(p.DEPARTAMENTO).toUpperCase() === depValue && p.OFICINA) {
+          opciones.add(String(p.OFICINA).toUpperCase());
+        }
+      });
+
+      const lista = Array.from(opciones).sort();
+
+      // Si no hay oficinas, mostrar mensaje
+      if (lista.length === 0) {
+        let opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "-- SIN OFICINAS EN ESTE DEPARTAMENTO --";
+        opt.disabled = true;
+        opt.selected = true;
+        oficSelect.appendChild(opt);
+        let extra = document.createElement("option");
+        baul = "** AGREGAR NUEVO **";
+        extra.value = baul;
+        extra.textContent = baul;
+        oficSelect.appendChild(extra);
+        oficSelect.addEventListener("change", manejarCambioSelect);
+        return;
+      }
+
+      // Placeholder inicial
+      let primera = document.createElement("option");
+      primera.value = "";
+      primera.textContent = "-- INGRESE OFICINA --";
+      primera.disabled = true;
+      primera.selected = true;
+      oficSelect.appendChild(primera);
+
+      // Opciones de oficinas
+      lista.forEach(val => {
+        let opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = val;
+        oficSelect.appendChild(opt);
+      });
+
+      if (departa == "TODOS") {
+        // Opción para agregar nueva
+        let extra = document.createElement("option");
+        baul = "** AGREGAR NUEVO **";
+        extra.value = baul;
+        extra.textContent = baul;
+        oficSelect.appendChild(extra);
+      }
+
+      // Reutilizar mismo manejador que otros selects
+      oficSelect.addEventListener("change", manejarCambioSelect);
+    }
+
+
+    function manejarCambioSelect(e) {
+      const select = e.target;
+      if (select.value === "** AGREGAR NUEVO **") {
+        selectActivo = select;
+        abrirPopup(select.getAttribute("data-label"));
+      }
+    }
+
+    function abrirPopup(label) {
+      document.getElementById("popup-title").textContent = "Ingresa un nuevo " + label;
+      document.getElementById("popup-input").value = "";
+      document.getElementById("popup").style.display = "flex";
+    }
+
+    function cerrarPopup() {
+      document.getElementById("popup").style.display = "none";
+      selectActivo = null;
+    }
+
+    function agregarNuevoValor() {
+      const input = document.getElementById("popup-input");
+      const nuevoValor = input.value.trim().toUpperCase();
+
+      if (nuevoValor !== "" && selectActivo) {
+        const opciones = Array.from(selectActivo.options).map(opt => opt.value);
+        if (!opciones.includes(nuevoValor)) {
+          const option = document.createElement("option");
+          option.value = nuevoValor;
+          option.textContent = nuevoValor;
+          const ultimaOpcion = selectActivo.querySelector("option[value='** AGREGAR NUEVO **']");
+          selectActivo.insertBefore(option, ultimaOpcion);
+        }
+        selectActivo.value = nuevoValor;
+        // llenarOficina();  // Actualizar oficinas si es necesario
+        cerrarPopup();
+      }
+    }
+
+
+    // *****************************************************
+    // *****************************************************
+
+
+    // Función para guardar o modificar usuario
+
+    function guardar_usuario() {
+
+      baul = "";
+      rutb = document.getElementById("rut").value;
+      rutb = rutb.toString().toUpperCase().trim().replace(/\./g, "");  // Elimina todos los puntos
+      if (user_rut != "") { baul = user_rut; }
+      if ((user_rut == "") && (rutb != "")) { baul = rutb; }
+      if (/-\d+$/.test(baul)) { } else { baul = "" }    // si no termina con guion y numero, vaciar
+      if (baul == "") {
+        user_rut = baul;
+        alert("DEBE INGRESAR UN RUT VÁLIDO");
+        return;
+      } else {
+        user_rut = baul;
+      }
+
+      b_rutn = document.getElementById("rut").value.toString().toUpperCase().trim();
+      b_nomb = document.getElementById("nombres").value.toString().toUpperCase().trim();
+      b_ap_p = document.getElementById("ap_paterno").value.toString().toUpperCase().trim();
+      b_ap_m = document.getElementById("ap_materno").value.toString().toUpperCase().trim();
+      b_esta = document.getElementById("estado").value.toString().toUpperCase().trim();
+      b_depa = document.getElementById("departamento").value.toString().toUpperCase().trim();
+      b_ofic = document.getElementById("oficina").value.toString().toUpperCase().trim();
+      b_telf = document.getElementById("telefono").value.toString().toUpperCase().trim();
+      b_cont = document.getElementById("mod_contr").value.toString().toUpperCase().trim();
+      b_anex = document.getElementById("anexo").value.toString().toUpperCase().trim();
+      b_emai = document.getElementById("correo").value.toString().toUpperCase().trim();
+      b_titu = document.getElementById("titulo_academico").value.toString().toUpperCase().trim();
+      b_fnac = document.getElementById("fech_nacim").value.toString().toUpperCase().trim();
+      b_dire = document.getElementById("domicilio").value.toString().toUpperCase().trim();
+      b_grad = document.getElementById("grado").value.toString().toUpperCase().trim();
+      b_tall = document.getElementById("taller").value.toString().toUpperCase().trim();
+      b_esca = document.getElementById("escalafon").value.toString().toUpperCase().trim();
+      b_func = document.getElementById("funcion").value.toString().toUpperCase().trim();
+      b_ttra = document.getElementById("tipo_trabajo").value.toString().toUpperCase().trim();
+      b_turn = document.getElementById("turno").value.toString().toUpperCase().trim();
+      b_hort = document.getElementById("horario_turno").value.toString().toUpperCase().trim();
+      b_come = document.getElementById("comentario").value.toString().toUpperCase().trim();
+
+
+      if (b_nomb == "" || b_ap_p == "" || b_ap_m == "") {
+        alert("DEBE INGRESAR LOS NOMBRES Y APELLIDOS");
+        return;
+      }
+      if (b_telf != "") {
+        if (b_telf.length != 9) {
+          alert("DEBE INGRESAR UN NUMERO TELEFONICO VALIDO\nES UN 9 SEGUIDO DE 8 NÚMEROS (SIN GUIÓN)");
+          return;
+        }
+      }
+      if (b_esta == "") {
+        alert("DEBE INGRESAR EL ESTADO DEL USUARIO");
+        return;
+      }
+      if (b_depa == "" || b_ofic == "") {
+        alert("DEBE INGRESAR EL DEPARTAMENTO Y OFICINA");
+        return;
+      }
+      if (b_cont == "") {
+        alert("DEBE INGRESAR EL TIPO DE CONTRATO");
+        return;
+      }
+
+
+      formu_js = {
+        RUT: b_rutn || '',
+        NOMBRES: b_nomb || '',
+        AP_PATERNO: b_ap_p || '',
+        AP_MATERNO: b_ap_m || '',
+        FECH_NACIM: b_fnac || '',
+        DOMICILIO: b_dire || '',
+        TELEFONO: b_telf || '',
+        ANEXO: b_anex || '',
+        CORREO: b_emai || '',
+        TITULO_ACADEMICO: b_titu || '',
+        DEPARTAMENTO: b_depa || '',
+        OFICINA: b_ofic || '',
+        TALLER: b_tall || '',
+        TIPO_TRABAJO: b_ttra || '',
+        MOD_CONTR: b_cont || '',
+        ESCALAFON: b_esca || '',
+        GRADO: b_grad || '',
+        FUNCION: b_func || '',
+        TURNO: b_turn || '',
+        HORARIO_TURNO: b_hort || '',
+        ESTADO: b_esta || '',
+        COMENTARIO: b_come || ''
+      }
+
+      resp_dt = [];
+      resp_js = {};
+      resp_dt.push(0); // ID en 0
+      resp_js["ID"] = 0;
+
+      for (let i = 1; i < campos.length; i++) {
+        let titulon = titulos_dt[i];
+        let input = document.getElementById(titulon.toLowerCase());
+        let val = input?.value || "";
+
+        // Detectar si es numérico o fecha
+        if (val !== "") {
+          if (input.type === "date" || input.type === "number" || input.type === "tel" || input.type === "email") {
+            // Mantener tal cual
+          } else if (!isNaN(val)) {
+            // Es un número → lo dejamos igual
+          } else {
+            // Es texto → pasamos a mayúsculas
+            val = val.toUpperCase();
+          }
+        }
+
+        resp_dt.push(val);
+        resp_js[campo] = val;
+        baul = "";
+      }
+
+      let iguales = JSON.stringify(resp_js) === JSON.stringify(use0_js);
+      if (iguales) {
+        alert("ESTOS DATOS YA FUERON INGRESADOS");
+        return;
+      } else {
+
+        solic_js = [];
+        result_0 = [];
+        solic_js = pers_js.find(fila => fila.RUT === user_rut);
+        if (!solic_js) {
+          alert("NO SE ENCUENTRA EL RUT EN LA BASE DE DATOS");
+          return;
+        }
+
+        resp_js = [];
+        resp_js = { ...solic_js, ...formu_js };
+
+        let baul_a = JSON.stringify(Object.keys(solic_js).sort().reduce((acc, key) => { acc[key] = solic_js[key]; return acc; }, {}));
+        let baul_b = JSON.stringify(Object.keys(resp_js).sort().reduce((acc, key) => { acc[key] = resp_js[key]; return acc; }, {}));
+
+        if (baul_a === baul_b) {
+          alert("NO HAY NINGÚN CAMBIO EN LOS DATOS");
+          return;
+        }
+
+        const index = pers_js.findIndex(item => item.RUT === user_rut);
+        if (index !== -1) {
+          pers_js[index] = Object.assign({}, pers_js[index], resp_js);      // mantiene lo viejo y sobrescribe lo nuevo
+          baul = pers_js[index];
+        }
+
+        resul_nc = [];
+        resul_nc = titulos_dt.map(key => baul[key] ?? null);    // null si no existe la clave
+
+        baul = "";
+        var datos = [...resul_nc];
+
+        let filaEncontrada = pers_dt.findIndex(fila => fila[5] === user_rut);
+        pers_dt[filaEncontrada] = resul_nc;
+
+        var pagina = "PERSONAL DIMAO";
+        var fila = filaEncontrada + 1;
+        var tipo = 1;
+        var body_js = JSON.stringify({ pagina, fila, datos, tipo });
+
+        mostrarCargando();
+
+        fetch(WEB_PERSONAL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: body_js
+        })
+          .then(() => {
+            ocultarCargando();
+            enviado = 1;
+            enviado_0 = [...datos];
+            enviado_1 = [];
+            alert("Reclamo enviado exitosamente - OK!");
+            setTimeout(() => {
+              enviado = 0;
+            }, 1000);
+            limpiarFormulario();
+          })
+          .catch(error => {
+            if (enviado == 0) {
+              ocultarCargando();
+              alert('Error al enviar los datos');
+            }
+          })
+          .finally(() => {
+          });
+      }
+    }
+
+
+
+    async function load_API_Enviar() {
+
+      cuerpo = JSON.stringify({
+        codigo: 1597,
+        tabla: "dimao_personal",
+        clave: "RUT",
+        valor: user_rut,
+        datos: resp_js
+      });
+      try {
+        const response = await fetch(WEB_API_EDIT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8"
+          },
+          body: cuerpo
+        });
+
+        const result = await response.json();
+        // console.log("Respuesta del servidor:", result);
+
+        if (result.status === "ok") {
+          use0_js = { ...resp_js };     // actualizar use0_js
+          actualizarPers_js();          // Actualiza pers_js con el nuevo registro
+          alert("✅ " + result.mensaje);
+        } else {
+          alert("⚠️ " + result.mensaje);
+        }
+      } catch (error) {
+        // console.error("Error al enviar los datos:", error);
+        alert("❌ Error de conexión con el servidor");
+      }
+    }
+
+
+    // *****************************************************
+
+
+    function actualizarPers_js() {
+      // Buscar si existe un objeto en pers_js con el mismo RUT que resp_js.RUT
+      const rutBuscado = resp_js.RUT;
+      let encontrado = false;
+      for (let i = 0; i < pers_js.length; i++) {
+        if (pers_js[i].RUT === rutBuscado) {
+          // Si lo encuentra, reemplaza todo el objeto
+          resp_js.ID = pers_js[i].ID;
+          pers_js[i] = resp_js;
+          encontrado = true;
+          break;
+        }
+      }
+
+      if (!encontrado) {
+        // No existe un mismo RUT, entonces crear nuevo registro
+        // Determinar el ID máximo actual en pers_js
+        let maxId = 0;
+        for (const obj of pers_js) {
+          // Asegurarse de que obj.ID sea numérico
+          const idNum = parseInt(obj.ID, 10);
+          if (!isNaN(idNum) && idNum > maxId) {
+            maxId = idNum;
+          }
+        }
+        // Asignar a resp_js.ID el valor máximo + 1
+        resp_js.ID = maxId + 1;
+        // Agregar resp_js al arreglo pers_js
+        pers_js.push(resp_js);
+      }
+    }
+
+
+    // *****************************************************
+
+    function salir() {
+      // alert("Saliendo del formulario");
+      window.location.href = "formulario-5.html";  // intenta cerrar la ventana
+    }
+
+    // Inicialización
+    function inicializar_select() {
+      llenarSelect("departamento", "departamento", "DEPARTAMENTO");
+      // llenarSelect("oficina", "oficina", "OFICINA");
+      llenarSelect("taller", "taller", "TALLER");
+      llenarSelect("tipo de contrato", "mod_contr", "MOD_CONTR");
+      llenarSelect("escalafon", "escalafon", "ESCALAFON");
+      llenarSelect("turno", "turno", "TURNO");
+      llenarSelect("tipo de trabajo", "tipo_trabajo", "TIPO_TRABAJO");
+      llenarSelect("horario del turno", "horario_turno", "HORARIO_TURNO");
+    };
+
+    document.getElementById("departamento").addEventListener("change", llenarOficina);
+
+
+    // ****************************************************
+
+
+    // Función para mostrar sugerencias
+    function showSuggestions() {
+
+      var input = document.getElementById("buscar");
+      var suggestionsDiv = document.getElementById("suggestionsPersonal");
+      limpiar_suggestions();
+      var filap = 0;
+
+      input = input.value.toString().toUpperCase();
+      input = input.replace(/\./g, "");  // Elimina todos los puntos
+
+      if (input) {
+        const filteredPersonal = pers_list.filter(([nombre, rut]) => {
+          return (
+            nombre.toString().includes(input) ||
+            rut.toString().includes(input)
+          );
+        });
+
+        suggestionsDiv.innerHTML = ''; // limpiar antes de mostrar
+
+        filteredPersonal.forEach(([nombre, rut]) => {
+          const suggestionItem = document.createElement("div");
+          suggestionItem.textContent = nombre + " (" + rut + ")"; // mostramos ambas cosas
+          suggestionItem.onclick = () => selectDato(nombre.toString(), rut.toString());
+          suggestionsDiv.appendChild(suggestionItem);
+          const rect = document.getElementById("buscar").getBoundingClientRect();
+          suggestionsDiv.style.top = rect.top + "px";      // alineado en la parte superior
+          suggestionsDiv.style.left = (parseInt(rect.right) + 50).toLocaleString() + "px";   // pegado al borde derecho del input
+          suggestionsDiv.style.width = "500px";            // ancho fijo
+          suggestionsDiv.style.height = "200px";           // alto fijo
+        });
+      } else {
+        limpiar_suggestions();
+      }
+    }
+
+
+    function selectDato(nomb_pers, user_rut1) {
+      user_rut = user_rut1.toString().toUpperCase().replace(/\./g, "");  // Elimina todos los puntos
+      input = document.getElementById("buscar");
+      input.value = nomb_pers;
+      limpiar_suggestions();
+
+      let persona1 = pers_js.find(p => p.RUT === user_rut);
+      user_id = persona1.ID;
+      recuperar_datos();
+    }
+
+
+    function recuperar_datos() {
+      // Normalizar user_rut
+      user_rut = String(user_rut || "")
+        .toUpperCase()
+        .trim()
+        .replace(/\./g, "");
+
+      if (user_rut.startsWith("0")) {
+        user_rut = user_rut.substring(1);
+      }
+
+      // Buscar en pers_js la persona correspondiente
+      const persona = pers_js.find(p => {
+        let rutLimpio = String(p.RUT || "")
+          .toUpperCase()
+          .trim()
+          .replace(/\./g, "");
+
+        if (rutLimpio.startsWith("0")) {
+          rutLimpio = rutLimpio.substring(1);
+        }
+
+        return rutLimpio === user_rut;
+      });
+
+      if (!persona) {
+        alert("No se encontró el RUT en los datos.");
+        return;
+      }
+
+      // Llenar los inputs de texto
+      const camposTexto = [
+        "RUT", "NOMBRES", "AP_PATERNO", "AP_MATERNO",
+        "FECH_NACIM", "DOMICILIO", "TELEFONO", "CELULAR", "ANEXO",
+        "CORREO", "TITULO_ACADEMICO", "GRADO", "FUNCION", "COMENTARIO"
+      ];
+
+      camposTexto.forEach(campo => {
+        const input = document.getElementById(campo.toLowerCase());
+        if (input) {
+          let val = persona[campo] || "";
+
+          if (campo == "FECH_NACIM") {
+            val = corregirFecha(val); // devuelve objeto Date o null
+            if (val instanceof Date && !isNaN(val)) {
+              // Formatear a YYYY-MM-DD
+              let mes = (val.getMonth() + 1).toString().padStart(2, '0');
+              let dia = val.getDate().toString().padStart(2, '0');
+              val = `${val.getFullYear()}-${mes}-${dia}`;
+            } else {
+              val = ""; // si no es fecha válida
+            }
+          }
+
+          if (typeof val === "string" && campo !== "FECH_NACIM") {
+            val = val.toUpperCase();
+          }
+
+          input.value = val;
+        }
+      });
+
+      // Llenar selects
+      const camposSelect = [
+        "DEPARTAMENTO", "TALLER", "ESTADO", "MOD_CONTR",
+        "ESCALAFON", "TIPO_TRABAJO", "TURNO", "HORARIO_TURNO", "OFICINA"
+      ];
+
+      camposSelect.forEach(campo => {
+        const select = document.getElementById(campo.toLowerCase());
+        if (select) {
+          let val = (persona[campo] || "").toString().toUpperCase();
+          if (val && Array.from(select.options).some(opt => opt.value === val)) {
+            select.value = val;
+          } else {
+            select.value = "";
+          }
+        }
+        if (campo == "DEPARTAMENTO") { llenarOficina(); }
+      });
+    }
+
+
+
+    // ****************************************************
+
+
+    function corregirFecha(valor) {
+      if (valor instanceof Date && !isNaN(valor)) {
+        return valor; // ya es un objeto Date válido
+      }
+
+      if (typeof valor !== "string") {
+        return null; // no es ni string ni Date
+      }
+
+      valor = valor.trim();
+      if (!valor) return null;
+
+      // Normalizar separador
+      const separador = valor.includes("-") ? "-" : "/";
+      const partes = valor.split(separador);
+
+      if (partes.length !== 3) return null;
+
+      let dia, mes, anio;
+
+      // Detectar formato según posición del año
+      if (partes[0].length === 4) {
+        // Formato YYYY-MM-DD o YYYY/MM/DD
+        anio = parseInt(partes[0], 10);
+        mes = parseInt(partes[1], 10);
+        dia = parseInt(partes[2], 10);
+      } else if (partes[2].length === 4) {
+        // Formato DD-MM-YYYY o DD/MM/YYYY
+        dia = parseInt(partes[0], 10);
+        mes = parseInt(partes[1], 10);
+        anio = parseInt(partes[2], 10);
+      } else {
+        return null; // formato desconocido
+      }
+
+      // Crear fecha
+      const fecha = new Date(anio, mes - 1, dia);
+
+      // Validar que sea correcta (ej: 31-02-2023 no es válido)
+      if (
+        fecha.getFullYear() === anio &&
+        fecha.getMonth() === mes - 1 &&
+        fecha.getDate() === dia
+      ) {
+        return fecha;
+      }
+
+      return null; // fecha inválida
+    }
+
+
+    // ****************************************************
+
+
+
+    // Mostrar overlay y ocultar después de 10s
+    function mostrarCargando() {
+      document.getElementById("overlay").style.display = "flex";
+      setTimeout(ocultarCargando, 10000); // 10 segundos
+    }
+
+    // Ocultar overlay
+    function ocultarCargando() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    // ***************************************************************
+
+    function convertir_Formato_MySQL(baul) {
+      if (!Array.isArray(baul) || baul.length < 2) {
+        return []; // Retorna vacío si no hay datos suficientes
+      }
+      baul_js = [];
+      const titulos = baul[0];              // Primera fila = nombres de columnas
+      for (let ii = 1; ii < baul.length; ii++) {
+        const fila = baul[ii];
+        const objeto = {};
+        for (let jj = 0; jj < titulos.length; jj++) {
+          objeto[titulos[jj]] = fila[jj];   // Usa el título como clave
+        }
+        baul_js.push(objeto);
+      }
+      return baul_js;
+    }
+
+    function limpiar_suggestions() {
+      suggestionsDiv = document.getElementById("suggestionsPersonal");
+      const rect = document.getElementById("buscar").getBoundingClientRect();
+      suggestionsDiv.style.top = rect.top + "px";    // alineado en la parte superior
+      suggestionsDiv.style.left = (parseInt(rect.left) - 10).toLocaleString() + "px";   // pegado al borde izquierdo
+      suggestionsDiv.style.width = "0px";            // ancho fijo
+      suggestionsDiv.style.height = "0px";           // alto fijo
+      suggestionsDiv.innerHTML = "";
+    }
+
+  </script>
+</body>
+
+</html>
